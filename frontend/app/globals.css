@@ -33,10 +33,10 @@
 body {
   background: var(--bg-deep-black);
   background-image: 
-    radial-gradient(circle at top, rgba(28, 8, 10, 0.75) 0%, rgba(10, 6, 7, 0.92) 75%),
-    url('/bg_multiverse_neural.jpg');
+    radial-gradient(circle at 50% 15%, rgba(224, 27, 34, 0.12) 0%, rgba(10, 6, 7, 0.88) 65%, rgba(6, 4, 5, 0.98) 100%),
+    url('/bg_pixel_paradox_arena.jpg');
   background-size: cover;
-  background-position: center;
+  background-position: center top;
   background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-body);
@@ -1114,43 +1114,86 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
 }
 
-/* Webbed Mouth Comic Gag Animation */
-@keyframes webSplatAnim {
-  0% { transform: scale(0) rotate(-35deg); opacity: 0; }
-  60% { transform: scale(1.3) rotate(8deg); opacity: 1; }
-  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+/* High-Energy Multiverse & Exciting Interactive Animations */
+@keyframes neonPulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(224, 27, 34, 0.4), inset 0 0 10px rgba(224, 27, 34, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 32px rgba(224, 27, 34, 0.75), inset 0 0 20px rgba(224, 27, 34, 0.35);
+  }
 }
 
-.webbed-mouth-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 52px;
-  height: 52px;
-  pointer-events: none;
-  z-index: 20;
-  animation: webSplatAnim 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+@keyframes cyanPulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.35), inset 0 0 10px rgba(56, 189, 248, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(56, 189, 248, 0.7), inset 0 0 20px rgba(56, 189, 248, 0.35);
+  }
 }
 
-.comic-badge-webbed {
-  position: absolute;
-  top: -24px;
-  left: -15px;
-  background: #FFF;
-  color: #0284C7;
-  font-family: 'Space Grotesk', Impact, sans-serif;
-  font-size: 0.72rem;
-  font-weight: 900;
-  padding: 3px 8px;
-  border-radius: 4px;
-  border: 2px solid #0284C7;
-  box-shadow: 3px 3px 0 #000;
-  transform: rotate(-10deg);
-  animation: comicBoom 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 50;
-  pointer-events: none;
+@keyframes cyberBorderSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes badgeShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes heroFloating {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.hero-floating-anim {
+  animation: heroFloating 4s ease-in-out infinite;
+}
+
+.neon-pulse-border {
+  animation: neonPulseGlow 3s infinite ease-in-out;
+}
+
+.cyan-pulse-border {
+  animation: cyanPulseGlow 3s infinite ease-in-out;
+}
+
+.shimmer-badge {
+  background: linear-gradient(90deg, rgba(224, 27, 34, 0.15) 0%, rgba(250, 204, 21, 0.35) 50%, rgba(224, 27, 34, 0.15) 100%);
+  background-size: 200% 100%;
+  animation: badgeShimmer 3.5s infinite linear;
+}
+
+.interactive-stat-box {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(14, 8, 10, 0.7);
+  backdrop-filter: blur(12px);
+}
+
+.interactive-stat-box:hover {
+  transform: translateY(-6px) scale(1.03);
+  border-color: #E23636;
+  box-shadow: 0 14px 30px rgba(226, 54, 54, 0.35), 0 0 20px rgba(250, 204, 21, 0.2);
+}
+
+.round-tab-btn {
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.round-tab-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.2);
+}
+
+.round-tab-btn.active {
+  background: linear-gradient(135deg, #E01B22 0%, #850B12 100%) !important;
+  color: #FFF !important;
+  border-color: #FACC15 !important;
+  box-shadow: 0 0 18px rgba(224, 27, 34, 0.6) !important;
 }
 
 

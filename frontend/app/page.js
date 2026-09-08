@@ -4,44 +4,44 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 
 const SPIDEY_QUOTES = [
-  "🕸️ 'With great computing power comes great responsibility!'",
-  "⚡ 'Stage 0 has 30 MCQs in strictly 30 mins! (+10 correct, -5 wrong!)'",
-  "🎯 'In Round 1, spot the exact AI generator for maximum 10 points!'",
-  "🕷️ 'My Spider-Sense is tingling... deepfake anomalies detected!'",
-  "⏱️ '40s in R1, 45s in R2, and 75s in the Grand Finale!'",
-  "🛡️ 'Real-time automated leaderboard active for Stage 0 & Stage 1!'"
+  "🕸️ 'With great computing power comes 75% attendance criteria and great responsibility!'",
+  "⚡ 'Stage 0: 30 MCQs in strictly 30 mins! (+10 correct, -5 for blind tukka!)'",
+  "🎯 'In Round 1, spot the exact AI model (Midjourney vs Flux) for maximum 10 points!'",
+  "🔬 'My Spider-Sense detects deepfakes faster than an external examiner catches chits!'",
+  "⏱️ '40s in R1, 45s in R2, 75s in Grand Finale! Keep calm and trust the optical physics!'",
+  "☕ 'Chai break after the round! Right now, keep your eyes on the pixel reflections!'"
 ]
 
 const DEADPOOL_QUOTES = [
-  "⚔️ 'Hey! I am a mercenary with swords, not JARVIS!'",
-  "🌮 'Hey nerd! You ready to get schooled by Midjourney v6?'",
-  "🤖 'Pro tip: If a human has 7 fingers and 3 ears, it is AI, genius.'",
-  "💬 'Stuck? Click me! My Merc-Bot knows all the event secrets.'",
-  "💥 'Yaswanth & Vignesh coded me in. Blame them for your -5 penalties!'",
-  "🕶️ 'Maximum Effort! Don't let your teammate drag your team average down!'"
+  "⚔️ 'Arre bhai! I am a mercenary with swords, not JARVIS or Sundar Pichai!'",
+  "🍗 'Did someone say Hyderabad Dum Biryani?! Win Pixel Paradox and treat your squad!'",
+  "🤖 'Engineering tip: If a person has 8 fingers and 3 ears, it is AI, genius!'",
+  "⚡ 'Stage 0 has -5 negative marking! Stop blind tukka guesses like semester exams!'",
+  "💥 'Yaswanth & Vignesh coded me with chai and zero sleep. Bow before the organizers!'",
+  "🕶️ 'Maximum Effort! Don't let your backbencher teammate tank your score to -40!'"
 ]
 
 // Deadpool Technical Questions (Scoring, Rules, AI Detection, Prompts)
 const DEADPOOL_TECH_FAQ = [
   {
-    q: "How does Stage 0 Prelims scoring work?",
-    a: "Listen up buttercup! 30 questions, 30 minutes! +10 for correct, -5 for wrong! One bad guess deletes half a correct answer. It's called psychological warfare, courtesy of the tournament directors!"
+    q: "Why is blind guessing suicidal in Stage 0 (-5 penalty)?",
+    a: "Math time, bachha! With 4 options, a random guess has 25% chance of +10 and 75% chance of -5. Expected value = (0.25 × 10) - (0.75 × 5) = -1.25 points per guess! If you guess 20 questions blindly, you lose 25 points! If you don't know, skip it (0 pts)!"
   },
   {
-    q: "How do I get maximum 10 points in Round 1?",
-    a: "40 seconds per image! Real photo = 10 pts. AI photo + correct generator model (Midjourney, DALL-E, Flux) = 10 pts. Guess AI right but miss the model? You still grab 8 pts. Guess wrong? Big fat ZERO! 100% automated real-time leaderboard!"
+    q: "How to grab full 10 points in Round 1 (Pixel Detective)?",
+    a: "40 seconds timer! If it's a real camera photo = 10 pts. If it's AI generated and you guess the exact model (Midjourney v6, DALL-E 3, Flux) = 10 pts. If you guess AI right but pick the wrong model, you still get 8 pts. Wrong answer = 0 pts!"
   },
   {
-    q: "What's the exact formula for prompt cosine similarity in Stage 3?",
-    a: "Cosine similarity = (A · B) / (||A|| ||B||). Boom! Did you think I was just a handsome face in red spandex?! I read Wikipedia while eating nachos! Basically: if your prompt keywords match the generator's latent vector, you win maximum points!"
+    q: "What is Cosine Similarity in Stage 3 Prompt Duel?",
+    a: "Cosine Similarity = (A · B) / (||A|| ||B||). In simple words: the server converts your prompt words into mathematical vectors using CLIP neural networks. The closer your descriptive angle is to the original prompt, the closer your score is to 100%!"
   },
   {
-    q: "How do we tell real cameras vs AI photorealism without guessing?",
-    a: "Real cameras have dust specks, lens flare, chromatic aberration, and humans with actual pores. AI models smooth everything out until people look like buttered mannequins!"
+    q: "Physical camera sensor noise vs AI smoothing—how to spot?",
+    a: "Real DSLR cameras take photos with natural ISO grain, chromatic aberration (purple/green fringes at lens edges), and sharp individual hair strands. AI models smudge hair into smooth noodles and make skin look like plastic butter!"
   },
   {
-    q: "Why is there -5 negative marking in Stage 0?!",
-    a: "Because blind guessing will tank your score faster than a speeding bullet! In Stage 0, one wrong click costs -5 points. If you don't know, leave it blank (0 pts)!"
+    q: "What is the best 30-minute time management strategy for Stage 0?",
+    a: "30 questions in 30 minutes means you have 60 seconds per question! Don't sprint like you're running for the college bus! Spend 40 seconds analyzing, 10 seconds answering, and leave doubt questions for a second pass!"
   },
   {
     q: "Ask Spidey-bug, he may know! 🕸️",
@@ -49,55 +49,55 @@ const DEADPOOL_TECH_FAQ = [
   }
 ]
 
-// Deadpool Non-Technical / Fun & Banter Questions (Jokes, Trolls, Chimichangas)
+// Deadpool Non-Technical / Fun & Banter Questions (Jokes, Trolls, Indian Student Banter)
 const DEADPOOL_NON_TECH_FAQ = [
   {
     q: "Hey, are you like ChatGPT or JARVIS?",
-    a: "Hey! I'm a mercenary with swords, not JARVIS! Do I look like an AI butler with a British accent?! I'm Wade Wilson, your neighborhood fourth-wall demolition specialist!"
+    a: "Arre bhai! I am a mercenary with swords, not JARVIS or Sundar Pichai! I don't calculate your internal attendance, I slice through bad pixels and hunt for chicken biryani! Ask me about tournament scoring or tell me to troll Spidey!"
   },
   {
     q: "Troll Spider-Man right now! 🎯",
-    a: "TROLL_SPIDEY_GAG" // Triggers web splat gag!
+    a: "TROLL_SPIDEY_GAG"
   },
   {
-    q: "Can I inspect element or view page source to find the answer?",
-    a: "Oh sure, inspect element on a canvas! Did you think the organizers learned web dev from a 5-minute TikTok tutorial? It's obfuscated, script kiddie! Stop hacking and use your eyeballs!"
+    q: "Can we bribe the judges with Biryani or Samosas?",
+    a: "Bro, tempting offer! But Yaswanth and Vignesh are strict MCA professors in spirit—they will accept the biryani, eat the leg piece, and still deduct -5 marks if your answer is wrong! Focus on the pixels!"
   },
   {
-    q: "Can I cheat using ChatGPT on my second monitor?",
-    a: "Oh please try it! The silent 1-minute webcam monitor will catch you darting your eyes like a guilty raccoon, and the coordinators will banish your squad straight to the Shadow Realm!"
+    q: "Can I inspect element or view page source to find the answers?",
+    a: "Arey wah, Mr. Robot! You think the organizers learned web dev from a 2-minute YouTube short? Everything is verified server-side on Spring Boot. Stop inspecting element and use your eyeballs, backbencher!"
   },
   {
-    q: "What happens if our squad scores negative 40 in Stage 0?",
-    a: "Then your team average goes down in history as the Titanic of Pixel Paradox! The MCA department will make you wash the computer lab monitors. Stop guessing blindly!"
+    q: "What happens if our squad gets -40 in Stage 0?",
+    a: "Then your team average goes down in MCA department history like a legend! The coordinators will make you clean the computer lab keyboards with an old toothbrush. Don't do blind tukka!"
   },
   {
-    q: "What's the secret to surviving all 4 rounds?",
-    a: "Rule 1: Maximum Effort! Rule 2: Don't let your squad panic. Rule 3: Click with confidence! If you doubt yourself, you've already lost to a bunch of matrix multiplications!"
+    q: "Can we use ChatGPT on phone during the round?",
+    a: "Oh please try! The automated 1-minute webcam monitor captures your face. The moment your eyes dart down like a student hiding chits in a viva exam, the system flags you and banishes you to the shadow realm!"
   }
 ]
 
 // Spider-Man Technical Questions (Forensics, Anatomy, Optical Physics)
 const SPIDEY_TECH_FAQ = [
   {
-    q: "What's your scientific secret for Round 1 (Pixel Detective)?",
-    a: "Optical physics, Peter Parker style! Real cameras produce natural optical bokeh, lens flare, and coherent light falloff. Midjourney v6 makes overly waxy skin, Flux has hyper-sharp textures, and DALL-E 3 struggles with photorealism. Look at the iris reflections!"
+    q: "How to distinguish Midjourney v6 vs Flux.1 vs DALL-E 3?",
+    a: "Here is Peter Parker's forensic breakdown:\n• Midjourney v6: Cinematic rim lighting, subtle waxy subsurface scattering on skin, painterly artistic flair in background.\n• Flux.1: Incredible microtexture on fabric, perfect legible English text on signs, but occasional background geometric perspective errors.\n• DALL-E 3: Saturated pastel colors, cartoonish smoothness, ultra-clean commercial look without realistic camera lens imperfections."
   },
   {
-    q: "Why do neural networks struggle with drawing hands?",
-    a: "Great question! Human hands have 27 bones and countless complex kinematic angles with severe occlusions. 2D diffusion models predict statistical pixel clusters, not 3D skeletal anatomy!"
+    q: "Why do AI diffusion models struggle with drawing human hands?",
+    a: "Biomechanical complexity! A human hand has 27 bones, 34 muscles, and hundreds of complex rotational angles. 2D diffusion models don't possess 3D skeletal kinematic models—they just predict pixel clusters, leading to 6 fingers or melted knuckles!"
   },
   {
-    q: "How do I spot deepfakes in Stage 2 (45 seconds)?",
-    a: "In 45 seconds, do a 3-point scan: 1) Eyeball pupil roundness, 2) Ear cartilage symmetry, 3) Clothing seam alignment and jewelry continuity. AI models get lazy on background accessories!"
+    q: "What is the 3-Point Scan for Stage 2 Deepfake Forensics (45s)?",
+    a: "In 45 seconds, execute Peter's 3-Point Scan:\n1) Iris Reflection: Check if both eyes reflect the same light source.\n2) Ear Cartilage: Check if left and right ears have natural symmetrical folds.\n3) Boundary Artifacts: Look for compression mismatches and blurred blending where neck meets clothing collar!"
   },
   {
-    q: "What is the breakdown of all the competition rounds?",
-    a: "Stage 0: 30 Qs in 30m (+10/-5). Stage 1: 10 pixels, 40s each (10 pts). Stage 2: 7 forensic challenges, 45s each. Stage 3: 5 prompt duel showdowns, 75s each with progressive 10% zoom! Check the tabs on the home page!"
+    q: "What are the rules and timers for all 4 rounds?",
+    a: "• Stage 0 (Prelims): 30 MCQs, strictly 30 mins (+10 correct, -5 wrong).\n• Stage 1 (Pixel Detective): 10 questions, 40s each, real-time leaderboard.\n• Stage 2 (Deepfake Diagnostics): 7 challenges, 45s each.\n• Stage 3 (Prompt Duel Finale): 5 rounds, 75s each with progressive 10% zoom steps!"
   },
   {
-    q: "Why do participants panic and guess blindly in Stage 0?",
-    a: "Because people treat 30 minutes like an Olympic sprint! You guys finish in 8 minutes, click randomly, and end up with -35 points. Take a breath! 30 questions in 30 minutes gives you a full 60 seconds per question. Quality over speed!"
+    q: "How does progressive 10% zoom work in Stage 3?",
+    a: "In Round 3, each pixel image reveals in progressive 10% zoom steps every few seconds. Early zoom challenges your macro-composition instincts (style, medium, artist), while full resolution lets you catch fine details (textures, lighting tokens)!"
   },
   {
     q: "Ask the guy in red spandex on the left! 🌮",
@@ -109,23 +109,23 @@ const SPIDEY_TECH_FAQ = [
 const SPIDEY_NON_TECH_FAQ = [
   {
     q: "What does your Spider-Sense say about Deadpool?",
-    a: "My Spider-Sense has had a massive migraine ever since Wade showed up on the left! He tried to plug a taco directly into the backend server port. Don't listen to his chaos, focus on the science!"
+    a: "My Spider-Sense has had a massive headache ever since Wade entered the room! He tried to power the lab server using a samosa warmer! Don't listen to his chaotic advice—stick to science and logic!"
   },
   {
-    q: "Can our team bribe the judges with snacks or tacos?",
-    a: "What?! No! Peter Parker stands for ethics and fair play! You can't bribe anyone with tacos! ...Though if you offered Wade Wilson a chimichanga, he'd probably leak his own grocery list. Focus on getting the answers right through genuine skill!"
+    q: "How to stay calm when the 40-second timer turns red?",
+    a: "Take a deep breath! Just like swinging between Mumbai skyscrapers, panic makes you misjudge the distance. Scan the eyes, check the shadows, eliminate 2 options, and lock in your decision with 5 seconds to spare!"
   },
   {
-    q: "Did someone really try to inspect element on the image canvas?",
-    a: "Yes! Wade was laughing so hard his mask almost fell off. The organizers are skilled MCA developers—everything is securely verified server-side. Trust your vision, not DevTools!"
+    q: "Is it true that engineering toppers always win Pixel Paradox?",
+    a: "Not necessarily! Pixel forensics isn't about memorizing textbook definitions—it's about keen observation, pattern recognition, and staying calm under pressure. Backbenchers with sharp eyes win this all the time!"
   },
   {
-    q: "How do I stay calm when the timer turns red?",
-    a: "Take a deep breath! Web-shooters require precision, and so does pixel forensics. Zoom in on the ears, eyes, and hands first—that gives you the verdict in under 10 seconds!"
+    q: "Can our team share answers on WhatsApp group?",
+    a: "No way! Peter Parker believes in honesty and true sportsmanship! Besides, the silent webcam proctoring and tab-switch detection will catch you faster than Spider-Man catches a thief. Play fair and win with pride!"
   },
   {
-    q: "What happens if Wade annoys you too much on the left?",
-    a: "Simple: I shoot a high-tensile web cluster straight into his mouth! In fact, ask him to roast me and watch what happens! 🕸️"
+    q: "What will happen if we troll Deadpool?",
+    a: "Haha! Wade pretends to be tough, but if you mention his 10th grade marks or remind him that Peter Parker has a science degree, he gets totally roasted! Click 'Ask the guy on the left' to see him in action!"
   }
 ]
 
@@ -143,14 +143,13 @@ export default function Home() {
   // Chat Category States
   const [deadpoolCategory, setDeadpoolCategory] = useState('technical')
   const [spideyCategory, setSpideyCategory] = useState('technical')
-  const [isDeadpoolWebbed, setIsDeadpoolWebbed] = useState(false)
 
   // Deadpool Chatbot State
   const [isDeadpoolChatOpen, setIsDeadpoolChatOpen] = useState(false)
   const [deadpoolMessages, setDeadpoolMessages] = useState([
     {
       sender: 'deadpool',
-      text: "Yo! I'm Deadpool, your friendly neighborhood Merc-With-A-Chat. Pick a question below, or hit 'Ask Spidey-bug' if you want the boring nerd math!"
+      text: "Yo! I'm Deadpool, your friendly neighborhood Merc-With-A-Chat. Arre bhai, ask me tournament secrets below, or hit 'Ask Spidey-bug' if you want Peter's nerd science!"
     }
   ])
   const [deadpoolInput, setDeadpoolInput] = useState('')
@@ -161,7 +160,7 @@ export default function Home() {
   const [spideyMessages, setSpideyMessages] = useState([
     {
       sender: 'spidey',
-      text: "Hey there! Spider-Man here! 🕸️ Need real tactical advice for Pixel Paradox? Ask me below, and try not to take Deadpool's advice unless you want your team GPA in the negative!"
+      text: "Hey there! Spider-Man here! 🕸️ Need real tactical advice for Pixel Paradox? Ask me below, and don't let Wade convince you to guess blindly!"
     }
   ])
   const [spideyInput, setSpideyInput] = useState('')
@@ -198,24 +197,6 @@ export default function Home() {
 
   // Deadpool Question Click Handler
   const handleDeadpoolAsk = (q, a) => {
-    if (isDeadpoolWebbed && a !== 'SLICE_WEB') {
-      setDeadpoolMessages(prev => [
-        ...prev,
-        { sender: 'user', text: q },
-        { sender: 'deadpool', text: "MMPHH! MMMPPHH! 🕸️💢 (Translation: 'My mouth is webbed shut! Use [✂️ Slice with Katana] below to cut me loose!')" }
-      ])
-      return
-    }
-
-    if (a === 'SLICE_WEB') {
-      setIsDeadpoolWebbed(false)
-      setDeadpoolMessages(prev => [
-        ...prev,
-        { sender: 'deadpool', text: "⚔️ *SHING!* Ahh! Fresh air! Delicious carbon monoxide! That web tasted like spearmint dental floss! Spider-dork is gonna regret that!" }
-      ])
-      return
-    }
-
     if (a === 'TROLL_SPIDEY_GAG') {
       setDeadpoolMessages(prev => [
         ...prev,
@@ -225,30 +206,29 @@ export default function Home() {
 
       setTimeout(() => {
         setIsDeadpoolTyping(false)
-        // Step 1: Deadpool roasts Spidey
+        // Step 1: Deadpool roasts Spidey with hilarious Indian college humor
         setDeadpoolMessages(prev => [
           ...prev,
           { 
             sender: 'deadpool', 
-            text: "🎯 OH YOU WANT A TROLL?! Hey Spidey! Look at webslinger over there, crying about radioactive arachnid bites while wearing blue-and-red long johns! Did Aunt May knit those tights for you?! HAHAHAHA! 😂💀" 
+            text: "🎯 AYE SPIDEY! Look at this Peter Parker fellow—acting like a college class topper who reminds the professor about homework! Crying about radioactive spiders while swinging across local train tracks! Did your tailor run out of red cloth for those tights?! Hahaha! 😂💀" 
           }
         ])
 
-        // Step 2: Spider-Man webs Deadpool's mouth
+        // Step 2: Spidey delivers a hilarious Desi comeback
         setTimeout(() => {
-          setIsDeadpoolWebbed(true)
           setDeadpoolMessages(prev => [
             ...prev,
             {
               sender: 'spidey',
-              text: "🕸️ *THWIP! SPLAT!* That is ENOUGH out of you, Wade! High-tensile web applied directly to the pie-hole. You are all welcome, folks!"
+              text: "🕸️ Arre Wade bhaiya! At least I passed my 12th board exams and don't eat roadside pani puri with my mask on! Focus on the pixels instead of giving free unasked gyaan to the juniors! 😂"
             },
             {
               sender: 'deadpool',
-              text: "MMPHH! MMMPPHH! 🕸️💢 (Translation: 'I will remember this, arachnid! Hey user, click [✂️ Slice with Katana] to free me!')"
+              text: "💥 Acha beta?! Samosa party on you at the canteen if my squad tops the leaderboard! Let's get back to business!"
             }
           ])
-        }, 900)
+        }, 1100)
       }, 500)
       return
     }
@@ -360,36 +340,27 @@ export default function Home() {
     const userText = deadpoolInput.trim()
     setDeadpoolInput('')
 
-    if (isDeadpoolWebbed) {
-      setDeadpoolMessages(prev => [
-        ...prev,
-        { sender: 'user', text: userText },
-        { sender: 'deadpool', text: "MMPHH! MMMPPHH! 🕸️💢 (Translation: 'I cannot talk while webbed! Click [✂️ Slice with Katana]!')" }
-      ])
-      return
-    }
+    let answer = "Arre bhai! I am a mercenary with swords, not JARVIS or Sundar Pichai! I don't calculate internal attendance, I slice through bad pixels and hunt for biryani. Check the Technical Rules or Fun & Trolls tabs above, or click 'Ask Spidey-bug'!"
 
-    let answer = "Hey! I am a mercenary with swords, not JARVIS! I don't calculate quantum trajectories, I slice through bad pixels and collect chimichangas. Check the Technical Rules or Fun & Trolls tabs above, or click 'Ask Spidey-bug'!"
-
-    if (query.includes('jarvis') || query.includes('ai bot') || query.includes('robot') || query.includes('assistant')) {
-      answer = "Hey! I am a mercenary with swords, not JARVIS! You think Tony Stark built me? No way! I'm 100% organic Canadian chimichanga-fueled chaos!"
+    if (query.includes('jarvis') || query.includes('ai bot') || query.includes('robot') || query.includes('pichai') || query.includes('assistant')) {
+      answer = "Arre bhai! I am a mercenary with swords, not JARVIS or Sundar Pichai! You think Tony Stark or Google built me? No way! I'm 100% organic chaotic energy fueled by chai and spicy samosas!"
     } else if (query.includes('troll') || query.includes('roast spidey') || query.includes('roast spider') || query.includes('attack spidey')) {
       handleDeadpoolAsk("Troll Spider-Man right now! 🎯", "TROLL_SPIDEY_GAG")
       return
     } else if (query.includes('spidey') || query.includes('peter') || query.includes('spider') || query.includes('math') || query.includes('formula') || query.includes('science')) {
       answer = "Peter? He's over on the right side having an existential crisis about responsibility. Click 'Ask Spidey-bug' below to bother him!"
-    } else if (query.includes('stage 0') || query.includes('prelim') || query.includes('quiz') || query.includes('negative') || query.includes('-5')) {
+    } else if (query.includes('stage 0') || query.includes('prelim') || query.includes('quiz') || query.includes('negative') || query.includes('-5') || query.includes('tukka')) {
       answer = DEADPOOL_TECH_FAQ[0].a
     } else if (query.includes('round 1') || query.includes('stage 1') || query.includes('detective') || query.includes('points') || query.includes('10 points')) {
       answer = DEADPOOL_TECH_FAQ[1].a
     } else if (query.includes('yaswanth') || query.includes('vignesh') || query.includes('coordinator') || query.includes('author')) {
       answer = "Yaswanth & Vignesh are the mad architects behind this tournament! They wrote the code, tuned the -5 penalty, and probably spent 3 days straight debugging Next.js routes. Bow before the organizers!"
-    } else if (query.includes('cheat') || query.includes('camera') || query.includes('webcam') || query.includes('phone')) {
-      answer = DEADPOOL_NON_TECH_FAQ[3].a
-    } else if (query.includes('deadpool') || query.includes('chimichanga') || query.includes('taco') || query.includes('food')) {
-      answer = "Did someone say chimichanga?! Look, if you win Pixel Paradox, maybe Yaswanth & Vignesh will buy us all tacos. Go register!"
-    } else if (query.includes('inspect') || query.includes('source') || query.includes('hack')) {
+    } else if (query.includes('cheat') || query.includes('camera') || query.includes('webcam') || query.includes('phone') || query.includes('whatsapp')) {
+      answer = DEADPOOL_NON_TECH_FAQ[5].a
+    } else if (query.includes('biryani') || query.includes('samosa') || query.includes('chai') || query.includes('food') || query.includes('bribe')) {
       answer = DEADPOOL_NON_TECH_FAQ[2].a
+    } else if (query.includes('inspect') || query.includes('source') || query.includes('hack')) {
+      answer = DEADPOOL_NON_TECH_FAQ[3].a
     } else if (query.includes('finger') || query.includes('hand') || query.includes('midjourney')) {
       answer = "Pro tip: If the character has 11 fingers and ears growing out of their neck, it's AI! For real optical science, click 'Ask Spidey-bug he may know! 🕸️'!"
     }
@@ -418,24 +389,24 @@ export default function Home() {
     const userText = spideyInput.trim()
     setSpideyInput('')
 
-    let answer = "Hmm, my Spider-Sense didn't catch that clearly. Try asking about Stage 0 rules, Round 1 AI models, negative marking, or click one of my quick questions below!"
+    let answer = "Hmm, my Spider-Sense didn't catch that clearly. Try asking about Stage 0 negative marks, Round 1 AI generators (Midjourney vs Flux), or click one of the quick questions below!"
 
-    if (query.includes('deadpool') || query.includes('wade') || query.includes('taco') || query.includes('bribe') || query.includes('chaos')) {
-      answer = "Don't get Wade started on tacos! He's already complaining about the Next.js server latency on the left side. Click 'Ask the guy in red spandex' if you want his jokes!"
-    } else if (query.includes('secret') || query.includes('tip') || query.includes('round 1') || query.includes('model') || query.includes('pixel')) {
-      answer = SPIDEY_FAQ[1].a
+    if (query.includes('deadpool') || query.includes('wade') || query.includes('biryani') || query.includes('samosa') || query.includes('bribe')) {
+      answer = SPIDEY_NON_TECH_FAQ[0].a
+    } else if (query.includes('round 1') || query.includes('model') || query.includes('flux') || query.includes('midjourney') || query.includes('dall-e')) {
+      answer = SPIDEY_TECH_FAQ[0].a
     } else if (query.includes('yaswanth') || query.includes('vignesh') || query.includes('coordinator')) {
-      answer = SPIDEY_FAQ[2].a
-    } else if (query.includes('stage 0') || query.includes('prelim') || query.includes('strategy') || query.includes('negative') || query.includes('-5')) {
-      answer = SPIDEY_FAQ[3].a
-    } else if (query.includes('hack') || query.includes('timer') || query.includes('cheat') || query.includes('inspect')) {
-      answer = SPIDEY_FAQ[7].a
+      answer = "Yaswanth (25MX360) and Vignesh (25MX356) are the MCA tournament directors. They designed the 4 stages, set the timers, and built the live leaderboard. Give it your 100%!"
+    } else if (query.includes('stage 0') || query.includes('prelim') || query.includes('negative') || query.includes('-5') || query.includes('rule')) {
+      answer = SPIDEY_TECH_FAQ[3].a
+    } else if (query.includes('hand') || query.includes('finger') || query.includes('anatomy')) {
+      answer = SPIDEY_TECH_FAQ[1].a
+    } else if (query.includes('round 2') || query.includes('deepfake') || query.includes('eye') || query.includes('scan')) {
+      answer = SPIDEY_TECH_FAQ[2].a
+    } else if (query.includes('round 3') || query.includes('zoom') || query.includes('prompt')) {
+      answer = SPIDEY_TECH_FAQ[4].a
     } else if (query.includes('hi') || query.includes('hello') || query.includes('hey')) {
-      answer = "Hey! Ready to put your observational skills to the test? Ask me anything about the four competition stages, or ask about Deadpool if you want to laugh!"
-    } else if (query.includes('round 2') || query.includes('stage 2') || query.includes('deepfake')) {
-      answer = SPIDEY_FAQ[6].a
-    } else if (query.includes('round 3') || query.includes('stage 3') || query.includes('prompt') || query.includes('duel') || query.includes('zoom')) {
-      answer = "Stage 3 is Prompt Duel! 5 showdowns, 75s each. Starts at 10% extreme zoom and gradually reveals. Identify the prompt keywords and lighting style before anyone else!"
+      answer = "Namaste! Peter Parker here. Ready to test your AI detection skills? Ask me anything about the four rounds, or ask about Wade on the left if you want to laugh!"
     }
 
     setSpideyMessages(prev => [
@@ -570,20 +541,8 @@ export default function Home() {
         title="Click Deadpool to chat!"
       >
         <div className="deadpool-floating" style={{ position: 'relative' }}>
-          {showDeadpoolPop && !isDeadpoolWebbed && (
+          {showDeadpoolPop && (
             <div className="comic-badge-maximum">MAXIMUM EFFORT!</div>
-          )}
-          {isDeadpoolWebbed && (
-            <>
-              <div className="comic-badge-webbed">*THWIP!* SPLAT!</div>
-              <div className="webbed-mouth-overlay">
-                <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" strokeWidth="2.5">
-                  <circle cx="32" cy="32" r="24" strokeDasharray="3 3" opacity="0.9" />
-                  <path d="M8 8 L56 56 M56 8 L8 56 M32 8 L32 56 M8 32 L56 32" opacity="0.85" />
-                  <polygon points="20,20 44,20 44,44 20,44" fill="rgba(255,255,255,0.7)" stroke="#38BDF8" strokeWidth="1.5" />
-                </svg>
-              </div>
-            </>
           )}
           {/* Deadpool Mask Head */}
           <div style={{
@@ -634,37 +593,39 @@ export default function Home() {
         {/* Multiverse Header Banner */}
         <header style={{ textAlign: 'center', marginBottom: '40px', position: 'relative' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '14px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <span style={{ 
-              background: 'rgba(224, 27, 34, 0.15)', 
+            <span className="shimmer-badge" style={{ 
               border: '1px solid #E01B22', 
               color: '#FF4D4D', 
-              padding: '3px 12px', 
-              borderRadius: '4px', 
-              fontSize: '0.8rem', 
-              fontWeight: '700',
-              letterSpacing: '1px' 
+              padding: '4px 14px', 
+              borderRadius: '6px', 
+              fontSize: '0.82rem', 
+              fontWeight: '800',
+              letterSpacing: '1.5px',
+              boxShadow: '0 0 14px rgba(224, 27, 34, 0.4)'
             }}>
               LOGIN 2026 // MULTIVERSE PROTOCOL
             </span>
             <span style={{ 
-              background: 'rgba(250, 204, 21, 0.1)', 
+              background: 'rgba(250, 204, 21, 0.12)', 
               border: '1px solid #FACC15', 
               color: '#FACC15', 
-              padding: '3px 10px', 
-              borderRadius: '4px', 
-              fontSize: '0.8rem', 
-              fontWeight: '700' 
+              padding: '4px 12px', 
+              borderRadius: '6px', 
+              fontSize: '0.82rem', 
+              fontWeight: '700',
+              letterSpacing: '1px'
             }}>
-              ⚡ DEPT OF MCA
+              ⚡ DEPT OF COMPUTER APPLICATIONS
             </span>
           </div>
 
-          <h1 className="glitch-text" data-text="PIXEL PARADOX" style={{ 
+          <h1 className="glitch-text hero-floating-anim" data-text="PIXEL PARADOX" style={{ 
             fontSize: 'clamp(2.8rem, 7vw, 4.8rem)', 
             letterSpacing: '3px',
             lineHeight: 1.05,
             marginBottom: '8px',
-            textTransform: 'uppercase'
+            textTransform: 'uppercase',
+            filter: 'drop-shadow(0 0 20px rgba(224, 27, 34, 0.4))'
           }}>
             PIXEL PARADOX
           </h1>
@@ -685,6 +646,40 @@ export default function Home() {
           <p style={{ maxWidth: '820px', margin: '0 auto', color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.6' }}>
             Step inside the high-stakes Multiverse of Generative AI. Decode neural hallucinations, separate authentic photos from synthetic deepfakes, and prove your team is the sharpest in the multiverse!
           </p>
+
+          {/* Interactive Live Tournament Metrics Ribbon */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: '12px',
+            maxWidth: '920px',
+            margin: '28px auto 0',
+            textAlign: 'left'
+          }}>
+            <div className="interactive-stat-box" style={{ padding: '12px 16px', borderRadius: '10px' }}>
+              <div style={{ fontSize: '0.72rem', color: '#FF6B6B', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Stage 0 // Prelims</div>
+              <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#FFF' }}>30 Qs / 30 Mins</div>
+              <div style={{ fontSize: '0.75rem', color: '#FACC15' }}>+10 Correct / -5 Penalty</div>
+            </div>
+
+            <div className="interactive-stat-box" style={{ padding: '12px 16px', borderRadius: '10px' }}>
+              <div style={{ fontSize: '0.72rem', color: '#38BDF8', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Stage 1 // Detective</div>
+              <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#FFF' }}>10 Pixels / 40s</div>
+              <div style={{ fontSize: '0.75rem', color: '#4ADE80' }}>Real (10) | AI Model (10)</div>
+            </div>
+
+            <div className="interactive-stat-box" style={{ padding: '12px 16px', borderRadius: '10px' }}>
+              <div style={{ fontSize: '0.72rem', color: '#A78BFA', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Stage 2 // Inpainting</div>
+              <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#FFF' }}>7 Challenges / 45s</div>
+              <div style={{ fontSize: '0.75rem', color: '#C084FC' }}>Forensic Artifact Scan</div>
+            </div>
+
+            <div className="interactive-stat-box" style={{ padding: '12px 16px', borderRadius: '10px' }}>
+              <div style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Stage 3 // Grand Finale</div>
+              <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#FFF' }}>5 Prompts / 75s</div>
+              <div style={{ fontSize: '0.75rem', color: '#38BDF8' }}>10% Zoom Step Duel</div>
+            </div>
+          </div>
         </header>
 
         {/* Quick Action Station Cards */}
@@ -1039,33 +1034,6 @@ export default function Home() {
 
             {/* Dynamic Popping Suggestion & Suggested Question Chips */}
             <div style={{ padding: '10px 14px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '180px', overflowY: 'auto' }}>
-              {/* Webbed Gag Katana Slice Button */}
-              {isDeadpoolWebbed && (
-                <div 
-                  onClick={() => handleDeadpoolAsk("Slice the web!", "SLICE_WEB")}
-                  style={{
-                    background: 'linear-gradient(135deg, #EF4444 0%, #991B1B 100%)',
-                    color: '#FFF',
-                    border: '1.5px solid #FACC15',
-                    borderRadius: '8px',
-                    padding: '8px 12px',
-                    textAlign: 'center',
-                    fontWeight: 'bold',
-                    fontSize: '0.8rem',
-                    cursor: 'pointer',
-                    boxShadow: '0 0 12px rgba(239, 68, 68, 0.6)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px'
-                  }}
-                >
-                  <span>⚔️</span>
-                  <span>Slice Web with Katana! (Unmute Wade)</span>
-                  <span>⚔️</span>
-                </div>
-              )}
-
               {/* Category Filter Tabs */}
               <div style={{ display: 'flex', gap: '6px', margin: '2px 0' }}>
                 <button
@@ -1136,16 +1104,14 @@ export default function Home() {
             <form onSubmit={handleSendDeadpoolCustom} style={{ display: 'flex', padding: '10px 12px', borderTop: '1px solid rgba(255,255,255,0.08)', background: '#0A0406' }}>
               <input 
                 type="text"
-                placeholder={isDeadpoolWebbed ? "Deadpool is webbed shut..." : "Ask Deadpool anything..."}
+                placeholder="Ask Deadpool anything..."
                 value={deadpoolInput}
-                disabled={isDeadpoolWebbed}
                 onChange={(e) => setDeadpoolInput(e.target.value)}
                 style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', borderRadius: '6px', padding: '8px 12px', fontSize: '0.82rem', outline: 'none' }}
               />
               <button 
                 type="submit"
-                disabled={isDeadpoolWebbed}
-                style={{ background: isDeadpoolWebbed ? '#555' : '#E23636', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: isDeadpoolWebbed ? 'not-allowed' : 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
+                style={{ background: '#E23636', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
               >
                 Send
               </button>
@@ -1159,9 +1125,9 @@ export default function Home() {
             style={{ cursor: 'pointer' }}
             title="Click to open Deadpool's Chatbot!"
           >
-            {isDeadpoolWebbed ? "MMPHH! MMMPPHH! 🕸️💢" : DEADPOOL_QUOTES[deadpoolQuoteIndex]}
+            {DEADPOOL_QUOTES[deadpoolQuoteIndex]}
             <div style={{ fontSize: '0.7rem', color: '#FACC15', marginTop: '4px', textAlign: 'left' }}>
-              {isDeadpoolWebbed ? "[Click to Unweb Wade ✂️]" : "[Click Deadpool to Chat 💬]"}
+              [Click Deadpool to Chat 💬]
             </div>
           </div>
         )}
@@ -1172,18 +1138,6 @@ export default function Home() {
           style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           onClick={() => setIsDeadpoolChatOpen(prev => !prev)}
         >
-          {isDeadpoolWebbed && (
-            <>
-              <div className="comic-badge-webbed">*THWIP!* SPLAT!</div>
-              <div className="webbed-mouth-overlay">
-                <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" strokeWidth="2.5">
-                  <circle cx="32" cy="32" r="24" strokeDasharray="3 3" opacity="0.9" />
-                  <path d="M8 8 L56 56 M56 8 L8 56 M32 8 L32 56 M8 32 L56 32" opacity="0.85" />
-                  <polygon points="20,20 44,20 44,44 20,44" fill="rgba(255,255,255,0.7)" stroke="#38BDF8" strokeWidth="1.5" />
-                </svg>
-              </div>
-            </>
-          )}
           <div style={{
             width: '64px',
             height: '64px',
