@@ -72,6 +72,8 @@ export default function GameArena() {
   const [prelimAnswers, setPrelimAnswers] = useState({})
   const [prelimStatus, setPrelimStatus] = useState('NOT_STARTED')
   const [prelimTimeLeft, setPrelimTimeLeft] = useState(30 * 60)
+  const [currentPrelimIdx, setCurrentPrelimIdx] = useState(0)
+  const [flaggedQuestions, setFlaggedQuestions] = useState(new Set())
 
   // Tournament Protocol Acknowledgment Modal
   const [showAcknowledgeModal, setShowAcknowledgeModal] = useState(false)
@@ -773,7 +775,7 @@ export default function GameArena() {
           </div>
         ) : (
           /* GAME STATE VIEWS */
-          <div style={{ maxWidth: '820px', margin: '0 auto', width: '100%' }}>
+          <div style={{ maxWidth: '1100px', margin: '0 auto', width: '100%' }}>
             
             {/* ROUND 0: WAITING IN LOBBY */}
             {gameState.activeRound === 0 && (
@@ -985,98 +987,302 @@ export default function GameArena() {
                         </div>
                       )}
 
-                      {/* Modern Question Cards */}
-                      {prelimQuestions.map((q, idx) => (
-                        <div key={q.id} className="stagger-fade-in" style={{
-                          marginBottom: '24px',
-                          padding: '20px 24px',
-                          borderRadius: '12px',
-                          border: '1px solid rgba(255, 255, 255, 0.08)',
-                          background: 'rgba(255, 255, 255, 0.02)',
-                          boxShadow: '0 4px 18px rgba(0, 0, 0, 0.4)',
-                          animationDelay: `${idx * 0.03}s`
-                        }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-                            <span style={{
-                              background: prelimAnswers[q.id] ? '#E01B22' : 'rgba(255, 255, 255, 0.08)',
-                              color: '#FFF',
-                              fontSize: '0.75rem',
-                              fontWeight: '800',
-                              padding: '3px 10px',
-                              borderRadius: '6px',
-                              border: '1px solid rgba(255, 255, 255, 0.15)',
-                              letterSpacing: '0.5px'
-                            }}>
-                              QUESTION {idx + 1} OF 30
-                            </span>
-                            {prelimAnswers[q.id] ? (
-                              <span style={{ fontSize: '0.74rem', color: '#4ADE80', fontWeight: 'bold' }}>
-                                ✓ Answered
-                              </span>
-                            ) : (
-                              <span style={{ fontSize: '0.74rem', color: 'var(--text-dim)' }}>
-                                Not answered
-                              </span>
-                            )}
-                          </div>
+                      {/* Single-Question Navigator Layout */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 220px', gap: '20px', alignItems: 'start' }}>
 
-                          <p style={{ fontWeight: '600', fontSize: '1.02rem', marginBottom: '16px', color: 'var(--text-white)', lineHeight: '1.55' }}>
-                            {q.questionText}
-                          </p>
-
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                            {['optionA', 'optionB', 'optionC', 'optionD'].map((opt, optIdx) => {
-                              const letter = ['A', 'B', 'C', 'D'][optIdx]
-                              const isSelected = prelimAnswers[q.id] === q[opt]
-                              return (
-                                <div 
-                                  key={opt} 
-                                  className={`quiz-option-card ${isSelected ? 'selected' : ''}`}
-                                  onClick={() => setPrelimAnswers({ ...prelimAnswers, [q.id]: q[opt] })}
-                                >
-                                  <div className="option-letter-badge">{letter}</div>
-                                  <span style={{ 
-                                    color: isSelected ? '#FFF' : 'var(--text-primary)', 
-                                    fontSize: '0.92rem', 
-                                    lineHeight: '1.4', 
-                                    fontWeight: isSelected ? '600' : 'normal' 
-                                  }}>
-                                    {q[opt]}
-                                  </span>
-                                </div>
-                              )
-                            })}
-                          </div>
-                        </div>
-                      ))}
-
-                      {/* Submit Action Card */}
-                      <div style={{ 
-                        position: 'sticky', 
-                        bottom: '20px', 
-                        background: 'rgba(14, 7, 10, 0.95)', 
-                        backdropFilter: 'blur(16px)', 
-                        padding: '16px 20px', 
-                        borderRadius: '12px', 
-                        border: '1.5px solid #E01B22', 
-                        boxShadow: '0 8px 32px rgba(0,0,0,0.8), 0 0 20px rgba(224, 27, 34, 0.3)',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        gap: '16px',
-                        zIndex: 10
-                      }}>
+                        {/* LEFT: Single Question Panel */}
                         <div>
-                          <div style={{ fontSize: '0.8rem', color: '#FACC15', fontWeight: 'bold' }}>
-                            Ready to finalize?
-                          </div>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                            {Object.keys(prelimAnswers).length} of 30 questions recorded
-                          </div>
+                          {prelimQuestions.length > 0 && (() => {
+                            const q = prelimQuestions[currentPrelimIdx]
+                            const isAnswered = !!prelimAnswers[q.id]
+                            const isFlagged = flaggedQuestions.has(q.id)
+                            const totalAnswered = Object.keys(prelimAnswers).length
+                            return (
+                              <div className="stagger-fade-in" key={q.id} style={{ animationDuration: '0.3s' }}>
+                                {/* Question Header */}
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                                    <span style={{
+                                      background: isAnswered ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255, 255, 255, 0.06)',
+                                      color: isAnswered ? '#4ADE80' : '#FFF',
+                                      fontSize: '0.75rem',
+                                      fontWeight: '800',
+                                      padding: '4px 12px',
+                                      borderRadius: '6px',
+                                      border: `1px solid ${isAnswered ? '#4ADE80' : 'rgba(255,255,255,0.15)'}`,
+                                      letterSpacing: '0.5px'
+                                    }}>
+                                      Q {currentPrelimIdx + 1} / 30
+                                    </span>
+                                    {isAnswered && (
+                                      <span style={{ fontSize: '0.8rem', color: '#4ADE80', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                        ✓ Answered
+                                      </span>
+                                    )}
+                                    {isFlagged && (
+                                      <span style={{ fontSize: '0.8rem', color: '#FACC15', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                        🚩 Flagged for Review
+                                      </span>
+                                    )}
+                                    {!isAnswered && !isFlagged && (
+                                      <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>Not answered</span>
+                                    )}
+                                  </div>
+                                  {/* Flag/Unflag button */}
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setFlaggedQuestions(prev => {
+                                        const next = new Set(prev)
+                                        if (next.has(q.id)) next.delete(q.id)
+                                        else next.add(q.id)
+                                        return next
+                                      })
+                                    }}
+                                    style={{
+                                      background: isFlagged ? 'rgba(250,204,21,0.15)' : 'rgba(255,255,255,0.05)',
+                                      border: `1px solid ${isFlagged ? '#FACC15' : 'rgba(255,255,255,0.12)'}`,
+                                      color: isFlagged ? '#FACC15' : 'var(--text-secondary)',
+                                      padding: '5px 12px',
+                                      borderRadius: '6px',
+                                      fontSize: '0.78rem',
+                                      fontWeight: 'bold',
+                                      cursor: 'pointer',
+                                      transition: 'all 0.2s ease',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '5px'
+                                    }}
+                                  >
+                                    {isFlagged ? '🚩 Unflag' : '🏳️ Flag for Review'}
+                                  </button>
+                                </div>
+
+                                {/* Question Text */}
+                                <div style={{
+                                  background: 'rgba(255,255,255,0.03)',
+                                  border: '1px solid rgba(255,255,255,0.08)',
+                                  borderRadius: '10px',
+                                  padding: '20px 22px',
+                                  marginBottom: '18px'
+                                }}>
+                                  <p style={{ fontWeight: '600', fontSize: '1.05rem', color: 'var(--text-white)', lineHeight: '1.65', margin: 0 }}>
+                                    {q.questionText}
+                                  </p>
+                                </div>
+
+                                {/* Options */}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '11px', marginBottom: '22px' }}>
+                                  {['optionA', 'optionB', 'optionC', 'optionD'].map((opt, optIdx) => {
+                                    const letter = ['A', 'B', 'C', 'D'][optIdx]
+                                    const isSelected = prelimAnswers[q.id] === q[opt]
+                                    return (
+                                      <div
+                                        key={opt}
+                                        className={`quiz-option-card ${isSelected ? 'selected' : ''}`}
+                                        onClick={() => setPrelimAnswers({ ...prelimAnswers, [q.id]: q[opt] })}
+                                        style={{ cursor: 'pointer', transition: 'all 0.18s ease' }}
+                                      >
+                                        <div className="option-letter-badge" style={{ background: isSelected ? '#E01B22' : undefined }}>{letter}</div>
+                                        <span style={{
+                                          color: isSelected ? '#FFF' : 'var(--text-primary)',
+                                          fontSize: '0.93rem',
+                                          lineHeight: '1.4',
+                                          fontWeight: isSelected ? '600' : 'normal'
+                                        }}>
+                                          {q[opt]}
+                                        </span>
+                                      </div>
+                                    )
+                                  })}
+                                </div>
+
+                                {/* Prev / Next / Clear nav row */}
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
+                                  <button
+                                    type="button"
+                                    disabled={currentPrelimIdx === 0}
+                                    onClick={() => setCurrentPrelimIdx(i => i - 1)}
+                                    style={{
+                                      padding: '10px 20px',
+                                      background: currentPrelimIdx === 0 ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.08)',
+                                      border: '1px solid rgba(255,255,255,0.12)',
+                                      color: currentPrelimIdx === 0 ? 'var(--text-dim)' : '#FFF',
+                                      borderRadius: '8px',
+                                      fontWeight: '700',
+                                      cursor: currentPrelimIdx === 0 ? 'not-allowed' : 'pointer',
+                                      fontSize: '0.88rem',
+                                      transition: 'all 0.2s ease'
+                                    }}
+                                  >
+                                    ← Prev
+                                  </button>
+
+                                  <div style={{ display: 'flex', gap: '8px' }}>
+                                    {isAnswered && (
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          const updated = { ...prelimAnswers }
+                                          delete updated[q.id]
+                                          setPrelimAnswers(updated)
+                                        }}
+                                        style={{
+                                          padding: '10px 16px',
+                                          background: 'rgba(239,68,68,0.1)',
+                                          border: '1px solid rgba(239,68,68,0.4)',
+                                          color: '#EF4444',
+                                          borderRadius: '8px',
+                                          fontWeight: '600',
+                                          cursor: 'pointer',
+                                          fontSize: '0.82rem'
+                                        }}
+                                      >
+                                        ✕ Clear
+                                      </button>
+                                    )}
+                                  </div>
+
+                                  {currentPrelimIdx < 29 ? (
+                                    <button
+                                      type="button"
+                                      onClick={() => setCurrentPrelimIdx(i => i + 1)}
+                                      style={{
+                                        padding: '10px 20px',
+                                        background: 'rgba(224,27,34,0.18)',
+                                        border: '1px solid rgba(224,27,34,0.45)',
+                                        color: '#FFF',
+                                        borderRadius: '8px',
+                                        fontWeight: '700',
+                                        cursor: 'pointer',
+                                        fontSize: '0.88rem',
+                                        transition: 'all 0.2s ease'
+                                      }}
+                                    >
+                                      Next →
+                                    </button>
+                                  ) : (
+                                    <button
+                                      type="button"
+                                      onClick={handlePrelimSubmit}
+                                      style={{
+                                        padding: '10px 20px',
+                                        background: 'linear-gradient(135deg, #E01B22, #FF4D4D)',
+                                        border: 'none',
+                                        color: '#FFF',
+                                        borderRadius: '8px',
+                                        fontWeight: '800',
+                                        cursor: 'pointer',
+                                        fontSize: '0.88rem',
+                                        boxShadow: '0 0 14px rgba(224,27,34,0.5)'
+                                      }}
+                                    >
+                                      ⚡ Submit Quiz
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            )
+                          })()}
                         </div>
-                        <button className="btn-primary" style={{ padding: '12px 28px', fontSize: '0.95rem' }} onClick={handlePrelimSubmit}>
-                          Submit Prelims Quiz →
-                        </button>
+
+                        {/* RIGHT: Question Navigator Panel */}
+                        <div style={{ position: 'sticky', top: '20px' }}>
+                          <div style={{
+                            background: 'rgba(255,255,255,0.03)',
+                            border: '1px solid rgba(255,255,255,0.08)',
+                            borderRadius: '12px',
+                            padding: '16px',
+                            marginBottom: '12px'
+                          }}>
+                            <div style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
+                              Question Navigator
+                            </div>
+                            {/* Legend */}
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>
+                              <span style={{ fontSize: '0.65rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
+                                <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#4ADE80', display: 'inline-block' }} /> Answered
+                              </span>
+                              <span style={{ fontSize: '0.65rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
+                                <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#FACC15', display: 'inline-block' }} /> Flagged
+                              </span>
+                              <span style={{ fontSize: '0.65rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
+                                <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: 'rgba(255,255,255,0.12)', display: 'inline-block' }} /> Unanswered
+                              </span>
+                            </div>
+                            {/* Number Grid */}
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '5px' }}>
+                              {prelimQuestions.map((q, idx) => {
+                                const isAnswered = !!prelimAnswers[q.id]
+                                const isFlagged = flaggedQuestions.has(q.id)
+                                const isCurrent = idx === currentPrelimIdx
+                                let bg = 'rgba(255,255,255,0.07)'
+                                let border = '1px solid rgba(255,255,255,0.1)'
+                                let color = 'var(--text-secondary)'
+                                if (isAnswered) { bg = 'rgba(74,222,128,0.15)'; border = '1px solid #4ADE80'; color = '#4ADE80' }
+                                if (isFlagged && !isAnswered) { bg = 'rgba(250,204,21,0.15)'; border = '1px solid #FACC15'; color = '#FACC15' }
+                                if (isFlagged && isAnswered) { bg = 'rgba(250,204,21,0.1)'; border = '1.5px solid #FACC15'; color = '#FACC15' }
+                                if (isCurrent) { border = '2px solid #E01B22'; color = '#FFF' }
+                                return (
+                                  <button
+                                    key={q.id}
+                                    type="button"
+                                    onClick={() => setCurrentPrelimIdx(idx)}
+                                    style={{
+                                      background: isCurrent ? 'rgba(224,27,34,0.25)' : bg,
+                                      border,
+                                      color,
+                                      borderRadius: '5px',
+                                      padding: '5px 2px',
+                                      fontSize: '0.72rem',
+                                      fontWeight: isCurrent ? '800' : '600',
+                                      cursor: 'pointer',
+                                      transition: 'all 0.15s ease',
+                                      lineHeight: '1',
+                                      textAlign: 'center',
+                                      boxShadow: isCurrent ? '0 0 8px rgba(224,27,34,0.4)' : 'none'
+                                    }}
+                                    title={`Q${idx + 1}: ${isAnswered ? 'Answered' : isFlagged ? 'Flagged' : 'Unanswered'}`}
+                                  >
+                                    {isFlagged ? '🚩' : idx + 1}
+                                  </button>
+                                )
+                              })}
+                            </div>
+                          </div>
+
+                          {/* Summary Stats */}
+                          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '10px', padding: '12px 14px', marginBottom: '12px' }}>
+                            <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Progress</div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem' }}>
+                                <span style={{ color: '#4ADE80' }}>✓ Answered</span>
+                                <strong style={{ color: '#FFF' }}>{Object.keys(prelimAnswers).length}</strong>
+                              </div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem' }}>
+                                <span style={{ color: '#FACC15' }}>🚩 Flagged</span>
+                                <strong style={{ color: '#FFF' }}>{flaggedQuestions.size}</strong>
+                              </div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem' }}>
+                                <span style={{ color: 'var(--text-dim)' }}>○ Unanswered</span>
+                                <strong style={{ color: '#FFF' }}>{30 - Object.keys(prelimAnswers).length}</strong>
+                              </div>
+                            </div>
+                            <div className="arena-progress-container" style={{ margin: '10px 0 0', height: '6px' }}>
+                              <div className="arena-progress-bar" style={{ width: `${(Object.keys(prelimAnswers).length / Math.max(prelimQuestions.length, 1)) * 100}%` }} />
+                            </div>
+                          </div>
+
+                          {/* Final Submit Button */}
+                          <button
+                            type="button"
+                            className="btn-primary"
+                            style={{ width: '100%', padding: '12px', fontSize: '0.88rem', borderRadius: '8px' }}
+                            onClick={handlePrelimSubmit}
+                          >
+                            ⚡ Submit Quiz
+                          </button>
+                        </div>
                       </div>
                     </div>
                   )}
