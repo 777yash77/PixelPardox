@@ -4,28 +4,28 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 
 const SPIDEY_QUOTES = [
-  "🕸️ 'With great computing power comes 75% attendance criteria and great responsibility!'",
-  "⚡ 'Stage 0: 30 MCQs in strictly 30 mins! (+10 correct, -5 for blind tukka!)'",
+  "🕸️ 'With great computing power comes strict deadlines and great responsibility!'",
+  "⚡ 'Stage 0: 30 MCQs in strictly 30 mins! (+10 correct, -5 for blind guesses!)'",
   "🎯 'In Round 1, spot the exact AI model (Midjourney vs Flux) for maximum 10 points!'",
-  "🔬 'My Spider-Sense detects deepfakes faster than an external examiner catches chits!'",
-  "⏱️ '40s in R1, 45s in R2, 75s in Grand Finale! Keep calm and trust the optical physics!'",
-  "☕ 'Chai break after the round! Right now, keep your eyes on the pixel reflections!'"
+  "🔬 'My Spider-Sense detects deepfakes faster than any external proctor!'",
+  "⏱️ '40s in R1, 45s in R2, 75s in Grand Finale! Keep calm and trust optical physics!'",
+  "☕ 'Coffee break after the round! Right now, keep your eyes locked on the pixel reflections!'"
 ]
 
 const DEADPOOL_QUOTES = [
-  "⚔️ 'Arre bhai! I am a mercenary with swords, not JARVIS or Sundar Pichai!'",
-  "🍗 'Did someone say Hyderabad Dum Biryani?! Win Pixel Paradox and treat your squad!'",
-  "🤖 'Engineering tip: If a person has 8 fingers and 3 ears, it is AI, genius!'",
-  "⚡ 'Stage 0 has -5 negative marking! Stop blind tukka guesses like semester exams!'",
-  "💥 'Yaswanth & Vignesh coded me with chai and zero sleep. Bow before the organizers!'",
-  "🕶️ 'Maximum Effort! Don't let your backbencher teammate tank your score to -40!'"
+  "⚔️ 'Hey! I am a mercenary with swords, not JARVIS or ChatGPT!'",
+  "🍕 'Did someone say free victory pizza?! Win Pixel Paradox and treat your squad!'",
+  "🤖 'Pro tip: If a character has 8 fingers and 3 ears, it is AI, genius!'",
+  "⚡ 'Stage 0 has -5 negative marking! Stop blind guessing like a panicked rookie!'",
+  "💥 'The tournament coordinators built this event with coffee and zero sleep. Respect!'",
+  "🕶️ 'Maximum Effort! Don't let your careless teammate tank your score to -40!'"
 ]
 
 // Deadpool Technical Questions (Scoring, Rules, AI Detection, Prompts)
 const DEADPOOL_TECH_FAQ = [
   {
     q: "Why is blind guessing suicidal in Stage 0 (-5 penalty)?",
-    a: "Math time, bachha! With 4 options, a random guess has 25% chance of +10 and 75% chance of -5. Expected value = (0.25 × 10) - (0.75 × 5) = -1.25 points per guess! If you guess 20 questions blindly, you lose 25 points! If you don't know, skip it (0 pts)!"
+    a: "Math time, rookie! With 4 options, a random guess has a 25% chance of +10 and a 75% chance of -5. Expected value = (0.25 × 10) - (0.75 × 5) = -1.25 points per guess! If you guess 20 questions blindly, you lose 25 points! If you don't know, skip it (0 pts)!"
   },
   {
     q: "How to grab full 10 points in Round 1 (Pixel Detective)?",
@@ -33,15 +33,15 @@ const DEADPOOL_TECH_FAQ = [
   },
   {
     q: "What is Cosine Similarity in Stage 3 Prompt Duel?",
-    a: "Cosine Similarity = (A · B) / (||A|| ||B||). In simple words: the server converts your prompt words into mathematical vectors using CLIP neural networks. The closer your descriptive angle is to the original prompt, the closer your score is to 100%!"
+    a: "Cosine Similarity = (A · B) / (||A|| ||B||). In plain English: the server converts your prompt words into mathematical vectors using CLIP neural networks. The closer your descriptive angle is to the original prompt, the closer your score is to 100%!"
   },
   {
     q: "Physical camera sensor noise vs AI smoothing—how to spot?",
-    a: "Real DSLR cameras take photos with natural ISO grain, chromatic aberration (purple/green fringes at lens edges), and sharp individual hair strands. AI models smudge hair into smooth noodles and make skin look like plastic butter!"
+    a: "Real DSLR cameras take photos with natural ISO grain, chromatic aberration (purple and green fringes at lens edges), and sharp individual hair strands. AI models smudge hair into smooth noodles and make skin look like plastic butter!"
   },
   {
     q: "What is the best 30-minute time management strategy for Stage 0?",
-    a: "30 questions in 30 minutes means you have 60 seconds per question! Don't sprint like you're running for the college bus! Spend 40 seconds analyzing, 10 seconds answering, and leave doubt questions for a second pass!"
+    a: "30 questions in 30 minutes means you have 60 seconds per question! Don't sprint like you're running for the last train! Spend 40 seconds analyzing, 10 seconds answering, and leave doubt questions for a second pass!"
   },
   {
     q: "Ask Spidey-bug, he may know! 🕸️",
@@ -49,31 +49,31 @@ const DEADPOOL_TECH_FAQ = [
   }
 ]
 
-// Deadpool Non-Technical / Fun & Banter Questions (Jokes, Trolls, Indian Student Banter)
+// Deadpool Non-Technical / Fun & Banter Questions (Jokes, Trolls, strictly English)
 const DEADPOOL_NON_TECH_FAQ = [
   {
     q: "Hey, are you like ChatGPT or JARVIS?",
-    a: "Arre bhai! I am a mercenary with swords, not JARVIS or Sundar Pichai! I don't calculate your internal attendance, I slice through bad pixels and hunt for chicken biryani! Ask me about tournament scoring or tell me to troll Spidey!"
+    a: "Hey! I am a mercenary with swords, not JARVIS! Do I look like a British AI butler in a titanium suit?! I slice through bad pixels and break the fourth wall. Ask me about tournament scoring or tell me to troll Spidey!"
   },
   {
     q: "Troll Spider-Man right now! 🎯",
     a: "TROLL_SPIDEY_GAG"
   },
   {
-    q: "Can we bribe the judges with Biryani or Samosas?",
-    a: "Bro, tempting offer! But Yaswanth and Vignesh are strict MCA professors in spirit—they will accept the biryani, eat the leg piece, and still deduct -5 marks if your answer is wrong! Focus on the pixels!"
+    q: "Can we bribe the judges with pizza or snacks?",
+    a: "Tempting offer! But the tournament coordinators are strictly professional—they will gladly eat your pizza and still deduct -5 marks if your answer is wrong! Focus on the pixels!"
   },
   {
     q: "Can I inspect element or view page source to find the answers?",
-    a: "Arey wah, Mr. Robot! You think the organizers learned web dev from a 2-minute YouTube short? Everything is verified server-side on Spring Boot. Stop inspecting element and use your eyeballs, backbencher!"
+    a: "Look at you, Mr. Hacker! You think the organizers learned web development from a five-minute tutorial? Everything is verified server-side on Spring Boot. Stop inspecting element and use your eyeballs!"
   },
   {
     q: "What happens if our squad gets -40 in Stage 0?",
-    a: "Then your team average goes down in MCA department history like a legend! The coordinators will make you clean the computer lab keyboards with an old toothbrush. Don't do blind tukka!"
+    a: "Then your team score goes down in tournament history like the Titanic! The coordinators will probably make you clean all the lab keyboards with a toothbrush. Stop guessing blindly!"
   },
   {
-    q: "Can we use ChatGPT on phone during the round?",
-    a: "Oh please try! The automated 1-minute webcam monitor captures your face. The moment your eyes dart down like a student hiding chits in a viva exam, the system flags you and banishes you to the shadow realm!"
+    q: "Can we use ChatGPT on our phones during the round?",
+    a: "Oh please try! The automated webcam proctor monitors your face. The moment your eyes dart down like a guilty suspect, the system flags your workstation and banishes your team to the shadow realm!"
   }
 ]
 
@@ -81,15 +81,15 @@ const DEADPOOL_NON_TECH_FAQ = [
 const SPIDEY_TECH_FAQ = [
   {
     q: "How to distinguish Midjourney v6 vs Flux.1 vs DALL-E 3?",
-    a: "Here is Peter Parker's forensic breakdown:\n• Midjourney v6: Cinematic rim lighting, subtle waxy subsurface scattering on skin, painterly artistic flair in background.\n• Flux.1: Incredible microtexture on fabric, perfect legible English text on signs, but occasional background geometric perspective errors.\n• DALL-E 3: Saturated pastel colors, cartoonish smoothness, ultra-clean commercial look without realistic camera lens imperfections."
+    a: "Here is Peter Parker's forensic breakdown:\n• Midjourney v6: Cinematic rim lighting, subtle waxy subsurface scattering on skin, painterly artistic flair in the background.\n• Flux.1: Incredible microtexture on fabric, perfect legible English text on signs, but occasional background geometric perspective errors.\n• DALL-E 3: Saturated pastel colors, cartoonish smoothness, ultra-clean commercial look without realistic camera lens imperfections."
   },
   {
     q: "Why do AI diffusion models struggle with drawing human hands?",
-    a: "Biomechanical complexity! A human hand has 27 bones, 34 muscles, and hundreds of complex rotational angles. 2D diffusion models don't possess 3D skeletal kinematic models—they just predict pixel clusters, leading to 6 fingers or melted knuckles!"
+    a: "Biomechanical complexity! A human hand has 27 bones, 34 muscles, and hundreds of complex rotational angles. 2D diffusion models don't possess 3D skeletal kinematic models—they just predict statistical pixel clusters, leading to extra fingers or melted knuckles!"
   },
   {
     q: "What is the 3-Point Scan for Stage 2 Deepfake Forensics (45s)?",
-    a: "In 45 seconds, execute Peter's 3-Point Scan:\n1) Iris Reflection: Check if both eyes reflect the same light source.\n2) Ear Cartilage: Check if left and right ears have natural symmetrical folds.\n3) Boundary Artifacts: Look for compression mismatches and blurred blending where neck meets clothing collar!"
+    a: "In 45 seconds, execute Peter's 3-Point Scan:\n1) Iris Reflection: Check if both eyes reflect the same ambient light source.\n2) Ear Cartilage: Check if left and right ears have natural symmetrical folds.\n3) Boundary Artifacts: Look for compression mismatches and blurred blending where the neck meets clothing collar!"
   },
   {
     q: "What are the rules and timers for all 4 rounds?",
@@ -109,23 +109,23 @@ const SPIDEY_TECH_FAQ = [
 const SPIDEY_NON_TECH_FAQ = [
   {
     q: "What does your Spider-Sense say about Deadpool?",
-    a: "My Spider-Sense has had a massive headache ever since Wade entered the room! He tried to power the lab server using a samosa warmer! Don't listen to his chaotic advice—stick to science and logic!"
+    a: "My Spider-Sense has had a massive headache ever since Wade entered the room! He tried to plug a toaster directly into the main server rack! Don't listen to his chaotic advice—stick to science and logic!"
   },
   {
     q: "How to stay calm when the 40-second timer turns red?",
-    a: "Take a deep breath! Just like swinging between Mumbai skyscrapers, panic makes you misjudge the distance. Scan the eyes, check the shadows, eliminate 2 options, and lock in your decision with 5 seconds to spare!"
+    a: "Take a deep breath! Web-shooters require precision, and so does pixel forensics. Zoom in on the eyes, check the shadow angles, eliminate two bad choices, and lock in your answer with 5 seconds to spare!"
   },
   {
-    q: "Is it true that engineering toppers always win Pixel Paradox?",
-    a: "Not necessarily! Pixel forensics isn't about memorizing textbook definitions—it's about keen observation, pattern recognition, and staying calm under pressure. Backbenchers with sharp eyes win this all the time!"
+    q: "Do only textbook geniuses win Pixel Paradox?",
+    a: "Not at all! Pixel forensics is not about memorizing definitions—it's about sharp observation, pattern recognition, and staying calm under ticking clocks. Teams with great teamwork win this all the time!"
   },
   {
-    q: "Can our team share answers on WhatsApp group?",
-    a: "No way! Peter Parker believes in honesty and true sportsmanship! Besides, the silent webcam proctoring and tab-switch detection will catch you faster than Spider-Man catches a thief. Play fair and win with pride!"
+    q: "Can our team share answers in a chat group?",
+    a: "Absolutely not! Peter Parker stands for honesty and fair play! Besides, the automated webcam invigilation and tab-switch monitor will flag you immediately. Play fair and win on genuine merit!"
   },
   {
-    q: "What will happen if we troll Deadpool?",
-    a: "Haha! Wade pretends to be tough, but if you mention his 10th grade marks or remind him that Peter Parker has a science degree, he gets totally roasted! Click 'Ask the guy on the left' to see him in action!"
+    q: "What happens if we troll Deadpool?",
+    a: "Haha! Wade pretends to be fearless, but if you challenge his logic or remind him that Peter Parker has an actual science degree, he gets totally roasted! Click 'Ask the guy on the left' to see him in action!"
   }
 ]
 
@@ -149,7 +149,7 @@ export default function Home() {
   const [deadpoolMessages, setDeadpoolMessages] = useState([
     {
       sender: 'deadpool',
-      text: "Yo! I'm Deadpool, your friendly neighborhood Merc-With-A-Chat. Arre bhai, ask me tournament secrets below, or hit 'Ask Spidey-bug' if you want Peter's nerd science!"
+      text: "Yo! I'm Deadpool, your friendly neighborhood Merc-With-A-Chat. Pick a question below, or hit 'Ask Spidey-bug' if you want Peter's nerd science!"
     }
   ])
   const [deadpoolInput, setDeadpoolInput] = useState('')
@@ -206,26 +206,26 @@ export default function Home() {
 
       setTimeout(() => {
         setIsDeadpoolTyping(false)
-        // Step 1: Deadpool roasts Spidey with hilarious Indian college humor
+        // Step 1: Deadpool roasts Spidey in clean sharp English
         setDeadpoolMessages(prev => [
           ...prev,
           { 
             sender: 'deadpool', 
-            text: "🎯 AYE SPIDEY! Look at this Peter Parker fellow—acting like a college class topper who reminds the professor about homework! Crying about radioactive spiders while swinging across local train tracks! Did your tailor run out of red cloth for those tights?! Hahaha! 😂💀" 
+            text: "🎯 HEY SPIDER-NERD! Look at Peter Parker over there—acting like the class teacher's pet who reminds the professor to collect homework! Whining about radioactive spider bites while wearing blue-and-red long johns! Did your aunt knit those tights for you?! Hahaha! 😂💀" 
           }
         ])
 
-        // Step 2: Spidey delivers a hilarious Desi comeback
+        // Step 2: Spidey delivers a sharp witty English comeback
         setTimeout(() => {
           setDeadpoolMessages(prev => [
             ...prev,
             {
               sender: 'spidey',
-              text: "🕸️ Arre Wade bhaiya! At least I passed my 12th board exams and don't eat roadside pani puri with my mask on! Focus on the pixels instead of giving free unasked gyaan to the juniors! 😂"
+              text: "🕸️ Oh please, Wade! At least I have an accredited science degree and don't talk to invisible cameras! Focus on the pixel forensics instead of giving unsolicited lectures to the contestants! 😂"
             },
             {
               sender: 'deadpool',
-              text: "💥 Acha beta?! Samosa party on you at the canteen if my squad tops the leaderboard! Let's get back to business!"
+              text: "💥 Big talk from someone who swings on string! Pizza is on you if my squad takes first place on the leaderboard!"
             }
           ])
         }, 1100)
@@ -340,24 +340,24 @@ export default function Home() {
     const userText = deadpoolInput.trim()
     setDeadpoolInput('')
 
-    let answer = "Arre bhai! I am a mercenary with swords, not JARVIS or Sundar Pichai! I don't calculate internal attendance, I slice through bad pixels and hunt for biryani. Check the Technical Rules or Fun & Trolls tabs above, or click 'Ask Spidey-bug'!"
+    let answer = "Hey! I am a mercenary with swords, not JARVIS or ChatGPT! I don't calculate your team attendance, I slice through bad pixels and hunt for pizza. Check the Technical Rules or Fun & Trolls tabs above, or click 'Ask Spidey-bug'!"
 
-    if (query.includes('jarvis') || query.includes('ai bot') || query.includes('robot') || query.includes('pichai') || query.includes('assistant')) {
-      answer = "Arre bhai! I am a mercenary with swords, not JARVIS or Sundar Pichai! You think Tony Stark or Google built me? No way! I'm 100% organic chaotic energy fueled by chai and spicy samosas!"
+    if (query.includes('jarvis') || query.includes('ai bot') || query.includes('robot') || query.includes('chatgpt') || query.includes('assistant')) {
+      answer = "Hey! I am a mercenary with swords, not JARVIS! You think Tony Stark built me? No way! I am pure chaotic energy fueled by coffee and maximum effort!"
     } else if (query.includes('troll') || query.includes('roast spidey') || query.includes('roast spider') || query.includes('attack spidey')) {
       handleDeadpoolAsk("Troll Spider-Man right now! 🎯", "TROLL_SPIDEY_GAG")
       return
     } else if (query.includes('spidey') || query.includes('peter') || query.includes('spider') || query.includes('math') || query.includes('formula') || query.includes('science')) {
       answer = "Peter? He's over on the right side having an existential crisis about responsibility. Click 'Ask Spidey-bug' below to bother him!"
-    } else if (query.includes('stage 0') || query.includes('prelim') || query.includes('quiz') || query.includes('negative') || query.includes('-5') || query.includes('tukka')) {
+    } else if (query.includes('stage 0') || query.includes('prelim') || query.includes('quiz') || query.includes('negative') || query.includes('-5') || query.includes('guess')) {
       answer = DEADPOOL_TECH_FAQ[0].a
     } else if (query.includes('round 1') || query.includes('stage 1') || query.includes('detective') || query.includes('points') || query.includes('10 points')) {
       answer = DEADPOOL_TECH_FAQ[1].a
-    } else if (query.includes('yaswanth') || query.includes('vignesh') || query.includes('coordinator') || query.includes('author')) {
-      answer = "Yaswanth & Vignesh are the mad architects behind this tournament! They wrote the code, tuned the -5 penalty, and probably spent 3 days straight debugging Next.js routes. Bow before the organizers!"
+    } else if (query.includes('coordinator') || query.includes('organizer') || query.includes('author') || query.includes('creator') || query.includes('director')) {
+      answer = "The tournament coordinators are the architects behind this competition! They wrote the code, tuned the -5 penalty, and spent days debugging routes. Bow before the organizers!"
     } else if (query.includes('cheat') || query.includes('camera') || query.includes('webcam') || query.includes('phone') || query.includes('whatsapp')) {
       answer = DEADPOOL_NON_TECH_FAQ[5].a
-    } else if (query.includes('biryani') || query.includes('samosa') || query.includes('chai') || query.includes('food') || query.includes('bribe')) {
+    } else if (query.includes('food') || query.includes('pizza') || query.includes('snack') || query.includes('bribe') || query.includes('coffee')) {
       answer = DEADPOOL_NON_TECH_FAQ[2].a
     } else if (query.includes('inspect') || query.includes('source') || query.includes('hack')) {
       answer = DEADPOOL_NON_TECH_FAQ[3].a
@@ -391,12 +391,12 @@ export default function Home() {
 
     let answer = "Hmm, my Spider-Sense didn't catch that clearly. Try asking about Stage 0 negative marks, Round 1 AI generators (Midjourney vs Flux), or click one of the quick questions below!"
 
-    if (query.includes('deadpool') || query.includes('wade') || query.includes('biryani') || query.includes('samosa') || query.includes('bribe')) {
+    if (query.includes('deadpool') || query.includes('wade') || query.includes('pizza') || query.includes('snack') || query.includes('bribe')) {
       answer = SPIDEY_NON_TECH_FAQ[0].a
     } else if (query.includes('round 1') || query.includes('model') || query.includes('flux') || query.includes('midjourney') || query.includes('dall-e')) {
       answer = SPIDEY_TECH_FAQ[0].a
-    } else if (query.includes('yaswanth') || query.includes('vignesh') || query.includes('coordinator')) {
-      answer = "Yaswanth (25MX360) and Vignesh (25MX356) are the MCA tournament directors. They designed the 4 stages, set the timers, and built the live leaderboard. Give it your 100%!"
+    } else if (query.includes('coordinator') || query.includes('organizer') || query.includes('director')) {
+      answer = "The tournament coordinators designed the 4 stages, set the timers, and built the live leaderboard. Give it your 100%!"
     } else if (query.includes('stage 0') || query.includes('prelim') || query.includes('negative') || query.includes('-5') || query.includes('rule')) {
       answer = SPIDEY_TECH_FAQ[3].a
     } else if (query.includes('hand') || query.includes('finger') || query.includes('anatomy')) {
@@ -406,7 +406,7 @@ export default function Home() {
     } else if (query.includes('round 3') || query.includes('zoom') || query.includes('prompt')) {
       answer = SPIDEY_TECH_FAQ[4].a
     } else if (query.includes('hi') || query.includes('hello') || query.includes('hey')) {
-      answer = "Namaste! Peter Parker here. Ready to test your AI detection skills? Ask me anything about the four rounds, or ask about Wade on the left if you want to laugh!"
+      answer = "Hello there! Peter Parker here. Ready to test your AI detection skills? Ask me anything about the four rounds, or ask about Wade on the left if you want a laugh!"
     }
 
     setSpideyMessages(prev => [
@@ -974,7 +974,7 @@ export default function Home() {
           <div style={{ marginBottom: '8px', color: '#FF4D4D', fontWeight: 'bold' }}>
             LOGIN 2026 // DEPARTMENT OF COMPUTER APPLICATIONS
           </div>
-          <p>Event Coordinators: <strong>Yaswanth (25MX360)</strong> &amp; <strong>Vignesh (25MX356)</strong></p>
+          <p>Organized by: <strong>Department of Computer Applications (MCA)</strong></p>
           <p style={{ marginTop: '4px', fontSize: '0.78rem', color: 'var(--text-dim)' }}>
             Pixel Paradox Engine v2.6 • Powered by Next.js &amp; Spring Boot
           </p>
