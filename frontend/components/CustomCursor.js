@@ -10,20 +10,29 @@ export default function CustomCursor() {
   const [isVisible, setIsVisible] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const [isClicking, setIsClicking] = useState(false)
-  const [hoverType, setHoverType] = useState('') // 'button', 'link', 'input', 'hero'
 
   useEffect(() => {
-    // Check if pointer is fine (desktop/mouse)
+    // Only activate on fine-pointer devices (mouse / trackpad)
     const isFinePointer = window.matchMedia('(pointer: fine)').matches
     if (!isFinePointer) return
 
     setIsVisible(true)
 
+    // Inject a <style> that forcibly overrides cursor:none on EVERY element,
+    // including elements that have inline cursor:pointer from React/JS
+    const styleTag = document.createElement('style')
+    styleTag.id = 'cyber-cursor-override'
+    styleTag.textContent = `
+      html, html *, html *::before, html *::after {
+        cursor: none !important;
+      }
+    `
+    document.head.appendChild(styleTag)
+
     let mouseX = window.innerWidth / 2
     let mouseY = window.innerHeight / 2
     let ringX = mouseX
     let ringY = mouseY
-    let isMoving = false
     let idleTimeout
 
     const canvas = canvasRef.current
@@ -31,7 +40,7 @@ export default function CustomCursor() {
     const ctx = canvas.getContext('2d')
     let animationFrameId
 
-    // Resize canvas
+    // Resize canvas to full viewport
     const handleResize = () => {
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
@@ -55,11 +64,10 @@ export default function CustomCursor() {
     const addParticles = (x, y, count = 2, speed = 1.2) => {
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2
-        const s = (Math.random() * speed + 0.3)
+        const s = Math.random() * speed + 0.3
         const c = colors[Math.floor(Math.random() * colors.length)]
         particles.push({
-          x,
-          y,
+          x, y,
           vx: Math.cos(angle) * s,
           vy: Math.sin(angle) * s,
           size: Math.random() * 2.8 + 1,
@@ -74,85 +82,46 @@ export default function CustomCursor() {
     const onMouseMove = (e) => {
       mouseX = e.clientX
       mouseY = e.clientY
-      isMoving = true
 
-      // Update dot position immediately for 0-latency feedback
+      // Zero-latency dot update
       if (cursorDotRef.current) {
         cursorDotRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`
       }
 
-      // Add trail node
+      // Build trail
       trail.push({ x: mouseX, y: mouseY, alpha: 1, age: 0 })
       if (trail.length > MAX_TRAIL) trail.shift()
 
-      // Add dynamic cyber sparks on move
-      if (Math.random() > 0.35) {
-        addParticles(mouseX, mouseY, 1, 0.8)
-      }
+      // Cyber sparks on movement
+      if (Math.random() > 0.35) addParticles(mouseX, mouseY, 1, 0.8)
 
       clearTimeout(idleTimeout)
-      idleTimeout = setTimeout(() => {
-        isMoving = false
-      }, 150)
+      idleTimeout = setTimeout(() => {}, 150)
 
-      // Detect hover target
+      // Detect interactive hover target
       const target = e.target
       if (target) {
-        const interactive = target.closest('button, a, input, textarea, select, .chat-chip, .chat-chip-spidey, .quiz-option-card, .model-chip-btn, .duel-choice-btn, .card-hover-lift, .comic-card, [role="button"]')
-        if (interactive) {
-          setIsHovered(true)
-          if (interactive.closest('.spidey-swinging-pro') || interactive.closest('.sticky-spidey-bar')) {
-            setHoverType('SPIDEY')
-          } else if (interactive.closest('.deadpool-swinging-pro') || interactive.closest('.sticky-deadpool-bar')) {
-            setHoverType('DEADPOOL')
-          } else if (interactive.tagName === 'INPUT' || interactive.tagName === 'TEXTAREA') {
-            setHoverType('INPUT')
-          } else {
-            setHoverType('TARGET')
-          }
-        } else {
-          setIsHovered(false)
-          setHoverType('')
-        }
+        const interactive = target.closest(
+          'button, a, input, textarea, select, ' +
+          '.chat-chip, .chat-chip-spidey, .quiz-option-card, .model-chip-btn, ' +
+          '.duel-choice-btn, .card-hover-lift, .comic-card, [role="button"]'
+        )
+        setIsHovered(!!interactive)
       }
     }
 
     const onMouseDown = (e) => {
       setIsClicking(true)
-      // Spawn dual shockwave rings (Multiverse Crimson + Cyber Cyan)
-      shockwaves.push({
-        x: e.clientX,
-        y: e.clientY,
-        radius: 4,
-        maxRadius: 48,
-        alpha: 0.95,
-        color: '#E01B22',
-        lineWidth: 2.5
-      })
-      shockwaves.push({
-        x: e.clientX,
-        y: e.clientY,
-        radius: 1,
-        maxRadius: 36,
-        alpha: 0.85,
-        color: '#38BDF8',
-        lineWidth: 1.8
-      })
-      // Burst particles with higher count and dynamic spread
+      shockwaves.push(
+        { x: e.clientX, y: e.clientY, radius: 4,  maxRadius: 48, alpha: 0.95, color: '#E01B22', lineWidth: 2.5 },
+        { x: e.clientX, y: e.clientY, radius: 1,  maxRadius: 36, alpha: 0.85, color: '#38BDF8', lineWidth: 1.8 }
+      )
       addParticles(e.clientX, e.clientY, 16, 3.6)
     }
 
-    const onMouseUp = () => {
-      setIsClicking(false)
-    }
-
-    const onMouseLeave = () => {
-      setIsVisible(false)
-    }
-
-    const onMouseEnter = () => {
-      setIsVisible(true)
-    }
+    const onMouseUp    = () => setIsClicking(false)
+    const onMouseLeave = () => setIsVisible(false)
+    const onMouseEnter = () => setIsVisible(true)
 
     window.addEventListener('mousemove', onMouseMove, { passive: true })
     window.addEventListener('mousedown', onMouseDown)
@@ -160,11 +129,11 @@ export default function CustomCursor() {
     document.addEventListener('mouseleave', onMouseLeave)
     document.addEventListener('mouseenter', onMouseEnter)
 
-    // Main animation loop
+    // ─── Main Animation Loop ───────────────────────────────────────────────────
     const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // 1. Smooth Follower Ring interpolation (Lerp)
+      // 1. Smooth Follower Ring (Lerp)
       const lerp = 0.18
       ringX += (mouseX - ringX) * lerp
       ringY += (mouseY - ringY) * lerp
@@ -173,7 +142,7 @@ export default function CustomCursor() {
         cursorRingRef.current.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`
       }
 
-      // 2. Multiverse Flashlight / Neural Spotlight following cursor
+      // 2. Multiverse Flashlight / Neural Spotlight
       const spotGrad = ctx.createRadialGradient(ringX, ringY, 0, ringX, ringY, 180)
       spotGrad.addColorStop(0, 'rgba(224, 27, 34, 0.07)')
       spotGrad.addColorStop(0.4, 'rgba(56, 189, 248, 0.04)')
@@ -191,16 +160,17 @@ export default function CustomCursor() {
           const ratio = i / trail.length
           const alpha = ratio * 0.45
 
-          // Outer glowing web thread
           ctx.beginPath()
           ctx.moveTo(p1.x, p1.y)
           ctx.lineTo(p2.x, p2.y)
-          ctx.strokeStyle = i % 2 === 0 ? `rgba(224, 27, 34, ${alpha})` : `rgba(56, 189, 248, ${alpha})`
+          ctx.strokeStyle = i % 2 === 0
+            ? `rgba(224, 27, 34, ${alpha})`
+            : `rgba(56, 189, 248, ${alpha})`
           ctx.lineWidth = ratio * 2.5 + 0.5
           ctx.lineCap = 'round'
           ctx.stroke()
 
-          // Cross web-tethers between non-adjacent points for neural mesh effect
+          // Cross web-tethers (neural mesh)
           if (i > 2 && Math.random() > 0.6) {
             const pOld = trail[i - 2]
             const dist = Math.hypot(p2.x - pOld.x, p2.y - pOld.y)
@@ -216,15 +186,13 @@ export default function CustomCursor() {
         }
       }
 
-      // Age trail
+      // Age trail nodes
       for (let i = trail.length - 1; i >= 0; i--) {
         trail[i].age += 1
-        if (trail[i].age > 18) {
-          trail.splice(i, 1)
-        }
+        if (trail[i].age > 18) trail.splice(i, 1)
       }
 
-      // 4. Render and update Cyber Spark Particles
+      // 4. Cyber Spark Particles
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i]
         p.x += p.vx
@@ -233,10 +201,7 @@ export default function CustomCursor() {
         p.vy *= 0.94
         p.alpha -= p.decay
 
-        if (p.alpha <= 0) {
-          particles.splice(i, 1)
-          continue
-        }
+        if (p.alpha <= 0) { particles.splice(i, 1); continue }
 
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
@@ -244,30 +209,27 @@ export default function CustomCursor() {
         ctx.shadowColor = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, 0.8)`
         ctx.shadowBlur = 8
         ctx.fill()
-        ctx.shadowBlur = 0 // reset
+        ctx.shadowBlur = 0
       }
 
-      // 5. Render Shockwave Rings
+      // 5. Shockwave Rings
       for (let i = shockwaves.length - 1; i >= 0; i--) {
         const sw = shockwaves[i]
         sw.radius += 2.5
-        sw.alpha -= 0.04
+        sw.alpha  -= 0.04
 
-        if (sw.alpha <= 0 || sw.radius >= sw.maxRadius) {
-          shockwaves.splice(i, 1)
-          continue
-        }
+        if (sw.alpha <= 0 || sw.radius >= sw.maxRadius) { shockwaves.splice(i, 1); continue }
 
         ctx.beginPath()
         ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2)
-        ctx.strokeStyle = sw.color
-        ctx.globalAlpha = sw.alpha
-        ctx.lineWidth = sw.lineWidth || 2
-        ctx.shadowColor = sw.color
-        ctx.shadowBlur = 12
+        ctx.strokeStyle   = sw.color
+        ctx.globalAlpha   = sw.alpha
+        ctx.lineWidth     = sw.lineWidth || 2
+        ctx.shadowColor   = sw.color
+        ctx.shadowBlur    = 12
         ctx.stroke()
-        ctx.globalAlpha = 1.0
-        ctx.shadowBlur = 0
+        ctx.globalAlpha   = 1.0
+        ctx.shadowBlur    = 0
       }
 
       animationFrameId = requestAnimationFrame(render)
@@ -283,50 +245,41 @@ export default function CustomCursor() {
       document.removeEventListener('mouseleave', onMouseLeave)
       document.removeEventListener('mouseenter', onMouseEnter)
       cancelAnimationFrame(animationFrameId)
+      // Clean up the injected cursor override
+      const tag = document.getElementById('cyber-cursor-override')
+      if (tag) tag.remove()
     }
   }, [])
 
+  if (!isVisible) return null
+
   return (
-    <div style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.25s ease', pointerEvents: 'none' }}>
-      {/* Background Interactive Multiverse Trail Canvas */}
+    <div style={{ pointerEvents: 'none' }}>
+      {/* Full-viewport trail canvas */}
       <canvas
         ref={canvasRef}
         className="cyber-cursor-canvas"
         style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          pointerEvents: 'none',
-          zIndex: 999990
+          position: 'fixed', top: 0, left: 0,
+          width: '100vw', height: '100vh',
+          pointerEvents: 'none', zIndex: 999990
         }}
       />
 
-      {/* Trailing Smooth Reticle Follower Ring */}
+      {/* Lagging reticle ring (brackets + dashed ring + red aperture) */}
       <div
         ref={cursorRingRef}
         className={`cyber-cursor-ring ${isHovered ? 'cursor-hover' : ''} ${isClicking ? 'cursor-clicking' : ''}`}
       >
-        {/* Reticle Notches */}
         <div className="cursor-bracket bracket-tl" />
         <div className="cursor-bracket bracket-tr" />
         <div className="cursor-bracket bracket-bl" />
         <div className="cursor-bracket bracket-br" />
-
-        {/* Reticle Crosshair Ticks */}
-        <div className="cursor-crosshair-h" />
-        <div className="cursor-crosshair-v" />
-
-        {/* Hover Target Badge */}
-        {isHovered && hoverType && (
-          <div className="cursor-target-label">
-            {hoverType === 'SPIDEY' ? '🕷️ THWIP' : hoverType === 'DEADPOOL' ? '🌮 MAXIMUM' : hoverType === 'INPUT' ? '⚡ EDIT' : '🎯 LOCK'}
-          </div>
-        )}
+        <div className="cursor-dashed-ring" />
+        <div className="cursor-red-ring" />
       </div>
 
-      {/* Real-time Sharp Precision Dot */}
+      {/* Zero-latency center crosshair dot */}
       <div
         ref={cursorDotRef}
         className={`cyber-cursor-dot ${isHovered ? 'dot-hover' : ''} ${isClicking ? 'dot-clicking' : ''}`}

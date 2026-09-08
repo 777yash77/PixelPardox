@@ -1903,10 +1903,27 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ==========================================================================
    CUSTOM MULTIVERSE CYBER CURSOR & PAGE TRAIL ANIMATION
+   (Tactical Sci-Fi Crosshair Reticle — Matches Reference Image)
    ========================================================================== */
+
+/* Hide ALL cursors on fine-pointer devices — overrides inline styles too */
 @media (pointer: fine) {
-  *, *::before, *::after, html, body, a, button, input, textarea, select, [role="button"], label, .card-hover-lift, .chat-chip, .comic-btn {
+  html, html *, html *::before, html *::after {
     cursor: none !important;
+  }
+}
+
+/* On touch devices (smartphones, tablets), restore native touch cursor */
+@media (pointer: coarse), (hover: none) {
+  html, html *, html *::before, html *::after {
+    cursor: auto !important;
+  }
+  .cyber-cursor-canvas,
+  .cyber-cursor-ring,
+  .cyber-cursor-dot {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
 }
 
@@ -1921,180 +1938,175 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 999990;
 }
 
-/* Precision Inner Dot */
+/* Center Precision Pure White Crosshair Dot (0-latency tracking) */
 .cyber-cursor-dot {
   position: fixed;
   top: 0;
   left: 0;
   pointer-events: none;
   z-index: 999999;
-  width: 8px;
-  height: 8px;
-  margin-top: -4px;
-  margin-left: -4px;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  margin-left: -3.5px;
   border-radius: 50%;
   background: #FFFFFF;
-  box-shadow: 0 0 10px #FF3B3B, 0 0 18px #38BDF8, 0 0 26px rgba(250, 204, 21, 0.6);
+  box-shadow: 0 0 6px #FFFFFF, 0 0 12px rgba(255, 255, 255, 0.95);
   will-change: transform;
-  transition: background 0.2s ease, width 0.2s ease, height 0.2s ease, margin 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.12s ease-out;
 }
 
+/* Vertical Crosshair Spike passing through center white dot */
+.cyber-cursor-dot::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: 50%;
+  width: 1.5px;
+  transform: translateX(-50%);
+  background: #FFFFFF;
+  box-shadow: 0 0 4px #FFFFFF;
+  pointer-events: none;
+}
+
+/* Horizontal Crosshair Spike passing through center white dot */
+.cyber-cursor-dot::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  top: 50%;
+  height: 1.5px;
+  transform: translateY(-50%);
+  background: #FFFFFF;
+  box-shadow: 0 0 4px #FFFFFF;
+  pointer-events: none;
+}
+
+/* When Hovered: Remains pure white! Never turns into a yellow blob! */
 .cyber-cursor-dot.dot-hover {
-  width: 12px;
-  height: 12px;
-  margin-top: -6px;
-  margin-left: -6px;
-  background: #FACC15;
-  box-shadow: 0 0 14px #FACC15, 0 0 28px #EF4444, 0 0 40px rgba(56, 189, 248, 0.8);
+  background: #FFFFFF;
+  box-shadow: 0 0 8px #FFFFFF, 0 0 16px rgba(255, 255, 255, 1);
+  transform: scale(1.15);
 }
 
 .cyber-cursor-dot.dot-clicking {
-  transform: scale(0.5);
-  background: #FF2222;
-  box-shadow: 0 0 25px #FF0000;
+  transform: scale(0.8);
 }
 
-/* Smooth Interpolating Follower Ring / Targeting Reticle */
+/* Smooth Trailing Follower Reticle (Exact match to reference photo) */
 .cyber-cursor-ring {
   position: fixed;
   top: 0;
   left: 0;
   pointer-events: none;
   z-index: 999995;
-  width: 42px;
-  height: 42px;
-  margin-top: -21px;
-  margin-left: -21px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(224, 27, 34, 0.75);
-  background: radial-gradient(circle, rgba(224, 27, 34, 0.05) 0%, rgba(56, 189, 248, 0.02) 60%, transparent 100%);
-  box-shadow: 0 0 16px rgba(224, 27, 34, 0.5), inset 0 0 10px rgba(56, 189, 248, 0.35);
+  width: 46px;
+  height: 46px;
+  margin-top: -23px;
+  margin-left: -23px;
   will-change: transform;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-              height 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-              margin 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.2s ease,
-              box-shadow 0.2s ease,
-              background 0.2s ease;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              width 0.2s ease,
+              height 0.2s ease,
+              margin 0.2s ease;
 }
 
-/* Outer Compass Tick Ring */
-.cyber-cursor-ring::before {
-  content: '';
-  position: absolute;
-  top: -6px;
-  left: -6px;
-  right: -6px;
-  bottom: -6px;
-  border-radius: 50%;
-  border: 1px dashed rgba(250, 204, 21, 0.4);
-  pointer-events: none;
-  animation: reticleSpin 12s linear infinite;
-  transition: border-color 0.2s ease, transform 0.2s ease;
-}
-
-/* Hover Target Lock State */
-.cyber-cursor-ring.cursor-hover {
-  width: 58px;
-  height: 58px;
-  margin-top: -29px;
-  margin-left: -29px;
-  border-color: #38BDF8;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, rgba(224, 27, 34, 0.04) 60%, transparent 100%);
-  box-shadow: 0 0 26px rgba(56, 189, 248, 0.85), inset 0 0 14px rgba(250, 204, 21, 0.5);
-}
-
-.cyber-cursor-ring.cursor-hover::before {
-  border-color: rgba(56, 189, 248, 0.8);
-  animation-duration: 5s;
-}
-
-/* Click Shock Compression */
-.cyber-cursor-ring.cursor-clicking {
-  width: 28px;
-  height: 28px;
-  margin-top: -14px;
-  margin-left: -14px;
-  border-color: #FACC15;
-  box-shadow: 0 0 30px rgba(250, 204, 21, 0.95), inset 0 0 15px rgba(239, 68, 68, 0.8);
-}
-
-/* Corner Reticle Brackets */
+/* 1. Four Golden Yellow Corner Brackets [ ] */
 .cursor-bracket {
   position: absolute;
-  width: 7px;
-  height: 7px;
+  width: 9px;
+  height: 9px;
   border-color: #FACC15;
-  opacity: 0.9;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .bracket-tl {
-  top: -3px;
-  left: -3px;
-  border-top: 1.8px solid #FACC15;
-  border-left: 1.8px solid #FACC15;
+  top: 0;
+  left: 0;
+  border-top: 2.5px solid #FACC15;
+  border-left: 2.5px solid #FACC15;
+  filter: drop-shadow(0 0 3px rgba(250, 204, 21, 0.9));
 }
 
 .bracket-tr {
-  top: -3px;
-  right: -3px;
-  border-top: 1.8px solid #FACC15;
-  border-right: 1.8px solid #FACC15;
+  top: 0;
+  right: 0;
+  border-top: 2.5px solid #FACC15;
+  border-right: 2.5px solid #FACC15;
+  filter: drop-shadow(0 0 3px rgba(250, 204, 21, 0.9));
 }
 
 .bracket-bl {
-  bottom: -3px;
-  left: -3px;
-  border-bottom: 1.8px solid #FACC15;
-  border-left: 1.8px solid #FACC15;
+  bottom: 0;
+  left: 0;
+  border-bottom: 2.5px solid #FACC15;
+  border-left: 2.5px solid #FACC15;
+  filter: drop-shadow(0 0 3px rgba(250, 204, 21, 0.9));
 }
 
 .bracket-br {
-  bottom: -3px;
-  right: -3px;
-  border-bottom: 1.8px solid #FACC15;
-  border-right: 1.8px solid #FACC15;
+  bottom: 0;
+  right: 0;
+  border-bottom: 2.5px solid #FACC15;
+  border-right: 2.5px solid #FACC15;
+  filter: drop-shadow(0 0 3px rgba(250, 204, 21, 0.9));
 }
 
-/* Reticle Crosshair Ticks */
-.cursor-crosshair-h {
+/* 2. Concentric Yellow Dashed Radar Circle */
+.cursor-dashed-ring {
   position: absolute;
-  width: 14px;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.4);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px dashed #FACC15;
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.5);
+  animation: reticleSpin 14s linear infinite;
   pointer-events: none;
-}
-.cursor-crosshair-v {
-  position: absolute;
-  width: 1px;
-  height: 14px;
-  background: rgba(255, 255, 255, 0.4);
-  pointer-events: none;
+  transition: all 0.2s ease;
 }
 
-/* Dynamic Targeting Monospace Label */
-.cursor-target-label {
+/* 3. Solid Crimson Red Inner Aperture Ring */
+.cursor-red-ring {
   position: absolute;
-  bottom: -24px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-display);
-  font-size: 0.65rem;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  color: #FACC15;
-  background: rgba(14, 7, 10, 0.85);
-  border: 1px solid rgba(250, 204, 21, 0.4);
-  padding: 1px 6px;
-  border-radius: 4px;
-  text-shadow: 0 0 6px rgba(0, 0, 0, 0.95), 0 0 10px rgba(250, 204, 21, 0.7);
-  white-space: nowrap;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid #E01B22;
+  background: radial-gradient(circle, rgba(224, 27, 34, 0.2) 0%, rgba(14, 7, 10, 0.85) 100%);
+  box-shadow: 0 0 12px rgba(224, 27, 34, 0.75), inset 0 0 8px rgba(0, 0, 0, 0.9);
   pointer-events: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  transition: all 0.2s ease;
+}
+
+/* On Hover: Crisp Cyber Lock (No big yellow blob!) */
+.cyber-cursor-ring.cursor-hover {
+  transform: scale(1.12);
+}
+
+.cyber-cursor-ring.cursor-hover .cursor-bracket {
+  border-color: #FACC15;
+  filter: drop-shadow(0 0 6px #FACC15);
+}
+
+.cyber-cursor-ring.cursor-hover .cursor-dashed-ring {
+  border-color: #FACC15;
+  animation-duration: 5s;
+  box-shadow: 0 0 14px rgba(250, 204, 21, 0.8);
+}
+
+.cyber-cursor-ring.cursor-hover .cursor-red-ring {
+  border-color: #FF2B32;
+  box-shadow: 0 0 18px rgba(255, 43, 50, 0.9), inset 0 0 10px rgba(224, 27, 34, 0.5);
+}
+
+/* Click Compression Shock */
+.cyber-cursor-ring.cursor-clicking {
+  transform: scale(0.85);
 }
 
 @keyframes reticleSpin {
@@ -2116,9 +2128,10 @@ h1, h2, h3, h4, h5, h6 {
   align-items: start;
 }
 
-@media (max-width: 860px) {
+@media (max-width: 880px) {
   .quiz-stage-layout {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
 }
 
@@ -2131,21 +2144,24 @@ h1, h2, h3, h4, h5, h6 {
   height: 100vh;
   background: rgba(8, 3, 5, 0.88);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 99999;
-  padding: 20px;
+  padding: 16px;
   animation: modalFadeIn 0.25s ease-out;
 }
 
 .quiz-confirm-modal {
   width: 100%;
   max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
   background: linear-gradient(145deg, rgba(26, 12, 18, 0.98), rgba(14, 7, 10, 0.98));
   border: 1.5px solid #E01B22;
   border-radius: 16px;
-  padding: 32px;
+  padding: 30px 24px;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.9), 0 0 30px rgba(224, 27, 34, 0.35);
   position: relative;
   text-align: center;
@@ -2161,6 +2177,389 @@ h1, h2, h3, h4, h5, h6 {
     transform: scale(1);
   }
 }
+
+/* ==========================================================================
+   COMPREHENSIVE RESPONSIVE DESIGN — ALL DEVICES
+   Mobile First: 320px → 480px → 768px → 1024px → 1280px+
+   ========================================================================== */
+
+/* --- LARGE DESKTOP (1280px+) --- */
+@media (min-width: 1280px) {
+  .deadpool-swinging-pro {
+    left: clamp(10px, 3vw, 60px) !important;
+  }
+  .spidey-swinging-pro {
+    right: clamp(10px, 3vw, 60px) !important;
+  }
+}
+
+/* --- LAPTOP / SMALL DESKTOP (1025px - 1279px) --- */
+@media (min-width: 1025px) and (max-width: 1279px) {
+  .deadpool-swinging-pro {
+    left: 8px !important;
+    transform: scale(0.88);
+    transform-origin: top left;
+  }
+  .spidey-swinging-pro {
+    right: 8px !important;
+    transform: scale(0.88);
+    transform-origin: top right;
+  }
+  .hero-floating-anim {
+    font-size: clamp(3rem, 6vw, 5rem) !important;
+  }
+}
+
+/* --- TABLET LANDSCAPE & SMALL LAPTOP (769px - 1024px) --- */
+@media (max-width: 1024px) {
+  .arena-hud-nav {
+    margin: 12px 14px 18px;
+    padding: 14px 18px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .deadpool-swinging-pro {
+    left: 0 !important;
+    transform: scale(0.75);
+    transform-origin: top left;
+  }
+
+  .spidey-swinging-pro {
+    right: 0 !important;
+    transform: scale(0.75);
+    transform-origin: top right;
+  }
+
+  .hero-floating-anim {
+    font-size: clamp(2.8rem, 5.5vw, 4.5rem) !important;
+  }
+
+  /* Quiz layout: collapse nav to bottom on smaller laptops */
+  .quiz-stage-layout {
+    grid-template-columns: 1fr 200px;
+    gap: 16px;
+  }
+
+  /* Game HUD: shrink timer/score elements */
+  .game-hud-score {
+    font-size: 0.85rem;
+  }
+}
+
+/* --- TABLET PORTRAIT (481px - 768px) --- */
+@media (max-width: 768px) {
+  /* Prevent horizontal overflow */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* Universal padding reset for containers */
+  [style*="padding"] {
+    padding-left: max(14px, env(safe-area-inset-left)) !important;
+    padding-right: max(14px, env(safe-area-inset-right)) !important;
+  }
+
+  /* --- HOME PAGE --- */
+  .hero-floating-anim {
+    font-size: clamp(1.9rem, 8vw, 3.2rem) !important;
+    letter-spacing: 1.5px !important;
+    text-align: center;
+  }
+
+  /* Mascots: hide large swing animations that overflow on tablets */
+  .deadpool-swinging-pro,
+  .spidey-swinging-pro {
+    display: none !important;
+  }
+
+  /* Roast battle: full width on mobile */
+  .roast-battle-card {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  /* Countdown timer strips: wrap */
+  .countdown-strip {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+
+  /* Stage cards grid: 2 columns on tablet, 1 on phone */
+  .stage-cards-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  /* Rules/info section: stacked */
+  .rules-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* --- GAME ARENA PAGE --- */
+  .arena-hud-nav {
+    margin: 8px 10px 14px;
+    padding: 10px 14px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .arena-hud-nav > div {
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  /* HUD Score & Timer: stack on narrow screens */
+  .hud-score-block {
+    font-size: 0.9rem;
+  }
+
+  /* Question image: full width */
+  .question-image-container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Quiz navigator: move below question */
+  .quiz-stage-layout {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+
+  /* Quiz question navigator: horizontal scroll on mobile */
+  .quiz-nav-panel {
+    position: static !important;
+    overflow-x: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 14px !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Option cards: large tap targets */
+  .quiz-option-card {
+    padding: 14px 16px !important;
+    min-height: 52px;
+    font-size: 0.9rem !important;
+  }
+
+  /* Duel choice buttons: stack vertically */
+  .duel-choice-row {
+    flex-direction: column !important;
+    gap: 14px !important;
+  }
+
+  .duel-choice-btn {
+    width: 100% !important;
+    max-width: 400px !important;
+    margin: 0 auto;
+    padding: 18px 14px !important;
+    font-size: 1rem !important;
+  }
+
+  /* --- CHATBOT COMPANIONS --- */
+  .sticky-deadpool-bar {
+    left: 10px !important;
+    bottom: 12px !important;
+  }
+
+  .sticky-spidey-bar {
+    right: 10px !important;
+    bottom: 12px !important;
+  }
+
+  .deadpool-speech,
+  .spidey-speech {
+    max-width: 180px !important;
+    font-size: 0.74rem !important;
+    padding: 7px 10px !important;
+  }
+
+  .deadpool-chat-window,
+  .spidey-chat-window {
+    width: calc(100vw - 24px) !important;
+    max-width: 340px !important;
+    max-height: 58vh !important;
+    font-size: 0.82rem !important;
+  }
+
+  /* --- LEADERBOARD PAGE --- */
+  .leaderboard-podium {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 16px !important;
+  }
+
+  .podium-card {
+    width: 100% !important;
+    max-width: 320px !important;
+  }
+
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+  }
+
+  /* --- LOGIN PAGE --- */
+  .login-card {
+    margin: 16px !important;
+    padding: 24px 20px !important;
+    width: calc(100% - 32px) !important;
+    max-width: 100% !important;
+  }
+
+  /* --- MODAL FIXES --- */
+  .quiz-confirm-modal {
+    padding: 24px 18px !important;
+    max-width: calc(100vw - 32px) !important;
+  }
+
+  .acknowledge-modal {
+    padding: 20px 16px !important;
+    max-width: calc(100vw - 32px) !important;
+    max-height: 90vh !important;
+    overflow-y: auto;
+  }
+}
+
+/* --- MOBILE PORTRAIT (≤ 480px) --- */
+@media (max-width: 480px) {
+  /* Hero title: very small phones */
+  .hero-floating-anim {
+    font-size: clamp(1.6rem, 9vw, 2.4rem) !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  /* Stage cards: single column */
+  .stage-cards-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Buttons: full-width on mobile */
+  .btn-primary,
+  .btn-secondary {
+    padding: 11px 18px !important;
+    font-size: 0.88rem !important;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Header nav links: stacked */
+  header > div {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Quiz navigator tiles: smaller on tiny screens */
+  .quiz-nav-tile {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 0.72rem !important;
+  }
+
+  /* HUD: compact for tiny screens */
+  .arena-hud-nav {
+    margin: 6px 8px 12px;
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+
+  /* Clue button: full width */
+  .clue-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* Game round answer inputs */
+  .round-answer-row {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  /* Chat windows: full screen on tiny phones */
+  .deadpool-chat-window,
+  .spidey-chat-window {
+    width: calc(100vw - 16px) !important;
+    max-height: 70vh !important;
+    bottom: 70px !important;
+  }
+
+  /* Prelim timer: compact */
+  .prelim-timer-display {
+    font-size: 1.6rem !important;
+  }
+
+  /* Score panels */
+  .score-display-block {
+    font-size: 1.8rem !important;
+  }
+}
+
+/* --- VERY SMALL PHONES (≤ 360px) --- */
+@media (max-width: 360px) {
+  .hero-floating-anim {
+    font-size: clamp(1.4rem, 10vw, 2rem) !important;
+  }
+
+  .arena-hud-nav {
+    padding: 7px 9px;
+  }
+
+  .quiz-nav-tile {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 0.65rem !important;
+  }
+
+  .deadpool-speech,
+  .spidey-speech {
+    display: none !important;
+  }
+}
+
+/* --- LANDSCAPE MOBILE (phones rotated) --- */
+@media (max-height: 500px) and (orientation: landscape) {
+  .deadpool-swinging-pro,
+  .spidey-swinging-pro {
+    display: none !important;
+  }
+
+  .sticky-deadpool-bar,
+  .sticky-spidey-bar {
+    bottom: 8px !important;
+  }
+
+  .deadpool-chat-window,
+  .spidey-chat-window {
+    max-height: 80vh !important;
+    bottom: 60px !important;
+  }
+
+  .arena-hud-nav {
+    padding: 6px 12px;
+    margin: 6px 10px 10px;
+  }
+}
+
+/* --- SAFE AREA INSETS (iPhone notch / Dynamic Island) --- */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .sticky-deadpool-bar,
+  .sticky-spidey-bar {
+    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 
 
 
