@@ -70,6 +70,20 @@ const SPIDEY_ROAST_BATTLES = [
   }
 ]
 
+// 3 Pre-set Default Trolls: Deadpool roasting Spider-Man (1 single hilarious paragraph each)
+const DEADPOOL_SPIDEY_TROLLS = [
+  "🎯 Look at Peter Parker over there—acting like the class teacher's pet who reminds the professor to collect homework! Whining about radioactive spider bites while swinging around in skin-tight blue-and-red long johns! Did your aunt knit those spandex tights for you, or did you borrow them from a synchronized swimming squad?! Go swing on your little string, web-head! 😂💀",
+  "📢 BREAKING NEWS: Local Spider-Boy caught crying in the server room because he couldn't afford a domain name for his portfolio! Hey Pete, maybe sell another blurry selfie of yourself to the newspaper for $15 so you can pay your overdue rent to your angry landlord! Don't let him evict your spider-nest! 📸🕸️",
+  "🤖 Peter honestly thinks prompting an AI is 'an exercise in advanced semantic linguistics'! Bro, I just mash 'cyberpunk pizza explosion 8k' with my forehead and get 10 points! Meanwhile, you spend 40 seconds calculating diffraction angles only to realize the AI drew a guy with 12 fingers and two belly buttons! Stick to Silly String, Parker! 💥🍕"
+]
+
+// 3 Pre-set Default Trolls: Spider-Man roasting Deadpool (1 single hilarious paragraph each)
+const SPIDEY_DEADPOOL_TROLLS = [
+  "🕸️ Oh, you want to hear about Wade Wilson? The guy who literally tried to debug the competition server by stabbing the hard drive with a katana! He thought 'CSS' stood for 'Can't Slice Someone'! Security had to install three extra industrial air filters on his side of the screen because he hasn't washed his tactical onesie since 2016! 🦨😷",
+  "🕷️ Quick tournament update on Wade: In his practice test for Stage 0, he scored negative 150 points because he thought blind guessing was 'tactical psychological warfare'! He answered 30 questions with 50 skull emojis and wondered why the server returned a runtime error! Contestants, please don't let Wade touch your keyboard! 📉😂",
+  "🔬 Wade pretends to be an AI mastermind, but the last time he tried generating an image, the neural network surrendered and deleted its own weights out of pure terror! He typed three words, expected the Mona Lisa, and ended up with a mutant badger wearing sunglasses inside a microwave. Stick to your chimichangas, Wade! 🌮💀"
+]
+
 // Deadpool Technical Questions (Scoring, Rules, AI Detection, Prompts)
 const DEADPOOL_TECH_FAQ = [
   {
@@ -202,8 +216,9 @@ export default function Home() {
   const [showDeadpoolPop, setShowDeadpoolPop] = useState(false)
 
   // Interactive Roast Duel State
-  const [roastBattleIdx, setRoastBattleIdx] = useState(0)
-  const [spideyRoastIdx, setSpideyRoastIdx] = useState(0)
+  const [heroDuelIdx, setHeroDuelIdx] = useState(0)
+  const [deadpoolTrollIdx, setDeadpoolTrollIdx] = useState(0)
+  const [spideyTrollIdx, setSpideyTrollIdx] = useState(0)
   const [comicPopSound, setComicPopSound] = useState('💥 MAXIMUM EFFORT!')
 
   // Typing simulation state
@@ -274,35 +289,19 @@ export default function Home() {
       ])
       setIsDeadpoolTyping(true)
 
-      const roast = ROAST_BATTLES[roastBattleIdx % ROAST_BATTLES.length]
-      setRoastBattleIdx(prev => prev + 1)
+      const trollText = DEADPOOL_SPIDEY_TROLLS[deadpoolTrollIdx % DEADPOOL_SPIDEY_TROLLS.length]
+      setDeadpoolTrollIdx(prev => prev + 1)
 
       setTimeout(() => {
         setIsDeadpoolTyping(false)
-        // Step 1: Deadpool roasts Spidey
         setDeadpoolMessages(prev => [
           ...prev,
           { 
             sender: 'deadpool', 
-            text: roast.deadpool 
+            text: trollText 
           }
         ])
-
-        // Step 2: Spidey delivers a sharp witty comeback and Wade answers back
-        setTimeout(() => {
-          setDeadpoolMessages(prev => [
-            ...prev,
-            {
-              sender: 'spidey',
-              text: roast.spidey
-            },
-            {
-              sender: 'deadpool',
-              text: roast.deadpoolEnd
-            }
-          ])
-        }, 1100)
-      }, 500)
+      }, 450)
       return
     }
 
@@ -363,24 +362,19 @@ export default function Home() {
       ])
       setIsSpideyTyping(true)
 
-      const roast = SPIDEY_ROAST_BATTLES[spideyRoastIdx % SPIDEY_ROAST_BATTLES.length]
-      setSpideyRoastIdx(prev => prev + 1)
+      const trollText = SPIDEY_DEADPOOL_TROLLS[spideyTrollIdx % SPIDEY_DEADPOOL_TROLLS.length]
+      setSpideyTrollIdx(prev => prev + 1)
 
       setTimeout(() => {
         setIsSpideyTyping(false)
         setSpideyMessages(prev => [
           ...prev,
-          { sender: 'spidey', text: roast.spidey }
+          { 
+            sender: 'spidey', 
+            text: trollText 
+          }
         ])
-
-        setTimeout(() => {
-          setSpideyMessages(prev => [
-            ...prev,
-            { sender: 'deadpool', text: roast.deadpool },
-            { sender: 'spidey', text: roast.spideyEnd }
-          ])
-        }, 1100)
-      }, 500)
+      }, 450)
       return
     }
 
@@ -802,12 +796,12 @@ export default function Home() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span className="comic-bubble-pop">{comicPopSound || '💥 HERO BANTER DUEL'}</span>
                   <span style={{ fontSize: '0.85rem', color: '#FACC15', fontWeight: 'bold' }}>
-                    Round {((roastBattleIdx % ROAST_BATTLES.length) + 1)}: {ROAST_BATTLES[roastBattleIdx % ROAST_BATTLES.length].tag}
+                    Round {((heroDuelIdx % ROAST_BATTLES.length) + 1)}: {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].tag}
                   </span>
                 </div>
                 <button
                   onClick={() => {
-                    setRoastBattleIdx(prev => prev + 1)
+                    setHeroDuelIdx(prev => prev + 1)
                     const sounds = ['💥 MAXIMUM EFFORT!', '🕸️ THWIP!', '🔥 BURRRRN!', '🎬 4TH WALL SMASHED!', '⚡ SPIDER-SENSE TINGLE!']
                     setComicPopSound(sounds[Math.floor(Math.random() * sounds.length)])
                   }}
@@ -838,7 +832,7 @@ export default function Home() {
                     <span style={{ fontWeight: '900', color: '#FF4D4D', fontSize: '0.82rem', letterSpacing: '1px' }}>⚔️ DEADPOOL // MERC-WITH-A-MOUTH</span>
                   </div>
                   <p style={{ fontSize: '0.86rem', color: '#FEE2E2', lineHeight: '1.45' }}>
-                    {ROAST_BATTLES[roastBattleIdx % ROAST_BATTLES.length].deadpool}
+                    {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].deadpool}
                   </p>
                 </div>
 
@@ -848,10 +842,10 @@ export default function Home() {
                     <span style={{ fontWeight: '900', color: '#38BDF8', fontSize: '0.82rem', letterSpacing: '1px' }}>🕸️ SPIDER-MAN // SCIENTIFIC RETORT</span>
                   </div>
                   <p style={{ fontSize: '0.86rem', color: '#E0F2FE', lineHeight: '1.45' }}>
-                    {ROAST_BATTLES[roastBattleIdx % ROAST_BATTLES.length].spidey}
+                    {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].spidey}
                   </p>
                   <div style={{ marginTop: '8px', paddingTop: '6px', borderTop: '1px dashed rgba(56, 189, 248, 0.3)', fontSize: '0.8rem', color: '#FACC15', fontStyle: 'italic' }}>
-                    {ROAST_BATTLES[roastBattleIdx % ROAST_BATTLES.length].deadpoolEnd}
+                    {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].deadpoolEnd}
                   </div>
                 </div>
               </div>
