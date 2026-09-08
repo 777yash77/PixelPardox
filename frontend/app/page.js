@@ -62,18 +62,42 @@ const SPIDEY_ROAST_BATTLES = [
   }
 ]
 
-// 3 Pre-set Default Trolls: Deadpool roasting Spider-Man (1 single hilarious paragraph each)
+// 5 Pre-set Default Trolls: Deadpool roasting Spider-Man (1 single hilarious paragraph each)
 const DEADPOOL_SPIDEY_TROLLS = [
   "🎯 Peter Parker is literally the only superhero in the Marvel universe whose greatest nemesis isn't Thanos or Green Goblin—it's his overdue apartment rent. Look at him over there on the right, squinting at pixel reflections like a stressed engineering student who forgot he had an exam today. Hey Pete, instead of calculating cornea diffraction angles, maybe ask Mr. Stark's foundation for minimum wage so your landlord stops threatening eviction! 😂💀",
   "📢 You want to know why Peter is useless in a fast-paced competition? Because while normal human beings analyze the picture and lock in their choice, Peter spends 38 seconds writing a peer-reviewed dissertation on why a synthetic eyelash has irregular specular highlights. By the time he finishes his optical physics monologue, the countdown buzzer goes off and his team drops four spots on the leaderboard! 📸🕸️",
-  "🤖 Peter acts like the insufferable class topper who reminds the professor they forgot to assign weekend homework. If you get flagged for opening another browser tab, he won't just report you—he'll deliver a 20-minute sermon about 'great responsibility' while hanging upside down from the ceiling like a glorified bat. Don't listen to the boy scout, trust your instincts, and take the points! 💥🍕"
+  "🤖 Peter acts like the insufferable class topper who reminds the professor they forgot to assign weekend homework. If you get flagged for opening another browser tab, he won't just report you—he'll deliver a 20-minute sermon about 'great responsibility' while hanging upside down from the ceiling like a glorified bat. Don't listen to the boy scout, trust your instincts, and take the points! 💥🍕",
+  "🎯 Have you ever seen Peter try to order food at a takeout counter? He calculates the nutritional density per cent, compares it with his daily caloric expenditure, realizes he's fifty cents short, and ends up eating half a cold bagel behind a dumpster while explaining photon scattering to a pigeon. The guy has the proportional strength of a spider and the purchasing power of a medieval peasant! 🥯🕊️",
+  "📢 Peter's greatest achievement in computer forensics was spending forty-five minutes proving that an AI-generated cat had an unnatural pixel gradient in its whiskers. Meanwhile, the bank across the street was being robbed by Rhino in broad daylight. Priorities, Spidey! The pixels aren't going to mug your aunt! 🦏💥"
 ]
 
-// 3 Pre-set Default Trolls: Spider-Man roasting Deadpool (1 single hilarious paragraph each)
+// 5 Pre-set Default Trolls: Spider-Man roasting Deadpool (1 single hilarious paragraph each)
 const SPIDEY_DEADPOOL_TROLLS = [
   "🕸️ Wade likes to talk big, but let's remember this is an elite technical forensics competition and he is an armed mercenary who literally asked security if he could submit answers by stabbing the monitor with a katana. The only reason he understands neural hallucinations is because his entire medical record is an uncontrolled biological disaster. Do not take technical advice from a man who uses edged weapons as trackpad pointers! 🦨😷",
   "🕷️ Wade's tournament strategy is essentially playing Russian roulette with a 4-option multiple-choice exam. In his practice test for Stage 0, he clicked every single answer without reading the questions, scored minus 120 points, and then filed an official complaint claiming the scoring database had 'negative aura'. If your teammate starts guessing like Wade, take their mouse away immediately! 📉😂",
-  "🔬 Have you ever seen Wade attempt AI prompt engineering? He gave the diffusion model four hundred random buzzwords, and the GPU ran out of video memory trying to figure out what a 'tactical explosive avocado' was supposed to look like. He doesn't understand diffusion models—he thinks neural networks are caught in commercial fishing nets. Stick to actual pixel analysis, contestants! 🌮💀"
+  "🔬 Have you ever seen Wade attempt AI prompt engineering? He gave the diffusion model four hundred random buzzwords, and the GPU ran out of video memory trying to figure out what a 'tactical explosive avocado' was supposed to look like. He doesn't understand diffusion models—he thinks neural networks are caught in commercial fishing nets. Stick to actual pixel analysis, contestants! 🌮💀",
+  "🕷️ Wade's idea of artificial intelligence is shouting loudly at his toaster until it pops out burnt waffles. During our system test yesterday, he tried to plug an HDMI cable directly into his forehead because he thought 'cybernetic bandwidth' worked via cranial osmosis. I have seen kindergarteners with better hardware comprehension. Please keep him away from the power strip! 🧇⚡",
+  "🔬 Wade claims he has an advanced algorithm for Stage 2 deepfake detection. His method? If the subject in the photo looks more attractive than him, he declares it a synthetic forgery out of pure professional jealousy. If we used his criteria, ninety-nine percent of the global population would be classified as deepfakes! Stick to actual forensic anatomy, everyone! 🪞💀"
+]
+
+// 6 Hilarious Stand-Alone Jokes: Deadpool
+const DEADPOOL_JOKES_POOL = [
+  "🎨 Why did the neural network break up with the graphic designer? Because every single time they held hands, it tried to give them seven fingers, two left thumbs, and an elbow growing out of their collarbone! And then when asked to apologize, it hallucinated a four-page apology letter in ancient Latin signed by Napoleon Bonaparte! 😂💀",
+  "🍹 A machine learning engineer, a cyber criminal, and me walk into a bar. The engineer orders a beer, the criminal tries to steal the tap, and I shoot the jukebox because it was playing smooth jazz. The bartender looks at us and screams, 'Is this an armed robbery or an unhandled null pointer exception?!' Both, baby! Maximum Effort! 💥🍸",
+  "🦝 You want to know real comedy? Look at someone who studied for three weeks, opens Stage 0, and gets the first question wrong with a minus-five deduction. They sit there staring at the screen with the exact facial expression of a raccoon watching its cotton candy dissolve in a puddle of water. Don't be that raccoon, rookie! 💀🍕",
+  "🍟 Why don't diffusion models ever get invited to family dinner? Because whenever you ask them to pass the salt, they generate a hyper-realistic 8K photorealistic render of an astronaut riding an explosive taco through the rings of Saturn! Just give me the table salt, Midjourney, my french fries are getting cold! 🚀🌮",
+  "🦶 My financial advisor asked me why I haven't invested in generative AI startups. I told him: 'Look, why would I buy stock in an algorithm that can write an eight-hundred-word Shakespearean sonnet, but still thinks a human foot has three heels and fourteen toes?' If I want that kind of anatomical nightmare, I can just look in the mirror! 🪞💀",
+  "💻 What did the database say when the panicked contestant tried to spam submit answers in the final three seconds? 'Error 404: Dignity Not Found. Would you like to roll back this life decision to the previous stable commit?' You can't out-bluff a backend server with raw emotional desperation, kids! 🔥🎮"
+]
+
+// 6 Hilarious Stand-Alone Jokes: Spider-Man
+const SPIDEY_JOKES_POOL = [
+  "🐱 Why do AI models struggle so much with quantum physics? Because the moment you observe them, their probability wave collapses into four extra fingers and a waxy plastic forehead! Schrödinger's cat isn't dead or alive—in Midjourney, it's just a feline with three tails and ears rendered inside its mouth! ⚛️🔬",
+  "🖥️ Wade asked me earlier why my code wasn't compiling. I told him there was a bug in line forty-two. He immediately drew dual katanas and sliced my monitor into three pieces shouting 'I neutralized the pest, Parker!' That monitor cost me three weeks of Daily Bugle freelance photo checks. Rest in peace, LCD display! 🕸️💸",
+  "📐 There are 10 types of contestants in Pixel Paradox: Those who understand binary classification and specular photon reflections, and those who ask Wade Wilson for advice and end up with a negative integer score that defies Euclidean mathematics! 😂📊",
+  "☕ Why was the AI prompt engineer kicked out of the coffee shop? Because they walked up to the barista and shouted: 'A high-contrast cinematic espresso, highly detailed, photorealistic, 8K resolution, unreal engine 5 render, volumetric steam, octane, trending on Artstation!' The barista just handed them tap water and told them to touch grass. 🌿🥤",
+  "🕷️ How does Peter Parker debug recursive neural networks? Step 1: Set a breakpoint. Step 2: Formulate an empirical hypothesis. Step 3: Wade kicks the server rack because the cooling fans 'were humming off-key'. Step 4: Cry softly into my spider-mask while calculating how many days late my apartment rent is. 💸🥲",
+  "🧪 An artificial neural network walks into a chemistry lab. The professor asks, 'Can you synthesize this organic hydrocarbon chain?' The AI smiles confidently, outputs an impossible molecule with fifteen covalent bonds per carbon, and says 'Source: Trust me, I have 175 billion parameters.' Check your sources before submitting, folks! 🔬🧬"
 ]
 
 // Deadpool Technical Questions (Scoring, Rules, AI Detection, Prompts)
@@ -107,12 +131,16 @@ const DEADPOOL_TECH_FAQ = [
 // Deadpool Non-Technical / Fun & Banter Questions (Jokes, Trolls, strictly English)
 const DEADPOOL_NON_TECH_FAQ = [
   {
-    q: "Hey, are you like ChatGPT or JARVIS?",
-    a: "Do I look like a polite British voice trapped in Tony Stark's thermostat? I am Wade Wilson. I get paid in cash to break things and mock bad life choices. If you want a robot to summarize a PDF, go ask Siri. If you want to survive this leaderboard, listen up."
+    q: "Tell me a hilarious joke! 🤣",
+    a: "TELL_DEADPOOL_JOKE"
   },
   {
     q: "Troll Spider-Man right now! 🎯",
     a: "TROLL_SPIDEY_GAG"
+  },
+  {
+    q: "Hey, are you like ChatGPT or JARVIS?",
+    a: "Do I look like a polite British voice trapped in Tony Stark's thermostat? I am Wade Wilson. I get paid in cash to break things and mock bad life choices. If you want a robot to summarize a PDF, go ask Siri. If you want to survive this leaderboard, listen up."
   },
   {
     q: "Can we bribe the judges with pizza or snacks?",
@@ -137,6 +165,10 @@ const DEADPOOL_NON_TECH_FAQ = [
   {
     q: "Is Spider-Man wearing actual pajamas right now?",
     a: "YES! It is literally a reinforced high-tech onesie with eye holes! And he washes it in cold water so the webs don't fade. Do NOT tell him I told you, he gets super defensive about laundry day!"
+  },
+  {
+    q: "What is your secret weapon for winning this tournament?",
+    a: "Confidence, sheer chaos, and the fact that I taped an extra set of AAA batteries to the back of my mouse. Also, Peter thinks I don't know that right-clicking opens a context menu, but joke's on him—I use keyboard shortcuts exclusively by punching the number pad! Maximum Effort! 💥🌮"
   }
 ]
 
@@ -171,12 +203,16 @@ const SPIDEY_TECH_FAQ = [
 // Spider-Man Non-Technical / Fun & Banter Questions
 const SPIDEY_NON_TECH_FAQ = [
   {
-    q: "What does your Spider-Sense say about Deadpool?",
-    a: "My Spider-Sense usually warns me about life-threatening kinetic hazards. Around Wade, it's just a constant low-frequency migraine telling me that someone with zero impulse control is standing behind me with loaded firearms. Ignore him and stick to the scientific methods."
+    q: "Tell me a nerdy hilarious joke! 🧪🕸️",
+    a: "TELL_SPIDEY_JOKE"
   },
   {
     q: "Roast Deadpool right back! 🕷️⚡",
     a: "ROAST_DEADPOOL_GAG"
+  },
+  {
+    q: "What does your Spider-Sense say about Deadpool?",
+    a: "My Spider-Sense usually warns me about life-threatening kinetic hazards. Around Wade, it's just a constant low-frequency migraine telling me that someone with zero impulse control is standing behind me with loaded firearms. Ignore him and stick to the scientific methods."
   },
   {
     q: "Why does Wade carry two swords in a computer competition?",
@@ -197,6 +233,10 @@ const SPIDEY_NON_TECH_FAQ = [
   {
     q: "Can our team share answers in a chat group?",
     a: "Absolutely not! Peter Parker stands for honesty and fair play! Besides, the automated webcam invigilation and tab-switch monitor will flag you immediately. Play fair and win on genuine merit!"
+  },
+  {
+    q: "What's the funniest thing you caught Wade doing during setup?",
+    a: "He spent twenty minutes trying to connect his wireless Bluetooth katana to the local Wi-Fi router. When the authentication failed, he filed a hardware ticket alleging that Tony Stark was actively hacking his scabbard. I had to bribe him with three mini tacos just to unplug the Ethernet cable! 🌮📡"
   }
 ]
 
@@ -211,6 +251,8 @@ export default function Home() {
   const [heroDuelIdx, setHeroDuelIdx] = useState(0)
   const [deadpoolTrollIdx, setDeadpoolTrollIdx] = useState(0)
   const [spideyTrollIdx, setSpideyTrollIdx] = useState(0)
+  const [deadpoolJokeIdx, setDeadpoolJokeIdx] = useState(0)
+  const [spideyJokeIdx, setSpideyJokeIdx] = useState(0)
   const [comicPopSound, setComicPopSound] = useState('💥 MAXIMUM EFFORT!')
 
   // Typing simulation state
@@ -274,6 +316,29 @@ export default function Home() {
 
   // Deadpool Question Click Handler
   const handleDeadpoolAsk = (q, a) => {
+    if (a === 'TELL_DEADPOOL_JOKE') {
+      setDeadpoolMessages(prev => [
+        ...prev,
+        { sender: 'user', text: q }
+      ])
+      setIsDeadpoolTyping(true)
+
+      const jokeText = DEADPOOL_JOKES_POOL[deadpoolJokeIdx % DEADPOOL_JOKES_POOL.length]
+      setDeadpoolJokeIdx(prev => prev + 1)
+
+      setTimeout(() => {
+        setIsDeadpoolTyping(false)
+        setDeadpoolMessages(prev => [
+          ...prev,
+          { 
+            sender: 'deadpool', 
+            text: jokeText 
+          }
+        ])
+      }, 450)
+      return
+    }
+
     if (a === 'TROLL_SPIDEY_GAG') {
       setDeadpoolMessages(prev => [
         ...prev,
@@ -347,6 +412,29 @@ export default function Home() {
 
   // Spidey Question Click Handler
   const handleSpideyAsk = (q, a) => {
+    if (a === 'TELL_SPIDEY_JOKE') {
+      setSpideyMessages(prev => [
+        ...prev,
+        { sender: 'user', text: q }
+      ])
+      setIsSpideyTyping(true)
+
+      const jokeText = SPIDEY_JOKES_POOL[spideyJokeIdx % SPIDEY_JOKES_POOL.length]
+      setSpideyJokeIdx(prev => prev + 1)
+
+      setTimeout(() => {
+        setIsSpideyTyping(false)
+        setSpideyMessages(prev => [
+          ...prev,
+          { 
+            sender: 'spidey', 
+            text: jokeText 
+          }
+        ])
+      }, 450)
+      return
+    }
+
     if (a === 'ROAST_DEADPOOL_GAG') {
       setSpideyMessages(prev => [
         ...prev,
@@ -432,14 +520,15 @@ export default function Home() {
     if (query.includes('jarvis') || query.includes('ai bot') || query.includes('robot') || query.includes('chatgpt') || query.includes('assistant')) {
       answer = "Do I look like a British AI assistant trapped in Tony Stark's thermostat? I am Wade Wilson. I get paid in cash to break things and mock bad life choices. If you want a robot to summarize a PDF, go ask Siri. If you want to survive this leaderboard, focus up!"
     } else if (query.includes('troll') || query.includes('roast spidey') || query.includes('roast spider') || query.includes('attack spidey')) {
-      handleDeadpoolAsk("Troll Spider-Man right now! 🎯", "TROLL_SPIDEY_GAG")
+      handleDeadpoolAsk(userText, "TROLL_SPIDEY_GAG")
       return
-    } else if (query.includes('joke') || query.includes('laugh') || query.includes('funny')) {
-      answer = "A joke? Look at your team's score in Stage 0 when someone guesses five questions in a row with a minus-five penalty. That's not an exam score, that's a credit card statement!"
+    } else if (query.includes('joke') || query.includes('laugh') || query.includes('funny') || query.includes('humor') || query.includes('hilarious') || query.includes('comedy') || query.includes('giggle') || query.includes('make me laugh')) {
+      handleDeadpoolAsk(userText, "TELL_DEADPOOL_JOKE")
+      return
     } else if (query.includes('pajama') || query.includes('onesie') || query.includes('suit')) {
-      answer = DEADPOOL_NON_TECH_FAQ[7].a
+      answer = DEADPOOL_NON_TECH_FAQ[8].a
     } else if (query.includes('background') || query.includes('theme') || query.includes('design') || query.includes('look')) {
-      answer = DEADPOOL_NON_TECH_FAQ[3].a
+      answer = DEADPOOL_NON_TECH_FAQ[4].a
     } else if (query.includes('spidey') || query.includes('peter') || query.includes('spider') || query.includes('math') || query.includes('formula') || query.includes('science')) {
       answer = "Peter? He's over on the right side having an existential crisis about responsibility. Click 'Ask Spidey-bug' below to bother him!"
     } else if (query.includes('stage 0') || query.includes('prelim') || query.includes('quiz') || query.includes('negative') || query.includes('-5') || query.includes('guess')) {
@@ -449,11 +538,13 @@ export default function Home() {
     } else if (query.includes('coordinator') || query.includes('organizer') || query.includes('author') || query.includes('creator') || query.includes('director')) {
       answer = "The tournament coordinators are the architects behind this competition! They wrote the code, tuned the -5 penalty, and spent days debugging routes. Bow before the organizers!"
     } else if (query.includes('cheat') || query.includes('camera') || query.includes('webcam') || query.includes('phone') || query.includes('whatsapp')) {
-      answer = DEADPOOL_NON_TECH_FAQ[6].a
+      answer = DEADPOOL_NON_TECH_FAQ[7].a
     } else if (query.includes('food') || query.includes('pizza') || query.includes('snack') || query.includes('bribe') || query.includes('coffee')) {
-      answer = DEADPOOL_NON_TECH_FAQ[2].a
+      answer = DEADPOOL_NON_TECH_FAQ[3].a
     } else if (query.includes('inspect') || query.includes('source') || query.includes('hack')) {
-      answer = DEADPOOL_NON_TECH_FAQ[4].a
+      answer = DEADPOOL_NON_TECH_FAQ[5].a
+    } else if (query.includes('secret weapon') || query.includes('win') || query.includes('strategy')) {
+      answer = DEADPOOL_NON_TECH_FAQ[9].a
     } else if (query.includes('finger') || query.includes('hand') || query.includes('midjourney')) {
       answer = "Pro tip: If the character has 11 fingers and ears growing out of their neck, it's AI! For real optical science, click 'Ask Spidey-bug he may know! 🕸️'!"
     }
@@ -485,14 +576,15 @@ export default function Home() {
     let answer = "My Spider-Sense didn't catch that clearly. Try asking about Stage 0 negative marking rules, Round 1 generator signatures (Midjourney vs Flux), or click one of the questions below!"
 
     if (query.includes('roast') || query.includes('burn') || query.includes('troll wade') || query.includes('troll deadpool')) {
-      handleSpideyAsk("Roast Deadpool right back! 🕷️⚡", "ROAST_DEADPOOL_GAG")
+      handleSpideyAsk(userText, "ROAST_DEADPOOL_GAG")
       return
-    } else if (query.includes('joke') || query.includes('funny')) {
-      answer = "You want a tech joke? Wade tried to git push an actual katana directly into the repository and filed an official bug report because GitHub wouldn't accept edged weapons."
+    } else if (query.includes('joke') || query.includes('funny') || query.includes('laugh') || query.includes('humor') || query.includes('hilarious') || query.includes('comedy') || query.includes('giggle') || query.includes('make me laugh')) {
+      handleSpideyAsk(userText, "TELL_SPIDEY_JOKE")
+      return
     } else if (query.includes('sword') || query.includes('katana')) {
-      answer = SPIDEY_NON_TECH_FAQ[2].a
+      answer = SPIDEY_NON_TECH_FAQ[3].a
     } else if (query.includes('deadpool') || query.includes('wade') || query.includes('pizza') || query.includes('snack') || query.includes('bribe')) {
-      answer = SPIDEY_NON_TECH_FAQ[0].a
+      answer = SPIDEY_NON_TECH_FAQ[2].a
     } else if (query.includes('round 1') || query.includes('model') || query.includes('flux') || query.includes('midjourney') || query.includes('dall-e')) {
       answer = SPIDEY_TECH_FAQ[0].a
     } else if (query.includes('coordinator') || query.includes('organizer') || query.includes('director')) {
@@ -505,6 +597,8 @@ export default function Home() {
       answer = SPIDEY_TECH_FAQ[2].a
     } else if (query.includes('round 3') || query.includes('zoom') || query.includes('prompt')) {
       answer = SPIDEY_TECH_FAQ[4].a
+    } else if (query.includes('wifi') || query.includes('setup') || query.includes('caught')) {
+      answer = SPIDEY_NON_TECH_FAQ[8].a
     } else if (query.includes('hi') || query.includes('hello') || query.includes('hey')) {
       answer = "Hello there! Peter Parker here. Ready to test your AI detection skills? Ask me anything about the four rounds, or ask about Wade on the left if you want a laugh!"
     }
@@ -1267,7 +1361,7 @@ export default function Home() {
               </div>
 
               <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '2px' }}>
-                {deadpoolCategory === 'technical' ? 'Tournament Rules & AI Hints:' : 'Fourth-Wall Banter & Trolls:'}
+                {deadpoolCategory === 'technical' ? 'Tournament Rules & AI Hints:' : 'Fourth-Wall Banter, Jokes & Trolls:'}
               </span>
               {(deadpoolCategory === 'technical' ? DEADPOOL_TECH_FAQ : DEADPOOL_NON_TECH_FAQ).map((faq, idx) => (
                 <div 
@@ -1451,7 +1545,7 @@ export default function Home() {
               </div>
 
               <span style={{ fontSize: '0.68rem', color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '2px' }}>
-                {spideyCategory === 'technical' ? 'Forensic Science & Strategies:' : 'Spidey Banter & Advice:'}
+                {spideyCategory === 'technical' ? 'Forensic Science & Strategies:' : 'Spidey Banter, Jokes & Advice:'}
               </span>
               {(spideyCategory === 'technical' ? SPIDEY_TECH_FAQ : SPIDEY_NON_TECH_FAQ).map((faq, idx) => (
                 <div 
