@@ -657,13 +657,19 @@ export default function Home() {
         onMouseLeave={() => setShowSpideyThwip(false)}
         title="Click Spider-Man to Chat!"
       >
-        <div className="spidey-swinging-pro" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div className="spidey-swinging-pro" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
+          {/* Ceiling Web Anchor Splat */}
+          <div className="spidey-ceiling-anchor" />
+
           {/* Elastic Silk Line */}
           <div className="web-elastic-line" style={{
             width: '2.5px',
             background: 'linear-gradient(to bottom, #FFFFFF 0%, rgba(255,255,255,0.95) 50%, #E01B22 100%)',
             boxShadow: '0 0 10px rgba(255,255,255,0.85), 0 0 18px rgba(224,27,34,0.65)'
           }} />
+
+          {/* Atmospheric Cyan Multiverse Aura */}
+          <div className="spidey-multiverse-aura" />
 
           {/* Full Model Spider-Man Container */}
           <div className="mascot-image-wrapper" style={{
@@ -713,12 +719,12 @@ export default function Home() {
         </div>
       </div>
 
-      {/* TOP-LEFT: RAPPELLING DEADPOOL FULL BODY MODEL WITH TACTICAL CABLE */}
+      {/* TOP-LEFT: TACTICAL PERCH DEADPOOL FULL BODY MODEL ON CYBER PLATFORM */}
       <div 
         style={{
           position: 'absolute',
           top: 0,
-          left: '5%',
+          left: '4.5%',
           zIndex: 40,
           pointerEvents: 'auto',
           cursor: 'pointer'
@@ -732,9 +738,17 @@ export default function Home() {
         onMouseLeave={() => setShowDeadpoolPop(false)}
         title="Click Deadpool to Chat!"
       >
-        <div className="deadpool-swinging-pro" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {/* Tactical Steel Cable Line */}
-          <div className="deadpool-cable-line" />
+        <div className="deadpool-perch-rig">
+          {/* Dual Tactical Suspension Cables anchoring platform */}
+          <div className="deadpool-cables-container">
+            <div className="cable-ceiling-clamp-left" />
+            <div className="cable-ceiling-clamp-right" />
+            <div className="deadpool-cable-left" />
+            <div className="deadpool-cable-right" />
+          </div>
+
+          {/* Atmospheric Red Multiverse Aura */}
+          <div className="deadpool-multiverse-aura" />
 
           {/* Full Model Deadpool Container */}
           <div className="mascot-image-wrapper" style={{
@@ -759,6 +773,14 @@ export default function Home() {
             />
           </div>
 
+          {/* High-Tech Tactical Combat Platform directly under boots */}
+          <div className="deadpool-combat-platform">
+            <div className="platform-thruster-left" />
+            <div className="platform-thruster-right" />
+            <span style={{ fontSize: '0.6rem', color: '#EF4444', fontFamily: 'monospace', fontWeight: 900, letterSpacing: '0.8px' }}>⚡ PERCH-01</span>
+            <span style={{ fontSize: '0.6rem', color: '#FACC15', fontFamily: 'monospace', fontWeight: 900 }}>COMBAT READY</span>
+          </div>
+
           {/* Deadpool Callout Tag */}
           <div className="mascot-tag-pill deadpool-tag">
             <span>⚔️ DEADPOOL • MERC-BOT</span>
@@ -771,12 +793,30 @@ export default function Home() {
       <div className="container page-transition" style={{ maxWidth: '1100px', margin: '0 auto', padding: '36px 20px' }}>
         
         {/* Multiverse Header Banner */}
-        <header style={{ textAlign: 'center', marginBottom: '40px', position: 'relative' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '14px', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <header style={{ textAlign: 'center', marginBottom: '44px', position: 'relative' }}>
+          {/* Live Multiverse Status Telemetry Banner */}
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '10px',
+            background: 'linear-gradient(90deg, rgba(224, 27, 34, 0.12) 0%, rgba(10, 6, 7, 0.85) 50%, rgba(56, 189, 248, 0.12) 100%)',
+            border: '1px solid rgba(224, 27, 34, 0.35)',
+            borderRadius: '24px',
+            padding: '6px 20px',
+            marginBottom: '18px',
+            boxShadow: '0 0 20px rgba(224, 27, 34, 0.25), inset 0 0 12px rgba(224, 27, 34, 0.15)'
+          }}>
+            <span className="live-pulse-dot" style={{ width: '9px', height: '9px', background: '#22C55E', boxShadow: '0 0 10px #22C55E' }} />
+            <span style={{ fontSize: '0.76rem', color: '#FFF', fontWeight: '800', letterSpacing: '1.4px', textTransform: 'uppercase', fontFamily: 'var(--font-display)' }}>
+              MULTIVERSE CLUSTER ONLINE • 4 FORENSIC STAGES ACTIVE • REAL-TIME LEADERBOARD
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', flexWrap: 'wrap', justifyContent: 'center' }}>
             <span className="shimmer-badge" style={{ 
               border: '1px solid #E01B22', 
               color: '#FF4D4D', 
-              padding: '4px 14px', 
+              padding: '5px 16px', 
               borderRadius: '6px', 
               fontSize: '0.82rem', 
               fontWeight: '800',
@@ -789,7 +829,7 @@ export default function Home() {
               background: 'rgba(250, 204, 21, 0.12)', 
               border: '1px solid #FACC15', 
               color: '#FACC15', 
-              padding: '4px 12px', 
+              padding: '5px 14px', 
               borderRadius: '6px', 
               fontSize: '0.82rem', 
               fontWeight: '700',
@@ -800,12 +840,12 @@ export default function Home() {
           </div>
 
           <h1 className="glitch-text hero-floating-anim" data-text="PIXEL PARADOX" style={{ 
-            fontSize: 'clamp(2.8rem, 7vw, 4.8rem)', 
-            letterSpacing: '3px',
+            fontSize: 'clamp(2.8rem, 7vw, 5rem)', 
+            letterSpacing: '4px',
             lineHeight: 1.05,
             marginBottom: '8px',
             textTransform: 'uppercase',
-            filter: 'drop-shadow(0 0 20px rgba(224, 27, 34, 0.4))'
+            filter: 'drop-shadow(0 0 24px rgba(224, 27, 34, 0.45))'
           }}>
             PIXEL PARADOX
           </h1>
@@ -813,17 +853,17 @@ export default function Home() {
           <div style={{ 
             display: 'inline-block',
             fontSize: 'clamp(1.1rem, 2.5vw, 1.6rem)', 
-            fontWeight: '600', 
+            fontWeight: '700', 
             color: '#FF4D4D', 
             letterSpacing: '3px',
             textTransform: 'uppercase',
-            textShadow: '0 0 16px rgba(224,27,34,0.7)',
+            textShadow: '0 0 18px rgba(224,27,34,0.75)',
             marginBottom: '16px'
           }}>
             THE REALITY GLITCH — REAL OR AI?
           </div>
 
-          <p style={{ maxWidth: '820px', margin: '0 auto', color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.6' }}>
+          <p style={{ maxWidth: '820px', margin: '0 auto', color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.65' }}>
             Step inside the high-stakes Multiverse of Generative AI. Decode neural hallucinations, separate authentic photos from synthetic deepfakes, and prove your team is the sharpest in the multiverse!
           </p>
 
@@ -833,43 +873,43 @@ export default function Home() {
             gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
             gap: '14px',
             maxWidth: '960px',
-            margin: '32px auto 0',
+            margin: '34px auto 0',
             textAlign: 'left'
           }}>
-            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3px solid #E01B22' }}>
+            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3.5px solid #E01B22', background: 'rgba(224, 27, 34, 0.08)', boxShadow: '0 4px 16px rgba(0,0,0,0.5)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                 <span style={{ fontSize: '0.72rem', color: '#FF6B6B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 0: PRELIMS</span>
                 <span style={{ fontSize: '1rem' }}>📝</span>
               </div>
               <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>30 Qs / 30 Mins</div>
-              <div style={{ fontSize: '0.75rem', color: '#FACC15', marginTop: '2px' }}>+10 Correct / -5 Penalty</div>
+              <div style={{ fontSize: '0.75rem', color: '#FACC15', marginTop: '3px', fontWeight: '600' }}>+10 Correct / -5 Penalty</div>
             </div>
 
-            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3px solid #38BDF8' }}>
+            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3.5px solid #38BDF8', background: 'rgba(56, 189, 248, 0.08)', boxShadow: '0 4px 16px rgba(0,0,0,0.5)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                 <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 1: DETECTIVE</span>
                 <span style={{ fontSize: '1rem' }}>🔍</span>
               </div>
               <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>10 Pixels / 40s</div>
-              <div style={{ fontSize: '0.75rem', color: '#4ADE80', marginTop: '2px' }}>Deepfake Forensics &amp; Model ID</div>
+              <div style={{ fontSize: '0.75rem', color: '#4ADE80', marginTop: '3px', fontWeight: '600' }}>Deepfake Forensics &amp; Model ID</div>
             </div>
 
-            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3px solid #A855F7' }}>
+            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3.5px solid #A855F7', background: 'rgba(168, 85, 247, 0.08)', boxShadow: '0 4px 16px rgba(0,0,0,0.5)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                 <span style={{ fontSize: '0.72rem', color: '#C084FC', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 2: GLITCH HUNT</span>
                 <span style={{ fontSize: '1rem' }}>⚡</span>
               </div>
               <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>7 Challenges / 45s</div>
-              <div style={{ fontSize: '0.75rem', color: '#E9D5FF', marginTop: '2px' }}>Artifact Forensics</div>
+              <div style={{ fontSize: '0.75rem', color: '#E9D5FF', marginTop: '3px', fontWeight: '600' }}>Artifact Forensics</div>
             </div>
 
-            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3px solid #FACC15' }}>
+            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3.5px solid #FACC15', background: 'rgba(250, 204, 21, 0.08)', boxShadow: '0 4px 16px rgba(0,0,0,0.5)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                 <span style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 3: GRAND FINALE</span>
                 <span style={{ fontSize: '1rem' }}>🎯</span>
               </div>
               <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>5 Prompts / 75s</div>
-              <div style={{ fontSize: '0.75rem', color: '#38BDF8', marginTop: '2px' }}>Semantic Prompt Cosine Duel</div>
+              <div style={{ fontSize: '0.75rem', color: '#38BDF8', marginTop: '3px', fontWeight: '600' }}>Semantic Prompt Cosine Duel</div>
             </div>
           </div>
         </header>
@@ -878,71 +918,107 @@ export default function Home() {
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-          gap: '20px', 
-          marginBottom: '48px' 
+          gap: '22px', 
+          marginBottom: '52px' 
         }}>
           <Link href="/register" style={{ textDecoration: 'none' }}>
-            <div className="comic-card card-hover-lift" style={{ padding: '28px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '4px solid #E01B22', background: 'rgba(18, 9, 12, 0.9)' }}>
+            <div className="comic-card card-hover-lift" style={{ 
+              padding: '28px', 
+              height: '100%', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              justifyContent: 'space-between', 
+              borderLeft: '4px solid #E01B22', 
+              background: 'linear-gradient(145deg, rgba(24, 10, 14, 0.95) 0%, rgba(12, 5, 8, 0.98) 100%)',
+              boxShadow: '0 8px 30px rgba(0,0,0,0.6)',
+              position: 'relative',
+              overflow: 'hidden'
+            }}>
+              <div style={{ position: 'absolute', top: 0, right: 0, width: '90px', height: '90px', background: 'radial-gradient(circle at top right, rgba(224,27,34,0.2) 0%, transparent 70%)', pointerEvents: 'none' }} />
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <span style={{ fontSize: '0.72rem', color: '#FF6B6B', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(224,27,34,0.15)', padding: '3px 10px', borderRadius: '4px', border: '1px solid rgba(224,27,34,0.4)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                  <span style={{ fontSize: '0.72rem', color: '#FF6B6B', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(224,27,34,0.18)', padding: '4px 12px', borderRadius: '4px', border: '1px solid rgba(224,27,34,0.5)' }}>
                     STEP 01: ONBOARDING
                   </span>
                   <span className="badge" style={{ background: 'rgba(224,27,34,0.2)', color: '#FF4D4D', borderColor: '#E01B22' }}>Teams of 2–4</span>
                 </div>
-                <h3 style={{ fontSize: '1.4rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>
+                <h3 style={{ fontSize: '1.45rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>
                   Assemble Your Team
                 </h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.55' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: '1.6' }}>
                   Register squad credentials with Team Leader ID and member profiles. Once registered, immediately access Stage 0 Prelims!
                 </p>
               </div>
-              <span className="btn-primary" style={{ marginTop: '22px', width: '100%', fontSize: '0.92rem' }}>
-                Register Squad →
+              <span className="btn-primary" style={{ marginTop: '24px', width: '100%', fontSize: '0.94rem', textAlign: 'center', display: 'block' }}>
+                Register Squad ➔
               </span>
             </div>
           </Link>
 
           <Link href="/login" style={{ textDecoration: 'none' }}>
-            <div className="comic-card card-hover-lift" style={{ padding: '28px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '4px solid #38BDF8', background: 'rgba(9, 14, 20, 0.9)' }}>
+            <div className="comic-card card-hover-lift" style={{ 
+              padding: '28px', 
+              height: '100%', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              justifyContent: 'space-between', 
+              borderLeft: '4px solid #38BDF8', 
+              background: 'linear-gradient(145deg, rgba(8, 16, 26, 0.95) 0%, rgba(5, 9, 15, 0.98) 100%)',
+              boxShadow: '0 8px 30px rgba(0,0,0,0.6)',
+              position: 'relative',
+              overflow: 'hidden'
+            }}>
+              <div style={{ position: 'absolute', top: 0, right: 0, width: '90px', height: '90px', background: 'radial-gradient(circle at top right, rgba(56,189,248,0.2) 0%, transparent 70%)', pointerEvents: 'none' }} />
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(56,189,248,0.15)', padding: '3px 10px', borderRadius: '4px', border: '1px solid rgba(56,189,248,0.4)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                  <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(56,189,248,0.18)', padding: '4px 12px', borderRadius: '4px', border: '1px solid rgba(56,189,248,0.5)' }}>
                     STEP 02: BATTLEGROUND
                   </span>
                   <span className="badge" style={{ background: 'rgba(56,189,248,0.15)', color: '#38BDF8', borderColor: '#38BDF8' }}>Live Arena</span>
                 </div>
-                <h3 style={{ fontSize: '1.4rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>
+                <h3 style={{ fontSize: '1.45rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>
                   Enter Battle Arena
                 </h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.55' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: '1.6' }}>
                   Sign in with Team ID &amp; Password. Tackle the 30-MCQ Prelims, followed by real-time projected visual challenges.
                 </p>
               </div>
-              <span className="btn-secondary" style={{ marginTop: '22px', width: '100%', fontSize: '0.92rem', borderColor: 'rgba(56,189,248,0.5)', color: '#38BDF8' }}>
-                Access Arena Portal →
+              <span className="btn-secondary" style={{ marginTop: '24px', width: '100%', fontSize: '0.94rem', borderColor: 'rgba(56,189,248,0.6)', color: '#38BDF8', textAlign: 'center', display: 'block' }}>
+                Access Arena Portal ➔
               </span>
             </div>
           </Link>
 
           <Link href="/leaderboard" style={{ textDecoration: 'none' }}>
-            <div className="comic-card card-hover-lift" style={{ padding: '28px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '4px solid #FACC15', background: 'rgba(16, 14, 8, 0.9)' }}>
+            <div className="comic-card card-hover-lift" style={{ 
+              padding: '28px', 
+              height: '100%', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              justifyContent: 'space-between', 
+              borderLeft: '4px solid #FACC15', 
+              background: 'linear-gradient(145deg, rgba(20, 18, 10, 0.95) 0%, rgba(10, 9, 5, 0.98) 100%)',
+              boxShadow: '0 8px 30px rgba(0,0,0,0.6)',
+              position: 'relative',
+              overflow: 'hidden'
+            }}>
+              <div style={{ position: 'absolute', top: 0, right: 0, width: '90px', height: '90px', background: 'radial-gradient(circle at top right, rgba(250,204,21,0.2) 0%, transparent 70%)', pointerEvents: 'none' }} />
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <span style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(250,204,21,0.15)', padding: '3px 10px', borderRadius: '4px', border: '1px solid rgba(250,204,21,0.4)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                  <span style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(250,204,21,0.18)', padding: '4px 12px', borderRadius: '4px', border: '1px solid rgba(250,204,21,0.5)' }}>
                     STEP 03: STANDINGS
                   </span>
                   <span className="badge" style={{ background: 'rgba(250,204,21,0.15)', color: '#FACC15', borderColor: '#FACC15' }}>Real-Time</span>
                 </div>
-                <h3 style={{ fontSize: '1.4rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>
+                <h3 style={{ fontSize: '1.45rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>
                   Live Leaderboard
                 </h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.55' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: '1.6' }}>
                   Instant zero-delay scoring matrix for Stage 0 Prelims &amp; Stage 1 Pixel Detective, with team rank progression.
                 </p>
               </div>
-              <span className="btn-secondary" style={{ marginTop: '22px', width: '100%', fontSize: '0.92rem', borderColor: 'rgba(250,204,21,0.5)', color: '#FACC15' }}>
-                View Leaderboard →
+              <span className="btn-secondary" style={{ marginTop: '24px', width: '100%', fontSize: '0.94rem', borderColor: 'rgba(250,204,21,0.6)', color: '#FACC15', textAlign: 'center', display: 'block' }}>
+                View Leaderboard ➔
               </span>
             </div>
           </Link>
