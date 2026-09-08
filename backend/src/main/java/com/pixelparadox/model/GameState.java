@@ -8,7 +8,7 @@ public class GameState {
     @Id
     private Long id = 1L; // Always 1 for the global single state
 
-    private int activeRound = 0; // 0 = registration, 1 = round 1, 2 = round 2, 3 = round 3, 4 = tie breaker, 5 = end
+    private int activeRound = 0; // 0=LOBBY, 1=PRELIMS, 2=PICTURE_ROUND, 3=AI_FLAW_ROUND, 4=PROMPT_ENGINEERING_FINAL, 5=COMPLETED
     
     private Long activeQuestionId;
     

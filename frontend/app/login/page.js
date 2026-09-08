@@ -7,11 +7,13 @@ import Link from 'next/link'
 export default function Login() {
   const router = useRouter()
   const [formData, setFormData] = useState({
-    email: '',
+    teamId: '',
     password: '',
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [step, setStep] = useState(1) // 1=login, 2=select participant
+  const [participantName, setParticipantName] = useState('')
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -36,12 +38,12 @@ export default function Login() {
         localStorage.setItem('token', data.token)
         localStorage.setItem('role', data.role)
         localStorage.setItem('teamName', data.teamName)
-        localStorage.setItem('email', data.email)
+        localStorage.setItem('teamId', data.teamId)
 
         if (data.role === 'ROLE_ADMIN') {
           router.push('/admin')
         } else {
-          router.push('/game')
+          setStep(2)
         }
       } else {
         setError(data.message || 'Login failed')
@@ -53,12 +55,24 @@ export default function Login() {
     }
   }
 
+  const handleSelectParticipant = (e) => {
+    e.preventDefault()
+    if (!participantName.trim()) {
+      setError('Please enter your name.')
+      return
+    }
+    localStorage.setItem('participantName', participantName)
+    router.push('/game')
+  }
+
   return (
     <div className="container flex-center page-transition" style={{ minHeight: '100vh' }}>
       <div className="glass-panel" style={{ width: '100%', maxWidth: '440px', padding: '40px' }}>
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <h2 style={{ fontSize: '2rem' }} className="cyan-gradient-text">Portal Login</h2>
-          <p style={{ color: '#8c9cb6', fontSize: '0.9rem', marginTop: '4px' }}>Pixel Paradox: AI or Reality?</p>
+          <h2 style={{ fontSize: '2.5rem', marginBottom: '8px', letterSpacing: '2px' }} className="glitch-text" data-text={step === 1 ? 'PORTAL LOGIN' : 'IDENTIFY USER'}>
+            {step === 1 ? 'PORTAL LOGIN' : 'IDENTIFY USER'}
+          </h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px', textTransform: 'uppercase', letterSpacing: '1px' }}>LOGIN 2026: The Last Human</p>
         </div>
 
         {error && (
@@ -67,48 +81,86 @@ export default function Login() {
           </div>
         )}
 
-        <form onSubmit={handleLogin}>
-          <div className="form-group">
-            <label className="form-label" htmlFor="email">Email Address</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="form-input"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="e.g., team@gmail.com"
-            />
+        {step === 1 ? (
+          <>
+            <form onSubmit={handleLogin}>
+              <div className="form-group">
+                <label className="form-label" htmlFor="teamId">Team ID</label>
+                <input
+                  type="text"
+                  id="teamId"
+                  name="teamId"
+                  className="form-input"
+                  required
+                  value={formData.teamId}
+                  onChange={handleChange}
+                  placeholder="e.g., T-1234"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  className="form-input"
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter password"
+                />
+              </div>
+
+              <button type="submit" className="btn-primary" style={{ width: '100%', marginTop: '12px' }} disabled={loading}>
+                {loading ? 'Logging in...' : 'Sign In'}
+              </button>
+            </form>
+
+            <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <p style={{ color: 'var(--text-secondary)' }}>
+                New team? <Link href="/register" style={{ color: 'var(--color-neon-blue)', textDecoration: 'none', fontWeight: 'bold' }}>Register here</Link>
+              </p>
+              <p>
+                <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.8rem', textTransform: 'uppercase' }}>&larr; Back to Home</Link>
+              </p>
+            </div>
+          </>
+        ) : (
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ marginBottom: '24px', color: '#fff' }}>Who is taking the quiz right now?</p>
+            <form onSubmit={handleSelectParticipant}>
+              <div className="form-group" style={{ textAlign: 'left' }}>
+                <label className="form-label" htmlFor="participantName">Your Name</label>
+                <input
+                  type="text"
+                  id="participantName"
+                  className="form-input"
+                  required
+                  value={participantName}
+                  onChange={(e) => setParticipantName(e.target.value)}
+                  placeholder="e.g. Yash"
+                />
+              </div>
+              <button 
+                type="submit"
+                className="btn-primary" 
+                style={{ width: '100%', marginTop: '12px' }}
+              >
+                Join Game
+              </button>
+            </form>
+            <button 
+              onClick={() => {
+                localStorage.clear()
+                setStep(1)
+              }} 
+              style={{ marginTop: '24px', background: 'none', border: 'none', color: '#ff6b6b', cursor: 'pointer' }}
+            >
+              Cancel Login
+            </button>
           </div>
-
-          <div className="form-group">
-            <label className="form-label" htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className="form-input"
-              required
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter password"
-            />
-          </div>
-
-          <button type="submit" className="btn-primary" style={{ width: '100%', marginTop: '12px' }} disabled={loading}>
-            {loading ? 'Logging in...' : 'Sign In'}
-          </button>
-        </form>
-
-        <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <p style={{ color: '#8c9cb6' }}>
-            New team? <Link href="/register" style={{ color: '#00d2ff', textDecoration: 'none' }}>Register here</Link>
-          </p>
-          <p>
-            <Link href="/" style={{ color: '#5c6c84', textDecoration: 'none', fontSize: '0.8rem' }}>&larr; Back to Home</Link>
-          </p>
-        </div>
+        )}
       </div>
     </div>
   )

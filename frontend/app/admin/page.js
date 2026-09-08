@@ -4,6 +4,17 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
+const STAGE_NAMES = {
+  0: 'Stage 0: Registration / Lobby',
+  1: 'Stage 0: Prelims (MCQ Quiz)',
+  2: 'Stage 1: Pixel Detective',
+  3: 'Stage 2: The Glitch Hunt',
+  4: 'Stage 3: Prompt Wars',
+  5: 'Stage 5: Game Over / Podium',
+  6: 'Evaluating Submissions',
+  7: 'Break Between Rounds'
+}
+
 export default function AdminDashboard() {
   const router = useRouter()
   const [token, setToken] = useState('')
@@ -17,13 +28,29 @@ export default function AdminDashboard() {
     zoomLevel: 100
   })
 
-  // Media Manager State
+  // Quiz Manager State (Stage 0 Prelims)
+  const [quizQuestions, setQuizQuestions] = useState([])
+  const [editingQuizId, setEditingQuizId] = useState(null)
+  const [quizForm, setQuizForm] = useState({
+    questionText: '',
+    optionA: '',
+    optionB: '',
+    optionC: '',
+    optionD: '',
+    correctOption: 'A',
+    points: 1,
+    orderNum: 1,
+    active: true
+  })
+  const [quizStatus, setQuizStatus] = useState({ success: '', error: '' })
+
+  // Media Manager State (Stages 1 - 3)
   const [images, setImages] = useState([])
   const [uploadData, setUploadData] = useState({
     file: null,
     isAi: false,
     modelUsed: '',
-    roundNumber: 1,
+    roundNumber: 2, // Default to Stage 1
     bonusQuestion: 'What AI Model was used to generate this image?',
     answerDetails: '',
     glitchCoordinates: '',
@@ -44,6 +71,10 @@ export default function AdminDashboard() {
   // Leaderboard State
   const [leaderboard, setLeaderboard] = useState([])
   const [advancementStatus, setAdvancementStatus] = useState('')
+  const [customAdvance, setCustomAdvance] = useState({ value: 10, isPercent: false })
+
+  // Invigilation State
+  const [webcams, setWebcams] = useState({}) // teamId -> { frame, participantName, timestamp }
 
   // WebSocket Ref
   const wsRef = useRef(null)
@@ -60,6 +91,7 @@ export default function AdminDashboard() {
     fetchGameState()
     fetchImages(storedToken)
     fetchLeaderboard()
+    fetchQuizQuestions(storedToken)
   }, [])
 
   // Refetch grading submissions when tab changes
@@ -68,6 +100,8 @@ export default function AdminDashboard() {
       fetchSubmissionsForGrading()
     } else if (activeTab === 'leaderboard') {
       fetchLeaderboard()
+    } else if (activeTab === 'quiz' && token) {
+      fetchQuizQuestions(token)
     }
   }, [activeTab, gameState.activeRound])
 
@@ -102,21 +136,22 @@ export default function AdminDashboard() {
         setGameState(data)
       }
     } catch (e) {
-      console.error(e)
+      console.error('Failed to fetch game state', e)
     }
   }
 
   const fetchImages = async (tok) => {
     try {
+      const currentToken = tok || token || (typeof window !== 'undefined' ? localStorage.getItem('token') : '')
       const res = await fetch('http://localhost:8080/api/game/images', {
-        headers: { 'Authorization': `Bearer ${tok || token}` }
+        headers: { 'Authorization': `Bearer ${currentToken}` }
       })
       if (res.ok) {
         const data = await res.json()
         setImages(data)
       }
     } catch (e) {
-      console.error(e)
+      console.error('Failed to fetch images', e)
     }
   }
 
@@ -128,14 +163,34 @@ export default function AdminDashboard() {
         setLeaderboard(data)
       }
     } catch (e) {
-      console.error(e)
+      console.error('Failed to fetch leaderboard', e)
+    }
+  }
+
+  const fetchQuizQuestions = async (tok) => {
+    try {
+      const currentToken = tok || token || (typeof window !== 'undefined' ? localStorage.getItem('token') : '')
+      const res = await fetch('http://localhost:8080/api/admin/quiz', {
+        headers: { 'Authorization': `Bearer ${currentToken}` }
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setQuizQuestions(data)
+        // Auto-update default orderNum for new question
+        if (!editingQuizId) {
+          setQuizForm(prev => ({ ...prev, orderNum: data.length + 1 }))
+        }
+      }
+    } catch (e) {
+      console.error('Failed to fetch quiz questions', e)
     }
   }
 
   const fetchSubmissionsForGrading = async () => {
     try {
+      const currentToken = token || (typeof window !== 'undefined' ? localStorage.getItem('token') : '')
       const res = await fetch(`http://localhost:8080/api/game/submissions?round=${gameState.activeRound}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: { 'Authorization': `Bearer ${currentToken}` }
       })
       if (res.ok) {
         const data = await res.json()
@@ -148,14 +203,14 @@ export default function AdminDashboard() {
         }
       }
     } catch (e) {
-      console.error(e)
+      console.error('Failed to fetch submissions', e)
     }
   }
 
-  // 3. WebSocket Connection (Native)
+  // 3. WebSocket Connection
   useEffect(() => {
-    let isMounted = true;
-    let reconnectTimeout = null;
+    let isMounted = true
+    let reconnectTimeout = null
 
     const setupWebSocket = () => {
       const ws = new WebSocket('ws://localhost:8080/ws')
@@ -166,32 +221,40 @@ export default function AdminDashboard() {
       }
 
       ws.onmessage = (event) => {
-        const message = JSON.parse(event.data)
-        console.log('Received WebSocket message:', message)
-
-        if (message.type === 'GAME_STATE') {
-          setGameState(message.payload)
-          // Reset submission counters on new question
-          setSubmissionCount(0)
-        } else if (message.type === 'SUBMISSION') {
-          setSubmissionCount(prev => prev + 1)
-          // If on grading tab, prepend new submission
-          setSubmissions(prev => {
-            if (prev.some(s => s.id === message.payload.id)) return prev
-            return [message.payload, ...prev]
-          })
-        } else if (message.type === 'SCORES_UPDATED') {
-          if (Array.isArray(message.payload)) {
-            setLeaderboard(message.payload)
-          } else {
-            fetchLeaderboard()
+        try {
+          const message = JSON.parse(event.data)
+          if (message.type === 'GAME_STATE') {
+            setGameState(message.payload)
+            setSubmissionCount(0)
+          } else if (message.type === 'SUBMISSION') {
+            setSubmissionCount(prev => prev + 1)
+            setSubmissions(prev => {
+              if (prev.some(s => s.id === message.payload.id)) return prev
+              return [message.payload, ...prev]
+            })
+          } else if (message.type === 'SCORES_UPDATED') {
+            if (Array.isArray(message.payload)) {
+              setLeaderboard(message.payload)
+            } else {
+              fetchLeaderboard()
+            }
+          } else if (message.type === 'CAMERA_FRAME') {
+            setWebcams(prev => ({
+              ...prev,
+              [message.payload.teamId]: {
+                frame: message.payload.frame,
+                participantName: message.payload.participantName,
+                timestamp: Date.now()
+              }
+            }))
           }
+        } catch (err) {
+          console.error('Error processing websocket message', err)
         }
       }
 
       ws.onclose = () => {
         if (isMounted) {
-          console.log('WebSocket closed, reconnecting in 3 seconds...')
           reconnectTimeout = setTimeout(setupWebSocket, 3000)
         }
       }
@@ -248,8 +311,8 @@ export default function AdminDashboard() {
   }
 
   const handleResetGame = async () => {
-    if (!confirm('DANGER: Are you absolutely sure you want to RESET the game engine? This will delete ALL submissions and reset all team scores back to 0. Uploaded images will be kept.')) return;
-    
+    if (!confirm('DANGER: Are you absolutely sure you want to RESET the game engine? This will delete ALL submissions and reset all team scores back to 0. Uploaded images and quiz questions will be preserved.')) return
+
     try {
       const res = await fetch('http://localhost:8080/api/game/reset', {
         method: 'POST',
@@ -265,6 +328,172 @@ export default function AdminDashboard() {
       }
     } catch (e) {
       alert('Failed to reset game engine (server error).')
+    }
+  }
+
+  // Quiz Manager Actions (Stage 0 Prelims)
+  const handleQuizFormChange = (e) => {
+    const { name, value, type, checked } = e.target
+    setQuizForm(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }))
+  }
+
+  const handleSaveQuizQuestion = async (e) => {
+    e.preventDefault()
+    setQuizStatus({ success: '', error: '' })
+
+    // Resolve correctAnswer based on correctOption choice
+    let resolvedAnswer = ''
+    if (quizForm.correctOption === 'A') resolvedAnswer = quizForm.optionA
+    else if (quizForm.correctOption === 'B') resolvedAnswer = quizForm.optionB
+    else if (quizForm.correctOption === 'C') resolvedAnswer = quizForm.optionC
+    else if (quizForm.correctOption === 'D') resolvedAnswer = quizForm.optionD
+
+    if (!resolvedAnswer || !resolvedAnswer.trim()) {
+      setQuizStatus({ success: '', error: 'The selected correct option cannot be blank.' })
+      return
+    }
+
+    const payload = {
+      questionText: quizForm.questionText.trim(),
+      optionA: quizForm.optionA.trim(),
+      optionB: quizForm.optionB.trim(),
+      optionC: quizForm.optionC.trim(),
+      optionD: quizForm.optionD.trim(),
+      correctAnswer: resolvedAnswer.trim(),
+      points: Number(quizForm.points) || 1,
+      orderNum: Number(quizForm.orderNum) || (quizQuestions.length + 1),
+      active: quizForm.active
+    }
+
+    try {
+      const url = editingQuizId
+        ? `http://localhost:8080/api/admin/quiz/${editingQuizId}`
+        : 'http://localhost:8080/api/admin/quiz'
+      const method = editingQuizId ? 'PUT' : 'POST'
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      })
+
+      if (res.ok) {
+        setQuizStatus({
+          success: editingQuizId ? 'Question updated successfully!' : 'New question added successfully!',
+          error: ''
+        })
+        setEditingQuizId(null)
+        setQuizForm({
+          questionText: '',
+          optionA: '',
+          optionB: '',
+          optionC: '',
+          optionD: '',
+          correctOption: 'A',
+          points: 1,
+          orderNum: quizQuestions.length + (editingQuizId ? 1 : 2),
+          active: true
+        })
+        fetchQuizQuestions(token)
+        setTimeout(() => setQuizStatus({ success: '', error: '' }), 3000)
+      } else {
+        setQuizStatus({ success: '', error: 'Failed to save question.' })
+      }
+    } catch (err) {
+      setQuizStatus({ success: '', error: 'Server error while saving question.' })
+    }
+  }
+
+  const handleEditQuestion = (q) => {
+    setEditingQuizId(q.id)
+    // Detect which option matches correctAnswer
+    let opt = 'A'
+    if (q.correctAnswer === q.optionB || q.correctAnswer === 'B') opt = 'B'
+    else if (q.correctAnswer === q.optionC || q.correctAnswer === 'C') opt = 'C'
+    else if (q.correctAnswer === q.optionD || q.correctAnswer === 'D') opt = 'D'
+
+    setQuizForm({
+      questionText: q.questionText || '',
+      optionA: q.optionA || '',
+      optionB: q.optionB || '',
+      optionC: q.optionC || '',
+      optionD: q.optionD || '',
+      correctOption: opt,
+      points: q.points || 1,
+      orderNum: q.orderNum || 1,
+      active: q.active !== false
+    })
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleCancelEdit = () => {
+    setEditingQuizId(null)
+    setQuizForm({
+      questionText: '',
+      optionA: '',
+      optionB: '',
+      optionC: '',
+      optionD: '',
+      correctOption: 'A',
+      points: 1,
+      orderNum: quizQuestions.length + 1,
+      active: true
+    })
+  }
+
+  const handleDeleteQuestion = async (id) => {
+    if (!confirm('Are you sure you want to delete this quiz question?')) return
+    try {
+      const res = await fetch(`http://localhost:8080/api/admin/quiz/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      if (res.ok) {
+        fetchQuizQuestions(token)
+      } else {
+        alert('Failed to delete question')
+      }
+    } catch (e) {
+      alert('Error deleting question')
+    }
+  }
+
+  const handleSeedDefaults = async () => {
+    if (!confirm('Seed 20 curated Stage 0 Prelims questions for "LOGIN 2026: The Last Human"?')) return
+    try {
+      const res = await fetch('http://localhost:8080/api/admin/quiz/seed', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      const data = await res.json()
+      alert(data.message || 'Seeding completed.')
+      fetchQuizQuestions(token)
+    } catch (e) {
+      alert('Error seeding default questions.')
+    }
+  }
+
+  const handleClearAllQuestions = async () => {
+    if (!confirm('DANGER: Delete ALL Prelims quiz questions?')) return
+    try {
+      const res = await fetch('http://localhost:8080/api/admin/quiz/all', {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      if (res.ok) {
+        alert('All questions removed.')
+        fetchQuizQuestions(token)
+      } else {
+        alert('Failed to clear questions.')
+      }
+    } catch (e) {
+      alert('Error clearing questions.')
     }
   }
 
@@ -288,6 +517,13 @@ export default function AdminDashboard() {
       return
     }
 
+    const currentToken = token || localStorage.getItem('token')
+    if (!currentToken) {
+      setUploadStatus({ success: '', error: 'Session expired or missing token. Please logout and log back in.' })
+      router.push('/login')
+      return
+    }
+
     const formData = new FormData()
     formData.append('file', uploadData.file)
     formData.append('isAi', uploadData.isAi)
@@ -301,7 +537,7 @@ export default function AdminDashboard() {
     try {
       const res = await fetch('http://localhost:8080/api/game/upload', {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers: { 'Authorization': `Bearer ${currentToken}` },
         body: formData
       })
       if (res.ok) {
@@ -310,20 +546,26 @@ export default function AdminDashboard() {
           file: null,
           isAi: false,
           modelUsed: '',
-          roundNumber: uploadData.roundNumber, // persist current round
+          roundNumber: uploadData.roundNumber,
           bonusQuestion: 'What AI Model was used to generate this image?',
           answerDetails: '',
           glitchCoordinates: '',
           isLightning: false
         })
         if (fileInputRef.current) fileInputRef.current.value = ''
-        fetchImages(token)
+        fetchImages(currentToken)
+      } else if (res.status === 401 || res.status === 403) {
+        setUploadStatus({ success: '', error: 'Session expired (HTTP 403 Forbidden). Please click Logout and log in again as admin.' })
       } else {
-        const data = await res.json()
-        setUploadStatus({ success: '', error: data.message || 'Upload failed' })
+        let msg = `Upload failed (Status: ${res.status})`
+        try {
+          const data = await res.json()
+          if (data.message) msg = data.message
+        } catch (_) {}
+        setUploadStatus({ success: '', error: msg })
       }
     } catch (err) {
-      setUploadStatus({ success: '', error: 'Server connection error during upload.' })
+      setUploadStatus({ success: '', error: 'Network error connecting to backend: ' + err.message })
     }
   }
 
@@ -362,7 +604,6 @@ export default function AdminDashboard() {
         body: JSON.stringify({ submissionId, score: parseInt(score) })
       })
       if (res.ok) {
-        // Remove from list
         setSubmissions(prev => prev.filter(s => s.id !== submissionId))
         setGradingStatus('Score graded successfully!')
         setTimeout(() => setGradingStatus(''), 2500)
@@ -403,92 +644,115 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="page-transition" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#0A0607', color: '#E8E8E8' }}>
       {/* Navigation Header */}
-      <nav className="glass-panel" style={{ margin: '16px', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: '12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <h1 style={{ fontSize: '1.25rem' }} className="cyan-gradient-text">Pixel Paradox Organizer</h1>
-          <span className="badge badge-active">Admin Panel</span>
+      <nav className="glass-panel" style={{ margin: '16px', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold', letterSpacing: '1px' }}>
+            <span style={{ color: 'var(--color-primary-blue, #E01B22)' }}>PIXEL PARADOX</span> ORGANIZER
+          </h1>
+          <span className="badge badge-active" style={{ background: 'rgba(224,27,34,0.15)', borderColor: '#E01B22', color: '#FF4D4D' }}>Admin Panel</span>
         </div>
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <button onClick={() => router.push('/admin/teams')} className="btn-secondary" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>Registered Teams</button>
-          <button onClick={handleLogout} className="btn-secondary" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>Logout</button>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <button onClick={() => router.push('/admin/teams')} className="btn-secondary" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+            👥 Registered Teams
+          </button>
+          <button onClick={() => router.push('/admin/recordings')} className="btn-secondary" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+            📹 Webcam Recordings
+          </button>
+          <button onClick={handleLogout} className="btn-secondary" style={{ padding: '8px 16px', fontSize: '0.85rem', color: '#FF4D4D' }}>
+            Logout
+          </button>
         </div>
       </nav>
 
       {/* Tab Selectors */}
-      <div style={{ padding: '0 24px', display: 'flex', gap: '8px', marginBottom: '16px' }}>
+      <div style={{ padding: '0 24px', display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
         <button 
           onClick={() => setActiveTab('control')} 
           className={activeTab === 'control' ? 'btn-primary' : 'btn-secondary'}
-          style={{ padding: '10px 20px', borderRadius: '8px 8px 0 0' }}
+          style={{ padding: '10px 18px', borderRadius: '8px 8px 0 0', fontWeight: '600' }}
         >
-          Game Control Room
+          🎮 Game Control Room
+        </button>
+        <button 
+          onClick={() => setActiveTab('quiz')} 
+          className={activeTab === 'quiz' ? 'btn-primary' : 'btn-secondary'}
+          style={{ padding: '10px 18px', borderRadius: '8px 8px 0 0', fontWeight: '600' }}
+        >
+          📝 Quiz Manager (Stage 0) {quizQuestions.length > 0 && <span style={{ marginLeft: '6px', fontSize: '0.75rem', background: 'rgba(255,255,255,0.2)', padding: '2px 6px', borderRadius: '10px' }}>{quizQuestions.length}</span>}
         </button>
         <button 
           onClick={() => setActiveTab('media')} 
           className={activeTab === 'media' ? 'btn-primary' : 'btn-secondary'}
-          style={{ padding: '10px 20px', borderRadius: '8px 8px 0 0' }}
+          style={{ padding: '10px 18px', borderRadius: '8px 8px 0 0', fontWeight: '600' }}
         >
-          Media Manager
+          🖼️ Media Manager (Stages 1-3) {images.length > 0 && <span style={{ marginLeft: '6px', fontSize: '0.75rem', background: 'rgba(255,255,255,0.2)', padding: '2px 6px', borderRadius: '10px' }}>{images.length}</span>}
         </button>
         <button 
           onClick={() => setActiveTab('grading')} 
           className={activeTab === 'grading' ? 'btn-primary' : 'btn-secondary'}
-          style={{ padding: '10px 20px', borderRadius: '8px 8px 0 0' }}
+          style={{ padding: '10px 18px', borderRadius: '8px 8px 0 0', fontWeight: '600' }}
         >
-          Grading Station ({submissions.length})
+          ⚖️ Grading Station ({submissions.length})
         </button>
         <button 
           onClick={() => setActiveTab('leaderboard')} 
           className={activeTab === 'leaderboard' ? 'btn-primary' : 'btn-secondary'}
-          style={{ padding: '10px 20px', borderRadius: '8px 8px 0 0' }}
+          style={{ padding: '10px 18px', borderRadius: '8px 8px 0 0', fontWeight: '600' }}
         >
-          Real-Time Leaderboard
+          🏆 Real-Time Leaderboard
+        </button>
+        <button 
+          onClick={() => setActiveTab('invigilation')} 
+          className={activeTab === 'invigilation' ? 'btn-primary' : 'btn-secondary'}
+          style={{ padding: '10px 18px', borderRadius: '8px 8px 0 0', fontWeight: '600' }}
+        >
+          👁️ Invigilation Grid ({Object.keys(webcams).length})
         </button>
       </div>
 
       <main className="container" style={{ flex: 1, paddingBottom: '60px' }}>
+        {/* ========================================================= */}
         {/* TAB 1: CONTROL ROOM */}
+        {/* ========================================================= */}
         {activeTab === 'control' && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
             {/* Global Game State Config */}
             <div className="glass-panel" style={{ padding: '24px' }}>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>Active Round Config</h3>
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
+                Active Round Config
+              </h3>
               
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '20px' }}>
-                <div style={{ background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Current Round:</span>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-cyan)', marginTop: '4px' }}>
-                    {gameState.activeRound === 0 ? '0 (Registration)' : 
-                     gameState.activeRound === 5 ? '5 (Game Ended)' : 
-                     `Round ${gameState.activeRound}`}
+                <div style={{ background: 'rgba(255,255,255,0.02)', padding: '14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Current Stage:</span>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--color-primary-blue, #E01B22)', marginTop: '4px' }}>
+                    {STAGE_NAMES[gameState.activeRound] || `Round ${gameState.activeRound}`}
                   </div>
                 </div>
-                <div style={{ background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ background: 'rgba(255,255,255,0.02)', padding: '14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
                   <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Active Question ID:</span>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#fff', marginTop: '4px' }}>
-                    {gameState.activeQuestionId || 'None'}
+                  <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#fff', marginTop: '4px' }}>
+                    {gameState.activeRound === 1 ? 'Prelims (Self-Paced)' : (gameState.activeQuestionId || 'None')}
                   </div>
                 </div>
               </div>
 
-              {/* Set Round Manual override */}
+              {/* Set Round Manual Override */}
               <div className="form-group" style={{ marginBottom: '16px' }}>
-                <label className="form-label">Set Active Round</label>
+                <label className="form-label">Set Active Competition Stage</label>
                 <select 
                   className="form-input" 
                   value={gameState.activeRound}
                   onChange={(e) => handleUpdateGameState(Number(e.target.value), null, 0, 100)}
                 >
-                  <option value={0}>Round 0 - Registration</option>
-                  <option value={1}>Round 1 - Pixel Detective</option>
-                  <option value={2}>Round 2 - The Glitch Hunt</option>
-                  <option value={3}>Round 3 - Prompt Wars</option>
-                  <option value={4}>Round 4 - Tie-Breaker</option>
-                  <option value={5}>Round 5 - Game Over</option>
-                  <option value={6}>Round 6 - Evaluating Results</option>
-                  <option value={7}>Round 7 - Break Time</option>
+                  <option value={0}>Stage 0 - Registration / Lobby</option>
+                  <option value={1}>Stage 0 - Prelims (MCQ Quiz - 30 Qs, strictly 30 mins)</option>
+                  <option value={2}>Stage 1 - Pixel Detective (Real vs AI - 10 Qs, 40s each)</option>
+                  <option value={3}>Stage 2 - The Glitch Hunt (Spot Inconsistencies - 7 Qs, 45s each)</option>
+                  <option value={4}>Stage 3 - Prompt Wars (Prompt Engineering - 5 Qs, 75s each)</option>
+                  <option value={5}>Stage 5 - Completed / Winner Podium</option>
                 </select>
               </div>
 
@@ -496,23 +760,23 @@ export default function AdminDashboard() {
               <div style={{ marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '16px' }}>
                 <button 
                   onClick={handleResetGame} 
-                  style={{ width: '100%', padding: '12px', background: 'rgba(255,20,147,0.1)', border: '1px solid #ff1493', color: '#ff5c93', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+                  style={{ width: '100%', padding: '12px', background: 'rgba(224,27,34,0.1)', border: '1px solid #E01B22', color: '#FF4D4D', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
                 >
-                  ⚠️ Reset Game Engine
+                  ⚠️ Reset Game Engine (Scores & Submissions)
                 </button>
               </div>
 
-              {/* Live Timer control */}
+              {/* Live Timer control for image questions */}
               {gameState.activeQuestionId && (
                 <div style={{ marginTop: '24px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '20px' }}>
                   <h4 style={{ marginBottom: '12px' }}>Timer Controls</h4>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#ff1493', fontFamily: 'var(--font-display)' }} className={gameState.timerRunning ? 'blink' : ''}>
+                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--color-primary-blue, #E01B22)', fontFamily: 'var(--font-display)' }}>
                       {timerText}
                     </div>
                     <div>
                       {gameState.timerRunning ? (
-                        <button onClick={() => handleToggleTimer(false)} className="btn-secondary" style={{ padding: '8px 16px', background: 'rgba(255,20,147,0.1)', borderColor: '#ff1493', color: '#ff5c93' }}>Pause Timer</button>
+                        <button onClick={() => handleToggleTimer(false)} className="btn-secondary" style={{ padding: '8px 16px', borderColor: '#E01B22', color: '#FF4D4D' }}>Pause Timer</button>
                       ) : (
                         <button onClick={() => handleToggleTimer(true)} className="btn-primary" style={{ padding: '8px 16px' }}>Start Timer</button>
                       )}
@@ -525,113 +789,439 @@ export default function AdminDashboard() {
               )}
             </div>
 
-            {/* Images List for Selection */}
+            {/* Right Panel: Stage-Specific Controls */}
             <div className="glass-panel" style={{ padding: '24px' }}>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>Round Images</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '16px' }}>
-                Select an image to project to team screens.
-              </p>
+              {gameState.activeRound === 1 ? (
+                /* Stage 0 Prelims Dashboard */
+                <div>
+                  <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
+                    Stage 0: Prelims MCQ Control
+                  </h3>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '20px', lineHeight: '1.5' }}>
+                    Stage 0 is a 30-question MCQ quiz conducted with silent 1-minute webcam invigilation. Each team member takes the test independently (strictly 30 minutes, +10 for correct, -5 for wrong, auto-graded in real-time).
+                  </p>
 
-              {images.filter(img => img.roundNumber === gameState.activeRound).length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-dim)' }}>
-                  No images uploaded for Round {gameState.activeRound} yet.
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '20px' }}>
+                    <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                      <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Questions Configured:</span>
+                      <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#fff', marginTop: '4px' }}>
+                        {quizQuestions.length}
+                      </div>
+                    </div>
+                    <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                      <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Status:</span>
+                      <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#4ADE80', marginTop: '8px' }}>
+                        ● Active / Open
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <button 
+                      onClick={() => setActiveTab('quiz')} 
+                      className="btn-primary" 
+                      style={{ padding: '12px 20px', width: '100%' }}
+                    >
+                      ✏️ Open Quiz Manager to Edit / Add Questions
+                    </button>
+                    <button 
+                      onClick={() => setActiveTab('leaderboard')} 
+                      className="btn-secondary" 
+                      style={{ padding: '12px 20px', width: '100%' }}
+                    >
+                      🏆 View Prelims Leaderboard & Cutoffs
+                    </button>
+                  </div>
                 </div>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '450px', overflowY: 'auto', paddingRight: '4px' }}>
-                  {images
-                    .filter(img => img.roundNumber === gameState.activeRound)
-                    .map((img) => (
-                      <div 
-                        key={img.id} 
-                        className="glass-panel" 
-                        style={{ 
-                          padding: '12px', 
-                          display: 'flex', 
-                          gap: '12px', 
-                          alignItems: 'center', 
-                          borderColor: gameState.activeQuestionId === img.id ? 'var(--color-cyan)' : 'var(--card-border)',
-                          background: gameState.activeQuestionId === img.id ? 'rgba(0,210,255,0.05)' : 'var(--card-bg)'
-                        }}
-                      >
-                        <img 
-                          src={`http://localhost:8080${img.imageUrl}`} 
-                          alt="preview" 
-                          style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.1)' }}
-                        />
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: '0.9rem', fontWeight: '600', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                            Question ID: {img.id} {img.isLightning && <span style={{ color: '#ff1493', fontSize: '0.75rem' }}>[Lightning]</span>}
-                          </div>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                            {img.isAi ? `AI (${img.modelUsed})` : 'Real'}
-                          </div>
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                          {gameState.activeQuestionId === img.id ? (
-                            <button 
-                              onClick={() => handleUpdateGameState(gameState.activeRound, null, 0, 100)} 
-                              className="btn-secondary" 
-                              style={{ padding: '6px 12px', fontSize: '0.75rem', color: '#ff5c93' }}
-                            >
-                              Stop
-                            </button>
-                          ) : (
-                            <button 
-                              onClick={() => handleUpdateGameState(
-                                gameState.activeRound, 
-                                img.id, 
-                                gameState.activeRound === 1 ? 10 : 60, // default timers (10s R1, 60s others)
-                                100
-                              )} 
-                              className="btn-primary" 
-                              style={{ padding: '6px 12px', fontSize: '0.75rem' }}
-                            >
-                              Launch
-                            </button>
-                          )}
-                          
-                          {/* Zoom adjustment for Tie-breaker (Round 4) */}
-                          {gameState.activeRound === 4 && gameState.activeQuestionId === img.id && (
-                            <select 
-                              className="form-input" 
-                              style={{ padding: '4px', fontSize: '0.7rem', marginTop: '4px' }}
-                              value={gameState.zoomLevel}
-                              onChange={(e) => handleUpdateGameState(4, img.id, gameState.timerDuration, parseInt(e.target.value))}
-                            >
-                              <option value={10}>10% Zoom (Hard)</option>
-                              <option value={25}>25% Zoom</option>
-                              <option value={50}>50% Zoom</option>
-                              <option value={75}>75% Zoom</option>
-                              <option value={100}>100% Zoom (Full)</option>
-                            </select>
-                          )}
-                        </div>
+                /* Stages 1-4 Projector Images */
+                <div>
+                  <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
+                    {STAGE_NAMES[gameState.activeRound] || `Stage ${gameState.activeRound}`} Questions
+                  </h3>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '16px' }}>
+                    Select an image question to project live to participant screens.
+                  </p>
+
+                  {images.filter(img => img.roundNumber === gameState.activeRound).length === 0 ? (
+                    <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-dim)' }}>
+                      No images uploaded for {STAGE_NAMES[gameState.activeRound] || `Stage ${gameState.activeRound}`} yet.
+                      <div style={{ marginTop: '12px' }}>
+                        <button onClick={() => setActiveTab('media')} className="btn-secondary" style={{ padding: '6px 14px', fontSize: '0.8rem' }}>
+                          Go to Media Manager to upload
+                        </button>
                       </div>
-                    ))}
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '450px', overflowY: 'auto', paddingRight: '4px' }}>
+                      {images
+                        .filter(img => img.roundNumber === gameState.activeRound)
+                        .map((img) => (
+                          <div 
+                            key={img.id} 
+                            className="glass-panel" 
+                            style={{ 
+                              padding: '12px', 
+                              display: 'flex', 
+                              gap: '12px', 
+                              alignItems: 'center', 
+                              borderColor: gameState.activeQuestionId === img.id ? 'var(--color-primary-blue, #E01B22)' : 'var(--card-border)',
+                              background: gameState.activeQuestionId === img.id ? 'rgba(224,27,34,0.08)' : 'var(--card-bg)'
+                            }}
+                          >
+                            <img 
+                              src={`http://localhost:8080${img.imageUrl}`} 
+                              alt="preview" 
+                              style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.1)' }}
+                            />
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ fontSize: '0.9rem', fontWeight: '600', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                                Question ID: {img.id} {img.isLightning && <span style={{ color: '#E01B22', fontSize: '0.75rem' }}>[Lightning]</span>}
+                              </div>
+                              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                                {img.isAi ? `AI (${img.modelUsed})` : 'Real'}
+                              </div>
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                              {gameState.activeQuestionId === img.id ? (
+                                <button 
+                                  onClick={() => handleUpdateGameState(gameState.activeRound, null, 0, 100)} 
+                                  className="btn-secondary" 
+                                  style={{ padding: '6px 12px', fontSize: '0.75rem', color: '#FF4D4D' }}
+                                >
+                                  Stop
+                                </button>
+                              ) : (
+                                <button 
+                                  onClick={() => handleUpdateGameState(
+                                    gameState.activeRound, 
+                                    img.id, 
+                                    gameState.activeRound === 2 ? 40 : (gameState.activeRound === 3 ? 45 : (gameState.activeRound === 4 ? 75 : 60)),
+                                    100
+                                  )} 
+                                  className="btn-primary" 
+                                  style={{ padding: '6px 12px', fontSize: '0.75rem' }}
+                                >
+                                  Launch
+                                </button>
+                              )}
+                              
+                              {/* Zoom adjustment for Stage 3 */}
+                              {gameState.activeRound === 4 && gameState.activeQuestionId === img.id && (
+                                <select 
+                                  className="form-input" 
+                                  style={{ padding: '4px', fontSize: '0.7rem', marginTop: '4px' }}
+                                  value={gameState.zoomLevel}
+                                  onChange={(e) => handleUpdateGameState(4, img.id, gameState.timerDuration, parseInt(e.target.value))}
+                                >
+                                  <option value={10}>10% Zoom (Hard)</option>
+                                  <option value={25}>25% Zoom</option>
+                                  <option value={50}>50% Zoom</option>
+                                  <option value={75}>75% Zoom</option>
+                                  <option value={100}>100% Zoom (Full)</option>
+                                </select>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           </div>
         )}
 
-        {/* TAB 2: MEDIA MANAGER */}
+        {/* ========================================================= */}
+        {/* TAB 2: QUIZ MANAGER (STAGE 0 PRELIMS MCQS) */}
+        {/* ========================================================= */}
+        {activeTab === 'quiz' && (
+          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.8fr', gap: '28px' }}>
+            {/* Form: Add / Edit Question */}
+            <div className="glass-panel" style={{ padding: '24px', height: 'fit-content' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+                  {editingQuizId ? `Edit Question #${editingQuizId}` : 'Add New MCQ Question'}
+                </h3>
+                {editingQuizId && (
+                  <button onClick={handleCancelEdit} className="btn-secondary" style={{ padding: '4px 10px', fontSize: '0.75rem' }}>
+                    Cancel Edit
+                  </button>
+                )}
+              </div>
+
+              {quizStatus.success && (
+                <div style={{ background: 'rgba(74, 222, 128, 0.1)', border: '1px solid #4ADE80', color: '#4ADE80', borderRadius: '8px', padding: '10px 14px', fontSize: '0.85rem', marginBottom: '16px' }}>
+                  {quizStatus.success}
+                </div>
+              )}
+              {quizStatus.error && (
+                <div style={{ background: 'rgba(224, 27, 34, 0.1)', border: '1px solid #E01B22', color: '#FF4D4D', borderRadius: '8px', padding: '10px 14px', fontSize: '0.85rem', marginBottom: '16px' }}>
+                  {quizStatus.error}
+                </div>
+              )}
+
+              <form onSubmit={handleSaveQuizQuestion}>
+                <div className="form-group" style={{ marginBottom: '14px' }}>
+                  <label className="form-label" style={{ fontSize: '0.85rem', marginBottom: '4px' }}>Question Text</label>
+                  <textarea 
+                    name="questionText" 
+                    rows={3} 
+                    className="form-input" 
+                    required 
+                    placeholder="Enter the MCQ question text here..."
+                    value={quizForm.questionText} 
+                    onChange={handleQuizFormChange} 
+                  />
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '14px' }}>
+                  <div>
+                    <label className="form-label" style={{ fontSize: '0.8rem', color: quizForm.correctOption === 'A' ? '#4ADE80' : 'var(--text-secondary)' }}>
+                      Option A {quizForm.correctOption === 'A' && '✓ (Correct)'}
+                    </label>
+                    <input 
+                      type="text" 
+                      name="optionA" 
+                      className="form-input" 
+                      required 
+                      placeholder="Choice A text"
+                      value={quizForm.optionA} 
+                      onChange={handleQuizFormChange} 
+                    />
+                  </div>
+
+                  <div>
+                    <label className="form-label" style={{ fontSize: '0.8rem', color: quizForm.correctOption === 'B' ? '#4ADE80' : 'var(--text-secondary)' }}>
+                      Option B {quizForm.correctOption === 'B' && '✓ (Correct)'}
+                    </label>
+                    <input 
+                      type="text" 
+                      name="optionB" 
+                      className="form-input" 
+                      required 
+                      placeholder="Choice B text"
+                      value={quizForm.optionB} 
+                      onChange={handleQuizFormChange} 
+                    />
+                  </div>
+
+                  <div>
+                    <label className="form-label" style={{ fontSize: '0.8rem', color: quizForm.correctOption === 'C' ? '#4ADE80' : 'var(--text-secondary)' }}>
+                      Option C {quizForm.correctOption === 'C' && '✓ (Correct)'}
+                    </label>
+                    <input 
+                      type="text" 
+                      name="optionC" 
+                      className="form-input" 
+                      required 
+                      placeholder="Choice C text"
+                      value={quizForm.optionC} 
+                      onChange={handleQuizFormChange} 
+                    />
+                  </div>
+
+                  <div>
+                    <label className="form-label" style={{ fontSize: '0.8rem', color: quizForm.correctOption === 'D' ? '#4ADE80' : 'var(--text-secondary)' }}>
+                      Option D {quizForm.correctOption === 'D' && '✓ (Correct)'}
+                    </label>
+                    <input 
+                      type="text" 
+                      name="optionD" 
+                      className="form-input" 
+                      required 
+                      placeholder="Choice D text"
+                      value={quizForm.optionD} 
+                      onChange={handleQuizFormChange} 
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group" style={{ marginBottom: '14px' }}>
+                  <label className="form-label" style={{ fontSize: '0.85rem' }}>Select Correct Choice</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
+                    {['A', 'B', 'C', 'D'].map(opt => (
+                      <button
+                        type="button"
+                        key={opt}
+                        onClick={() => setQuizForm(prev => ({ ...prev, correctOption: opt }))}
+                        className={quizForm.correctOption === opt ? 'btn-primary' : 'btn-secondary'}
+                        style={{ padding: '8px', textAlign: 'center', fontSize: '0.85rem', fontWeight: 'bold' }}
+                      >
+                        Option {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+                  <div className="form-group">
+                    <label className="form-label" style={{ fontSize: '0.8rem' }}>Order Number</label>
+                    <input 
+                      type="number" 
+                      name="orderNum" 
+                      className="form-input" 
+                      min={1}
+                      value={quizForm.orderNum} 
+                      onChange={handleQuizFormChange} 
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label" style={{ fontSize: '0.8rem' }}>Points Awarded</label>
+                    <input 
+                      type="number" 
+                      name="points" 
+                      className="form-input" 
+                      min={1}
+                      value={quizForm.points} 
+                      onChange={handleQuizFormChange} 
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button type="submit" className="btn-primary" style={{ flex: 1, padding: '10px' }}>
+                    {editingQuizId ? 'Update Question' : '+ Add Question'}
+                  </button>
+                  {editingQuizId && (
+                    <button type="button" onClick={handleCancelEdit} className="btn-secondary" style={{ padding: '10px 16px' }}>
+                      Cancel
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+
+            {/* List & Bulk Controls */}
+            <div className="glass-panel" style={{ padding: '24px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '12px', flexWrap: 'wrap', gap: '10px' }}>
+                <div>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>
+                    Stage 0 Questions Directory ({quizQuestions.length})
+                  </h3>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                    Total Points: {quizQuestions.reduce((sum, q) => sum + (q.points || 1), 0)} pts
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button onClick={handleSeedDefaults} className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem', borderColor: '#4ADE80', color: '#4ADE80' }}>
+                    ⚡ Seed 20 Curated Questions
+                  </button>
+                  <button onClick={handleClearAllQuestions} className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem', borderColor: '#E01B22', color: '#FF4D4D' }}>
+                    🗑️ Clear All
+                  </button>
+                </div>
+              </div>
+
+              {quizQuestions.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-dim)' }}>
+                  <p style={{ fontSize: '1.1rem', marginBottom: '12px' }}>No quiz questions configured for Stage 0 Prelims yet.</p>
+                  <p style={{ fontSize: '0.85rem', marginBottom: '20px' }}>You can add questions manually using the form on the left, or click the button below to load 20 pre-configured AI & Deepfake questions.</p>
+                  <button onClick={handleSeedDefaults} className="btn-primary" style={{ padding: '10px 20px' }}>
+                    ⚡ Seed Default 20 Questions
+                  </button>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxHeight: '720px', overflowY: 'auto', paddingRight: '6px' }}>
+                  {quizQuestions.map((q, idx) => (
+                    <div 
+                      key={q.id} 
+                      style={{ 
+                        background: editingQuizId === q.id ? 'rgba(224,27,34,0.1)' : 'rgba(255,255,255,0.02)', 
+                        borderRadius: '8px', 
+                        padding: '16px', 
+                        border: editingQuizId === q.id ? '1px solid var(--color-primary-blue, #E01B22)' : '1px solid rgba(255,255,255,0.06)' 
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{ background: 'rgba(255,255,255,0.1)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                            Q{q.orderNum || (idx + 1)}
+                          </span>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                            {q.points || 1} pt
+                          </span>
+                        </div>
+                        <div style={{ display: 'flex', gap: '6px' }}>
+                          <button 
+                            onClick={() => handleEditQuestion(q)} 
+                            className="btn-secondary" 
+                            style={{ padding: '4px 10px', fontSize: '0.75rem' }}
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteQuestion(q.id)} 
+                            className="btn-secondary" 
+                            style={{ padding: '4px 10px', fontSize: '0.75rem', color: '#FF4D4D', borderColor: 'rgba(224,27,34,0.3)' }}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+
+                      <p style={{ fontSize: '0.95rem', fontWeight: '600', color: '#fff', marginBottom: '12px', lineHeight: '1.4' }}>
+                        {q.questionText}
+                      </p>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '0.85rem' }}>
+                        {[
+                          { key: 'A', text: q.optionA },
+                          { key: 'B', text: q.optionB },
+                          { key: 'C', text: q.optionC },
+                          { key: 'D', text: q.optionD }
+                        ].map((opt) => {
+                          const isCorrect = q.correctAnswer === opt.text || q.correctAnswer === opt.key
+                          return (
+                            <div 
+                              key={opt.key} 
+                              style={{ 
+                                padding: '8px 12px', 
+                                borderRadius: '6px', 
+                                background: isCorrect ? 'rgba(74, 222, 128, 0.12)' : 'rgba(0,0,0,0.2)', 
+                                border: isCorrect ? '1px solid #4ADE80' : '1px solid rgba(255,255,255,0.04)',
+                                color: isCorrect ? '#4ADE80' : 'var(--text-secondary)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px'
+                              }}
+                            >
+                              <strong style={{ minWidth: '16px' }}>{opt.key})</strong>
+                              <span style={{ flex: 1 }}>{opt.text}</span>
+                              {isCorrect && <span style={{ fontWeight: 'bold' }}>✓</span>}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================= */}
+        {/* TAB 3: MEDIA MANAGER (STAGES 1 - 3) */}
+        {/* ========================================================= */}
         {activeTab === 'media' && (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '32px' }}>
             {/* Upload Panel */}
             <div className="glass-panel" style={{ padding: '24px' }}>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>Upload Game Image</h3>
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
+                Upload Visual Question
+              </h3>
               
-              {uploadStatus.success && <div style={{ background: 'rgba(0,210,255,0.08)', border: '1px solid var(--color-cyan)', color: 'var(--color-cyan)', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px' }}>{uploadStatus.success}</div>}
-              {uploadStatus.error && <div style={{ background: 'rgba(255,20,147,0.1)', border: '1px solid #ff1493', color: '#ff5c93', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px' }}>{uploadStatus.error}</div>}
+              {uploadStatus.success && <div style={{ background: 'rgba(74, 222, 128, 0.1)', border: '1px solid #4ADE80', color: '#4ADE80', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px' }}>{uploadStatus.success}</div>}
+              {uploadStatus.error && <div style={{ background: 'rgba(224,27,34,0.1)', border: '1px solid #E01B22', color: '#FF4D4D', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px' }}>{uploadStatus.error}</div>}
 
               <form onSubmit={handleUploadSubmit}>
                 <div className="form-group">
-                  <label className="form-label">Target Round</label>
+                  <label className="form-label">Target Competition Stage</label>
                   <select name="roundNumber" className="form-input" value={uploadData.roundNumber} onChange={handleUploadChange}>
-                    <option value={1}>Round 1 - Pixel Detective</option>
-                    <option value={2}>Round 2 - The Glitch Hunt</option>
-                    <option value={3}>Round 3 - Prompt Wars</option>
-                    <option value={4}>Round 4 - Tie-Breaker</option>
+                    <option value={2}>Stage 1 - Pixel Detective (Real vs AI — 10 Questions, 40s each)</option>
+                    <option value={3}>Stage 2 - The Glitch Hunt (Artifacts / Flaws — 7 Questions, 45s each)</option>
+                    <option value={4}>Stage 3 - Prompt Wars (Prompt Engineering — 5 Questions, 75s each)</option>
                   </select>
                 </div>
 
@@ -642,14 +1232,14 @@ export default function AdminDashboard() {
 
                 <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
                   <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                    <input type="checkbox" name="isAi" checked={uploadData.isAi} onChange={handleUploadChange} style={{ transform: 'scale(1.2)' }} />
+                    <input type="checkbox" name="isAi" checked={uploadData.isAi} onChange={handleUploadChange} style={{ transform: 'scale(1.2)', accentColor: '#E01B22' }} />
                     <span style={{ fontSize: '0.9rem' }}>AI Generated Visual</span>
                   </label>
                   
-                  {uploadData.roundNumber === 2 && (
+                  {uploadData.roundNumber === 3 && (
                     <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                      <input type="checkbox" name="isLightning" checked={uploadData.isLightning} onChange={handleUploadChange} style={{ transform: 'scale(1.2)' }} />
-                      <span style={{ fontSize: '0.9rem', color: '#ff1493' }}>Lightning Round</span>
+                      <input type="checkbox" name="isLightning" checked={uploadData.isLightning} onChange={handleUploadChange} style={{ transform: 'scale(1.2)', accentColor: '#E01B22' }} />
+                      <span style={{ fontSize: '0.9rem', color: '#FF4D4D' }}>Lightning Round</span>
                     </label>
                   )}
                 </div>
@@ -671,11 +1261,10 @@ export default function AdminDashboard() {
                   </div>
                 )}
 
-                {/* Descriptive answers fields based on target round */}
-                {uploadData.roundNumber === 2 && (
+                {uploadData.roundNumber === 3 && (
                   <>
                     <div className="form-group">
-                      <label className="form-label">Identify Inconsistencies (Answer details to match/grade)</label>
+                      <label className="form-label">Identify Inconsistencies / Expected Glitch Details</label>
                       <textarea name="answerDetails" rows={3} className="form-input" value={uploadData.answerDetails} onChange={handleUploadChange} placeholder="e.g., Distorted fingers, incorrect mirror reflection, shadow angles disagree" />
                     </div>
                     <div className="form-group">
@@ -685,44 +1274,47 @@ export default function AdminDashboard() {
                   </>
                 )}
 
-                {uploadData.roundNumber === 3 && (
+                {uploadData.roundNumber === 4 && (
                   <div className="form-group">
-                    <label className="form-label">Original Generation Prompt / Justification Details</label>
+                    <label className="form-label">Original Generation Prompt / Target Details</label>
                     <textarea name="answerDetails" rows={3} className="form-input" value={uploadData.answerDetails} onChange={handleUploadChange} placeholder="Describe the original prompt or the deepfake cues that make it real/AI." />
                   </div>
                 )}
 
-                {uploadData.roundNumber === 4 && (
-                  <div className="form-group">
-                    <label className="form-label">Correct Name/Object in Image (For Auto-score matching)</label>
-                    <input type="text" name="answerDetails" className="form-input" value={uploadData.answerDetails} onChange={handleUploadChange} placeholder="e.g., Eiffel Tower" />
-                  </div>
-                )}
-
-                <button type="submit" className="btn-primary" style={{ width: '100%', marginTop: '8px' }}>Upload Image Metadata</button>
+                <button type="submit" className="btn-primary" style={{ width: '100%', marginTop: '8px' }}>
+                  Upload Image Metadata
+                </button>
               </form>
             </div>
 
             {/* List & Manage Panel */}
             <div className="glass-panel" style={{ padding: '24px' }}>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>All Uploads Directory</h3>
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
+                All Visual Questions Directory
+              </h3>
               
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '600px', overflowY: 'auto', paddingRight: '4px' }}>
-                {[1, 2, 3, 4].map(roundNum => {
-                  const roundImgs = images.filter(img => img.roundNumber === roundNum)
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxHeight: '600px', overflowY: 'auto', paddingRight: '4px' }}>
+                {[
+                  { round: 2, label: 'Stage 1 - Pixel Detective (Target: 10 Qs, 40s per pixel)' },
+                  { round: 3, label: 'Stage 2 - The Glitch Hunt (Target: 7 Qs, 45s per pixel)' },
+                  { round: 4, label: 'Stage 3 - Prompt Wars (Target: 5 Qs, 75s per pixel)' }
+                ].map(({ round, label }) => {
+                  const roundImgs = images.filter(img => img.roundNumber === round)
                   return (
-                    <div key={roundNum} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: '16px' }}>
-                      <h4 style={{ fontSize: '1rem', color: 'var(--color-cyan)', marginBottom: '8px' }}>Round {roundNum} Uploads ({roundImgs.length})</h4>
+                    <div key={round} style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '16px' }}>
+                      <h4 style={{ fontSize: '1rem', color: 'var(--color-primary-blue, #E01B22)', marginBottom: '10px' }}>
+                        {label} ({roundImgs.length})
+                      </h4>
                       {roundImgs.length === 0 ? (
-                        <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>No uploads</p>
+                        <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>No visual questions uploaded yet</p>
                       ) : (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', gap: '8px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', gap: '10px' }}>
                           {roundImgs.map(img => (
                             <div key={img.id} style={{ position: 'relative', width: '80px', height: '80px', borderRadius: '6px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
                               <img src={`http://localhost:8080${img.imageUrl}`} alt="item" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                               <button 
                                 onClick={() => handleDeleteImage(img.id)}
-                                style={{ position: 'absolute', top: '2px', right: '2px', background: 'rgba(255,20,147,0.85)', color: '#fff', border: 'none', borderRadius: '50%', width: '18px', height: '18px', fontSize: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                style={{ position: 'absolute', top: '2px', right: '2px', background: 'rgba(224,27,34,0.9)', color: '#fff', border: 'none', borderRadius: '50%', width: '18px', height: '18px', fontSize: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                               >
                                 &times;
                               </button>
@@ -738,32 +1330,56 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* TAB 3: GRADING PANEL */}
+        {/* ========================================================= */}
+        {/* TAB 4: GRADING PANEL */}
+        {/* ========================================================= */}
         {activeTab === 'grading' && (
           <div className="glass-panel" style={{ padding: '24px' }}>
-            <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>Ungraded Submissions (Round {gameState.activeRound})</h3>
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
+              Pending Submissions — {STAGE_NAMES[gameState.activeRound] || `Round ${gameState.activeRound}`}
+            </h3>
             
-            {gradingStatus && <div style={{ background: 'rgba(0,210,255,0.08)', border: '1px solid var(--color-cyan)', color: 'var(--color-cyan)', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px' }}>{gradingStatus}</div>}
+            {gradingStatus && <div style={{ background: 'rgba(74, 222, 128, 0.1)', border: '1px solid #4ADE80', color: '#4ADE80', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px' }}>{gradingStatus}</div>}
             
+            {gameState.activeRound <= 2 && (
+              <div style={{ background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38BDF8', borderRadius: '8px', padding: '14px 18px', marginBottom: '18px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span style={{ fontSize: '1.4rem' }}>⚡</span>
+                <div>
+                  <div style={{ fontWeight: 'bold', fontSize: '0.95rem', marginBottom: '2px' }}>Automated Real-Time Scoring Active</div>
+                  <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>
+                    Grading system is not applicable for {gameState.activeRound === 1 ? 'Stage 0 (MCQ Quiz)' : 'Stage 1 (Pixel Detective)'}. Scores are automatically calculated and updated on the real-time leaderboard immediately upon submission.
+                  </div>
+                </div>
+              </div>
+            )}
+
             {submissions.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-dim)' }}>
-                No pending submissions for grading in the current active round.
+                No pending submissions for grading in the current active stage.
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {submissions.map((sub) => (
                   <div key={sub.id} className="glass-panel" style={{ padding: '20px', display: 'grid', gridTemplateColumns: '150px 1fr 200px', gap: '20px', alignItems: 'center' }}>
                     <div style={{ textAlign: 'center' }}>
-                      <img 
-                        src={`http://localhost:8080${sub.imageQuestion.imageUrl}`} 
-                        alt="question" 
-                        style={{ width: '100%', height: '100px', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}
-                      />
-                      <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '8px' }}>Q-ID: {sub.imageQuestion.id}</div>
+                      {sub.imageQuestion && sub.imageQuestion.imageUrl ? (
+                        <img 
+                          src={`http://localhost:8080${sub.imageQuestion.imageUrl}`} 
+                          alt="question" 
+                          style={{ width: '100%', height: '100px', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}
+                        />
+                      ) : (
+                        <div style={{ width: '100%', height: '100px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-dim)' }}>
+                          No Image
+                        </div>
+                      )}
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '8px' }}>
+                        Q-ID: {sub.imageQuestion ? sub.imageQuestion.id : 'N/A'}
+                      </div>
                     </div>
                     
                     <div>
-                      <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--color-cyan)', marginBottom: '8px' }}>
+                      <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--color-primary-blue, #E01B22)', marginBottom: '8px' }}>
                         Team: {sub.user.teamName}
                       </div>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
@@ -771,9 +1387,9 @@ export default function AdminDashboard() {
                           <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Team Submission:</span>
                           <p style={{ marginTop: '4px', fontSize: '0.9rem', whiteSpace: 'pre-wrap' }}>{sub.textSubmission || sub.chosenAnswer || 'No text entry'}</p>
                         </div>
-                        <div style={{ background: 'rgba(0,210,255,0.02)', padding: '12px', borderRadius: '6px', border: '1px solid rgba(0,210,255,0.08)' }}>
-                          <span style={{ fontSize: '0.75rem', color: 'var(--color-cyan)', textTransform: 'uppercase' }}>Expected Answer/Key Details:</span>
-                          <p style={{ marginTop: '4px', fontSize: '0.9rem', color: 'var(--text-white)' }}>{sub.imageQuestion.answerDetails || 'None specified'}</p>
+                        <div style={{ background: 'rgba(224,27,34,0.03)', padding: '12px', borderRadius: '6px', border: '1px solid rgba(224,27,34,0.1)' }}>
+                          <span style={{ fontSize: '0.75rem', color: '#FF4D4D', textTransform: 'uppercase' }}>Expected Answer/Key Details:</span>
+                          <p style={{ marginTop: '4px', fontSize: '0.9rem', color: 'var(--text-white)' }}>{sub.imageQuestion ? (sub.imageQuestion.answerDetails || 'None specified') : 'N/A'}</p>
                         </div>
                       </div>
                     </div>
@@ -806,12 +1422,16 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* TAB 4: LEADERBOARD & ADVANCEMENT */}
+        {/* ========================================================= */}
+        {/* TAB 5: LEADERBOARD & ADVANCEMENT */}
+        {/* ========================================================= */}
         {activeTab === 'leaderboard' && (
           <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '32px' }}>
-            {/* Live Standing Table */}
+            {/* Live Standings Table */}
             <div className="glass-panel" style={{ padding: '24px' }}>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>Live Leaderboard Standings</h3>
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
+                Live Leaderboard Standings
+              </h3>
               
               {leaderboard.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-dim)' }}>No teams registered yet.</div>
@@ -820,7 +1440,8 @@ export default function AdminDashboard() {
                   <thead>
                     <tr style={{ borderBottom: '2px solid rgba(255,255,255,0.08)' }}>
                       <th style={{ padding: '12px 8px', color: 'var(--text-secondary)' }}>Rank</th>
-                      <th style={{ padding: '12px 8px', color: 'var(--text-secondary)' }}>Team Name</th>
+                      <th style={{ padding: '12px 8px', color: 'var(--text-secondary)' }}>Team</th>
+                      <th style={{ padding: '12px 8px', color: 'var(--text-secondary)', textAlign: 'center' }}>Stage</th>
                       <th style={{ padding: '12px 8px', color: 'var(--text-secondary)', textAlign: 'center' }}>Total Score</th>
                       <th style={{ padding: '12px 8px', color: 'var(--text-secondary)', textAlign: 'center' }}>State</th>
                     </tr>
@@ -831,15 +1452,20 @@ export default function AdminDashboard() {
                         key={team.id} 
                         style={{ 
                           borderBottom: '1px solid rgba(255,255,255,0.04)',
-                          background: team.isEliminated ? 'rgba(255,20,147,0.01)' : 'transparent'
+                          background: team.isEliminated ? 'rgba(224,27,34,0.03)' : 'transparent'
                         }}
                       >
                         <td style={{ padding: '14px 8px', fontWeight: 'bold' }}>{idx + 1}</td>
                         <td style={{ padding: '14px 8px' }}>
-                          <div>{team.teamName}</div>
-                          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{team.memberName} (ID: {team.id})</span>
+                          <div style={{ fontWeight: '600' }}>{team.teamName}</div>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>TID: {team.teamId} (Size: {team.teamSize})</span>
                         </td>
-                        <td style={{ padding: '14px 8px', textAlign: 'center', fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--color-cyan)' }}>{team.score}</td>
+                        <td style={{ padding: '14px 8px', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                          Stage {team.roundNumber !== undefined ? (team.roundNumber - 1) : 0}
+                        </td>
+                        <td style={{ padding: '14px 8px', textAlign: 'center', fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--color-primary-blue, #E01B22)' }}>
+                          {team.score}
+                        </td>
                         <td style={{ padding: '14px 8px', textAlign: 'center' }}>
                           {team.isEliminated ? (
                             <span className="badge badge-eliminated">Eliminated</span>
@@ -854,36 +1480,40 @@ export default function AdminDashboard() {
               )}
             </div>
 
-            {/* Advancement Controls */}
+            {/* Advancement Rules */}
             <div className="glass-panel" style={{ padding: '24px', height: 'fit-content' }}>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>Round Advancement Rules</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '20px' }}>
-                Use these buttons to complete the current round. The platform will sort the teams by score, disqualify the lowest scoring teams, and transition the active round state.
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
+                Round Advancement Rules
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '20px', lineHeight: '1.4' }}>
+                Sort active teams by score, eliminate the lowest performers, and advance qualified teams to the next stage.
               </p>
 
               {advancementStatus && (
-                <div style={{ background: 'rgba(0,210,255,0.08)', border: '1px solid var(--color-cyan)', color: 'var(--color-cyan)', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px', textAlign: 'center' }}>
+                <div style={{ background: 'rgba(74, 222, 128, 0.1)', border: '1px solid #4ADE80', color: '#4ADE80', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px', textAlign: 'center' }}>
                   {advancementStatus}
                 </div>
               )}
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* Stage 0 -> Stage 1 */}
                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <h4 style={{ fontSize: '0.95rem', marginBottom: '8px' }}>Round 1 Cutoff</h4>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>Qualifies the <strong>Top 50%</strong> of active teams for Glitch Hunt. Resolves ties at the cutoff.</p>
+                  <h4 style={{ fontSize: '0.95rem', marginBottom: '6px' }}>Stage 0 Prelims Cutoff</h4>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>Qualifies the <strong>Top 50%</strong> of teams for Stage 1: Pixel Detective.</p>
                   <button 
                     onClick={() => handleAdvanceTeams(50, true)} 
                     className="btn-primary" 
                     style={{ width: '100%', padding: '10px' }}
                     disabled={gameState.activeRound !== 1}
                   >
-                    Advance Top 50%
+                    Advance Top 50% Teams
                   </button>
                 </div>
 
+                {/* Stage 1 -> Stage 2 */}
                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <h4 style={{ fontSize: '0.95rem', marginBottom: '8px' }}>Round 2 Cutoff</h4>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>Qualifies the <strong>Top 10</strong> teams for the Grand Finale Prompt Wars.</p>
+                  <h4 style={{ fontSize: '0.95rem', marginBottom: '6px' }}>Stage 1 Pixel Detective Cutoff</h4>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>Qualifies the <strong>Top 10</strong> teams for Stage 2: Glitch Hunt.</p>
                   <button 
                     onClick={() => handleAdvanceTeams(10, false)} 
                     className="btn-primary" 
@@ -893,8 +1523,57 @@ export default function AdminDashboard() {
                     Advance Top 10 Teams
                   </button>
                 </div>
+
+                {/* Stage 2 -> Stage 3 */}
+                <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <h4 style={{ fontSize: '0.95rem', marginBottom: '6px' }}>Stage 2 Glitch Hunt Cutoff</h4>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>Qualifies the <strong>Top 5</strong> finalists for Stage 3: Prompt Wars.</p>
+                  <button 
+                    onClick={() => handleAdvanceTeams(5, false)} 
+                    className="btn-primary" 
+                    style={{ width: '100%', padding: '10px' }}
+                    disabled={gameState.activeRound !== 3}
+                  >
+                    Advance Top 5 Finalists
+                  </button>
+                </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* ========================================================= */}
+        {/* TAB 6: INVIGILATION GRID */}
+        {/* ========================================================= */}
+        {activeTab === 'invigilation' && (
+          <div className="glass-panel" style={{ padding: '24px' }}>
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
+              Live Invigilation Cameras ({Object.keys(webcams).length} Active)
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '16px' }}>
+              {Object.entries(webcams).map(([teamId, data]) => {
+                const isStale = Date.now() - data.timestamp > 15000
+                return (
+                  <div key={teamId} style={{ background: '#000', borderRadius: '8px', overflow: 'hidden', border: `1px solid ${isStale ? '#E01B22' : 'rgba(255,255,255,0.1)'}`, position: 'relative' }}>
+                    <img src={data.frame} alt="webcam" style={{ width: '100%', display: 'block', opacity: isStale ? 0.5 : 1 }} />
+                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '4px 8px', background: 'rgba(0,0,0,0.75)', fontSize: '0.75rem', display: 'flex', justifyContent: 'space-between' }}>
+                      <span>TID: {teamId}</span>
+                      <span style={{ color: '#FF4D4D' }}>{data.participantName}</span>
+                    </div>
+                    {isStale && (
+                      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: '#FF4D4D', fontWeight: 'bold', fontSize: '0.8rem', background: 'rgba(0,0,0,0.85)', padding: '4px 8px', borderRadius: '4px' }}>
+                        FEED STALE
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+            {Object.keys(webcams).length === 0 && (
+              <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-dim)' }}>
+                No active webcam streams currently connected.
+              </div>
+            )}
           </div>
         )}
       </main>

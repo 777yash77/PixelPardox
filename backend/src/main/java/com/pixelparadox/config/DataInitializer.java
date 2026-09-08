@@ -28,49 +28,41 @@ public class DataInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         // 1. Seed Admin User
         String adminEmail = "ywanth224@gmail.com";
-        Optional<User> adminOpt = userRepository.findByLeaderEmail(adminEmail);
+        Optional<User> adminOpt = userRepository.findByTeamId(adminEmail);
         
         if (adminOpt.isEmpty()) {
             User admin = new User();
             admin.setTeamName("Admin Organizer");
-            admin.setLeaderEmail(adminEmail);
-            admin.setLeaderName("Admin Organizer");
-            admin.setMemberName("MCA Coordinator");
+            admin.setTeamId(adminEmail);
             admin.setPassword(passwordEncoder.encode("Yash1234"));
             admin.setRole("ROLE_ADMIN");
-            admin.setVerified(true);
+            admin.setTeamSize(1);
             userRepository.save(admin);
             System.out.println(">>> Seeded default admin user: " + adminEmail);
         } else {
             User admin = adminOpt.get();
-            if (admin.getLeaderName() == null) admin.setLeaderName("Admin Organizer");
             admin.setPassword(passwordEncoder.encode("Yash1234"));
             admin.setRole("ROLE_ADMIN");
-            admin.setVerified(true);
             userRepository.save(admin);
             System.out.println(">>> Updated admin credentials to standard: " + adminEmail);
         }
 
         // 3. Seed second admin user
         String secondAdminEmail = "25mx356@gmail.com";
-        Optional<User> secondAdminOpt = userRepository.findByLeaderEmail(secondAdminEmail);
+        Optional<User> secondAdminOpt = userRepository.findByTeamId(secondAdminEmail);
         if (secondAdminOpt.isEmpty()) {
             User secondAdmin = new User();
             secondAdmin.setTeamName("Second Admin");
-            secondAdmin.setLeaderEmail(secondAdminEmail);
-            secondAdmin.setLeaderName("Second Admin");
-            secondAdmin.setMemberName("Second Coordinator");
+            secondAdmin.setTeamId(secondAdminEmail);
             secondAdmin.setPassword(passwordEncoder.encode("vix-1234"));
             secondAdmin.setRole("ROLE_ADMIN");
-            secondAdmin.setVerified(true);
+            secondAdmin.setTeamSize(1);
             userRepository.save(secondAdmin);
             System.out.println(">>> Seeded second admin user: " + secondAdminEmail);
         } else {
             User secondAdmin = secondAdminOpt.get();
-            if (secondAdmin.getLeaderName() == null) secondAdmin.setLeaderName("Second Admin");
             secondAdmin.setPassword(passwordEncoder.encode("vix-1234"));
             secondAdmin.setRole("ROLE_ADMIN");
-            secondAdmin.setVerified(true);
             userRepository.save(secondAdmin);
             System.out.println(">>> Updated second admin credentials: " + secondAdminEmail);
         }

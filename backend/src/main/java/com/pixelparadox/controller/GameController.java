@@ -6,6 +6,8 @@ import com.pixelparadox.model.Submission;
 import com.pixelparadox.model.User;
 import com.pixelparadox.repository.ImageQuestionRepository;
 import com.pixelparadox.repository.UserRepository;
+import com.pixelparadox.repository.WebcamRecordingRepository;
+import com.pixelparadox.model.WebcamRecording;
 import com.pixelparadox.service.GameService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,13 +34,16 @@ public class GameController {
     private final GameService gameService;
     private final ImageQuestionRepository imageQuestionRepository;
     private final UserRepository userRepository;
+    private final WebcamRecordingRepository webcamRecordingRepository;
 
     public GameController(GameService gameService,
                           ImageQuestionRepository imageQuestionRepository,
-                          UserRepository userRepository) {
+                          UserRepository userRepository,
+                          WebcamRecordingRepository webcamRecordingRepository) {
         this.gameService = gameService;
         this.imageQuestionRepository = imageQuestionRepository;
         this.userRepository = userRepository;
+        this.webcamRecordingRepository = webcamRecordingRepository;
     }
 
     // Request Records
@@ -46,6 +51,10 @@ public class GameController {
     public record SubmitRequest(Long questionId, String chosenAnswer, String bonusAnswer, String textSubmission) {}
     public record GradeRequest(Long submissionId, int score) {}
     public record AdvanceRequest(int limitValue, boolean isPercent) {}
+    
+    // Prelims records
+    public record StartQuizRequest(String participantName) {}
+    public record SubmitQuizRequest(String participantName, Map<Long, String> answers) {}
 
     @GetMapping("/state")
     public ResponseEntity<GameState> getGameState() {
@@ -217,7 +226,7 @@ public class GameController {
     @GetMapping("/leaderboard")
     public ResponseEntity<List<User>> getLeaderboard() {
         // Return only teams, not admin
-        List<User> teams = userRepository.findByRoleAndIsVerifiedTrueOrderByScoreDesc("ROLE_TEAM");
+        List<User> teams = userRepository.findByRoleOrderByScoreDesc("ROLE_TEAM");
         return ResponseEntity.ok(teams);
     }
 
@@ -229,6 +238,82 @@ public class GameController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("message", "Failed to advance teams: " + e.getMessage()));
+        }
+    }
+
+    // --- PRELIMS ENDPOINTS ---
+
+    @GetMapping("/prelims/questions")
+    public ResponseEntity<?> getQuizQuestions() {
+        // Hide correct answers from participants
+        List<com.pixelparadox.model.QuizQuestion> questions = gameService.getQuizQuestions().stream().map(q -> {
+            com.pixelparadox.model.QuizQuestion safe = new com.pixelparadox.model.QuizQuestion();
+            safe.setId(q.getId());
+            safe.setQuestionText(q.getQuestionText());
+            safe.setOptionA(q.getOptionA());
+            safe.setOptionB(q.getOptionB());
+            safe.setOptionC(q.getOptionC());
+            safe.setOptionD(q.getOptionD());
+            safe.setOrderNum(q.getOrderNum());
+            safe.setPoints(q.getPoints());
+            // omit correctAnswer
+            return safe;
+        }).toList();
+        return ResponseEntity.ok(questions);
+    }
+
+    @PostMapping("/prelims/start")
+    public ResponseEntity<?> startQuizAttempt(@RequestBody StartQuizRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        try {
+            com.pixelparadox.model.QuizAttempt attempt = gameService.startQuizAttempt(email, request.participantName());
+            return ResponseEntity.ok(attempt);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/prelims/submit")
+    public ResponseEntity<?> submitQuizAttempt(@RequestBody SubmitQuizRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        try {
+            com.pixelparadox.model.QuizAttempt attempt = gameService.submitQuizAttempt(email, request.participantName(), request.answers());
+            return ResponseEntity.ok(attempt);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @PostMapping(value = "/prelims/video", consumes = "multipart/form-data")
+    public ResponseEntity<?> uploadWebcamRecording(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("participantName") String participantName) {
+
+        String teamId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Video file cannot be empty"));
+        }
+
+        try {
+            String uploadDir = "uploads/videos";
+            File directory = new File(uploadDir);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            String fileName = System.currentTimeMillis() + "_" + teamId + "_" + participantName.replaceAll("\\s+", "_") + ".webm";
+            Path path = Paths.get(uploadDir, fileName);
+            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+            String videoUrl = "/uploads/videos/" + fileName;
+            WebcamRecording recording = new WebcamRecording(teamId, participantName, videoUrl);
+            webcamRecordingRepository.save(recording);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Recording uploaded successfully"));
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Failed to save video: " + e.getMessage()));
         }
     }
 }

@@ -50,6 +50,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/game/submissions").hasRole("ADMIN")
                 .requestMatchers("/api/game/advance-teams").hasRole("ADMIN")
                 .requestMatchers("/api/game/state/update").hasRole("ADMIN")
+                .requestMatchers("/api/game/state/timer").hasRole("ADMIN")
+                .requestMatchers("/api/game/reset").hasRole("ADMIN")
                 .requestMatchers("/api/game/submit").hasRole("TEAM")
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()

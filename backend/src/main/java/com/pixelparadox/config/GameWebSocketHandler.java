@@ -29,7 +29,10 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
-        // We can handle incoming client messages if needed, but the game is mostly server-to-client broadcasts
+        // Relay camera frames to admin
+        if (message.getPayload().contains("\"type\":\"CAMERA_FRAME\"")) {
+            broadcast(message.getPayload());
+        }
     }
 
     public void broadcast(String message) {

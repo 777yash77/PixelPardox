@@ -10,6 +10,10 @@ import com.pixelparadox.repository.GameStateRepository;
 import com.pixelparadox.repository.ImageQuestionRepository;
 import com.pixelparadox.repository.SubmissionRepository;
 import com.pixelparadox.repository.UserRepository;
+import com.pixelparadox.model.QuizQuestion;
+import com.pixelparadox.model.QuizAttempt;
+import com.pixelparadox.repository.QuizQuestionRepository;
+import com.pixelparadox.repository.QuizAttemptRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +29,8 @@ public class GameService {
     private final ImageQuestionRepository imageQuestionRepository;
     private final SubmissionRepository submissionRepository;
     private final UserRepository userRepository;
+    private final QuizQuestionRepository quizQuestionRepository;
+    private final QuizAttemptRepository quizAttemptRepository;
     private final GameWebSocketHandler gameWebSocketHandler;
     private final ObjectMapper objectMapper;
 
@@ -32,12 +38,16 @@ public class GameService {
                        ImageQuestionRepository imageQuestionRepository,
                        SubmissionRepository submissionRepository,
                        UserRepository userRepository,
+                       QuizQuestionRepository quizQuestionRepository,
+                       QuizAttemptRepository quizAttemptRepository,
                        GameWebSocketHandler gameWebSocketHandler,
                        ObjectMapper objectMapper) {
         this.gameStateRepository = gameStateRepository;
         this.imageQuestionRepository = imageQuestionRepository;
         this.submissionRepository = submissionRepository;
         this.userRepository = userRepository;
+        this.quizQuestionRepository = quizQuestionRepository;
+        this.quizAttemptRepository = quizAttemptRepository;
         this.gameWebSocketHandler = gameWebSocketHandler;
         this.objectMapper = objectMapper;
     }
@@ -94,7 +104,7 @@ public class GameService {
 
     @Transactional
     public Submission submitAnswer(String email, Long questionId, String chosenAnswer, String bonusAnswer, String textSubmission) {
-        User user = userRepository.findByLeaderEmail(email)
+        User user = userRepository.findByTeamId(email)
                 .orElseThrow(() -> new IllegalArgumentException("Team user not found"));
 
         if (user.isEliminated()) {
@@ -118,25 +128,36 @@ public class GameService {
         submission.setBonusAnswer(bonusAnswer);
         submission.setTextSubmission(textSubmission);
 
-        // Auto-scoring for Round 1
-        if (question.getRoundNumber() == 1) {
+        // Auto-scoring for Round 1 (Pixel Detective - roundNumber 2 or 1)
+        if (question.getRoundNumber() == 2 || question.getRoundNumber() == 1) {
             int score = 0;
-            
-            if (!question.isAi() && "REAL".equalsIgnoreCase(chosenAnswer)) {
-                // Correctly guessed Real
-                score = 10;
-            } else if (question.isAi() && "AI".equalsIgnoreCase(chosenAnswer)) {
-                // Correctly guessed AI
-                score = 8; // Base points for guessing AI correctly
-                
-                // Match model if provided
-                if (question.getModelUsed() != null && !question.getModelUsed().trim().isEmpty() && bonusAnswer != null) {
-                    if (question.getModelUsed().equalsIgnoreCase(bonusAnswer.trim())) {
-                        score = 10; // 8 + 2 bonus points = 10 points
+            boolean userSaidReal = "REAL".equalsIgnoreCase(chosenAnswer);
+            boolean userSaidAi = "AI".equalsIgnoreCase(chosenAnswer);
+
+            if (!question.isAi()) {
+                // Image is Real
+                if (userSaidReal) {
+                    score = 10; // Correct choice Real gets 10 points
+                } else {
+                    score = 0;  // Wrong gets 0
+                }
+            } else {
+                // Image is AI
+                if (userSaidAi) {
+                    boolean modelRight = question.getModelUsed() != null && 
+                                          !question.getModelUsed().trim().isEmpty() && 
+                                          bonusAnswer != null && 
+                                          question.getModelUsed().trim().equalsIgnoreCase(bonusAnswer.trim());
+                    if (modelRight) {
+                        score = 10; // AI chosen and model is also right -> 10 points
+                    } else {
+                        score = 8;  // Only AI choice is correct -> 8 points
                     }
+                } else {
+                    score = 0; // Wrong gets 0 points
                 }
             }
-            
+
             submission.setScore(score);
             submission.setGraded(true);
 
@@ -177,7 +198,7 @@ public class GameService {
             Map<String, Object> userInfo = new HashMap<>();
             userInfo.put("id", user.getId());
             userInfo.put("teamName", user.getTeamName());
-            userInfo.put("leaderEmail", user.getLeaderEmail());
+            userInfo.put("teamId", user.getTeamId());
             submissionPayload.put("user", userInfo);
             
             Map<String, Object> questionInfo = new HashMap<>();
@@ -202,7 +223,7 @@ public class GameService {
 
     public void broadcastLeaderboard() {
         try {
-            List<User> teams = userRepository.findByRoleAndIsVerifiedTrueOrderByScoreDesc("ROLE_TEAM");
+            List<User> teams = userRepository.findByRoleOrderByScoreDesc("ROLE_TEAM");
             Map<String, Object> scoreMsg = Map.of("type", "SCORES_UPDATED", "payload", teams);
             gameWebSocketHandler.broadcast(objectMapper.writeValueAsString(scoreMsg));
         } catch (Exception e) {
@@ -239,8 +260,8 @@ public class GameService {
 
     @Transactional
     public void advanceTeams(int limitValue, boolean isPercent) {
-        // Fetch all active, verified teams
-        List<User> activeTeams = userRepository.findByRoleAndIsVerifiedTrueAndIsEliminatedFalseOrderByScoreDesc("ROLE_TEAM");
+        // Fetch all active teams
+        List<User> activeTeams = userRepository.findByRoleAndIsEliminatedFalseOrderByScoreDesc("ROLE_TEAM");
 
         if (activeTeams.isEmpty()) {
             return;
@@ -317,7 +338,103 @@ public class GameService {
         state.setZoomLevel(100);
         gameStateRepository.save(state);
 
+        // Reset Quiz Attempts
+        quizAttemptRepository.deleteAll();
+
         broadcastGameState(state);
+        broadcastLeaderboard();
+    }
+
+    // PRELIMS LOGIC
+
+    public List<QuizQuestion> getQuizQuestions() {
+        return quizQuestionRepository.findAllByOrderByOrderNumAsc();
+    }
+
+    @Transactional
+    public QuizAttempt startQuizAttempt(String email, String participantName) {
+        User team = userRepository.findByTeamId(email).orElseThrow();
+        Optional<QuizAttempt> existing = quizAttemptRepository.findByTeamIdAndParticipantName(team.getId(), participantName);
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+        QuizAttempt attempt = new QuizAttempt(team, participantName);
+        attempt.setStatus("IN_PROGRESS");
+        attempt.setStartedAt(System.currentTimeMillis());
+        return quizAttemptRepository.save(attempt);
+    }
+
+    @Transactional
+    public QuizAttempt submitQuizAttempt(String email, String participantName, Map<Long, String> answers) {
+        User team = userRepository.findByTeamId(email).orElseThrow();
+        QuizAttempt attempt = quizAttemptRepository.findByTeamIdAndParticipantName(team.getId(), participantName)
+                .orElseThrow(() -> new IllegalStateException("Quiz not started"));
+
+        if ("COMPLETED".equals(attempt.getStatus())) {
+            throw new IllegalStateException("Quiz already submitted");
+        }
+
+        List<QuizQuestion> questions = getQuizQuestions();
+        int score = 0;
+        for (QuizQuestion q : questions) {
+            String submittedAnswer = answers != null ? answers.get(q.getId()) : null;
+            if (submittedAnswer != null && !submittedAnswer.trim().isEmpty()) {
+                if (isCorrectAnswer(q, submittedAnswer)) {
+                    score += 10; // +10 points for correct answer
+                } else {
+                    score -= 5;  // -5 points for wrong answer
+                }
+            }
+        }
+        if (score < 0) score = 0; // Prevent negative total score
+
+        attempt.setScore(score);
+        attempt.setStatus("COMPLETED");
+        attempt.setCompletedAt(System.currentTimeMillis());
+        QuizAttempt saved = quizAttemptRepository.save(attempt);
+
+        updateTeamPrelimsScore(team);
+        return saved;
+    }
+
+    private boolean isCorrectAnswer(QuizQuestion q, String submitted) {
+        if (q == null || q.getCorrectAnswer() == null || submitted == null) return false;
+        String ca = q.getCorrectAnswer().trim();
+        String sa = submitted.trim();
+        if (ca.equalsIgnoreCase(sa)) return true;
+        if (ca.equalsIgnoreCase("A") || ca.equalsIgnoreCase("optionA")) {
+            return sa.equalsIgnoreCase(q.getOptionA()) || sa.equalsIgnoreCase("A");
+        }
+        if (ca.equalsIgnoreCase("B") || ca.equalsIgnoreCase("optionB")) {
+            return sa.equalsIgnoreCase(q.getOptionB()) || sa.equalsIgnoreCase("B");
+        }
+        if (ca.equalsIgnoreCase("C") || ca.equalsIgnoreCase("optionC")) {
+            return sa.equalsIgnoreCase(q.getOptionC()) || sa.equalsIgnoreCase("C");
+        }
+        if (ca.equalsIgnoreCase("D") || ca.equalsIgnoreCase("optionD")) {
+            return sa.equalsIgnoreCase(q.getOptionD()) || sa.equalsIgnoreCase("D");
+        }
+        if (sa.equalsIgnoreCase("A") && ca.equalsIgnoreCase(q.getOptionA())) return true;
+        if (sa.equalsIgnoreCase("B") && ca.equalsIgnoreCase(q.getOptionB())) return true;
+        if (sa.equalsIgnoreCase("C") && ca.equalsIgnoreCase(q.getOptionC())) return true;
+        if (sa.equalsIgnoreCase("D") && ca.equalsIgnoreCase(q.getOptionD())) return true;
+        return false;
+    }
+
+    private void updateTeamPrelimsScore(User team) {
+        List<QuizAttempt> attempts = quizAttemptRepository.findByTeamId(team.getId());
+
+        double totalScoreSum = 0.0;
+        for (QuizAttempt att : attempts) {
+            if ("COMPLETED".equals(att.getStatus())) {
+                totalScoreSum += att.getScore();
+            }
+        }
+
+        int memberCount = team.getTeamSize();
+        if (memberCount <= 0) memberCount = 1;
+        team.setScore((int) Math.round(totalScoreSum / memberCount));
+        userRepository.save(team);
         broadcastLeaderboard();
     }
 }

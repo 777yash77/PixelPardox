@@ -10,6 +10,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <div className="grid-overlay" />
+        <div className="scanlines" />
         {children}
       </body>
     </html>

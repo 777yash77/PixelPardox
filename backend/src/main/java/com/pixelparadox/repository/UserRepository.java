@@ -9,9 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByLeaderEmail(String leaderEmail);
+    Optional<User> findByTeamId(String teamId);
     Optional<User> findByTeamName(String teamName);
-    List<User> findByRoleAndIsVerifiedTrueOrderByScoreDesc(String role);
-    List<User> findByRoleAndIsVerifiedTrueAndIsEliminatedFalseOrderByScoreDesc(String role);
-    long countByRoleAndIsVerifiedTrue(String role);
+    List<User> findByRoleOrderByScoreDesc(String role);
+    List<User> findByRoleAndIsEliminatedFalseOrderByScoreDesc(String role);
+    long countByRole(String role);
 }
