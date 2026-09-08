@@ -5,19 +5,25 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 const SPIDEY_GAME_QUOTES = [
-  "🕸️ 'Take a deep breath, web-slinger! Optical physics is on your side!'",
-  "🕷️ 'Stage 0 has 30 questions in 30m. Quality over speed!'",
-  "⚡ 'In Round 1, check pupil reflections and light sources!'",
-  "🎯 'Need a hint? Click [Ask Spidey for a Clue] anytime!'",
-  "🛡️ 'Believe in your preparation! Great teams stay calm under pressure!'"
+  "🕸️ 'Take a deep breath, web-slinger! Optical physics and photon diffraction are on your side!'",
+  "🕷️ 'Stage 0 has 30 questions in 30m. Quality over reckless speed! Don't let -5 penalty marks sting you!'",
+  "⚡ 'In Round 1, check pupil reflections! AI models always render mismatched ambient light sources!'",
+  "🎯 'Need an optical breakdown? Click [Ask Spidey for a Clue] anytime!'",
+  "🔬 'If the sunglasses reflect a beach on the left and a parking lot on the right, congratulations—you caught a deepfake!'",
+  "🛡️ 'Believe in your preparation! Great teams stay calm when the timer turns red!'",
+  "☕ 'Peter Parker here: Ignore Wade over on the left trying to microwave pizza on the server rack!'",
+  "🕷️ 'Real camera lenses have chromatic aberration and ISO grain. Diffusion models have plastic butter skin!'"
 ]
 
 const DEADPOOL_GAME_QUOTES = [
-  "🌮 'Maximum Effort! Show these AI neural nets who's boss!'",
-  "⚔️ 'One bad guess is -5 points. Click with your brain, not your elbow!'",
-  "💥 'Stuck on a tricky image? Ask your boy Wade for a clue!'",
-  "🕶️ 'You guys are gonna win this thing! Just don't guess blindly!'",
-  "🍗 'Fuel up on coffee and snacks, and trust your instincts!'"
+  "🌮 'Maximum Effort! Show these AI neural nets who is boss!'",
+  "⚔️ 'One bad guess is -5 points! Click with your brain, not your elbow, rookie!'",
+  "💥 'Stuck on a tricky image? Ask your boy Wade for a tactical clue!'",
+  "🕶️ 'You guys are gonna win this thing! Just don't guess blindly like a panicked pigeon!'",
+  "🍕 'Fuel up on pizza and coffee, and let your instincts slice through these pixels!'",
+  "🚨 'Stop sweating on the mouse! You are gonna short-circuit your laptop trackpad!'",
+  "🦄 'I bet twenty bucks on your team topping the leaderboard! Don't make me lose cash to Spider-Man!'",
+  "🎬 'Hey you behind the screen: Relax your shoulders, un-clench your jaw, and smash that submit button!'"
 ]
 
 export default function GameArena() {

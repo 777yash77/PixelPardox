@@ -5,20 +5,69 @@ import Link from 'next/link'
 
 const SPIDEY_QUOTES = [
   "🕸️ 'With great computing power comes strict deadlines and great responsibility!'",
-  "⚡ 'Stage 0: 30 MCQs in strictly 30 mins! (+10 correct, -5 for blind guesses!)'",
-  "🎯 'In Round 1, spot the exact AI model (Midjourney vs Flux) for maximum 10 points!'",
-  "🔬 'My Spider-Sense detects deepfakes faster than any external proctor!'",
+  "⚡ 'Stage 0: 30 MCQs in strictly 30 mins! (+10 correct, -5 for blind reckless guesses!)'",
+  "🎯 'In Round 1, spot the exact AI model (Midjourney vs Flux) for the maximum 10 points!'",
+  "🔬 'My Spider-Sense detects deepfakes faster than any proctoring algorithm!'",
   "⏱️ '40s in R1, 45s in R2, 75s in Grand Finale! Keep calm and trust optical physics!'",
-  "☕ 'Coffee break after the round! Right now, keep your eyes locked on the pixel reflections!'"
+  "☕ 'Coffee break after the round! Right now, keep your eyes locked on the iris reflections!'",
+  "🕷️ 'If I got 10 points every time Wade interrupted my photonics lecture, I could finally pay rent!'",
+  "💡 'Real camera lenses have sensor noise and chromatic aberration. Diffusion models have waxy plastic skin!'",
+  "🛡️ 'Take a deep breath! Great teams win under pressure by communicating and staying focused!'"
 ]
 
 const DEADPOOL_QUOTES = [
-  "⚔️ 'Hey! I am a mercenary with swords, not JARVIS or ChatGPT!'",
-  "🍕 'Did someone say free victory pizza?! Win Pixel Paradox and treat your squad!'",
-  "🤖 'Pro tip: If a character has 8 fingers and 3 ears, it is AI, genius!'",
-  "⚡ 'Stage 0 has -5 negative marking! Stop blind guessing like a panicked rookie!'",
-  "💥 'The tournament coordinators built this event with coffee and zero sleep. Respect!'",
-  "🕶️ 'Maximum Effort! Don't let your careless teammate tank your score to -40!'"
+  "⚔️ 'Hey! I am a mercenary with swords, not JARVIS or ChatGPT! Stop asking me to write your resume!'",
+  "🍕 'Did someone say free victory pizza?! Win Pixel Paradox and treat your squad like royalty!'",
+  "🤖 'Pro tip: If a character has 11 fingers, two left elbows, and ears on their neck, it is AI, genius!'",
+  "⚡ 'Stage 0 has -5 negative marking! Stop blind guessing like a panicked pigeon on a keyboard!'",
+  "💥 'The tournament coordinators built this event on black coffee and zero sleep. Bow down in respect!'",
+  "🕶️ 'Maximum Effort! Don't let your careless teammate tank your leaderboard score to -50!'",
+  "🎬 'Hey you behind the monitor! Relax your shoulders, un-clench your jaw, and click the right pixel!'",
+  "🦄 'I bet twenty bucks on your squad winning this thing. Don't make me lose money to Peter Parker!'",
+  "🚨 'If you inspect element to find the answers, an alarm goes off in my swords. Don't test me!'"
+]
+
+// Multi-scenario Roast Battles between Deadpool & Spider-Man
+const ROAST_BATTLES = [
+  {
+    tag: "THWIP vs SWORD",
+    deadpool: "🎯 HEY SPIDER-NERD! Look at Peter Parker over there—acting like the class teacher's pet who reminds the professor to collect homework! Whining about radioactive spider bites while wearing blue-and-red long johns! Did your aunt knit those tights for you?! Hahaha! 😂💀",
+    spidey: "🕸️ Oh please, Wade! At least I have an accredited science degree and don't talk to invisible cameras! Focus on the pixel forensics instead of giving unsolicited lectures to the contestants! 😂",
+    deadpoolEnd: "💥 Big talk from someone who swings on string! Pizza is on you if my squad takes first place on the leaderboard!"
+  },
+  {
+    tag: "RENT vs KATANA",
+    deadpool: "📢 BREAKING NEWS: Local Spider-Boy caught crying in the server room because he couldn't afford a domain name for his portfolio! Hey Pete, maybe sell another selfie to the newspaper for $15 to pay your overdue rent! 📸🕸️",
+    spidey: "🧪 Wade, you literally tried to debug the Spring Boot backend by stabbing the server rack with a katana! You thought 'CSS' stood for 'Can't Slice Someone'! Let the contestants handle the real AI detection! 🔬",
+    deadpoolEnd: "🍕 Katanas fix 99% of computer bugs, okay?! The other 1% is just missing semicolons and bad vibes!"
+  },
+  {
+    tag: "FOURTH WALL SMASH",
+    deadpool: "👀 Hey you! Yes, YOU behind the screen with the mouse! Look at Peter Parker's posture right now. He's hunched over like a gargoyle calculating diffraction angles. Meanwhile, I'm here in glorious 4K breaking the fourth wall! Who's your favorite superhero now?! 🎬",
+    spidey: "🤦‍♂️ Wade, stop tapping on their monitor! You're leaving pizza grease all over their display! Contestants need clean screens to spot 10-point deepfakes, not your greasy thumbprints! 🧼",
+    deadpoolEnd: "🌮 That's organic avocado seasoning, Parker! It enhances screen brightness by 12%! Contestants, you're welcome!"
+  },
+  {
+    tag: "PROMPT CHAOS",
+    deadpool: "🤖 Peter thinks prompting an AI is 'an exercise in semantic linguistics'. Bro, I just type 'cyberpunk pizza party explosion ultra 8k unreal engine' and hit enter with my forehead! Maximum Effort! 💥",
+    spidey: "📉 And that's exactly why your generated images have an astronaut with 14 fingers holding a flaming pineapple inside a submarine! Stick to swordplay, Wade, and let the students use real prompt tokens! ✍️",
+    deadpoolEnd: "🍍 Excuse me, that 14-fingered pineapple astronaut is modern art and belongs in the Louvre!"
+  }
+]
+
+const SPIDEY_ROAST_BATTLES = [
+  {
+    tag: "EXAM DISASTER",
+    spidey: "🕷️ Quick question, Wade: If Stage 0 has a -5 penalty for blind guessing, why did your practice test score end up at -150? Did you answer questions that weren't even on the paper?! 📉",
+    deadpool: "🌮 That wasn't guessing, Parker! That was tactical psychological warfare against the exam server! I'm playing 5D chess while you're still playing with silly string! ♟️💥",
+    spideyEnd: "🕸️ Well, your 5D chess just lost our imaginary squad all their points. Contestants, PLEASE do not follow Wade's strategy!"
+  },
+  {
+    tag: "NEURAL TERROR",
+    spidey: "🕸️ Hey Wade! How is that 'prompt engineering course' going? Last time you tried generating an avatar, the AI surrendered and deleted its own neural weights out of pure terror! 😂",
+    deadpool: "⚔️ EXCUSE YOU, BUG-BOY! The AI didn't delete itself, it reached digital enlightenment from my sheer charisma! You're just jealous because my prompt scores broke the scoring algorithm! 🚀",
+    spideyEnd: "🔬 It didn't break the algorithm, Wade—it returned a NaN (Not a Number) because your prompt was just 50 skull emojis! 💀"
+  }
 ]
 
 // Deadpool Technical Questions (Scoring, Rules, AI Detection, Prompts)
@@ -64,6 +113,10 @@ const DEADPOOL_NON_TECH_FAQ = [
     a: "Tempting offer! But the tournament coordinators are strictly professional—they will gladly eat your pizza and still deduct -5 marks if your answer is wrong! Focus on the pixels!"
   },
   {
+    q: "Why is the website background so futuristic and sleek?",
+    a: "Because the organizers stayed up until 4 AM perfecting CSS glow animations instead of sleeping! You think this cyber multiverse aesthetic came from a free template?! Enjoy the visual spectacle, rookie!"
+  },
+  {
     q: "Can I inspect element or view page source to find the answers?",
     a: "Look at you, Mr. Hacker! You think the organizers learned web development from a five-minute tutorial? Everything is verified server-side on Spring Boot. Stop inspecting element and use your eyeballs!"
   },
@@ -74,6 +127,10 @@ const DEADPOOL_NON_TECH_FAQ = [
   {
     q: "Can we use ChatGPT on our phones during the round?",
     a: "Oh please try! The automated webcam proctor monitors your face. The moment your eyes dart down like a guilty suspect, the system flags your workstation and banishes your team to the shadow realm!"
+  },
+  {
+    q: "Is Spider-Man wearing actual pajamas right now?",
+    a: "YES! It is literally a reinforced high-tech onesie with eye holes! And he washes it in cold water so the webs don't fade. Do NOT tell him I told you, he gets super defensive about laundry day!"
   }
 ]
 
@@ -112,20 +169,28 @@ const SPIDEY_NON_TECH_FAQ = [
     a: "My Spider-Sense has had a massive headache ever since Wade entered the room! He tried to plug a toaster directly into the main server rack! Don't listen to his chaotic advice—stick to science and logic!"
   },
   {
+    q: "Roast Deadpool right back! 🕷️⚡",
+    a: "ROAST_DEADPOOL_GAG"
+  },
+  {
+    q: "Why does Wade carry two swords in a computer competition?",
+    a: "Security tried to confiscate them at the entrance, but he insisted they were 'high-precision optical debugging tools'. Please do not encourage his delusions!"
+  },
+  {
     q: "How to stay calm when the 40-second timer turns red?",
     a: "Take a deep breath! Web-shooters require precision, and so does pixel forensics. Zoom in on the eyes, check the shadow angles, eliminate two bad choices, and lock in your answer with 5 seconds to spare!"
   },
   {
-    q: "Do only textbook geniuses win Pixel Paradox?",
-    a: "Not at all! Pixel forensics is not about memorizing definitions—it's about sharp observation, pattern recognition, and staying calm under ticking clocks. Teams with great teamwork win this all the time!"
+    q: "Can I stuff 500 buzzwords into Stage 3 to get 100% Cosine score?",
+    a: "That is a classic beginner's trap! CLIP neural networks evaluate semantic coherence, not raw word count. If your prompt looks like a dictionary threw up, your similarity score will plummet! Be descriptive, artistic, and concise!"
+  },
+  {
+    q: "What should our team do if we panic in Stage 2?",
+    a: "Execute the 3-Point Scan: Eyes, Ears, Edges! Take one deep breath. Peter Parker has fought extraterrestrial symbiotes; you can definitely handle an AI-generated portrait with weird earlobes!"
   },
   {
     q: "Can our team share answers in a chat group?",
     a: "Absolutely not! Peter Parker stands for honesty and fair play! Besides, the automated webcam invigilation and tab-switch monitor will flag you immediately. Play fair and win on genuine merit!"
-  },
-  {
-    q: "What happens if we troll Deadpool?",
-    a: "Haha! Wade pretends to be fearless, but if you challenge his logic or remind him that Peter Parker has an actual science degree, he gets totally roasted! Click 'Ask the guy on the left' to see him in action!"
   }
 ]
 
@@ -135,6 +200,11 @@ export default function Home() {
   const [selectedRoundTab, setSelectedRoundTab] = useState(0)
   const [showSpideyThwip, setShowSpideyThwip] = useState(false)
   const [showDeadpoolPop, setShowDeadpoolPop] = useState(false)
+
+  // Interactive Roast Duel State
+  const [roastBattleIdx, setRoastBattleIdx] = useState(0)
+  const [spideyRoastIdx, setSpideyRoastIdx] = useState(0)
+  const [comicPopSound, setComicPopSound] = useState('💥 MAXIMUM EFFORT!')
 
   // Typing simulation state
   const [isDeadpoolTyping, setIsDeadpoolTyping] = useState(false)
@@ -204,28 +274,31 @@ export default function Home() {
       ])
       setIsDeadpoolTyping(true)
 
+      const roast = ROAST_BATTLES[roastBattleIdx % ROAST_BATTLES.length]
+      setRoastBattleIdx(prev => prev + 1)
+
       setTimeout(() => {
         setIsDeadpoolTyping(false)
-        // Step 1: Deadpool roasts Spidey in clean sharp English
+        // Step 1: Deadpool roasts Spidey
         setDeadpoolMessages(prev => [
           ...prev,
           { 
             sender: 'deadpool', 
-            text: "🎯 HEY SPIDER-NERD! Look at Peter Parker over there—acting like the class teacher's pet who reminds the professor to collect homework! Whining about radioactive spider bites while wearing blue-and-red long johns! Did your aunt knit those tights for you?! Hahaha! 😂💀" 
+            text: roast.deadpool 
           }
         ])
 
-        // Step 2: Spidey delivers a sharp witty English comeback
+        // Step 2: Spidey delivers a sharp witty comeback and Wade answers back
         setTimeout(() => {
           setDeadpoolMessages(prev => [
             ...prev,
             {
               sender: 'spidey',
-              text: "🕸️ Oh please, Wade! At least I have an accredited science degree and don't talk to invisible cameras! Focus on the pixel forensics instead of giving unsolicited lectures to the contestants! 😂"
+              text: roast.spidey
             },
             {
               sender: 'deadpool',
-              text: "💥 Big talk from someone who swings on string! Pizza is on you if my squad takes first place on the leaderboard!"
+              text: roast.deadpoolEnd
             }
           ])
         }, 1100)
@@ -283,6 +356,34 @@ export default function Home() {
 
   // Spidey Question Click Handler
   const handleSpideyAsk = (q, a) => {
+    if (a === 'ROAST_DEADPOOL_GAG') {
+      setSpideyMessages(prev => [
+        ...prev,
+        { sender: 'user', text: q }
+      ])
+      setIsSpideyTyping(true)
+
+      const roast = SPIDEY_ROAST_BATTLES[spideyRoastIdx % SPIDEY_ROAST_BATTLES.length]
+      setSpideyRoastIdx(prev => prev + 1)
+
+      setTimeout(() => {
+        setIsSpideyTyping(false)
+        setSpideyMessages(prev => [
+          ...prev,
+          { sender: 'spidey', text: roast.spidey }
+        ])
+
+        setTimeout(() => {
+          setSpideyMessages(prev => [
+            ...prev,
+            { sender: 'deadpool', text: roast.deadpool },
+            { sender: 'spidey', text: roast.spideyEnd }
+          ])
+        }, 1100)
+      }, 500)
+      return
+    }
+
     if (a === 'REFER_TO_DEADPOOL') {
       setSpideyMessages(prev => [
         ...prev,
@@ -347,6 +448,12 @@ export default function Home() {
     } else if (query.includes('troll') || query.includes('roast spidey') || query.includes('roast spider') || query.includes('attack spidey')) {
       handleDeadpoolAsk("Troll Spider-Man right now! 🎯", "TROLL_SPIDEY_GAG")
       return
+    } else if (query.includes('joke') || query.includes('laugh') || query.includes('funny')) {
+      answer = "Why did the AI cross the road? Trick question: it hallucinated the road, gave the chicken 3 heads, and added volumetric fog in Unreal Engine 5!"
+    } else if (query.includes('pajama') || query.includes('onesie') || query.includes('suit')) {
+      answer = DEADPOOL_NON_TECH_FAQ[7].a
+    } else if (query.includes('background') || query.includes('theme') || query.includes('design') || query.includes('look')) {
+      answer = DEADPOOL_NON_TECH_FAQ[3].a
     } else if (query.includes('spidey') || query.includes('peter') || query.includes('spider') || query.includes('math') || query.includes('formula') || query.includes('science')) {
       answer = "Peter? He's over on the right side having an existential crisis about responsibility. Click 'Ask Spidey-bug' below to bother him!"
     } else if (query.includes('stage 0') || query.includes('prelim') || query.includes('quiz') || query.includes('negative') || query.includes('-5') || query.includes('guess')) {
@@ -356,11 +463,11 @@ export default function Home() {
     } else if (query.includes('coordinator') || query.includes('organizer') || query.includes('author') || query.includes('creator') || query.includes('director')) {
       answer = "The tournament coordinators are the architects behind this competition! They wrote the code, tuned the -5 penalty, and spent days debugging routes. Bow before the organizers!"
     } else if (query.includes('cheat') || query.includes('camera') || query.includes('webcam') || query.includes('phone') || query.includes('whatsapp')) {
-      answer = DEADPOOL_NON_TECH_FAQ[5].a
+      answer = DEADPOOL_NON_TECH_FAQ[6].a
     } else if (query.includes('food') || query.includes('pizza') || query.includes('snack') || query.includes('bribe') || query.includes('coffee')) {
       answer = DEADPOOL_NON_TECH_FAQ[2].a
     } else if (query.includes('inspect') || query.includes('source') || query.includes('hack')) {
-      answer = DEADPOOL_NON_TECH_FAQ[3].a
+      answer = DEADPOOL_NON_TECH_FAQ[4].a
     } else if (query.includes('finger') || query.includes('hand') || query.includes('midjourney')) {
       answer = "Pro tip: If the character has 11 fingers and ears growing out of their neck, it's AI! For real optical science, click 'Ask Spidey-bug he may know! 🕸️'!"
     }
@@ -391,7 +498,14 @@ export default function Home() {
 
     let answer = "Hmm, my Spider-Sense didn't catch that clearly. Try asking about Stage 0 negative marks, Round 1 AI generators (Midjourney vs Flux), or click one of the quick questions below!"
 
-    if (query.includes('deadpool') || query.includes('wade') || query.includes('pizza') || query.includes('snack') || query.includes('bribe')) {
+    if (query.includes('roast') || query.includes('burn') || query.includes('troll wade') || query.includes('troll deadpool')) {
+      handleSpideyAsk("Roast Deadpool right back! 🕷️⚡", "ROAST_DEADPOOL_GAG")
+      return
+    } else if (query.includes('joke') || query.includes('funny')) {
+      answer = "Why does Spider-Man make great web apps? Because his Spider-Sense catches uncaught exceptions before they hit production!"
+    } else if (query.includes('sword') || query.includes('katana')) {
+      answer = SPIDEY_NON_TECH_FAQ[2].a
+    } else if (query.includes('deadpool') || query.includes('wade') || query.includes('pizza') || query.includes('snack') || query.includes('bribe')) {
       answer = SPIDEY_NON_TECH_FAQ[0].a
     } else if (query.includes('round 1') || query.includes('model') || query.includes('flux') || query.includes('midjourney') || query.includes('dall-e')) {
       answer = SPIDEY_TECH_FAQ[0].a
@@ -678,6 +792,69 @@ export default function Home() {
               <div style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Stage 3 // Grand Finale</div>
               <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#FFF' }}>5 Prompts / 75s</div>
               <div style={{ fontSize: '0.75rem', color: '#38BDF8' }}>10% Zoom Step Duel</div>
+            </div>
+          </div>
+
+          {/* Hero Banter Roast Duel Card */}
+          <div style={{ maxWidth: '920px', margin: '26px auto 0' }}>
+            <div className="roast-duel-card">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '14px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span className="comic-bubble-pop">{comicPopSound || '💥 HERO BANTER DUEL'}</span>
+                  <span style={{ fontSize: '0.85rem', color: '#FACC15', fontWeight: 'bold' }}>
+                    Round {((roastBattleIdx % ROAST_BATTLES.length) + 1)}: {ROAST_BATTLES[roastBattleIdx % ROAST_BATTLES.length].tag}
+                  </span>
+                </div>
+                <button
+                  onClick={() => {
+                    setRoastBattleIdx(prev => prev + 1)
+                    const sounds = ['💥 MAXIMUM EFFORT!', '🕸️ THWIP!', '🔥 BURRRRN!', '🎬 4TH WALL SMASHED!', '⚡ SPIDER-SENSE TINGLE!']
+                    setComicPopSound(sounds[Math.floor(Math.random() * sounds.length)])
+                  }}
+                  style={{
+                    background: 'linear-gradient(135deg, #E23636 0%, #B91C1C 100%)',
+                    color: '#FFF',
+                    border: '1px solid #FACC15',
+                    borderRadius: '8px',
+                    padding: '7px 16px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '0.82rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    boxShadow: '0 4px 14px rgba(226, 54, 54, 0.45)',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <span>🔥 Next Roast Battle!</span>
+                </button>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
+                {/* Deadpool's Roast */}
+                <div className="comic-balloon-deadpool">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                    <span style={{ fontWeight: '900', color: '#FF4D4D', fontSize: '0.82rem', letterSpacing: '1px' }}>⚔️ DEADPOOL // MERC-WITH-A-MOUTH</span>
+                  </div>
+                  <p style={{ fontSize: '0.86rem', color: '#FEE2E2', lineHeight: '1.45' }}>
+                    {ROAST_BATTLES[roastBattleIdx % ROAST_BATTLES.length].deadpool}
+                  </p>
+                </div>
+
+                {/* Spider-Man's Comeback */}
+                <div className="comic-balloon-spidey">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                    <span style={{ fontWeight: '900', color: '#38BDF8', fontSize: '0.82rem', letterSpacing: '1px' }}>🕸️ SPIDER-MAN // SCIENTIFIC RETORT</span>
+                  </div>
+                  <p style={{ fontSize: '0.86rem', color: '#E0F2FE', lineHeight: '1.45' }}>
+                    {ROAST_BATTLES[roastBattleIdx % ROAST_BATTLES.length].spidey}
+                  </p>
+                  <div style={{ marginTop: '8px', paddingTop: '6px', borderTop: '1px dashed rgba(56, 189, 248, 0.3)', fontSize: '0.8rem', color: '#FACC15', fontStyle: 'italic' }}>
+                    {ROAST_BATTLES[roastBattleIdx % ROAST_BATTLES.length].deadpoolEnd}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </header>
@@ -1017,8 +1194,13 @@ export default function Home() {
             <div style={{ padding: '14px', maxHeight: '280px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
               {deadpoolMessages.map((msg, idx) => (
                 <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-bot'}>
-                  <div style={{ fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '2px', color: msg.sender === 'user' ? '#FFF' : '#FF4D4D' }}>
-                    {msg.sender === 'user' ? 'You' : 'Deadpool'}
+                  <div style={{ 
+                    fontSize: '0.7rem', 
+                    fontWeight: 'bold', 
+                    marginBottom: '2px', 
+                    color: msg.sender === 'user' ? '#FFF' : msg.sender === 'spidey' ? '#38BDF8' : '#FF4D4D' 
+                  }}>
+                    {msg.sender === 'user' ? 'You' : msg.sender === 'spidey' ? 'Spider-Man' : 'Deadpool'}
                   </div>
                   <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
                 </div>
@@ -1196,8 +1378,13 @@ export default function Home() {
             <div style={{ padding: '14px', maxHeight: '280px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
               {spideyMessages.map((msg, idx) => (
                 <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-spidey'}>
-                  <div style={{ fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '2px', color: msg.sender === 'user' ? '#FFF' : '#38BDF8' }}>
-                    {msg.sender === 'user' ? 'You' : 'Spider-Man'}
+                  <div style={{ 
+                    fontSize: '0.7rem', 
+                    fontWeight: 'bold', 
+                    marginBottom: '2px', 
+                    color: msg.sender === 'user' ? '#FFF' : msg.sender === 'deadpool' ? '#FF4D4D' : '#38BDF8' 
+                  }}>
+                    {msg.sender === 'user' ? 'You' : msg.sender === 'deadpool' ? 'Deadpool' : 'Spider-Man'}
                   </div>
                   <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
                 </div>
