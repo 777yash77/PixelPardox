@@ -96,54 +96,73 @@ export default function LeaderboardPage() {
           </div>
         </header>
 
-        {/* Live Status Bar */}
-        <div className="glass-panel" style={{ padding: '12px 20px', marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+        {/* Live Status & Interactive Search Filter Bar */}
+        <div className="glass-panel" style={{ padding: '14px 20px', marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span className="pulse-dot" style={{ width: '10px', height: '10px', background: '#4ADE80', borderRadius: '50%' }}></span>
-            <span style={{ fontSize: '0.85rem', fontWeight: '600' }}>Live Engine Connected</span>
+            <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#4ADE80' }}>TELEMETRY UPLINK ACTIVE</span>
           </div>
-          {lastUpdated && (
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>
-              Last synced at {lastUpdated}
-            </span>
-          )}
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            {lastUpdated && (
+              <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)', background: 'rgba(255,255,255,0.04)', padding: '4px 10px', borderRadius: '4px' }}>
+                Synced: {lastUpdated}
+              </span>
+            )}
+            <button 
+              onClick={fetchLeaderboard}
+              style={{
+                background: 'rgba(56, 189, 248, 0.1)',
+                border: '1px solid #38BDF8',
+                color: '#38BDF8',
+                padding: '5px 12px',
+                borderRadius: '6px',
+                fontSize: '0.78rem',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              🔄 Refresh
+            </button>
+          </div>
         </div>
 
-        {/* Top 3 Podium (if >= 3 teams) */}
+        {/* Top 3 Cyber Podium */}
         {top3.length >= 3 && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '32px', alignItems: 'flex-end' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px', marginBottom: '32px', alignItems: 'flex-end' }}>
             {/* 2nd Place */}
-            <div className="comic-card" style={{ padding: '20px', textAlign: 'center', borderTop: '4px solid #C0C0C0', height: '210px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <div style={{ fontSize: '1.8rem', marginBottom: '4px' }}>🥈</div>
-              <div style={{ fontSize: '0.8rem', color: '#C0C0C0', fontWeight: 'bold' }}>2ND PLACE</div>
-              <h3 style={{ fontSize: '1.1rem', margin: '6px 0', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+            <div className="comic-card card-hover-lift" style={{ padding: '20px', textAlign: 'center', borderTop: '4px solid #C0C0C0', background: 'rgba(192, 192, 192, 0.05)', boxShadow: '0 8px 24px rgba(192, 192, 192, 0.15)', height: '210px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <div style={{ fontSize: '2rem', marginBottom: '4px' }}>🥈</div>
+              <div style={{ fontSize: '0.75rem', color: '#C0C0C0', fontWeight: '800', letterSpacing: '1px' }}>2ND PLACE • SILVER</div>
+              <h3 style={{ fontSize: '1.2rem', margin: '8px 0 4px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', color: '#FFF' }}>
                 {top3[1].teamName}
               </h3>
-              <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#FFF' }}>
+              <div style={{ fontSize: '1.6rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>
                 {top3[1].totalScore} <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>pts</span>
               </div>
             </div>
 
             {/* 1st Place */}
-            <div className="comic-card" style={{ padding: '24px', textAlign: 'center', borderTop: '4px solid #FACC15', height: '240px', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(250, 204, 21, 0.04)' }}>
-              <div style={{ fontSize: '2.4rem', marginBottom: '4px' }}>👑</div>
-              <div style={{ fontSize: '0.85rem', color: '#FACC15', fontWeight: 'bold', letterSpacing: '1px' }}>LEADER / 1ST</div>
-              <h3 style={{ fontSize: '1.25rem', margin: '6px 0', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', color: '#FFF' }}>
+            <div className="comic-card card-hover-lift" style={{ padding: '24px', textAlign: 'center', borderTop: '4px solid #FACC15', height: '240px', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(250, 204, 21, 0.08)', boxShadow: '0 12px 32px rgba(250, 204, 21, 0.25)', transform: 'scale(1.03)' }}>
+              <div style={{ fontSize: '2.6rem', marginBottom: '4px' }}>👑</div>
+              <div style={{ fontSize: '0.82rem', color: '#FACC15', fontWeight: '900', letterSpacing: '1.5px' }}>CHAMPION • 1ST PLACE</div>
+              <h3 style={{ fontSize: '1.35rem', margin: '8px 0 4px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', color: '#FFF' }}>
                 {top3[0].teamName}
               </h3>
-              <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#FACC15' }}>
+              <div style={{ fontSize: '2.1rem', fontWeight: '900', color: '#FACC15', fontFamily: 'var(--font-display)' }}>
                 {top3[0].totalScore} <span style={{ fontSize: '0.85rem', color: 'var(--text-dim)' }}>pts</span>
               </div>
             </div>
 
             {/* 3rd Place */}
-            <div className="comic-card" style={{ padding: '20px', textAlign: 'center', borderTop: '4px solid #CD7F32', height: '190px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div className="comic-card card-hover-lift" style={{ padding: '20px', textAlign: 'center', borderTop: '4px solid #CD7F32', background: 'rgba(205, 127, 50, 0.05)', boxShadow: '0 8px 24px rgba(205, 127, 50, 0.15)', height: '190px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div style={{ fontSize: '1.8rem', marginBottom: '4px' }}>🥉</div>
-              <div style={{ fontSize: '0.8rem', color: '#CD7F32', fontWeight: 'bold' }}>3RD PLACE</div>
-              <h3 style={{ fontSize: '1.1rem', margin: '6px 0', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+              <div style={{ fontSize: '0.75rem', color: '#CD7F32', fontWeight: '800', letterSpacing: '1px' }}>3RD PLACE • BRONZE</div>
+              <h3 style={{ fontSize: '1.15rem', margin: '8px 0 4px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', color: '#FFF' }}>
                 {top3[2].teamName}
               </h3>
-              <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#FFF' }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>
                 {top3[2].totalScore} <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>pts</span>
               </div>
             </div>

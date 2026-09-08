@@ -156,11 +156,11 @@ const SPIDEY_TECH_FAQ = [
   },
   {
     q: "What are the rules and timers for all 4 rounds?",
-    a: "• Stage 0 (Prelims): 30 MCQs, strictly 30 mins (+10 correct, -5 wrong).\n• Stage 1 (Pixel Detective): 10 questions, 40s each, real-time leaderboard.\n• Stage 2 (Deepfake Diagnostics): 7 challenges, 45s each.\n• Stage 3 (Prompt Duel Finale): 5 rounds, 75s each with progressive 10% zoom steps!"
+    a: "• Stage 0 (Prelims): 30 MCQs, strictly 30 mins (+10 correct, -5 wrong).\n• Stage 1 (Pixel Detective): 10 questions, 40s each, real-time leaderboard.\n• Stage 2 (Deepfake Diagnostics): 7 challenges, 45s each.\n• Stage 3 (Prompt Duel Finale): 5 rounds, 75s each with progressive resolution reveal!"
   },
   {
-    q: "How does progressive 10% zoom work in Stage 3?",
-    a: "In Round 3, each pixel image reveals in progressive 10% zoom steps every few seconds. Early zoom challenges your macro-composition instincts (style, medium, artist), while full resolution lets you catch fine details (textures, lighting tokens)!"
+    q: "How does progressive resolution reveal work in Stage 3?",
+    a: "In Round 3, each pixel image reveals in progressive resolution steps every few seconds. Early reveal challenges your macro-composition instincts (style, medium, artist), while full resolution lets you catch fine details (textures, lighting tokens)!"
   },
   {
     q: "Ask the guy in red spandex on the left! 🌮",
@@ -572,11 +572,8 @@ export default function Home() {
           }} />
 
           {/* Full Model Spider-Man Container */}
-          <div style={{
-            position: 'relative',
-            width: '100px',
-            height: '160px',
-            filter: 'drop-shadow(0 10px 22px rgba(224,27,34,0.75))'
+          <div className="mascot-image-wrapper" style={{
+            filter: 'drop-shadow(0 10px 24px rgba(224,27,34,0.75))'
           }}>
             {/* THWIP Action Pop */}
             {showSpideyThwip && (
@@ -586,7 +583,7 @@ export default function Home() {
             {/* Spider-Sense Radiating Crown (Around Head) */}
             <div className="spider-sense-intense" style={{
               position: 'absolute',
-              bottom: '-14px',
+              bottom: '-12px',
               left: '50%',
               transform: 'translateX(-50%)',
               width: '64px',
@@ -600,65 +597,18 @@ export default function Home() {
               </svg>
             </div>
 
-            {/* Complete Full-Body Hanging Spider-Man SVG */}
-            <svg viewBox="0 0 110 170" width="100" height="160" style={{ overflow: 'visible' }}>
-              {/* Feet Web Clamp */}
-              <circle cx="55" cy="12" r="5" fill="none" stroke="#FFFFFF" strokeWidth="2.5" />
-              <path d="M49 12 C49 8, 61 8, 61 12" stroke="#E01B22" strokeWidth="2" fill="none" />
-
-              {/* Legs (Upside-Down Acrobat Hang) */}
-              <path d="M50 14 L30 36 L24 64 L36 68 L44 44 L54 20 Z" fill="#1E3A8A" stroke="#0A0607" strokeWidth="2" />
-              <path d="M48 12 L34 26 L42 32 L54 16 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="1.8" />
-              <path d="M40 20 L48 24 M44 16 L50 20" stroke="#7A0A10" strokeWidth="1" />
-
-              <path d="M60 14 L80 36 L86 64 L74 68 L66 44 L56 20 Z" fill="#1E3A8A" stroke="#0A0607" strokeWidth="2" />
-              <path d="M62 12 L76 26 L68 32 L56 16 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="1.8" />
-              <path d="M70 20 L62 24 M66 16 L60 20" stroke="#7A0A10" strokeWidth="1" />
-
-              {/* Waist & Belt */}
-              <path d="M36 62 C44 58, 66 58, 74 62 L72 74 C60 76, 50 76, 38 74 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="2" />
-              <path d="M37 68 C48 66, 62 66, 73 68" stroke="#7A0A10" strokeWidth="1.2" fill="none" />
-
-              {/* Torso */}
-              <path d="M32 76 L24 102 C28 106, 34 108, 38 106 L40 74 Z" fill="#1E3A8A" stroke="#0A0607" strokeWidth="1.8" />
-              <path d="M78 76 L86 102 C82 106, 76 108, 72 106 L70 74 Z" fill="#1E3A8A" stroke="#0A0607" strokeWidth="1.8" />
-              <path d="M38 74 C44 72, 66 72, 72 74 L70 108 C55 110, 55 110, 40 108 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="2" />
-              
-              {/* Chest Web Grid */}
-              <path d="M55 74 L55 109 M38 82 Q55 86 72 82 M38 92 Q55 96 72 92 M39 101 Q55 104 71 101" stroke="#7A0A10" strokeWidth="1.2" fill="none" />
-              
-              {/* Spider Emblem on Chest */}
-              <ellipse cx="55" cy="90" rx="3.5" ry="5.5" fill="#0A0607" />
-              <path d="M54 88 Q46 80 43 78 M56 88 Q64 80 67 78" stroke="#0A0607" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-              <path d="M54 90 Q44 86 42 88 M56 90 Q66 86 68 88" stroke="#0A0607" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-              <path d="M54 92 Q44 98 43 104 M56 92 Q66 98 67 104" stroke="#0A0607" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-              <path d="M54 93 Q48 104 46 107 M56 93 Q62 104 64 107" stroke="#0A0607" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-
-              {/* Arms */}
-              <path d="M32 76 L18 90 L14 112 L22 116 L26 98 L36 84 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="1.8" />
-              <circle cx="16" cy="116" r="4.5" fill="#D81E27" stroke="#0A0607" strokeWidth="1.5" />
-              <path d="M13 120 L11 125 M16 121 L16 126 M19 119 L21 123" stroke="#D81E27" strokeWidth="2" strokeLinecap="round" />
-              <path d="M20 92 L26 96 M16 104 L23 107" stroke="#7A0A10" strokeWidth="1" />
-
-              <path d="M78 76 L92 90 L96 112 L88 116 L84 98 L74 84 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="1.8" />
-              <circle cx="94" cy="116" r="4.5" fill="#D81E27" stroke="#0A0607" strokeWidth="1.5" />
-              <path d="M97 120 L99 125 M94 121 L94 126 M91 119 L89 123" stroke="#D81E27" strokeWidth="2" strokeLinecap="round" />
-              <path d="M90 92 L84 96 M94 104 L87 107" stroke="#7A0A10" strokeWidth="1" />
-
-              {/* Mask & Head */}
-              <path d="M47 108 L47 115 L63 115 L63 108 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="1.5" />
-              <path d="M55 113 C38 113, 30 126, 30 142 C30 159, 43 169, 55 169 C67 169, 80 159, 80 142 C80 126, 72 113, 55 113 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="2.5" />
-              
-              <path d="M55 113 L55 169 M31 138 Q55 142 79 138 M33 150 Q55 154 77 150 M38 126 Q55 129 72 126" stroke="#7A0A10" strokeWidth="1.2" fill="none" opacity="0.9" />
-              <line x1="55" y1="141" x2="36" y2="128" stroke="#7A0A10" strokeWidth="1" />
-              <line x1="55" y1="141" x2="74" y2="128" stroke="#7A0A10" strokeWidth="1" />
-              <line x1="55" y1="141" x2="38" y2="158" stroke="#7A0A10" strokeWidth="1" />
-              <line x1="55" y1="141" x2="72" y2="158" stroke="#7A0A10" strokeWidth="1" />
-
-              {/* White Mask Eyes with Sharp Black Edge */}
-              <polygon points="36,136 48,143 47,132 37,126" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.8" strokeLinejoin="round" />
-              <polygon points="74,136 62,143 63,132 73,126" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.8" strokeLinejoin="round" />
-            </svg>
+            {/* Authentic Cinematic Transparent Spider-Man Model */}
+            <img 
+              src="/spiderman_model.png" 
+              alt="Spider-Man" 
+              style={{ 
+                width: '100%', 
+                height: '100%', 
+                objectFit: 'contain', 
+                userSelect: 'none',
+                pointerEvents: 'none'
+              }} 
+            />
           </div>
 
           {/* Spider-Man Callout Tag */}
@@ -693,92 +643,26 @@ export default function Home() {
           <div className="deadpool-cable-line" />
 
           {/* Full Model Deadpool Container */}
-          <div style={{
-            position: 'relative',
-            width: '100px',
-            height: '160px',
-            filter: 'drop-shadow(0 10px 22px rgba(226,54,54,0.75))'
+          <div className="mascot-image-wrapper" style={{
+            filter: 'drop-shadow(0 10px 24px rgba(226,54,54,0.75))'
           }}>
             {/* MAXIMUM EFFORT Action Pop */}
             {showDeadpoolPop && (
               <div className="comic-badge-maximum">MAXIMUM EFFORT!</div>
             )}
 
-            {/* Complete Full-Body Rappelling Deadpool SVG */}
-            <svg viewBox="0 0 110 170" width="100" height="160" style={{ overflow: 'visible' }}>
-              {/* Tactical Carabiner at top */}
-              <rect x="51" y="2" width="8" height="14" rx="3" fill="#64748B" stroke="#0F172A" strokeWidth="1.8" />
-
-              {/* Crossed Katanas on Back (X Shape) */}
-              <line x1="20" y1="40" x2="94" y2="114" stroke="#0A0607" strokeWidth="5.5" strokeLinecap="round" />
-              <line x1="20" y1="40" x2="94" y2="114" stroke="#CBD5E1" strokeWidth="3" strokeLinecap="round" />
-              <rect x="15" y="35" width="16" height="6" rx="1.5" fill="#EF4444" stroke="#0A0607" strokeWidth="1" transform="rotate(45 23 38)" />
-              <circle cx="15" cy="34" r="3" fill="#FACC15" stroke="#0A0607" strokeWidth="1" />
-
-              <line x1="90" y1="40" x2="16" y2="114" stroke="#0A0607" strokeWidth="5.5" strokeLinecap="round" />
-              <line x1="90" y1="40" x2="16" y2="114" stroke="#CBD5E1" strokeWidth="3" strokeLinecap="round" />
-              <rect x="79" y="35" width="16" height="6" rx="1.5" fill="#EF4444" stroke="#0A0607" strokeWidth="1" transform="rotate(-45 87 38)" />
-              <circle cx="95" cy="34" r="3" fill="#FACC15" stroke="#0A0607" strokeWidth="1" />
-
-              {/* Head & Mask */}
-              <path d="M55 16 C39 16, 32 27, 32 44 C32 60, 42 68, 55 68 C68 68, 78 60, 78 44 C78 27, 71 16, 55 16 Z" fill="#DC2626" stroke="#0A0607" strokeWidth="2.5" />
-              <ellipse cx="44" cy="42" rx="9" ry="14" fill="#0F080A" stroke="#0A0607" strokeWidth="1.5" transform="rotate(6 44 42)" />
-              <ellipse cx="66" cy="42" rx="9" ry="14" fill="#0F080A" stroke="#0A0607" strokeWidth="1.5" transform="rotate(-6 66 42)" />
-              <path d="M39 41 Q44 38 49 42 Q44 45 39 41 Z" fill="#FFFFFF" />
-              <path d="M71 41 Q66 38 61 42 Q66 45 71 41 Z" fill="#FFFFFF" />
-
-              {/* Neck & Chest */}
-              <rect x="47" y="66" width="16" height="8" rx="2" fill="#18090C" stroke="#0A0607" strokeWidth="1.5" />
-              <path d="M30 74 L24 98 L36 102 L38 74 Z" fill="#18090C" stroke="#0A0607" strokeWidth="2" />
-              <path d="M80 74 L86 98 L74 102 L72 74 Z" fill="#18090C" stroke="#0A0607" strokeWidth="2" />
-              <path d="M38 74 C44 72, 66 72, 72 74 L74 106 C60 108, 50 108, 36 106 Z" fill="#DC2626" stroke="#0A0607" strokeWidth="2" />
-              
-              {/* Harness Straps */}
-              <path d="M34 76 L72 104" stroke="#471418" strokeWidth="4" strokeLinecap="round" />
-              <path d="M34 76 L72 104" stroke="#18090C" strokeWidth="2.5" strokeLinecap="round" />
-              <path d="M76 76 L38 104" stroke="#471418" strokeWidth="4" strokeLinecap="round" />
-              <path d="M76 76 L38 104" stroke="#18090C" strokeWidth="2.5" strokeLinecap="round" />
-              <circle cx="55" cy="90" r="4.5" fill="#64748B" stroke="#0A0607" strokeWidth="1.5" />
-
-              {/* Utility Belt & Pouches */}
-              <rect x="34" y="104" width="42" height="9" rx="2" fill="#291518" stroke="#0A0607" strokeWidth="2" />
-              <rect x="36" y="103" width="7" height="11" rx="1.5" fill="#4B272C" stroke="#0A0607" strokeWidth="1.2" />
-              <rect x="45" y="103" width="6" height="11" rx="1.5" fill="#4B272C" stroke="#0A0607" strokeWidth="1.2" />
-              <rect x="59" y="103" width="6" height="11" rx="1.5" fill="#4B272C" stroke="#0A0607" strokeWidth="1.2" />
-              <rect x="67" y="103" width="7" height="11" rx="1.5" fill="#4B272C" stroke="#0A0607" strokeWidth="1.2" />
-              
-              {/* Deadpool Belt Buckle */}
-              <circle cx="55" cy="108.5" r="6" fill="#DC2626" stroke="#0A0607" strokeWidth="1.8" />
-              <line x1="55" y1="102.5" x2="55" y2="114.5" stroke="#0A0607" strokeWidth="1.2" />
-              <ellipse cx="52.5" cy="108.5" rx="1.6" ry="2.4" fill="#0A0607" />
-              <ellipse cx="57.5" cy="108.5" rx="1.6" ry="2.4" fill="#0A0607" />
-              <circle cx="52.2" cy="108.2" r="0.6" fill="#FFFFFF" />
-              <circle cx="57.2" cy="108.2" r="0.6" fill="#FFFFFF" />
-
-              {/* Right Arm Holding Cable */}
-              <path d="M72 74 L86 86 L88 38 L78 36 L76 74 Z" fill="#DC2626" stroke="#0A0607" strokeWidth="2" />
-              <path d="M78 36 L88 38 L86 26 L76 24 Z" fill="#18090C" stroke="#0A0607" strokeWidth="1.8" />
-              <rect x="75" y="22" width="13" height="12" rx="4" fill="#18090C" stroke="#0A0607" strokeWidth="1.5" />
-
-              {/* Left Arm Making Peace Sign ✌️ */}
-              <path d="M38 74 L22 86 L18 106 L28 108 L34 94 L40 76 Z" fill="#DC2626" stroke="#0A0607" strokeWidth="2" />
-              <circle cx="18" cy="112" r="5" fill="#18090C" stroke="#0A0607" strokeWidth="1.5" />
-              <line x1="15" y1="112" x2="10" y2="122" stroke="#18090C" strokeWidth="3" strokeLinecap="round" />
-              <line x1="19" y1="112" x2="18" y2="124" stroke="#18090C" strokeWidth="3" strokeLinecap="round" />
-
-              {/* Legs & Combat Boots */}
-              <path d="M38 113 L34 140 L38 162 L48 162 L50 140 L48 113 Z" fill="#DC2626" stroke="#0A0607" strokeWidth="2" />
-              <path d="M44 113 L48 113 L50 140 L46 140 Z" fill="#18090C" />
-              <rect x="34" y="132" width="14" height="10" rx="3" fill="#18090C" stroke="#0A0607" strokeWidth="1.5" />
-              <line x1="34" y1="124" x2="48" y2="124" stroke="#18090C" strokeWidth="2.5" />
-
-              <path d="M72 113 L76 140 L72 162 L62 162 L60 140 L62 113 Z" fill="#DC2626" stroke="#0A0607" strokeWidth="2" />
-              <path d="M66 113 L62 113 L60 140 L64 140 Z" fill="#18090C" />
-              <rect x="62" y="132" width="14" height="10" rx="3" fill="#18090C" stroke="#0A0607" strokeWidth="1.5" />
-
-              <path d="M34 154 L50 154 L52 166 L30 166 Z" fill="#18090C" stroke="#0A0607" strokeWidth="1.8" />
-              <path d="M76 154 L60 154 L58 166 L80 166 Z" fill="#18090C" stroke="#0A0607" strokeWidth="1.8" />
-            </svg>
+            {/* Authentic Cinematic Transparent Deadpool Model */}
+            <img 
+              src="/deadpool_model.png" 
+              alt="Deadpool" 
+              style={{ 
+                width: '100%', 
+                height: '100%', 
+                objectFit: 'contain', 
+                userSelect: 'none',
+                pointerEvents: 'none'
+              }} 
+            />
           </div>
 
           {/* Deadpool Callout Tag */}
@@ -873,7 +757,7 @@ export default function Home() {
                 <span style={{ fontSize: '1rem' }}>🔍</span>
               </div>
               <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>10 Pixels / 40s</div>
-              <div style={{ fontSize: '0.75rem', color: '#4ADE80', marginTop: '2px' }}>Real (10) | AI Model (10)</div>
+              <div style={{ fontSize: '0.75rem', color: '#4ADE80', marginTop: '2px' }}>Deepfake Forensics &amp; Model ID</div>
             </div>
 
             <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3px solid #A855F7' }}>
@@ -891,86 +775,7 @@ export default function Home() {
                 <span style={{ fontSize: '1rem' }}>🎯</span>
               </div>
               <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>5 Prompts / 75s</div>
-              <div style={{ fontSize: '0.75rem', color: '#38BDF8', marginTop: '2px' }}>10% Zoom Progressive Reveal</div>
-            </div>
-          </div>
-
-          {/* Hero Banter Roast Duel Card with VS Center Badge */}
-          <div style={{ maxWidth: '960px', margin: '28px auto 0' }}>
-            <div className="roast-duel-card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span className="comic-bubble-pop">{comicPopSound || '💥 HERO BANTER DUEL'}</span>
-                  <span style={{ fontSize: '0.85rem', color: '#FACC15', fontWeight: 'bold' }}>
-                    Matchup {((heroDuelIdx % ROAST_BATTLES.length) + 1)}: {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].tag}
-                  </span>
-                </div>
-                <button
-                  onClick={() => {
-                    setHeroDuelIdx(prev => prev + 1)
-                    const sounds = ['💥 MAXIMUM EFFORT!', '🕸️ THWIP!', '🔥 BURRRRN!', '🎬 4TH WALL SMASHED!', '⚡ SPIDER-SENSE TINGLE!']
-                    setComicPopSound(sounds[Math.floor(Math.random() * sounds.length)])
-                  }}
-                  style={{
-                    background: 'linear-gradient(135deg, #E23636 0%, #B91C1C 100%)',
-                    color: '#FFF',
-                    border: '1.5px solid #FACC15',
-                    borderRadius: '8px',
-                    padding: '8px 18px',
-                    cursor: 'pointer',
-                    fontWeight: 'bold',
-                    fontSize: '0.84rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    boxShadow: '0 4px 14px rgba(226, 54, 54, 0.45)',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  <span>🔥 Trigger Next Duel!</span>
-                </button>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '14px', position: 'relative' }}>
-                {/* Deadpool's Roast */}
-                <div className="comic-balloon-deadpool" style={{ background: 'rgba(226, 54, 54, 0.15)', border: '1.5px solid #E23636', borderRadius: '12px', padding: '16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '1.2rem' }}>🌮</span>
-                      <span style={{ fontWeight: '900', color: '#FF4D4D', fontSize: '0.85rem', letterSpacing: '1px' }}>
-                        DEADPOOL • MERC-WITH-A-MOUTH
-                      </span>
-                    </div>
-                    <span style={{ fontSize: '0.7rem', color: '#FACC15', background: 'rgba(0,0,0,0.5)', padding: '2px 6px', borderRadius: '4px' }}>
-                      Red Corner
-                    </span>
-                  </div>
-                  <p style={{ fontSize: '0.88rem', color: '#FEE2E2', lineHeight: '1.55' }}>
-                    {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].deadpool}
-                  </p>
-                </div>
-
-                {/* Spider-Man's Comeback */}
-                <div className="comic-balloon-spidey" style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1.5px solid #38BDF8', borderRadius: '12px', padding: '16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '1.2rem' }}>🕷️</span>
-                      <span style={{ fontWeight: '900', color: '#38BDF8', fontSize: '0.85rem', letterSpacing: '1px' }}>
-                        SPIDER-MAN • SCIENTIFIC RETORT
-                      </span>
-                    </div>
-                    <span style={{ fontSize: '0.7rem', color: '#38BDF8', background: 'rgba(0,0,0,0.5)', padding: '2px 6px', borderRadius: '4px' }}>
-                      Blue Corner
-                    </span>
-                  </div>
-                  <p style={{ fontSize: '0.88rem', color: '#E0F2FE', lineHeight: '1.55' }}>
-                    {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].spidey}
-                  </p>
-                  <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: '1px dashed rgba(56, 189, 248, 0.3)', fontSize: '0.82rem', color: '#FACC15', fontStyle: 'italic' }}>
-                    {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].deadpoolEnd}
-                  </div>
-                </div>
-              </div>
+              <div style={{ fontSize: '0.75rem', color: '#38BDF8', marginTop: '2px' }}>Semantic Prompt Cosine Duel</div>
             </div>
           </div>
         </header>
@@ -1217,9 +1022,9 @@ export default function Home() {
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px', marginBottom: '20px' }}>
                   <div style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    <strong style={{ color: '#38BDF8', fontSize: '0.95rem' }}>🔬 Progressive Zoom Reveal:</strong>
+                    <strong style={{ color: '#38BDF8', fontSize: '0.95rem' }}>🔬 Progressive Resolution Reveal:</strong>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '6px' }}>
-                      Visuals start at extreme 10% zoom magnification. Admin reveals 25%, 50%, 75%, and 100% full view. The earlier you reconstruct the exact prompt semantics, the higher your score.
+                      Visuals start with progressive focal magnification. The projection reveals sequential details towards full 100% view. The earlier you reconstruct the prompt semantics, the higher your score.
                     </p>
                   </div>
                   <div style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.08)' }}>
@@ -1231,6 +1036,87 @@ export default function Home() {
                 </div>
               </div>
             )}
+          </div>
+        </section>
+
+        {/* ========================================================= */}
+        {/* HERO BANTER ROAST DUEL CARD (SLIGHTLY BOTTOM SECTION)     */}
+        {/* ========================================================= */}
+        <section style={{ maxWidth: '1100px', margin: '0 auto 48px' }}>
+          <div className="roast-duel-card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span className="comic-bubble-pop">{comicPopSound || '💥 HERO BANTER DUEL'}</span>
+                <span style={{ fontSize: '0.85rem', color: '#FACC15', fontWeight: 'bold' }}>
+                  Matchup {((heroDuelIdx % ROAST_BATTLES.length) + 1)}: {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].tag}
+                </span>
+              </div>
+              <button
+                onClick={() => {
+                  setHeroDuelIdx(prev => prev + 1)
+                  const sounds = ['💥 MAXIMUM EFFORT!', '🕸️ THWIP!', '🔥 BURRRRN!', '🎬 4TH WALL SMASHED!', '⚡ SPIDER-SENSE TINGLE!']
+                  setComicPopSound(sounds[Math.floor(Math.random() * sounds.length)])
+                }}
+                style={{
+                  background: 'linear-gradient(135deg, #E23636 0%, #B91C1C 100%)',
+                  color: '#FFF',
+                  border: '1.5px solid #FACC15',
+                  borderRadius: '8px',
+                  padding: '8px 18px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  fontSize: '0.84rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  boxShadow: '0 4px 14px rgba(226, 54, 54, 0.45)',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <span>🔥 Trigger Next Duel!</span>
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '14px', position: 'relative' }}>
+              {/* Deadpool's Roast */}
+              <div className="comic-balloon-deadpool" style={{ background: 'rgba(226, 54, 54, 0.15)', border: '1.5px solid #E23636', borderRadius: '12px', padding: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '1.2rem' }}>🌮</span>
+                    <span style={{ fontWeight: '900', color: '#FF4D4D', fontSize: '0.85rem', letterSpacing: '1px' }}>
+                      DEADPOOL • MERC-WITH-A-MOUTH
+                    </span>
+                  </div>
+                  <span style={{ fontSize: '0.7rem', color: '#FACC15', background: 'rgba(0,0,0,0.5)', padding: '2px 6px', borderRadius: '4px' }}>
+                    Red Corner
+                  </span>
+                </div>
+                <p style={{ fontSize: '0.88rem', color: '#FEE2E2', lineHeight: '1.55' }}>
+                  {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].deadpool}
+                </p>
+              </div>
+
+              {/* Spider-Man's Comeback */}
+              <div className="comic-balloon-spidey" style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1.5px solid #38BDF8', borderRadius: '12px', padding: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '1.2rem' }}>🕷️</span>
+                    <span style={{ fontWeight: '900', color: '#38BDF8', fontSize: '0.85rem', letterSpacing: '1px' }}>
+                      SPIDER-MAN • SCIENTIFIC RETORT
+                    </span>
+                  </div>
+                  <span style={{ fontSize: '0.7rem', color: '#38BDF8', background: 'rgba(0,0,0,0.5)', padding: '2px 6px', borderRadius: '4px' }}>
+                    Blue Corner
+                  </span>
+                </div>
+                <p style={{ fontSize: '0.88rem', color: '#E0F2FE', lineHeight: '1.55' }}>
+                  {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].spidey}
+                </p>
+                <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: '1px dashed rgba(56, 189, 248, 0.3)', fontSize: '0.82rem', color: '#FACC15', fontStyle: 'italic' }}>
+                  {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].deadpoolEnd}
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 

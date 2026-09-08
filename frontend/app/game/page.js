@@ -799,7 +799,7 @@ export default function GameArena() {
                   <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(56,189,248,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
                     <div style={{ fontSize: '0.7rem', color: '#38BDF8', fontWeight: 'bold' }}>STAGE 1: DETECTIVE</div>
                     <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>10 Pixels / 40s</div>
-                    <div style={{ fontSize: '0.72rem', color: '#4ADE80' }}>Real (10) | Model (10)</div>
+                    <div style={{ fontSize: '0.72rem', color: '#4ADE80' }}>Authenticity &amp; Model ID</div>
                   </div>
 
                   <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(168,85,247,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
@@ -811,7 +811,7 @@ export default function GameArena() {
                   <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(250,204,21,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
                     <div style={{ fontSize: '0.7rem', color: '#FACC15', fontWeight: 'bold' }}>STAGE 3: PROMPT DUEL</div>
                     <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>5 Prompts / 75s</div>
-                    <div style={{ fontSize: '0.72rem', color: '#93C5FD' }}>10% Zoom Reveal</div>
+                    <div style={{ fontSize: '0.72rem', color: '#93C5FD' }}>Semantic Prompt Match</div>
                   </div>
                 </div>
 
@@ -1201,7 +1201,7 @@ export default function GameArena() {
                             </span>
                             {gameState.activeRound === 4 && (
                               <span style={{ background: 'rgba(0,0,0,0.75)', border: '1px solid #FACC15', color: '#FACC15', padding: '3px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold' }}>
-                                ZOOM: {gameState.zoomLevel || 10}%
+                                FOCAL REVEAL: {gameState.zoomLevel || 10}%
                               </span>
                             )}
                           </div>
@@ -1393,7 +1393,7 @@ export default function GameArena() {
                                   Prompt Wars • Reverse-Engineer the Generation Tokens
                                 </h4>
                                 <span style={{ fontSize: '0.75rem', color: '#38BDF8', fontWeight: 'bold' }}>
-                                  Zoom: {gameState.zoomLevel || 10}%
+                                  Resolution Stage: {gameState.zoomLevel || 10}%
                                 </span>
                               </div>
 
