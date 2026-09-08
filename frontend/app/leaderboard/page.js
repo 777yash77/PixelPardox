@@ -76,8 +76,7 @@ export default function LeaderboardPage() {
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
           <div>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <span className="marvel-logo" style={{ fontSize: '0.75rem', padding: '2px 8px' }}>MARVEL</span>
-              <span style={{ fontSize: '0.8rem', color: '#FF4D4D', fontWeight: 'bold', letterSpacing: '1px' }}>LOGIN 2026</span>
+              <span style={{ fontSize: '0.8rem', color: '#FF4D4D', fontWeight: 'bold', letterSpacing: '1px' }}>LOGIN 2026 // MULTIVERSE</span>
             </div>
             <h1 className="glitch-text" data-text="LIVE LEADERBOARD" style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', textTransform: 'uppercase', letterSpacing: '2px' }}>
               LIVE LEADERBOARD

@@ -38,7 +38,7 @@ export default function AdminDashboard() {
     optionC: '',
     optionD: '',
     correctOption: 'A',
-    points: 1,
+    points: 10,
     orderNum: 1,
     active: true
   })
@@ -363,7 +363,7 @@ export default function AdminDashboard() {
       optionC: quizForm.optionC.trim(),
       optionD: quizForm.optionD.trim(),
       correctAnswer: resolvedAnswer.trim(),
-      points: Number(quizForm.points) || 1,
+      points: Number(quizForm.points) || 10,
       orderNum: Number(quizForm.orderNum) || (quizQuestions.length + 1),
       active: quizForm.active
     }
@@ -396,7 +396,7 @@ export default function AdminDashboard() {
           optionC: '',
           optionD: '',
           correctOption: 'A',
-          points: 1,
+          points: 10,
           orderNum: quizQuestions.length + (editingQuizId ? 1 : 2),
           active: true
         })
@@ -425,7 +425,7 @@ export default function AdminDashboard() {
       optionC: q.optionC || '',
       optionD: q.optionD || '',
       correctOption: opt,
-      points: q.points || 1,
+      points: q.points || 10,
       orderNum: q.orderNum || 1,
       active: q.active !== false
     })
@@ -441,7 +441,7 @@ export default function AdminDashboard() {
       optionC: '',
       optionD: '',
       correctOption: 'A',
-      points: 1,
+      points: 10,
       orderNum: quizQuestions.length + 1,
       active: true
     })

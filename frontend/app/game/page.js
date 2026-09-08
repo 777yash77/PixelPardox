@@ -16,8 +16,8 @@ const DEADPOOL_GAME_QUOTES = [
   "🌮 'Maximum Effort! Show these AI neural nets who's boss!'",
   "⚔️ 'One bad guess is -5 points. Click with your brain, not your elbow!'",
   "💥 'Stuck on a tricky image? Ask your boy Wade for a clue!'",
-  "🕶️ 'You guys are gonna win this thing! Just don't panic!'",
-  "🍕 'Fuel up on chimichangas and trust your instincts!'"
+  "🕶️ 'You guys are gonna win this thing! Just don't do blind tukka!'",
+  "🍗 'Fuel up on biryani & cutting chai, and trust your instincts!'"
 ]
 
 export default function GameArena() {
