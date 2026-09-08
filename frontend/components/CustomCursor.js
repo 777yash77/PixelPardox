@@ -243,10 +243,6 @@ export default function CustomCursor() {
         className={`cyber-cursor-ring ${isHovered ? 'cursor-hover' : ''} ${isClicking ? 'cursor-clicking' : ''}`}
         style={{ opacity: isVisible ? 1 : 0 }}
       >
-        <div className="cursor-bracket bracket-tl" />
-        <div className="cursor-bracket bracket-tr" />
-        <div className="cursor-bracket bracket-bl" />
-        <div className="cursor-bracket bracket-br" />
         <div className="cursor-dashed-ring" />
         <div className="cursor-red-ring" />
       </div>
