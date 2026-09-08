@@ -1256,6 +1256,383 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.5;
 }
 
+/* ==========================================================================
+   CYBER ESPORTS ARENA & HUD TOURNAMENT UPGRADES
+   ========================================================================== */
+
+/* Cyber Navigation HUD */
+.arena-hud-nav {
+  margin: 16px 20px 24px;
+  padding: 16px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(14, 7, 10, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(224, 27, 34, 0.35);
+  border-top: 2px solid #E01B22;
+  border-radius: 14px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(224, 27, 34, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.arena-hud-nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #FF4D4D, #FACC15, transparent);
+  animation: shimmer 4s infinite linear;
+}
+
+/* Live Link Telemetry Pill */
+.live-telemetry-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(224, 27, 34, 0.15);
+  border: 1px solid rgba(224, 27, 34, 0.45);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  color: #FF6B6B;
+  text-transform: uppercase;
+}
+
+.live-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22C55E;
+  box-shadow: 0 0 10px #22C55E;
+  animation: pulseGlow 1.5s infinite ease-in-out;
+}
+
+/* Cyber Score Pill */
+.cyber-score-pill {
+  background: linear-gradient(135deg, rgba(224, 27, 34, 0.2) 0%, rgba(14, 7, 10, 0.9) 100%);
+  border: 1.5px solid #E01B22;
+  padding: 8px 18px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(224, 27, 34, 0.35), inset 0 0 12px rgba(224, 27, 34, 0.15);
+  text-align: right;
+  transition: all 0.3s ease;
+}
+
+.cyber-score-pill:hover {
+  transform: translateY(-2px);
+  border-color: #FACC15;
+  box-shadow: 0 6px 25px rgba(250, 204, 21, 0.35);
+}
+
+/* Question Progress Bar */
+.arena-progress-container {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  height: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 14px 0 24px;
+  position: relative;
+}
+
+.arena-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #E01B22, #FACC15);
+  border-radius: 8px;
+  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 12px rgba(224, 27, 34, 0.8);
+}
+
+/* Futuristic MCQ Option Card */
+.quiz-option-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.quiz-option-card:hover {
+  background: rgba(224, 27, 34, 0.08);
+  border-color: rgba(224, 27, 34, 0.45);
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px rgba(224, 27, 34, 0.2);
+}
+
+.quiz-option-card.selected {
+  background: linear-gradient(135deg, rgba(224, 27, 34, 0.22) 0%, rgba(20, 8, 11, 0.8) 100%);
+  border-color: #E01B22;
+  box-shadow: 0 6px 24px rgba(224, 27, 34, 0.4), inset 0 0 14px rgba(224, 27, 34, 0.2);
+  transform: translateX(6px);
+}
+
+.quiz-option-card.selected::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #FACC15;
+  box-shadow: 0 0 10px #FACC15;
+}
+
+/* Option Letter Badge */
+.option-letter-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.quiz-option-card.selected .option-letter-badge {
+  background: #E01B22;
+  color: #FFF;
+  border-color: #FACC15;
+  box-shadow: 0 0 12px rgba(224, 27, 34, 0.8);
+}
+
+/* Cyber Forensic Scanner Viewport Frame */
+.image-viewport-frame {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1.5px solid rgba(224, 27, 34, 0.4);
+  background: #000;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(224, 27, 34, 0.2);
+}
+
+/* HUD Corner Brackets */
+.hud-corner-tl, .hud-corner-tr, .hud-corner-bl, .hud-corner-br {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  z-index: 5;
+}
+.hud-corner-tl { top: 10px; left: 10px; border-top: 2.5px solid #FACC15; border-left: 2.5px solid #FACC15; }
+.hud-corner-tr { top: 10px; right: 10px; border-top: 2.5px solid #FACC15; border-right: 2.5px solid #FACC15; }
+.hud-corner-bl { bottom: 10px; left: 10px; border-bottom: 2.5px solid #FACC15; border-left: 2.5px solid #FACC15; }
+.hud-corner-br { bottom: 10px; right: 10px; border-bottom: 2.5px solid #FACC15; border-right: 2.5px solid #FACC15; }
+
+/* Subtle scanner line animation */
+@keyframes forensicScan {
+  0% { top: 0%; opacity: 0.8; }
+  50% { opacity: 0.4; }
+  100% { top: 100%; opacity: 0.8; }
+}
+
+.forensic-scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #38BDF8, #E01B22, transparent);
+  box-shadow: 0 0 12px #38BDF8;
+  z-index: 4;
+  pointer-events: none;
+  animation: forensicScan 4s linear infinite;
+}
+
+/* Interactive AI Model Grid Chips */
+.model-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.model-chip-btn {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.model-chip-btn:hover {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: #38BDF8;
+  color: #FFF;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
+}
+
+.model-chip-btn.selected {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.35) 0%, rgba(14, 165, 233, 0.2) 100%);
+  border-color: #38BDF8;
+  color: #FFF;
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.5);
+  font-weight: 700;
+}
+
+/* Real vs AI High-Impact Dual Buttons */
+.duel-choice-btn {
+  padding: 20px 24px;
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 2px solid transparent;
+}
+
+.duel-choice-real {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(10, 30, 18, 0.8) 100%);
+  border-color: rgba(34, 197, 94, 0.35);
+  color: #86EFAC;
+}
+
+.duel-choice-real:hover {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(10, 30, 18, 0.95) 100%);
+  border-color: #22C55E;
+  color: #FFF;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.35);
+}
+
+.duel-choice-real.active {
+  background: linear-gradient(135deg, #15803D 0%, #166534 100%);
+  border-color: #86EFAC;
+  color: #FFF;
+  box-shadow: 0 0 25px rgba(34, 197, 94, 0.6);
+  transform: scale(1.02);
+}
+
+.duel-choice-ai {
+  background: linear-gradient(135deg, rgba(224, 27, 34, 0.15) 0%, rgba(25, 7, 10, 0.8) 100%);
+  border-color: rgba(224, 27, 34, 0.4);
+  color: #FCA5A5;
+}
+
+.duel-choice-ai:hover {
+  background: linear-gradient(135deg, rgba(224, 27, 34, 0.3) 0%, rgba(25, 7, 10, 0.95) 100%);
+  border-color: #EF4444;
+  color: #FFF;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(224, 27, 34, 0.45);
+}
+
+.duel-choice-ai.active {
+  background: linear-gradient(135deg, #B91C1C 0%, #7F1D1D 100%);
+  border-color: #FACC15;
+  color: #FFF;
+  box-shadow: 0 0 25px rgba(224, 27, 34, 0.7);
+  transform: scale(1.02);
+}
+
+/* Forensic Terminal Textarea */
+.cyber-terminal-container {
+  border: 1.5px solid rgba(224, 27, 34, 0.35);
+  border-radius: 10px;
+  background: rgba(10, 5, 8, 0.92);
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  transition: all 0.25s ease;
+}
+
+.cyber-terminal-container:focus-within {
+  border-color: #ff3b3b;
+  box-shadow: 0 0 20px rgba(224, 27, 34, 0.4);
+}
+
+.cyber-terminal-header {
+  background: rgba(255, 255, 255, 0.04);
+  padding: 8px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.cyber-terminal-textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 14px 16px;
+  color: #FFF;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+}
+
+/* Suggestion Quick Chips for Glitch Hunt */
+.quick-tag-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #D1D5DB;
+  font-size: 0.74rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quick-tag-chip:hover {
+  background: rgba(224, 27, 34, 0.2);
+  border-color: #E01B22;
+  color: #FFF;
+  transform: translateY(-1px);
+}
+
+/* Stage Briefing Box */
+.stage-briefing-box {
+  background: linear-gradient(135deg, rgba(224, 27, 34, 0.1) 0%, rgba(14, 7, 10, 0.7) 100%);
+  border: 1.5px solid rgba(224, 27, 34, 0.35);
+  border-left: 4px solid #E01B22;
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+
 
 
 

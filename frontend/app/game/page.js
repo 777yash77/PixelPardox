@@ -660,18 +660,66 @@ export default function GameArena() {
     <div className="page-transition" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <video ref={videoRef} autoPlay playsInline muted style={{ display: 'none' }} />
       <canvas ref={canvasRef} width="160" height="120" style={{ display: 'none' }} />
-      {/* Top Banner */}
-      <nav className="glass-panel" style={{ margin: '16px', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: '12px' }}>
-        <div>
-          <span style={{ fontSize: '0.85rem', textTransform: 'uppercase', color: 'var(--color-neon-blue)', fontWeight: 600, letterSpacing: '1px' }}>LOGIN 2026: The Last Human</span>
-          <h2 style={{ fontSize: '1.2rem', marginTop: '2px', textTransform: 'uppercase' }} className="glitch-text" data-text={`TEAM: ${team.teamName}`}>TEAM: {team.teamName}</h2>
-        </div>
+      {/* Top Cyber HUD Navigation Banner */}
+      <nav className="arena-hud-nav">
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ textAlign: 'right' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Total Score:</span>
-            <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--color-neon-blue)', textShadow: '0 0 10px rgba(255,59,59,0.5)' }}>{team.score} Points</div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
+              <span className="live-telemetry-pill">
+                <span className="live-pulse-dot" />
+                Live Tournament Link
+              </span>
+              <span style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: 'bold', letterSpacing: '1px' }}>
+                LOGIN 2026 // NEURAL ARENA
+              </span>
+            </div>
+            <h2 style={{ fontSize: '1.25rem', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '8px' }} className="glitch-text" data-text={`TEAM: ${team.teamName}`}>
+              <span>TEAM: {team.teamName}</span>
+              {participantName && (
+                <span style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: '600', background: 'rgba(255,255,255,0.06)', padding: '2px 8px', borderRadius: '4px', textTransform: 'none' }}>
+                  Pilot: {participantName}
+                </span>
+              )}
+            </h2>
           </div>
-          <button onClick={handleLogout} className="btn-secondary" style={{ padding: '8px 14px', fontSize: '0.8rem' }}>Logout</button>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {/* Quick Clue Shortcut Buttons in Nav */}
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button 
+              type="button" 
+              onClick={() => handleGetClue('spidey')}
+              className="clue-btn-spidey"
+              style={{ padding: '6px 12px', fontSize: '0.76rem' }}
+              title="Get Science & Optical Clue from Peter Parker"
+            >
+              🕸️ Spidey Intel
+            </button>
+            <button 
+              type="button" 
+              onClick={() => handleGetClue('deadpool')}
+              className="clue-btn-deadpool"
+              style={{ padding: '6px 12px', fontSize: '0.76rem' }}
+              title="Get Tactical Clue from Deadpool"
+            >
+              🌮 Wade Clue
+            </button>
+          </div>
+
+          {/* Cyber Score Pill */}
+          <div className="cyber-score-pill">
+            <span style={{ fontSize: '0.68rem', color: '#FACC15', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', display: 'block' }}>
+              Live Score
+            </span>
+            <div style={{ fontSize: '1.35rem', fontWeight: '900', color: '#FFF', textShadow: '0 0 10px rgba(255,59,59,0.7)', fontFamily: 'var(--font-display)' }}>
+              {team.score} <span style={{ fontSize: '0.8rem', color: '#FF6B6B' }}>PTS</span>
+            </div>
+          </div>
+
+          <button onClick={handleLogout} className="btn-secondary" style={{ padding: '8px 16px', fontSize: '0.8rem', borderColor: 'rgba(255,255,255,0.15)' }}>
+            Exit Arena
+          </button>
         </div>
       </nav>
 
@@ -700,21 +748,78 @@ export default function GameArena() {
           </div>
         ) : (
           /* GAME STATE VIEWS */
-          <div style={{ maxWidth: '800px', margin: '0 auto', width: '100%' }}>
+          <div style={{ maxWidth: '820px', margin: '0 auto', width: '100%' }}>
             
             {/* ROUND 0: WAITING IN LOBBY */}
             {gameState.activeRound === 0 && (
-              <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', marginTop: '40px' }}>
-                <div className="float-bounce" style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(224,27,34,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-                  <div className="pulse-glow" style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--color-primary-blue)' }} />
+              <div className="glass-panel" style={{ padding: '44px 32px', textAlign: 'center', marginTop: '30px' }}>
+                <div className="float-bounce" style={{
+                  width: '90px',
+                  height: '90px',
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle, rgba(224,27,34,0.2) 0%, rgba(14,7,10,0.8) 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 24px',
+                  border: '2px solid #E01B22',
+                  boxShadow: '0 0 25px rgba(224, 27, 34, 0.4)'
+                }}>
+                  <div className="pulse-glow" style={{ width: '45px', height: '45px', borderRadius: '50%', background: 'var(--color-primary-blue)' }} />
                 </div>
-                <h2 className="glitch-text" data-text="WAITING ROOM" style={{ fontSize: '1.75rem', marginBottom: '12px', textTransform: 'uppercase' }}>WAITING ROOM</h2>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', maxWidth: '500px', margin: '0 auto 24px', lineHeight: 1.6 }}>
-                  Registration is complete. Please wait for the event coordinators to initiate the rounds. The screen will synchronize automatically when the game begins.
+
+                <div style={{ display: 'inline-block', marginBottom: '12px' }}>
+                  <span className="shimmer-badge" style={{ padding: '4px 14px', borderRadius: '6px', fontSize: '0.78rem', color: '#FACC15', border: '1px solid #FACC15' }}>
+                    LOBBY TELEMETRY ACTIVE
+                  </span>
+                </div>
+
+                <h2 className="glitch-text" data-text="TOURNAMENT COMMAND BRIEFING" style={{ fontSize: '2rem', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                  TOURNAMENT COMMAND BRIEFING
+                </h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', maxWidth: '560px', margin: '0 auto 28px', lineHeight: 1.6 }}>
+                  Team <strong style={{ color: '#FFF' }}>{team.teamName}</strong> is registered and locked in. Please stand by while event coordinators launch the tournament rounds.
                 </p>
-                <div className="shimmer-bg" style={{ padding: '16px', borderRadius: '8px', display: 'inline-block', border: '1px solid var(--card-border)' }}>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Status:</span>
-                  <div className="typing-cursor" style={{ fontWeight: '600', color: 'var(--color-neon-blue)', marginTop: '4px' }}>Awaiting Host Command</div>
+
+                {/* Stage Protocol Cards */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+                  gap: '12px',
+                  maxWidth: '740px',
+                  margin: '0 auto 28px',
+                  textAlign: 'left'
+                }}>
+                  <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(224,27,34,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
+                    <div style={{ fontSize: '0.7rem', color: '#FF6B6B', fontWeight: 'bold' }}>STAGE 0 // PRELIMS</div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>30 MCQs / 30 Mins</div>
+                    <div style={{ fontSize: '0.72rem', color: '#FACC15' }}>+10 Correct / -5 Wrong</div>
+                  </div>
+
+                  <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(56,189,248,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
+                    <div style={{ fontSize: '0.7rem', color: '#38BDF8', fontWeight: 'bold' }}>STAGE 1 // DETECTIVE</div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>10 Pixels / 40s</div>
+                    <div style={{ fontSize: '0.72rem', color: '#4ADE80' }}>Real (10) | Model (10)</div>
+                  </div>
+
+                  <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(168,85,247,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
+                    <div style={{ fontSize: '0.7rem', color: '#C084FC', fontWeight: 'bold' }}>STAGE 2 // INPAINTING</div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>7 Challenges / 45s</div>
+                    <div style={{ fontSize: '0.72rem', color: '#DDD6FE' }}>Glitch Artifact Scan</div>
+                  </div>
+
+                  <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(250,204,21,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
+                    <div style={{ fontSize: '0.7rem', color: '#FACC15', fontWeight: 'bold' }}>STAGE 3 // PROMPT DUEL</div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>5 Prompts / 75s</div>
+                    <div style={{ fontSize: '0.72rem', color: '#93C5FD' }}>10% Zoom Reveal</div>
+                  </div>
+                </div>
+
+                <div className="shimmer-bg" style={{ padding: '14px 24px', borderRadius: '8px', display: 'inline-block', border: '1px solid var(--card-border)' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', display: 'block' }}>System Status</span>
+                  <div className="typing-cursor" style={{ fontWeight: '700', color: 'var(--color-neon-blue)', marginTop: '4px', fontSize: '0.95rem' }}>
+                    Awaiting Host Command Transmission...
+                  </div>
                 </div>
               </div>
             )}
@@ -724,29 +829,98 @@ export default function GameArena() {
               <div style={{ marginTop: '20px' }}>
                 <div className="glass-panel" style={{ padding: '32px' }}>
                   {prelimStatus === 'NOT_STARTED' && (
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ background: 'rgba(255, 20, 147, 0.1)', border: '1px solid #ff1493', color: '#ff5c93', borderRadius: '8px', padding: '16px', fontSize: '0.9rem', marginBottom: '24px', textAlign: 'left', lineHeight: '1.5' }}>
-                        <strong style={{ display: 'block', marginBottom: '8px', fontSize: '1rem', color: '#fff' }}>⚠️ STAGE 0 RULES & SCORING</strong>
-                        <ul style={{ margin: 0, paddingLeft: '20px' }}>
-                          <li><strong>Questions:</strong> Exactly 30 MCQ questions.</li>
-                          <li><strong>Strict Timing:</strong> Strictly 30 minutes once started. Auto-submits when time expires.</li>
-                          <li><strong>Scoring Formula:</strong> Correct choice = <strong>+10 points</strong>, Wrong answer = <strong>-5 points</strong> (Negative marking). Unanswered = 0.</li>
-                          <li><strong>Team Average:</strong> Team score is calculated as the sum of all members' scores divided by your registered team size (2–4).</li>
-                          <li><strong>Silent Monitoring:</strong> 1-minute webcam anti-cheat verification operates in the background.</li>
+                    <div>
+                      {/* High-Impact Cyber Stage Briefing Card */}
+                      <div className="stage-briefing-box">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                          <span style={{ fontSize: '1.2rem' }}>⚠️</span>
+                          <span style={{ fontSize: '0.85rem', fontWeight: '800', color: '#FF4D4D', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
+                            STAGE 0 RULES &amp; SCORING FORMULA
+                          </span>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px', margin: '14px 0 16px' }}>
+                          <div style={{ background: 'rgba(34, 197, 94, 0.1)', border: '1px solid #22C55E', borderRadius: '6px', padding: '10px 12px' }}>
+                            <div style={{ fontSize: '0.72rem', color: '#86EFAC', fontWeight: 'bold' }}>CORRECT ANSWER</div>
+                            <div style={{ fontSize: '1.15rem', color: '#FFF', fontWeight: 'bold' }}>+10 Points</div>
+                          </div>
+                          <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid #EF4444', borderRadius: '6px', padding: '10px 12px' }}>
+                            <div style={{ fontSize: '0.72rem', color: '#FCA5A5', fontWeight: 'bold' }}>NEGATIVE MARKING</div>
+                            <div style={{ fontSize: '1.15rem', color: '#FFF', fontWeight: 'bold' }}>-5 Points</div>
+                          </div>
+                          <div style={{ background: 'rgba(250, 204, 21, 0.1)', border: '1px solid #FACC15', borderRadius: '6px', padding: '10px 12px' }}>
+                            <div style={{ fontSize: '0.72rem', color: '#FDE047', fontWeight: 'bold' }}>UNANSWERED</div>
+                            <div style={{ fontSize: '1.15rem', color: '#FFF', fontWeight: 'bold' }}>0 Points (Safe)</div>
+                          </div>
+                        </div>
+                        <ul style={{ margin: 0, paddingLeft: '18px', color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: '1.6' }}>
+                          <li><strong>30 Questions:</strong> Thoroughly test AI fundamentals, diffusion architectures, GANs, and deepfake forensics.</li>
+                          <li><strong>Strict 30-Minute Timer:</strong> Quiz auto-submits precisely when the countdown reaches 00:00.</li>
+                          <li><strong>Team Average:</strong> Final team prelim score is the sum of all members divided by team size.</li>
+                          <li><strong>Silent Monitoring:</strong> Automated webcam periodic invigilation runs smoothly in the background.</li>
                         </ul>
                       </div>
-                      <h2 style={{ marginBottom: '16px', color: 'var(--color-primary-blue, #E01B22)' }}>Stage 0: Prelims (30 Questions)</h2>
-                      <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>
-                        Welcome to the Prelims! You have strictly 30 minutes to complete the 30-question quiz. Read each question carefully.
-                      </p>
-                      <button className="btn-primary" onClick={handlePrelimStart}>Acknowledge & Start Quiz</button>
+
+                      <div style={{ textAlign: 'center', marginTop: '24px' }}>
+                        <h2 style={{ marginBottom: '12px', color: '#FFF', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                          Stage 0: Prelims Challenge
+                        </h2>
+                        <p style={{ color: 'var(--text-secondary)', marginBottom: '24px', maxWidth: '520px', margin: '0 auto 24px' }}>
+                          Ready your optical acuity and neural logic. Once initiated, your personal 30-minute timer begins.
+                        </p>
+                        <button className="btn-primary" style={{ padding: '14px 32px', fontSize: '1.05rem' }} onClick={handlePrelimStart}>
+                          ⚡ Acknowledge &amp; Start 30-Min Quiz →
+                        </button>
+                      </div>
                     </div>
                   )}
+
                   {prelimStatus === 'IN_PROGRESS' && (
                     <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', color: '#ff1493', fontWeight: 'bold' }}>
-                        <span>Time Left:</span>
-                        <span>{Math.floor(prelimTimeLeft / 60)}:{String(prelimTimeLeft % 60).padStart(2, '0')}</span>
+                      {/* Stage 0 Header HUD */}
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: '14px 20px',
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        border: '1.5px solid rgba(224, 27, 34, 0.35)',
+                        borderRadius: '10px',
+                        marginBottom: '16px'
+                      }}>
+                        <div>
+                          <span style={{ fontSize: '0.72rem', color: '#FF6B6B', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', display: 'block' }}>
+                            STAGE 0 // PRELIMS
+                          </span>
+                          <span style={{ fontSize: '0.95rem', color: '#FFF', fontWeight: '600' }}>
+                            30 Questions (+10 / -5 Penalty)
+                          </span>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <div style={{ textAlign: 'right' }}>
+                            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Time Left</span>
+                            <div style={{
+                              fontFamily: 'var(--font-display)',
+                              fontSize: '1.65rem',
+                              fontWeight: '900',
+                              color: prelimTimeLeft < 300 ? '#EF4444' : '#FACC15',
+                              textShadow: prelimTimeLeft < 300 ? '0 0 12px rgba(239, 68, 68, 0.8)' : '0 0 10px rgba(250, 204, 21, 0.4)'
+                            }} className={prelimTimeLeft < 180 ? 'blink' : ''}>
+                              {Math.floor(prelimTimeLeft / 60)}:{String(prelimTimeLeft % 60).padStart(2, '0')}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Question Progress Bar */}
+                      <div style={{ marginBottom: '20px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                          <span>Answered: <strong style={{ color: '#FFF' }}>{Object.keys(prelimAnswers).length}</strong> of 30 questions</span>
+                          <span style={{ color: '#FACC15', fontWeight: 'bold' }}>{Math.round((Object.keys(prelimAnswers).length / 30) * 100)}% Complete</span>
+                        </div>
+                        <div className="arena-progress-container" style={{ margin: 0 }}>
+                          <div className="arena-progress-bar" style={{ width: `${(Object.keys(prelimAnswers).length / 30) * 100}%` }} />
+                        </div>
                       </div>
 
                       {/* Superhero Clue Bar for Stage 0 */}
@@ -781,46 +955,121 @@ export default function GameArena() {
                           </div>
                         </div>
                       )}
+
+                      {/* Modern Question Cards */}
                       {prelimQuestions.map((q, idx) => (
-                        <div key={q.id} className="stagger-fade-in" style={{ marginBottom: '24px', paddingBottom: '24px', borderBottom: '1px solid rgba(255,255,255,0.1)', animationDelay: `${idx * 0.05}s` }}>
-                          <p style={{ fontWeight: 'bold', marginBottom: '12px', color: 'var(--text-white)' }}>{idx + 1}. {q.questionText}</p>
+                        <div key={q.id} className="stagger-fade-in" style={{
+                          marginBottom: '24px',
+                          padding: '20px 24px',
+                          borderRadius: '12px',
+                          border: '1px solid rgba(255, 255, 255, 0.08)',
+                          background: 'rgba(255, 255, 255, 0.02)',
+                          boxShadow: '0 4px 18px rgba(0, 0, 0, 0.4)',
+                          animationDelay: `${idx * 0.03}s`
+                        }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                            <span style={{
+                              background: prelimAnswers[q.id] ? '#E01B22' : 'rgba(255, 255, 255, 0.08)',
+                              color: '#FFF',
+                              fontSize: '0.75rem',
+                              fontWeight: '800',
+                              padding: '3px 10px',
+                              borderRadius: '6px',
+                              border: '1px solid rgba(255, 255, 255, 0.15)',
+                              letterSpacing: '0.5px'
+                            }}>
+                              QUESTION {idx + 1} OF 30
+                            </span>
+                            {prelimAnswers[q.id] ? (
+                              <span style={{ fontSize: '0.74rem', color: '#4ADE80', fontWeight: 'bold' }}>
+                                ✓ Answered
+                              </span>
+                            ) : (
+                              <span style={{ fontSize: '0.74rem', color: 'var(--text-dim)' }}>
+                                Not answered
+                              </span>
+                            )}
+                          </div>
+
+                          <p style={{ fontWeight: '600', fontSize: '1.02rem', marginBottom: '16px', color: 'var(--text-white)', lineHeight: '1.55' }}>
+                            {q.questionText}
+                          </p>
+
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                            {['optionA', 'optionB', 'optionC', 'optionD'].map((opt) => (
-                              <label key={opt} style={{ 
-                                display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer',
-                                padding: '10px 14px', borderRadius: '6px',
-                                border: prelimAnswers[q.id] === q[opt] ? '1px solid var(--color-primary-blue)' : '1px solid rgba(255,255,255,0.08)',
-                                background: prelimAnswers[q.id] === q[opt] ? 'rgba(224,27,34,0.1)' : 'transparent',
-                                transition: 'all 0.2s ease'
-                              }}>
-                                <input 
-                                  type="radio" 
-                                  name={`q-${q.id}`} 
-                                  value={q[opt]} 
-                                  checked={prelimAnswers[q.id] === q[opt]}
-                                  onChange={() => setPrelimAnswers({ ...prelimAnswers, [q.id]: q[opt] })}
-                                  style={{ accentColor: 'var(--color-primary-blue)' }}
-                                />
-                                <span style={{ color: prelimAnswers[q.id] === q[opt] ? 'var(--text-white)' : 'var(--text-secondary)' }}>{q[opt]}</span>
-                              </label>
-                            ))}
+                            {['optionA', 'optionB', 'optionC', 'optionD'].map((opt, optIdx) => {
+                              const letter = ['A', 'B', 'C', 'D'][optIdx]
+                              const isSelected = prelimAnswers[q.id] === q[opt]
+                              return (
+                                <div 
+                                  key={opt} 
+                                  className={`quiz-option-card ${isSelected ? 'selected' : ''}`}
+                                  onClick={() => setPrelimAnswers({ ...prelimAnswers, [q.id]: q[opt] })}
+                                >
+                                  <div className="option-letter-badge">{letter}</div>
+                                  <span style={{ 
+                                    color: isSelected ? '#FFF' : 'var(--text-primary)', 
+                                    fontSize: '0.92rem', 
+                                    lineHeight: '1.4', 
+                                    fontWeight: isSelected ? '600' : 'normal' 
+                                  }}>
+                                    {q[opt]}
+                                  </span>
+                                </div>
+                              )
+                            })}
                           </div>
                         </div>
                       ))}
-                      <button className="btn-primary" style={{ width: '100%' }} onClick={handlePrelimSubmit}>Submit Quiz</button>
+
+                      {/* Submit Action Card */}
+                      <div style={{ 
+                        position: 'sticky', 
+                        bottom: '20px', 
+                        background: 'rgba(14, 7, 10, 0.95)', 
+                        backdropFilter: 'blur(16px)', 
+                        padding: '16px 20px', 
+                        borderRadius: '12px', 
+                        border: '1.5px solid #E01B22', 
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.8), 0 0 20px rgba(224, 27, 34, 0.3)',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: '16px',
+                        zIndex: 10
+                      }}>
+                        <div>
+                          <div style={{ fontSize: '0.8rem', color: '#FACC15', fontWeight: 'bold' }}>
+                            Ready to finalize?
+                          </div>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                            {Object.keys(prelimAnswers).length} of 30 questions recorded
+                          </div>
+                        </div>
+                        <button className="btn-primary" style={{ padding: '12px 28px', fontSize: '0.95rem' }} onClick={handlePrelimSubmit}>
+                          Submit Prelims Quiz →
+                        </button>
+                      </div>
                     </div>
                   )}
+
                   {prelimStatus === 'COMPLETED' && (
-                    <div style={{ textAlign: 'center' }}>
-                      <div className="lock-in-pulse" style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(224,27,34,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', border: '2px solid var(--color-primary-blue)' }}>
-                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--color-neon-blue)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <div style={{ textAlign: 'center', padding: '30px 20px' }}>
+                      <div className="lock-in-pulse" style={{ width: '84px', height: '84px', borderRadius: '50%', background: 'rgba(224,27,34,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', border: '2.5px solid var(--color-primary-blue)' }}>
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--color-neon-blue)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                           <polyline className="draw-check" points="20 6 9 17 4 12" />
                         </svg>
                       </div>
-                      <h2 className="scale-pop" style={{ marginBottom: '16px', color: 'var(--color-neon-blue)', textTransform: 'uppercase' }}>Quiz Submitted!</h2>
-                      <p style={{ color: 'var(--text-secondary)' }}>
-                        Please wait for the other participants to finish.
+                      <h2 className="scale-pop" style={{ marginBottom: '12px', color: 'var(--color-neon-blue)', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                        Prelims Quiz Submitted!
+                      </h2>
+                      <p style={{ color: 'var(--text-secondary)', maxWidth: '500px', margin: '0 auto 20px', lineHeight: '1.6' }}>
+                        Your answers have been stored and scored. Please wait for other participants to conclude. The screen will automatically progress when coordinators initiate Stage 1.
                       </p>
+                      <div className="shimmer-bg" style={{ padding: '12px 24px', borderRadius: '8px', display: 'inline-block', border: '1px solid var(--card-border)' }}>
+                        <span className="typing-cursor" style={{ fontSize: '0.85rem', color: '#FACC15', fontWeight: 'bold' }}>
+                          Synchronizing with Main Leaderboard...
+                        </span>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -831,33 +1080,63 @@ export default function GameArena() {
             {gameState.activeRound > 1 && gameState.activeRound < 5 && (
               <div>
                 {!gameState.activeQuestionId ? (
-                  <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', marginTop: '40px' }}>
-                    <h2 style={{ fontSize: '1.5rem', marginBottom: '8px' }}>
+                  <div className="glass-panel" style={{ padding: '48px 32px', textAlign: 'center', marginTop: '30px' }}>
+                    <div className="float-bounce" style={{ width: '70px', height: '70px', borderRadius: '50%', background: 'rgba(224, 27, 34, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', border: '1.5px solid rgba(224, 27, 34, 0.4)' }}>
+                      <span style={{ fontSize: '1.8rem' }}>📡</span>
+                    </div>
+                    <h2 style={{ fontSize: '1.6rem', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>
                       {gameState.activeRound === 2 && 'Stage 1: Pixel Detective'}
                       {gameState.activeRound === 3 && 'Stage 2: The Glitch Hunt'}
                       {gameState.activeRound === 4 && 'Stage 3: Prompt Wars'}
                     </h2>
-                    <p style={{ color: 'var(--text-secondary)' }}>
-                      Get ready! Waiting for the organizers to launch the next image question...
+                    <p style={{ color: 'var(--text-secondary)', maxWidth: '520px', margin: '0 auto', lineHeight: '1.6' }}>
+                      Synchronized to Main Stage Screen. Waiting for the organizers to launch the next visual challenge...
                     </p>
+                    <div className="shimmer-bg" style={{ padding: '12px 24px', borderRadius: '8px', display: 'inline-block', border: '1px solid var(--card-border)', marginTop: '24px' }}>
+                      <span className="typing-cursor" style={{ fontSize: '0.84rem', color: 'var(--color-neon-blue)', fontWeight: 'bold' }}>
+                        Awaiting Next Neural Transmission
+                      </span>
+                    </div>
                   </div>
                 ) : (
                   <div style={{ marginTop: '20px' }}>
                     {/* Header: Timer & Round info */}
-                    <div className={`glass-panel ${timeLeft > 0 && timeLeft < 10 ? 'ring-pulse' : ''}`} style={{ padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderColor: timeLeft < 10 && timeLeft > 0 ? 'var(--color-primary-blue)' : 'var(--card-border)' }}>
+                    <div className={`glass-panel ${timeLeft > 0 && timeLeft < 10 ? 'ring-pulse' : ''}`} style={{
+                      padding: '16px 24px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '20px',
+                      borderColor: timeLeft < 10 && timeLeft > 0 ? '#E01B22' : 'var(--card-border)'
+                    }}>
                       <div>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Current Stage</span>
-                        <h3 style={{ fontSize: '1.1rem', textTransform: 'uppercase' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                          <span className="badge badge-active" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
+                            ROUND {gameState.activeRound - 1} ACTIVE
+                          </span>
+                          <span style={{ fontSize: '0.75rem', color: '#FACC15', fontWeight: 'bold' }}>
+                            QUESTION #{gameState.activeQuestionId}
+                          </span>
+                        </div>
+                        <h3 style={{ fontSize: '1.15rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
                           {gameState.activeRound === 2 && 'Stage 1: Pixel Detective'}
                           {gameState.activeRound === 3 && 'Stage 2: The Glitch Hunt'}
                           {gameState.activeRound === 4 && 'Stage 3: Prompt Wars'}
                         </h3>
                       </div>
-                      
+
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Time Remaining:</span>
-                        <div style={{ fontSize: '1.75rem', fontWeight: 'bold', fontFamily: 'var(--font-display)', color: timeLeft < 10 ? 'var(--color-neon-blue)' : '#fff', textShadow: timeLeft < 10 && timeLeft > 0 ? '0 0 15px rgba(224,27,34,0.7)' : 'none' }} className={timeLeft < 5 && timeLeft > 0 ? 'blink' : ''}>
-                          {timeLeft > 0 ? `${String(Math.floor(timeLeft / 60)).padStart(2, '0')}:${String(timeLeft % 60).padStart(2, '0')}` : '00:00'}
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', display: 'block' }}>Countdown</span>
+                          <div style={{
+                            fontSize: '1.85rem',
+                            fontWeight: '900',
+                            fontFamily: 'var(--font-display)',
+                            color: timeLeft < 10 ? 'var(--color-neon-blue)' : '#FFF',
+                            textShadow: timeLeft < 10 && timeLeft > 0 ? '0 0 16px rgba(224,27,34,0.8)' : '0 0 8px rgba(255,255,255,0.2)'
+                          }} className={timeLeft < 5 && timeLeft > 0 ? 'blink' : ''}>
+                            {timeLeft > 0 ? `${String(Math.floor(timeLeft / 60)).padStart(2, '0')}:${String(timeLeft % 60).padStart(2, '0')}` : '00:00'}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -895,56 +1174,84 @@ export default function GameArena() {
                       </div>
                     )}
 
-                    {/* Image Area for activeRound > 1 */}
+                    {/* Image Viewport with Cyber Forensics Frame */}
                     {currentQuestion && (
                       <div className="flex-center" style={{ marginBottom: '24px' }}>
-                        {gameState.activeRound === 4 ? (
-                          /* TIE BREAKER CSS ZOOM */
-                          <div style={{ width: '100%', maxWidth: '500px', height: '350px', overflow: 'hidden', position: 'relative', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                            <img 
-                              src={`http://localhost:8080${currentQuestion.imageUrl}`} 
-                              alt="zoomed" 
-                              style={{ 
-                                width: '100%', 
-                                height: '100%', 
-                                objectFit: 'cover', 
-                                transform: `scale(${100 / (gameState.zoomLevel || 10)})`,
-                                transformOrigin: 'center',
-                                transition: 'transform 0.5s ease'
-                              }} 
-                            />
+                        <div className="image-viewport-frame" style={{ width: '100%', maxWidth: '640px' }}>
+                          <div className="hud-corner-tl" />
+                          <div className="hud-corner-tr" />
+                          <div className="hud-corner-bl" />
+                          <div className="hud-corner-br" />
+                          <div className="forensic-scan-line" />
+
+                          {/* Top telemetry bar over image */}
+                          <div style={{
+                            position: 'absolute',
+                            top: '10px',
+                            left: '32px',
+                            right: '32px',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            zIndex: 5,
+                            pointerEvents: 'none'
+                          }}>
+                            <span style={{ background: 'rgba(0,0,0,0.75)', border: '1px solid #E01B22', color: '#FF4D4D', padding: '3px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', letterSpacing: '1px' }}>
+                              NEURAL FORENSIC FEED // ACTIVE
+                            </span>
+                            {gameState.activeRound === 4 && (
+                              <span style={{ background: 'rgba(0,0,0,0.75)', border: '1px solid #FACC15', color: '#FACC15', padding: '3px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold' }}>
+                                ZOOM: {gameState.zoomLevel || 10}%
+                              </span>
+                            )}
                           </div>
-                        ) : (
-                          /* STANDARD IMAGE VIEW */
-                          <div style={{ width: '100%', maxWidth: '600px', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
-                            <img 
-                              src={`http://localhost:8080${currentQuestion.imageUrl}`} 
-                              alt="quiz visual" 
-                              style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '400px', objectFit: 'contain', background: '#000' }}
-                            />
-                          </div>
-                        )}
+
+                          {gameState.activeRound === 4 ? (
+                            <div style={{ width: '100%', height: '360px', overflow: 'hidden', position: 'relative' }}>
+                              <img 
+                                src={`http://localhost:8080${currentQuestion.imageUrl}`} 
+                                alt="zoomed" 
+                                style={{ 
+                                  width: '100%', 
+                                  height: '100%', 
+                                  objectFit: 'cover', 
+                                  transform: `scale(${100 / (gameState.zoomLevel || 10)})`,
+                                  transformOrigin: 'center',
+                                  transition: 'transform 0.5s ease'
+                                }} 
+                              />
+                            </div>
+                          ) : (
+                            <div style={{ width: '100%', background: '#070405', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '300px' }}>
+                              <img 
+                                src={`http://localhost:8080${currentQuestion.imageUrl}`} 
+                                alt="quiz visual" 
+                                style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '420px', objectFit: 'contain' }}
+                              />
+                            </div>
+                          )}
+                        </div>
                       </div>
                     )}
 
                     {/* SUBMITTED WAITING SCREEN (for image rounds) */}
                     {submitted ? (
-                      <div className="glass-panel" style={{ padding: '32px', textAlign: 'center' }}>
+                      <div className="glass-panel" style={{ padding: '36px', textAlign: 'center' }}>
                         <div className="lock-in-pulse" style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(224,27,34,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', border: '2px solid var(--color-primary-blue)' }}>
                           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--color-neon-blue)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                             <polyline className="draw-check" points="20 6 9 17 4 12" />
                           </svg>
                         </div>
-                        <h3 className="scale-pop" style={{ textTransform: 'uppercase' }}>Response Locked In</h3>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '8px' }}>
-                          Your answer has been submitted successfully. Please wait for the current question timer to expire or for the organizers to launch the next image.
+                        <h3 className="scale-pop" style={{ textTransform: 'uppercase', letterSpacing: '1px', color: '#FFF' }}>Response Locked In</h3>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', marginTop: '8px', maxWidth: '480px', margin: '8px auto 0' }}>
+                          Your forensic analysis has been encrypted and submitted. Stand by for timer expiration or the next visual target!
                         </p>
                       </div>
                     ) : (
                       /* ACTIVE SUBMISSION FORM */
                       <div className="glass-panel" style={{ padding: '32px' }}>
                         {submitError && (
-                          <div style={{ background: 'rgba(255,20,147,0.1)', border: '1px solid #ff1493', color: '#ff5c93', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '20px' }}>
+                          <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid #EF4444', color: '#FCA5A5', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '20px' }}>
                             {submitError}
                           </div>
                         )}
@@ -953,49 +1260,71 @@ export default function GameArena() {
                           {/* STAGE 1 FORM */}
                           {gameState.activeRound === 2 && (
                             <div>
-                              <h4 style={{ fontSize: '1rem', marginBottom: '16px', color: '#fff' }}>Is this photograph Real or AI-Generated?</h4>
+                              <h4 style={{ fontSize: '1.05rem', marginBottom: '18px', color: '#fff', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                                Forensic Classification: Authentic or Synthetic AI?
+                              </h4>
                               
                               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
                                 <button
                                   type="button"
-                                  className={round1Answer.chosen === 'REAL' ? 'btn-primary' : 'btn-secondary'}
+                                  className={`duel-choice-btn duel-choice-real ${round1Answer.chosen === 'REAL' ? 'active' : ''}`}
                                   onClick={() => setRound1Answer({ ...round1Answer, chosen: 'REAL' })}
-                                  style={{ padding: '16px 20px', fontSize: '1.1rem' }}
                                 >
-                                  📷 Authentic Photo
+                                  <span style={{ fontSize: '1.8rem' }}>📷</span>
+                                  <span>Authentic Photo</span>
+                                  <span style={{ fontSize: '0.72rem', opacity: 0.8, textTransform: 'none', fontWeight: 'normal' }}>Captured with optical camera</span>
                                 </button>
+
                                 <button
                                   type="button"
-                                  className={round1Answer.chosen === 'AI' ? 'btn-primary' : 'btn-secondary'}
+                                  className={`duel-choice-btn duel-choice-ai ${round1Answer.chosen === 'AI' ? 'active' : ''}`}
                                   onClick={() => {
                                     setRound1Answer({ ...round1Answer, chosen: 'AI' })
                                     setShowModelSelect(true)
                                   }}
-                                  style={{ padding: '16px 20px', fontSize: '1.1rem' }}
                                 >
-                                  🤖 AI Generated
+                                  <span style={{ fontSize: '1.8rem' }}>🤖</span>
+                                  <span>Synthetic AI</span>
+                                  <span style={{ fontSize: '0.72rem', opacity: 0.8, textTransform: 'none', fontWeight: 'normal' }}>Diffusion / GAN Generated</span>
                                 </button>
                               </div>
 
                               {/* Bonus Model Guess */}
-                              {round1Answer.chosen === 'AI' && showModelSelect && (
-                                <div className="form-group" style={{ animation: 'fadeIn 0.3s ease-out' }}>
-                                  <label className="form-label">{currentQuestion?.bonusQuestion || 'Which AI Model was used to generate this image?'}</label>
-                                  <select 
-                                    className="form-input"
-                                    value={round1Answer.bonus}
-                                    onChange={(e) => setRound1Answer({ ...round1Answer, bonus: e.target.value })}
-                                  >
-                                    <option value="">-- Choose AI Model --</option>
-                                    <option value="Midjourney">Midjourney</option>
-                                    <option value="DALL-E 3">DALL-E 3</option>
-                                    <option value="Stable Diffusion">Stable Diffusion</option>
-                                    <option value="Adobe Firefly">Adobe Firefly</option>
-                                    <option value="Flux">Flux</option>
-                                    <option value="Claude">Claude</option>
-                                    <option value="Gemini">Gemini</option>
-                                    <option value="ChatGPT">ChatGPT</option>
-                                  </select>
+                              {round1Answer.chosen === 'AI' && (
+                                <div style={{ animation: 'staggerFadeIn 0.3s ease-out', marginTop: '20px', background: 'rgba(255,255,255,0.02)', padding: '18px', borderRadius: '10px', border: '1px solid rgba(56,189,248,0.25)' }}>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                    <label className="form-label" style={{ color: '#38BDF8', fontWeight: 'bold' }}>
+                                      🎯 {currentQuestion?.bonusQuestion || 'Identify the AI Generator Model (+Bonus Pts)'}:
+                                    </label>
+                                    {round1Answer.bonus && (
+                                      <span style={{ fontSize: '0.75rem', color: '#FACC15', fontWeight: 'bold' }}>
+                                        Selected: {round1Answer.bonus}
+                                      </span>
+                                    )}
+                                  </div>
+
+                                  <div className="model-grid">
+                                    {[
+                                      { name: 'Midjourney', icon: '🎨' },
+                                      { name: 'DALL-E 3', icon: '🌌' },
+                                      { name: 'Stable Diffusion', icon: '⚡' },
+                                      { name: 'Adobe Firefly', icon: '🔥' },
+                                      { name: 'Flux', icon: '🔮' },
+                                      { name: 'Claude', icon: '🧠' },
+                                      { name: 'Gemini', icon: '💎' },
+                                      { name: 'ChatGPT', icon: '💬' }
+                                    ].map(m => (
+                                      <button
+                                        key={m.name}
+                                        type="button"
+                                        className={`model-chip-btn ${round1Answer.bonus === m.name ? 'selected' : ''}`}
+                                        onClick={() => setRound1Answer({ ...round1Answer, bonus: m.name })}
+                                      >
+                                        <span>{m.icon}</span>
+                                        <span>{m.name}</span>
+                                      </button>
+                                    ))}
+                                  </div>
                                 </div>
                               )}
                             </div>
@@ -1003,50 +1332,117 @@ export default function GameArena() {
 
                           {/* STAGE 2 FORM */}
                           {gameState.activeRound === 3 && (
-                            <div className="form-group">
-                              <h4 style={{ fontSize: '1.05rem', color: '#fff', marginBottom: '12px' }}>
-                                Glitch Hunt: Identify the hidden AI artifacts or digital anomalies you see.
-                              </h4>
-                              {currentQuestion?.isLightning && (
-                                <p style={{ color: '#ff1493', fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '12px' }}>
-                                  ⚡ SURPRISE LIGHTNING IMAGE: Submit quickly for extra bonus points!
-                                </p>
-                              )}
-                              <textarea
-                                className="form-input"
-                                rows={4}
-                                required
-                                value={textSubmission}
-                                onChange={(e) => setTextSubmission(e.target.value)}
-                                placeholder="Describe anomalous reflections, bad shadows, extra fingers, text warping, etc..."
-                              />
+                            <div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                                <h4 style={{ fontSize: '1.05rem', color: '#fff' }}>
+                                  Glitch Hunt: Document Neural Artifacts &amp; Visual Anomalies
+                                </h4>
+                                {currentQuestion?.isLightning && (
+                                  <span className="shimmer-badge" style={{ padding: '3px 10px', borderRadius: '4px', fontSize: '0.72rem', color: '#FACC15', border: '1px solid #FACC15' }}>
+                                    ⚡ LIGHTNING ROUND // SPEED BONUS
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* Quick helper tags */}
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
+                                <span style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', alignSelf: 'center' }}>Quick Insert:</span>
+                                {[
+                                  'Asymmetrical iris reflections',
+                                  'Extra / melted knuckles',
+                                  'Collar edge blending artifact',
+                                  'Inconsistent directional shadow',
+                                  'Warped background lines',
+                                  'Excessive synthetic skin blur'
+                                ].map(tag => (
+                                  <button
+                                    key={tag}
+                                    type="button"
+                                    className="quick-tag-chip"
+                                    onClick={() => {
+                                      setTextSubmission(prev => prev ? `${prev}, ${tag}` : tag)
+                                    }}
+                                  >
+                                    + {tag}
+                                  </button>
+                                ))}
+                              </div>
+
+                              <div className="cyber-terminal-container">
+                                <div className="cyber-terminal-header">
+                                  <span>FORENSIC LOG // REPORT ENTRY</span>
+                                  <span>{textSubmission.length} chars</span>
+                                </div>
+                                <textarea
+                                  className="cyber-terminal-textarea"
+                                  rows={4}
+                                  required
+                                  value={textSubmission}
+                                  onChange={(e) => setTextSubmission(e.target.value)}
+                                  placeholder="Describe anomalous reflections, bad shadows, extra fingers, text warping, etc..."
+                                />
+                              </div>
                             </div>
                           )}
 
                           {/* STAGE 3 FORM */}
                           {gameState.activeRound === 4 && (
-                            <div className="form-group">
-                              <h4 style={{ fontSize: '1.05rem', color: '#fff', marginBottom: '12px' }}>
-                                Prompt Wars / Deepfake Challenge
-                              </h4>
-                              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '12px' }}>
-                                Deduce the generation prompt (for Reverse Prompting) or evaluate authenticity cues with technical justification (for Deepfake Showdown).
-                              </p>
-                              <textarea
-                                className="form-input"
-                                rows={4}
-                                required
-                                value={textSubmission}
-                                onChange={(e) => setTextSubmission(e.target.value)}
-                                placeholder="Write the prompt phrase or the technical justification details here..."
-                              />
+                            <div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                                <h4 style={{ fontSize: '1.05rem', color: '#fff' }}>
+                                  Prompt Wars // Reverse-Engineer the Generation Tokens
+                                </h4>
+                                <span style={{ fontSize: '0.75rem', color: '#38BDF8', fontWeight: 'bold' }}>
+                                  Zoom: {gameState.zoomLevel || 10}%
+                                </span>
+                              </div>
+
+                              {/* Quick prompt token chips */}
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
+                                <span style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', alignSelf: 'center' }}>Key Tokens:</span>
+                                {[
+                                  'cinematic lighting',
+                                  'volumetric fog',
+                                  'octane render 3D',
+                                  'photorealistic 8k',
+                                  'macro close-up',
+                                  'cyberpunk neon palette',
+                                  'shallow depth of field'
+                                ].map(token => (
+                                  <button
+                                    key={token}
+                                    type="button"
+                                    className="quick-tag-chip"
+                                    onClick={() => {
+                                      setTextSubmission(prev => prev ? `${prev}, ${token}` : token)
+                                    }}
+                                  >
+                                    + {token}
+                                  </button>
+                                ))}
+                              </div>
+
+                              <div className="cyber-terminal-container">
+                                <div className="cyber-terminal-header">
+                                  <span>PROMPT SYNTAX BUFFER</span>
+                                  <span>{textSubmission.length} chars</span>
+                                </div>
+                                <textarea
+                                  className="cyber-terminal-textarea"
+                                  rows={4}
+                                  required
+                                  value={textSubmission}
+                                  onChange={(e) => setTextSubmission(e.target.value)}
+                                  placeholder="Write the prompt tokens, subject, medium, lighting, and camera composition here..."
+                                />
+                              </div>
                             </div>
                           )}
 
                           <button 
                             type="submit" 
                             className="btn-primary" 
-                            style={{ width: '100%', marginTop: '16px' }}
+                            style={{ width: '100%', marginTop: '20px', padding: '14px', fontSize: '1.02rem' }}
                             disabled={gameState.activeRound === 2 && !round1Answer.chosen}
                           >
                             Lock In Answer &rarr;

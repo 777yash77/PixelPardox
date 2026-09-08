@@ -750,45 +750,57 @@ export default function Home() {
           {/* Interactive Live Tournament Metrics Ribbon */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: '12px',
-            maxWidth: '920px',
-            margin: '28px auto 0',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
+            gap: '14px',
+            maxWidth: '960px',
+            margin: '32px auto 0',
             textAlign: 'left'
           }}>
-            <div className="interactive-stat-box" style={{ padding: '12px 16px', borderRadius: '10px' }}>
-              <div style={{ fontSize: '0.72rem', color: '#FF6B6B', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Stage 0 // Prelims</div>
-              <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#FFF' }}>30 Qs / 30 Mins</div>
-              <div style={{ fontSize: '0.75rem', color: '#FACC15' }}>+10 Correct / -5 Penalty</div>
+            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3px solid #E01B22' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                <span style={{ fontSize: '0.72rem', color: '#FF6B6B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 0 // PRELIMS</span>
+                <span style={{ fontSize: '1rem' }}>📝</span>
+              </div>
+              <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>30 Qs / 30 Mins</div>
+              <div style={{ fontSize: '0.75rem', color: '#FACC15', marginTop: '2px' }}>+10 Correct / -5 Penalty</div>
             </div>
 
-            <div className="interactive-stat-box" style={{ padding: '12px 16px', borderRadius: '10px' }}>
-              <div style={{ fontSize: '0.72rem', color: '#38BDF8', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Stage 1 // Detective</div>
-              <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#FFF' }}>10 Pixels / 40s</div>
-              <div style={{ fontSize: '0.75rem', color: '#4ADE80' }}>Real (10) | AI Model (10)</div>
+            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3px solid #38BDF8' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 1 // DETECTIVE</span>
+                <span style={{ fontSize: '1rem' }}>🔍</span>
+              </div>
+              <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>10 Pixels / 40s</div>
+              <div style={{ fontSize: '0.75rem', color: '#4ADE80', marginTop: '2px' }}>Real (10) | AI Model (10)</div>
             </div>
 
-            <div className="interactive-stat-box" style={{ padding: '12px 16px', borderRadius: '10px' }}>
-              <div style={{ fontSize: '0.72rem', color: '#A78BFA', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Stage 2 // Inpainting</div>
-              <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#FFF' }}>7 Challenges / 45s</div>
-              <div style={{ fontSize: '0.75rem', color: '#C084FC' }}>Forensic Artifact Scan</div>
+            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3px solid #A855F7' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                <span style={{ fontSize: '0.72rem', color: '#C084FC', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 2 // GLITCH HUNT</span>
+                <span style={{ fontSize: '1rem' }}>⚡</span>
+              </div>
+              <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>7 Challenges / 45s</div>
+              <div style={{ fontSize: '0.75rem', color: '#E9D5FF', marginTop: '2px' }}>Artifact Forensics</div>
             </div>
 
-            <div className="interactive-stat-box" style={{ padding: '12px 16px', borderRadius: '10px' }}>
-              <div style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Stage 3 // Grand Finale</div>
-              <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#FFF' }}>5 Prompts / 75s</div>
-              <div style={{ fontSize: '0.75rem', color: '#38BDF8' }}>10% Zoom Step Duel</div>
+            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3px solid #FACC15' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                <span style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 3 // GRAND FINALE</span>
+                <span style={{ fontSize: '1rem' }}>🎯</span>
+              </div>
+              <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>5 Prompts / 75s</div>
+              <div style={{ fontSize: '0.75rem', color: '#38BDF8', marginTop: '2px' }}>10% Zoom Progressive Reveal</div>
             </div>
           </div>
 
-          {/* Hero Banter Roast Duel Card */}
-          <div style={{ maxWidth: '920px', margin: '26px auto 0' }}>
+          {/* Hero Banter Roast Duel Card with VS Center Badge */}
+          <div style={{ maxWidth: '960px', margin: '28px auto 0' }}>
             <div className="roast-duel-card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '14px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span className="comic-bubble-pop">{comicPopSound || '💥 HERO BANTER DUEL'}</span>
                   <span style={{ fontSize: '0.85rem', color: '#FACC15', fontWeight: 'bold' }}>
-                    Round {((heroDuelIdx % ROAST_BATTLES.length) + 1)}: {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].tag}
+                    Matchup {((heroDuelIdx % ROAST_BATTLES.length) + 1)}: {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].tag}
                   </span>
                 </div>
                 <button
@@ -800,12 +812,12 @@ export default function Home() {
                   style={{
                     background: 'linear-gradient(135deg, #E23636 0%, #B91C1C 100%)',
                     color: '#FFF',
-                    border: '1px solid #FACC15',
+                    border: '1.5px solid #FACC15',
                     borderRadius: '8px',
-                    padding: '7px 16px',
+                    padding: '8px 18px',
                     cursor: 'pointer',
                     fontWeight: 'bold',
-                    fontSize: '0.82rem',
+                    fontSize: '0.84rem',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '6px',
@@ -813,30 +825,46 @@ export default function Home() {
                     transition: 'all 0.2s ease'
                   }}
                 >
-                  <span>🔥 Next Roast Battle!</span>
+                  <span>🔥 Trigger Next Duel!</span>
                 </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '14px', position: 'relative' }}>
                 {/* Deadpool's Roast */}
-                <div className="comic-balloon-deadpool">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                    <span style={{ fontWeight: '900', color: '#FF4D4D', fontSize: '0.82rem', letterSpacing: '1px' }}>⚔️ DEADPOOL // MERC-WITH-A-MOUTH</span>
+                <div className="comic-balloon-deadpool" style={{ background: 'rgba(226, 54, 54, 0.15)', border: '1.5px solid #E23636', borderRadius: '12px', padding: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '1.2rem' }}>🌮</span>
+                      <span style={{ fontWeight: '900', color: '#FF4D4D', fontSize: '0.85rem', letterSpacing: '1px' }}>
+                        DEADPOOL // MERC-WITH-A-MOUTH
+                      </span>
+                    </div>
+                    <span style={{ fontSize: '0.7rem', color: '#FACC15', background: 'rgba(0,0,0,0.5)', padding: '2px 6px', borderRadius: '4px' }}>
+                      Red Corner
+                    </span>
                   </div>
-                  <p style={{ fontSize: '0.86rem', color: '#FEE2E2', lineHeight: '1.45' }}>
+                  <p style={{ fontSize: '0.88rem', color: '#FEE2E2', lineHeight: '1.55' }}>
                     {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].deadpool}
                   </p>
                 </div>
 
                 {/* Spider-Man's Comeback */}
-                <div className="comic-balloon-spidey">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                    <span style={{ fontWeight: '900', color: '#38BDF8', fontSize: '0.82rem', letterSpacing: '1px' }}>🕸️ SPIDER-MAN // SCIENTIFIC RETORT</span>
+                <div className="comic-balloon-spidey" style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1.5px solid #38BDF8', borderRadius: '12px', padding: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '1.2rem' }}>🕷️</span>
+                      <span style={{ fontWeight: '900', color: '#38BDF8', fontSize: '0.85rem', letterSpacing: '1px' }}>
+                        SPIDER-MAN // SCIENTIFIC RETORT
+                      </span>
+                    </div>
+                    <span style={{ fontSize: '0.7rem', color: '#38BDF8', background: 'rgba(0,0,0,0.5)', padding: '2px 6px', borderRadius: '4px' }}>
+                      Blue Corner
+                    </span>
                   </div>
-                  <p style={{ fontSize: '0.86rem', color: '#E0F2FE', lineHeight: '1.45' }}>
+                  <p style={{ fontSize: '0.88rem', color: '#E0F2FE', lineHeight: '1.55' }}>
                     {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].spidey}
                   </p>
-                  <div style={{ marginTop: '8px', paddingTop: '6px', borderTop: '1px dashed rgba(56, 189, 248, 0.3)', fontSize: '0.8rem', color: '#FACC15', fontStyle: 'italic' }}>
+                  <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: '1px dashed rgba(56, 189, 248, 0.3)', fontSize: '0.82rem', color: '#FACC15', fontStyle: 'italic' }}>
                     {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].deadpoolEnd}
                   </div>
                 </div>
@@ -845,69 +873,75 @@ export default function Home() {
           </div>
         </header>
 
-        {/* Quick Action Station Cards */}
+        {/* Quick Action Station Cards (3-Step Tournament Flow) */}
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
           gap: '20px', 
-          marginBottom: '44px' 
+          marginBottom: '48px' 
         }}>
           <Link href="/register" style={{ textDecoration: 'none' }}>
-            <div className="comic-card card-hover-lift" style={{ padding: '26px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '4px solid #E01B22' }}>
+            <div className="comic-card card-hover-lift" style={{ padding: '28px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '4px solid #E01B22', background: 'rgba(18, 9, 12, 0.9)' }}>
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                  <span style={{ fontSize: '1.5rem' }}>🕸️</span>
-                  <span className="badge" style={{ background: 'rgba(224,27,34,0.2)', color: '#FF4D4D', borderColor: '#E01B22' }}>Teams of 2-4</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '0.72rem', color: '#FF6B6B', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(224,27,34,0.15)', padding: '3px 10px', borderRadius: '4px', border: '1px solid rgba(224,27,34,0.4)' }}>
+                    STEP 01 // ONBOARDING
+                  </span>
+                  <span className="badge" style={{ background: 'rgba(224,27,34,0.2)', color: '#FF4D4D', borderColor: '#E01B22' }}>Teams of 2–4</span>
                 </div>
-                <h3 style={{ fontSize: '1.35rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
+                <h3 style={{ fontSize: '1.4rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>
                   Assemble Your Team
                 </h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: '1.5' }}>
-                  Register your squad with Team Leader &amp; member credentials. Prepare for Stage 0 Prelims!
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.55' }}>
+                  Register squad credentials with Team Leader ID and member profiles. Once registered, immediately access Stage 0 Prelims!
                 </p>
               </div>
-              <span className="btn-primary" style={{ marginTop: '20px', width: '100%', fontSize: '0.9rem' }}>
+              <span className="btn-primary" style={{ marginTop: '22px', width: '100%', fontSize: '0.92rem' }}>
                 Register Squad →
               </span>
             </div>
           </Link>
 
           <Link href="/login" style={{ textDecoration: 'none' }}>
-            <div className="comic-card card-hover-lift" style={{ padding: '26px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '4px solid #38BDF8' }}>
+            <div className="comic-card card-hover-lift" style={{ padding: '28px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '4px solid #38BDF8', background: 'rgba(9, 14, 20, 0.9)' }}>
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                  <span style={{ fontSize: '1.5rem' }}>⚡</span>
-                  <span className="badge" style={{ background: 'rgba(56,189,248,0.15)', color: '#38BDF8', borderColor: '#38BDF8' }}>Game Arena</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(56,189,248,0.15)', padding: '3px 10px', borderRadius: '4px', border: '1px solid rgba(56,189,248,0.4)' }}>
+                    STEP 02 // BATTLEGROUND
+                  </span>
+                  <span className="badge" style={{ background: 'rgba(56,189,248,0.15)', color: '#38BDF8', borderColor: '#38BDF8' }}>Live Arena</span>
                 </div>
-                <h3 style={{ fontSize: '1.35rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
+                <h3 style={{ fontSize: '1.4rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>
                   Enter Battle Arena
                 </h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: '1.5' }}>
-                  Sign in with Team ID &amp; Password. Jump directly to Stage 0 Prelims or projected live questions.
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.55' }}>
+                  Sign in with Team ID &amp; Password. Tackle the 30-MCQ Prelims, followed by real-time projected visual challenges.
                 </p>
               </div>
-              <span className="btn-secondary" style={{ marginTop: '20px', width: '100%', fontSize: '0.9rem', borderColor: 'rgba(56,189,248,0.4)', color: '#38BDF8' }}>
-                Sign In Portal →
+              <span className="btn-secondary" style={{ marginTop: '22px', width: '100%', fontSize: '0.92rem', borderColor: 'rgba(56,189,248,0.5)', color: '#38BDF8' }}>
+                Access Arena Portal →
               </span>
             </div>
           </Link>
 
           <Link href="/leaderboard" style={{ textDecoration: 'none' }}>
-            <div className="comic-card card-hover-lift" style={{ padding: '26px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '4px solid #FACC15' }}>
+            <div className="comic-card card-hover-lift" style={{ padding: '28px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '4px solid #FACC15', background: 'rgba(16, 14, 8, 0.9)' }}>
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                  <span style={{ fontSize: '1.5rem' }}>🏆</span>
-                  <span className="badge" style={{ background: 'rgba(250,204,21,0.15)', color: '#FACC15', borderColor: '#FACC15' }}>Automated Live</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(250,204,21,0.15)', padding: '3px 10px', borderRadius: '4px', border: '1px solid rgba(250,204,21,0.4)' }}>
+                    STEP 03 // STANDINGS
+                  </span>
+                  <span className="badge" style={{ background: 'rgba(250,204,21,0.15)', color: '#FACC15', borderColor: '#FACC15' }}>Real-Time</span>
                 </div>
-                <h3 style={{ fontSize: '1.35rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
+                <h3 style={{ fontSize: '1.4rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>
                   Live Leaderboard
                 </h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: '1.5' }}>
-                  Standings updated automatically in real time for Stage 0 &amp; 1 with zero manual grading delay.
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.55' }}>
+                  Instant zero-delay scoring matrix for Stage 0 Prelims &amp; Stage 1 Pixel Detective, with team rank progression.
                 </p>
               </div>
-              <span className="btn-secondary" style={{ marginTop: '20px', width: '100%', fontSize: '0.9rem', borderColor: 'rgba(250,204,21,0.4)', color: '#FACC15' }}>
-                View Standings →
+              <span className="btn-secondary" style={{ marginTop: '22px', width: '100%', fontSize: '0.92rem', borderColor: 'rgba(250,204,21,0.5)', color: '#FACC15' }}>
+                View Leaderboard →
               </span>
             </div>
           </Link>
