@@ -682,7 +682,7 @@ export default function Home() {
           display: 'flex',
           flexDirection: 'column'
         }}>
-          <span style={{ color: '#FACC15', fontSize: '0.7rem' }}>⚔️ DEADPOOL // MERC-BOT</span>
+          <span style={{ color: '#FACC15', fontSize: '0.7rem' }}>⚔️ DEADPOOL • MERC-BOT</span>
           <span>Click to Open Chatbot</span>
         </div>
       </div>
@@ -703,7 +703,7 @@ export default function Home() {
               letterSpacing: '1.5px',
               boxShadow: '0 0 14px rgba(224, 27, 34, 0.4)'
             }}>
-              LOGIN 2026 // MULTIVERSE PROTOCOL
+              LOGIN 2026 • MULTIVERSE PROTOCOL
             </span>
             <span style={{ 
               background: 'rgba(250, 204, 21, 0.12)', 
@@ -740,7 +740,7 @@ export default function Home() {
             textShadow: '0 0 16px rgba(224,27,34,0.7)',
             marginBottom: '16px'
           }}>
-            THE REALITY GLITCH // REAL OR AI?
+            THE REALITY GLITCH — REAL OR AI?
           </div>
 
           <p style={{ maxWidth: '820px', margin: '0 auto', color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.6' }}>
@@ -758,7 +758,7 @@ export default function Home() {
           }}>
             <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3px solid #E01B22' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                <span style={{ fontSize: '0.72rem', color: '#FF6B6B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 0 // PRELIMS</span>
+                <span style={{ fontSize: '0.72rem', color: '#FF6B6B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 0: PRELIMS</span>
                 <span style={{ fontSize: '1rem' }}>📝</span>
               </div>
               <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>30 Qs / 30 Mins</div>
@@ -767,7 +767,7 @@ export default function Home() {
 
             <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3px solid #38BDF8' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 1 // DETECTIVE</span>
+                <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 1: DETECTIVE</span>
                 <span style={{ fontSize: '1rem' }}>🔍</span>
               </div>
               <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>10 Pixels / 40s</div>
@@ -776,7 +776,7 @@ export default function Home() {
 
             <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3px solid #A855F7' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                <span style={{ fontSize: '0.72rem', color: '#C084FC', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 2 // GLITCH HUNT</span>
+                <span style={{ fontSize: '0.72rem', color: '#C084FC', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 2: GLITCH HUNT</span>
                 <span style={{ fontSize: '1rem' }}>⚡</span>
               </div>
               <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>7 Challenges / 45s</div>
@@ -785,7 +785,7 @@ export default function Home() {
 
             <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3px solid #FACC15' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                <span style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 3 // GRAND FINALE</span>
+                <span style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 3: GRAND FINALE</span>
                 <span style={{ fontSize: '1rem' }}>🎯</span>
               </div>
               <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>5 Prompts / 75s</div>
@@ -836,7 +836,7 @@ export default function Home() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ fontSize: '1.2rem' }}>🌮</span>
                       <span style={{ fontWeight: '900', color: '#FF4D4D', fontSize: '0.85rem', letterSpacing: '1px' }}>
-                        DEADPOOL // MERC-WITH-A-MOUTH
+                        DEADPOOL • MERC-WITH-A-MOUTH
                       </span>
                     </div>
                     <span style={{ fontSize: '0.7rem', color: '#FACC15', background: 'rgba(0,0,0,0.5)', padding: '2px 6px', borderRadius: '4px' }}>
@@ -854,7 +854,7 @@ export default function Home() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ fontSize: '1.2rem' }}>🕷️</span>
                       <span style={{ fontWeight: '900', color: '#38BDF8', fontSize: '0.85rem', letterSpacing: '1px' }}>
-                        SPIDER-MAN // SCIENTIFIC RETORT
+                        SPIDER-MAN • SCIENTIFIC RETORT
                       </span>
                     </div>
                     <span style={{ fontSize: '0.7rem', color: '#38BDF8', background: 'rgba(0,0,0,0.5)', padding: '2px 6px', borderRadius: '4px' }}>
@@ -885,7 +885,7 @@ export default function Home() {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                   <span style={{ fontSize: '0.72rem', color: '#FF6B6B', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(224,27,34,0.15)', padding: '3px 10px', borderRadius: '4px', border: '1px solid rgba(224,27,34,0.4)' }}>
-                    STEP 01 // ONBOARDING
+                    STEP 01: ONBOARDING
                   </span>
                   <span className="badge" style={{ background: 'rgba(224,27,34,0.2)', color: '#FF4D4D', borderColor: '#E01B22' }}>Teams of 2–4</span>
                 </div>
@@ -907,7 +907,7 @@ export default function Home() {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                   <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(56,189,248,0.15)', padding: '3px 10px', borderRadius: '4px', border: '1px solid rgba(56,189,248,0.4)' }}>
-                    STEP 02 // BATTLEGROUND
+                    STEP 02: BATTLEGROUND
                   </span>
                   <span className="badge" style={{ background: 'rgba(56,189,248,0.15)', color: '#38BDF8', borderColor: '#38BDF8' }}>Live Arena</span>
                 </div>
@@ -929,7 +929,7 @@ export default function Home() {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                   <span style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(250,204,21,0.15)', padding: '3px 10px', borderRadius: '4px', border: '1px solid rgba(250,204,21,0.4)' }}>
-                    STEP 03 // STANDINGS
+                    STEP 03: STANDINGS
                   </span>
                   <span className="badge" style={{ background: 'rgba(250,204,21,0.15)', color: '#FACC15', borderColor: '#FACC15' }}>Real-Time</span>
                 </div>
@@ -990,7 +990,7 @@ export default function Home() {
               <div className="stagger-fade-in">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
                   <div>
-                    <span style={{ background: '#E01B22', color: '#FFF', padding: '3px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>STAGE 0 // PRELIMS</span>
+                    <span style={{ background: '#E01B22', color: '#FFF', padding: '3px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>STAGE 0: PRELIMS</span>
                     <h3 style={{ fontSize: '1.45rem', marginTop: '6px' }}>Multiverse Gauntlet (MCQ Quiz)</h3>
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
@@ -1028,7 +1028,7 @@ export default function Home() {
               <div className="stagger-fade-in">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
                   <div>
-                    <span style={{ background: '#E01B22', color: '#FFF', padding: '3px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>STAGE 1 // PROJECTED</span>
+                    <span style={{ background: '#E01B22', color: '#FFF', padding: '3px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>STAGE 1: PROJECTED</span>
                     <h3 style={{ fontSize: '1.45rem', marginTop: '6px' }}>Pixel Detective (Real vs AI)</h3>
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
@@ -1066,7 +1066,7 @@ export default function Home() {
               <div className="stagger-fade-in">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
                   <div>
-                    <span style={{ background: '#E01B22', color: '#FFF', padding: '3px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>STAGE 2 // ARTIFACTS</span>
+                    <span style={{ background: '#E01B22', color: '#FFF', padding: '3px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>STAGE 2: ARTIFACTS</span>
                     <h3 style={{ fontSize: '1.45rem', marginTop: '6px' }}>The Glitch Hunt (Artifact Investigation)</h3>
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
@@ -1100,7 +1100,7 @@ export default function Home() {
               <div className="stagger-fade-in">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
                   <div>
-                    <span style={{ background: '#E01B22', color: '#FFF', padding: '3px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>STAGE 3 // GRAND FINALE</span>
+                    <span style={{ background: '#E01B22', color: '#FFF', padding: '3px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>STAGE 3: GRAND FINALE</span>
                     <h3 style={{ fontSize: '1.45rem', marginTop: '6px' }}>Prompt Wars (Showdown &amp; Reverse Engineering)</h3>
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
@@ -1138,7 +1138,7 @@ export default function Home() {
             <span style={{ fontSize: '1.8rem' }}>🕷️</span>
             <div>
               <h3 style={{ fontSize: '1.3rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                Rules of Engagement // Multiverse Protocol
+                Rules of Engagement • Multiverse Protocol
               </h3>
               <span style={{ fontSize: '0.8rem', color: '#FF4D4D' }}>FAIR PLAY &amp; PROTOCOLS STRICTLY ENFORCED</span>
             </div>
@@ -1169,7 +1169,7 @@ export default function Home() {
         {/* Footer */}
         <footer style={{ textAlign: 'center', color: 'var(--text-dim)', fontSize: '0.85rem', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '24px' }}>
           <div style={{ marginBottom: '8px', color: '#FF4D4D', fontWeight: 'bold' }}>
-            LOGIN 2026 // DEPARTMENT OF COMPUTER APPLICATIONS
+            LOGIN 2026 • DEPARTMENT OF COMPUTER APPLICATIONS
           </div>
           <p>Organized by: <strong>Department of Computer Applications (MCA)</strong></p>
           <p style={{ marginTop: '4px', fontSize: '0.78rem', color: 'var(--text-dim)' }}>
@@ -1199,7 +1199,7 @@ export default function Home() {
                 </div>
                 <div>
                   <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Deadpool's Merc-Bot</div>
-                  <div style={{ fontSize: '0.7rem', color: '#FACC15' }}>● Fourth Wall Breaker // Online</div>
+                  <div style={{ fontSize: '0.7rem', color: '#FACC15' }}>● Fourth Wall Breaker • Online</div>
                 </div>
               </div>
               <button 
@@ -1383,7 +1383,7 @@ export default function Home() {
                 </div>
                 <div>
                   <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Spidey's Web-Bot</div>
-                  <div style={{ fontSize: '0.7rem', color: '#38BDF8' }}>● Peter Parker // Tactical Assistant</div>
+                  <div style={{ fontSize: '0.7rem', color: '#38BDF8' }}>● Peter Parker • Tactical Assistant</div>
                 </div>
               </div>
               <button 

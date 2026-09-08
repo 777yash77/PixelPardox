@@ -670,7 +670,7 @@ export default function GameArena() {
                 Live Tournament Link
               </span>
               <span style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: 'bold', letterSpacing: '1px' }}>
-                LOGIN 2026 // NEURAL ARENA
+                LOGIN 2026 • NEURAL ARENA
               </span>
             </div>
             <h2 style={{ fontSize: '1.25rem', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '8px' }} className="glitch-text" data-text={`TEAM: ${team.teamName}`}>
@@ -791,25 +791,25 @@ export default function GameArena() {
                   textAlign: 'left'
                 }}>
                   <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(224,27,34,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
-                    <div style={{ fontSize: '0.7rem', color: '#FF6B6B', fontWeight: 'bold' }}>STAGE 0 // PRELIMS</div>
+                    <div style={{ fontSize: '0.7rem', color: '#FF6B6B', fontWeight: 'bold' }}>STAGE 0: PRELIMS</div>
                     <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>30 MCQs / 30 Mins</div>
                     <div style={{ fontSize: '0.72rem', color: '#FACC15' }}>+10 Correct / -5 Wrong</div>
                   </div>
 
                   <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(56,189,248,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
-                    <div style={{ fontSize: '0.7rem', color: '#38BDF8', fontWeight: 'bold' }}>STAGE 1 // DETECTIVE</div>
+                    <div style={{ fontSize: '0.7rem', color: '#38BDF8', fontWeight: 'bold' }}>STAGE 1: DETECTIVE</div>
                     <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>10 Pixels / 40s</div>
                     <div style={{ fontSize: '0.72rem', color: '#4ADE80' }}>Real (10) | Model (10)</div>
                   </div>
 
                   <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(168,85,247,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
-                    <div style={{ fontSize: '0.7rem', color: '#C084FC', fontWeight: 'bold' }}>STAGE 2 // INPAINTING</div>
+                    <div style={{ fontSize: '0.7rem', color: '#C084FC', fontWeight: 'bold' }}>STAGE 2: INPAINTING</div>
                     <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>7 Challenges / 45s</div>
                     <div style={{ fontSize: '0.72rem', color: '#DDD6FE' }}>Glitch Artifact Scan</div>
                   </div>
 
                   <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(250,204,21,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
-                    <div style={{ fontSize: '0.7rem', color: '#FACC15', fontWeight: 'bold' }}>STAGE 3 // PROMPT DUEL</div>
+                    <div style={{ fontSize: '0.7rem', color: '#FACC15', fontWeight: 'bold' }}>STAGE 3: PROMPT DUEL</div>
                     <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>5 Prompts / 75s</div>
                     <div style={{ fontSize: '0.72rem', color: '#93C5FD' }}>10% Zoom Reveal</div>
                   </div>
@@ -889,7 +889,7 @@ export default function GameArena() {
                       }}>
                         <div>
                           <span style={{ fontSize: '0.72rem', color: '#FF6B6B', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', display: 'block' }}>
-                            STAGE 0 // PRELIMS
+                            STAGE 0: PRELIMS
                           </span>
                           <span style={{ fontSize: '0.95rem', color: '#FFF', fontWeight: '600' }}>
                             30 Questions (+10 / -5 Penalty)
@@ -1197,7 +1197,7 @@ export default function GameArena() {
                             pointerEvents: 'none'
                           }}>
                             <span style={{ background: 'rgba(0,0,0,0.75)', border: '1px solid #E01B22', color: '#FF4D4D', padding: '3px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', letterSpacing: '1px' }}>
-                              NEURAL FORENSIC FEED // ACTIVE
+                              NEURAL FORENSIC FEED • ACTIVE
                             </span>
                             {gameState.activeRound === 4 && (
                               <span style={{ background: 'rgba(0,0,0,0.75)', border: '1px solid #FACC15', color: '#FACC15', padding: '3px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold' }}>
@@ -1339,7 +1339,7 @@ export default function GameArena() {
                                 </h4>
                                 {currentQuestion?.isLightning && (
                                   <span className="shimmer-badge" style={{ padding: '3px 10px', borderRadius: '4px', fontSize: '0.72rem', color: '#FACC15', border: '1px solid #FACC15' }}>
-                                    ⚡ LIGHTNING ROUND // SPEED BONUS
+                                    ⚡ LIGHTNING ROUND • SPEED BONUS
                                   </span>
                                 )}
                               </div>
@@ -1370,7 +1370,7 @@ export default function GameArena() {
 
                               <div className="cyber-terminal-container">
                                 <div className="cyber-terminal-header">
-                                  <span>FORENSIC LOG // REPORT ENTRY</span>
+                                  <span>FORENSIC LOG • REPORT ENTRY</span>
                                   <span>{textSubmission.length} chars</span>
                                 </div>
                                 <textarea
@@ -1390,7 +1390,7 @@ export default function GameArena() {
                             <div>
                               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                                 <h4 style={{ fontSize: '1.05rem', color: '#fff' }}>
-                                  Prompt Wars // Reverse-Engineer the Generation Tokens
+                                  Prompt Wars • Reverse-Engineer the Generation Tokens
                                 </h4>
                                 <span style={{ fontSize: '0.75rem', color: '#38BDF8', fontWeight: 'bold' }}>
                                   Zoom: {gameState.zoomLevel || 10}%
