@@ -5,25 +5,25 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 const SPIDEY_GAME_QUOTES = [
-  "🕸️ 'Take a deep breath, web-slinger! Optical physics and photon diffraction are on your side!'",
-  "🕷️ 'Stage 0 has 30 questions in 30m. Quality over reckless speed! Don't let -5 penalty marks sting you!'",
-  "⚡ 'In Round 1, check pupil reflections! AI models always render mismatched ambient light sources!'",
-  "🎯 'Need an optical breakdown? Click [Ask Spidey for a Clue] anytime!'",
-  "🔬 'If the sunglasses reflect a beach on the left and a parking lot on the right, congratulations—you caught a deepfake!'",
-  "🛡️ 'Believe in your preparation! Great teams stay calm when the timer turns red!'",
-  "☕ 'Peter Parker here: Ignore Wade over on the left trying to microwave pizza on the server rack!'",
-  "🕷️ 'Real camera lenses have chromatic aberration and ISO grain. Diffusion models have plastic butter skin!'"
+  "🕸️ 'Take a steady breath! Optical physics and photon diffraction are on your side.'",
+  "🕷️ 'Stage 0 is 30 questions in 30 minutes. Quality over reckless haste—protect your score from -5 penalties!'",
+  "⚡ 'In Round 1, inspect iris highlights. Diffusion models almost always mismatch ambient light reflections.'",
+  "🎯 'Need forensic analysis? Click [Ask Spidey for a Clue] anytime!'",
+  "🔬 'Check lens edge chromatic aberration. Real glass produces subtle color fringing; AI renders uniform blur.'",
+  "🛡️ 'Stay calm when the timer turns red. Great teams win by staying composed under pressure.'",
+  "☕ 'Ignore Wade over on the left trying to juggle weapons in the server room. Focus on the pixel boundaries.'",
+  "🕷️ 'Look closely at ear cartilage and hair roots. AI consistently fails anatomical transitions.'"
 ]
 
 const DEADPOOL_GAME_QUOTES = [
-  "🌮 'Maximum Effort! Show these AI neural nets who is boss!'",
-  "⚔️ 'One bad guess is -5 points! Click with your brain, not your elbow, rookie!'",
-  "💥 'Stuck on a tricky image? Ask your boy Wade for a tactical clue!'",
-  "🕶️ 'You guys are gonna win this thing! Just don't guess blindly like a panicked pigeon!'",
-  "🍕 'Fuel up on pizza and coffee, and let your instincts slice through these pixels!'",
-  "🚨 'Stop sweating on the mouse! You are gonna short-circuit your laptop trackpad!'",
-  "🦄 'I bet twenty bucks on your team topping the leaderboard! Don't make me lose cash to Spider-Man!'",
-  "🎬 'Hey you behind the screen: Relax your shoulders, un-clench your jaw, and smash that submit button!'"
+  "🌮 'Maximum Effort! Show these neural networks what actual human intelligence looks like!'",
+  "⚔️ 'A wrong guess is minus five points. Click with your brain, not your panic, rookie!'",
+  "💥 'Stuck on a suspicious pixel? Click [Ask Deadpool for a Clue] before you guess blindly!'",
+  "🕶️ 'Trust your preparation! Just don't let your teammate start clicking random answers!'",
+  "🍕 'Focus up! A lead on the leaderboard is won on precision, not speed!'",
+  "🚨 'Stop sweating on the mouse! You are going to short-circuit the trackpad!'",
+  "🦄 'I put twenty bucks on your squad. Don't make me lose money to Peter Parker!'",
+  "🎬 'Relax your shoulders, take a breath, and lock in the answer before the red timer hits zero!'"
 ]
 
 export default function GameArena() {

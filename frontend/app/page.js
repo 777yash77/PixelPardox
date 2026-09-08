@@ -4,84 +4,76 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 
 const SPIDEY_QUOTES = [
-  "🕸️ 'With great computing power comes strict deadlines and great responsibility!'",
-  "⚡ 'Stage 0: 30 MCQs in strictly 30 mins! (+10 correct, -5 for blind reckless guesses!)'",
-  "🎯 'In Round 1, spot the exact AI model (Midjourney vs Flux) for the maximum 10 points!'",
-  "🔬 'My Spider-Sense detects deepfakes faster than any proctoring algorithm!'",
-  "⏱️ '40s in R1, 45s in R2, 75s in Grand Finale! Keep calm and trust optical physics!'",
-  "☕ 'Coffee break after the round! Right now, keep your eyes locked on the iris reflections!'",
-  "🕷️ 'If I got 10 points every time Wade interrupted my photonics lecture, I could finally pay rent!'",
-  "💡 'Real camera lenses have sensor noise and chromatic aberration. Diffusion models have waxy plastic skin!'",
-  "🛡️ 'Take a deep breath! Great teams win under pressure by communicating and staying focused!'"
+  "🕸️ 'With great computing power comes strict deadlines and negative marking!'",
+  "⚡ 'Stage 0: 30 MCQs in 30 minutes. Correct is +10, but a wrong guess costs you -5!'",
+  "🎯 'In Round 1, identifying the exact AI model earns you the full 10 points.'",
+  "🔬 'Real camera lenses create consistent sensor noise. Diffusion models produce waxy plastic skin.'",
+  "⏱️ '40s in Round 1, 45s in Round 2, 75s in Grand Finale. Stay calm and observe the physics.'",
+  "🕷️ 'If I had a dollar for every time Wade gave terrible tournament advice, I could finally pay rent.'",
+  "💡 'Check the specular reflections on both irises. Light sources don't lie, but neural networks do.'",
+  "🛡️ 'Good teams communicate under pressure. Panicked teams click randomly and lose points.'"
 ]
 
 const DEADPOOL_QUOTES = [
-  "⚔️ 'Hey! I am a mercenary with swords, not JARVIS or ChatGPT! Stop asking me to write your resume!'",
-  "🍕 'Did someone say free victory pizza?! Win Pixel Paradox and treat your squad like royalty!'",
-  "🤖 'Pro tip: If a character has 11 fingers, two left elbows, and ears on their neck, it is AI, genius!'",
-  "⚡ 'Stage 0 has -5 negative marking! Stop blind guessing like a panicked pigeon on a keyboard!'",
-  "💥 'The tournament coordinators built this event on black coffee and zero sleep. Bow down in respect!'",
-  "🕶️ 'Maximum Effort! Don't let your careless teammate tank your leaderboard score to -50!'",
-  "🎬 'Hey you behind the monitor! Relax your shoulders, un-clench your jaw, and click the right pixel!'",
-  "🦄 'I bet twenty bucks on your squad winning this thing. Don't make me lose money to Peter Parker!'",
-  "🚨 'If you inspect element to find the answers, an alarm goes off in my swords. Don't test me!'"
+  "⚔️ 'Hey! I am a mercenary with weapons, not an LLM. Stop typing prompts at me!'",
+  "⚡ 'Stage 0 has minus five negative marks! Stop guessing like you're playing the lottery!'",
+  "🎯 'Pro tip: If the portrait has fourteen teeth on the top and three on the bottom, it is AI.'",
+  "☕ 'The tournament coordinators built this on black coffee and sheer spite. Show some respect.'",
+  "🕶️ 'Maximum Effort! If your teammate tries to guess blindly, slap their hand away from the trackpad.'",
+  "🎬 'Look at Peter on the right, stressing over photon angles. Just pick an answer, nerd!'",
+  "🦄 'I put twenty dollars on your squad winning this. Don't embarrass me in front of Spider-Man.'",
+  "🚨 'Inspecting element won't show you the answers, genius. The verification is server-side.'"
 ]
 
 // Multi-scenario Roast Battles between Deadpool & Spider-Man
 const ROAST_BATTLES = [
   {
-    tag: "THWIP vs SWORD",
-    deadpool: "🎯 HEY SPIDER-NERD! Look at Peter Parker over there—acting like the class teacher's pet who reminds the professor to collect homework! Whining about radioactive spider bites while wearing blue-and-red long johns! Did your aunt knit those tights for you?! Hahaha! 😂💀",
-    spidey: "🕸️ Oh please, Wade! At least I have an accredited science degree and don't talk to invisible cameras! Focus on the pixel forensics instead of giving unsolicited lectures to the contestants! 😂",
-    deadpoolEnd: "💥 Big talk from someone who swings on string! Pizza is on you if my squad takes first place on the leaderboard!"
+    tag: "RENT vs FREELANCE",
+    deadpool: "Look at Peter Parker over there, squinting at pixel reflections like an exhausted graduate student whose stipend got cancelled. Peter, your arch-nemesis isn't Doctor Octopus—it's your monthly rent. Maybe ask Tony Stark's estate for minimum wage instead of giving free forensic lectures!",
+    spidey: "Wade, you're an armed mercenary who literally asked the tournament proctor if you could submit answers by shooting the display. The only reason you understand AI hallucinations is because your entire medical history is an uncontrolled biological error.",
+    deadpoolEnd: "Hey! Katanas have a 99% success rate for hardware troubleshooting! Ask any qualified technician!"
   },
   {
-    tag: "RENT vs KATANA",
-    deadpool: "📢 BREAKING NEWS: Local Spider-Boy caught crying in the server room because he couldn't afford a domain name for his portfolio! Hey Pete, maybe sell another selfie to the newspaper for $15 to pay your overdue rent! 📸🕸️",
-    spidey: "🧪 Wade, you literally tried to debug the Spring Boot backend by stabbing the server rack with a katana! You thought 'CSS' stood for 'Can't Slice Someone'! Let the contestants handle the real AI detection! 🔬",
-    deadpoolEnd: "🍕 Katanas fix 99% of computer bugs, okay?! The other 1% is just missing semicolons and bad vibes!"
+    tag: "OPTICS vs CHAOS",
+    deadpool: "Peter's entire strategy is writing a peer-reviewed academic thesis on why an eyelid reflection has inconsistent photon diffraction. Bro, by the time you finish your physics monologue, the 40-second timer hits zero and your squad is in fourteenth place!",
+    spidey: "And your strategy in Stage 0 was answering multiple-choice questions with skull emojis, racking up minus eighty points, and blaming the compiler for having 'hostile vibes'. Contestants, please don't let Wade near your mouse.",
+    deadpoolEnd: "That wasn't guessing, Parker! That was tactical psychological warfare against the database!"
   },
   {
-    tag: "FOURTH WALL SMASH",
-    deadpool: "👀 Hey you! Yes, YOU behind the screen with the mouse! Look at Peter Parker's posture right now. He's hunched over like a gargoyle calculating diffraction angles. Meanwhile, I'm here in glorious 4K breaking the fourth wall! Who's your favorite superhero now?! 🎬",
-    spidey: "🤦‍♂️ Wade, stop tapping on their monitor! You're leaving pizza grease all over their display! Contestants need clean screens to spot 10-point deepfakes, not your greasy thumbprints! 🧼",
-    deadpoolEnd: "🌮 That's organic avocado seasoning, Parker! It enhances screen brightness by 12%! Contestants, you're welcome!"
-  },
-  {
-    tag: "PROMPT CHAOS",
-    deadpool: "🤖 Peter thinks prompting an AI is 'an exercise in semantic linguistics'. Bro, I just type 'cyberpunk pizza party explosion ultra 8k unreal engine' and hit enter with my forehead! Maximum Effort! 💥",
-    spidey: "📉 And that's exactly why your generated images have an astronaut with 14 fingers holding a flaming pineapple inside a submarine! Stick to swordplay, Wade, and let the students use real prompt tokens! ✍️",
-    deadpoolEnd: "🍍 Excuse me, that 14-fingered pineapple astronaut is modern art and belongs in the Louvre!"
+    tag: "PROMPT REALITY",
+    deadpool: "Peter thinks prompt engineering requires 'syntactic semantic alignment'. I just mashed the keyboard with my forehead and got 10 points! Enjoy your calculus, web-head!",
+    spidey: "You typed three swear words and Midjourney had a stroke trying to render a tactical unicorn inside a microwave. Stick to swordplay, Wade, and let the students use real prompt tokens.",
+    deadpoolEnd: "Excuse me! That tactical microwave unicorn was an avant-garde masterpiece!"
   }
 ]
 
 const SPIDEY_ROAST_BATTLES = [
   {
     tag: "EXAM DISASTER",
-    spidey: "🕷️ Quick question, Wade: If Stage 0 has a -5 penalty for blind guessing, why did your practice test score end up at -150? Did you answer questions that weren't even on the paper?! 📉",
-    deadpool: "🌮 That wasn't guessing, Parker! That was tactical psychological warfare against the exam server! I'm playing 5D chess while you're still playing with silly string! ♟️💥",
-    spideyEnd: "🕸️ Well, your 5D chess just lost our imaginary squad all their points. Contestants, PLEASE do not follow Wade's strategy!"
+    spidey: "Quick tournament update on Wade: In his practice test for Stage 0, he clicked every answer blindly, scored minus 120 points, and blamed the database for having 'bad aura'. Please do not adopt his strategy.",
+    deadpool: "I was stress-testing the scoring boundary conditions, Parker! That's called quality assurance, look it up!",
+    spideyEnd: "You don't stress-test a multiple-choice quiz by getting every single question wrong, Wade."
   },
   {
     tag: "NEURAL TERROR",
-    spidey: "🕸️ Hey Wade! How is that 'prompt engineering course' going? Last time you tried generating an avatar, the AI surrendered and deleted its own neural weights out of pure terror! 😂",
-    deadpool: "⚔️ EXCUSE YOU, BUG-BOY! The AI didn't delete itself, it reached digital enlightenment from my sheer charisma! You're just jealous because my prompt scores broke the scoring algorithm! 🚀",
-    spideyEnd: "🔬 It didn't break the algorithm, Wade—it returned a NaN (Not a Number) because your prompt was just 50 skull emojis! 💀"
+    spidey: "Wade claims he's a prompt engineer. Last week he gave the diffusion model four hundred buzzwords and the server ran out of memory trying to understand what an 'explosive avocado' looked like.",
+    deadpool: "It was an artistic statement on the fragility of organic produce! You have no culture!",
+    spideyEnd: "It crashed the graphics driver, Wade. That's not culture, that's a kernel panic."
   }
 ]
 
 // 3 Pre-set Default Trolls: Deadpool roasting Spider-Man (1 single hilarious paragraph each)
 const DEADPOOL_SPIDEY_TROLLS = [
-  "🎯 Look at Peter Parker over there—acting like the class teacher's pet who reminds the professor to collect homework! Whining about radioactive spider bites while swinging around in skin-tight blue-and-red long johns! Did your aunt knit those spandex tights for you, or did you borrow them from a synchronized swimming squad?! Go swing on your little string, web-head! 😂💀",
-  "📢 BREAKING NEWS: Local Spider-Boy caught crying in the server room because he couldn't afford a domain name for his portfolio! Hey Pete, maybe sell another blurry selfie of yourself to the newspaper for $15 so you can pay your overdue rent to your angry landlord! Don't let him evict your spider-nest! 📸🕸️",
-  "🤖 Peter honestly thinks prompting an AI is 'an exercise in advanced semantic linguistics'! Bro, I just mash 'cyberpunk pizza explosion 8k' with my forehead and get 10 points! Meanwhile, you spend 40 seconds calculating diffraction angles only to realize the AI drew a guy with 12 fingers and two belly buttons! Stick to Silly String, Parker! 💥🍕"
+  "🎯 Peter Parker is literally the only superhero in the Marvel universe whose greatest nemesis isn't Thanos or Green Goblin—it's his overdue apartment rent. Look at him over there on the right, squinting at pixel reflections like a stressed engineering student who forgot he had an exam today. Hey Pete, instead of calculating cornea diffraction angles, maybe ask Mr. Stark's foundation for minimum wage so your landlord stops threatening eviction! 😂💀",
+  "📢 You want to know why Peter is useless in a fast-paced competition? Because while normal human beings analyze the picture and lock in their choice, Peter spends 38 seconds writing a peer-reviewed dissertation on why a synthetic eyelash has irregular specular highlights. By the time he finishes his optical physics monologue, the countdown buzzer goes off and his team drops four spots on the leaderboard! 📸🕸️",
+  "🤖 Peter acts like the insufferable class topper who reminds the professor they forgot to assign weekend homework. If you get flagged for opening another browser tab, he won't just report you—he'll deliver a 20-minute sermon about 'great responsibility' while hanging upside down from the ceiling like a glorified bat. Don't listen to the boy scout, trust your instincts, and take the points! 💥🍕"
 ]
 
 // 3 Pre-set Default Trolls: Spider-Man roasting Deadpool (1 single hilarious paragraph each)
 const SPIDEY_DEADPOOL_TROLLS = [
-  "🕸️ Oh, you want to hear about Wade Wilson? The guy who literally tried to debug the competition server by stabbing the hard drive with a katana! He thought 'CSS' stood for 'Can't Slice Someone'! Security had to install three extra industrial air filters on his side of the screen because he hasn't washed his tactical onesie since 2016! 🦨😷",
-  "🕷️ Quick tournament update on Wade: In his practice test for Stage 0, he scored negative 150 points because he thought blind guessing was 'tactical psychological warfare'! He answered 30 questions with 50 skull emojis and wondered why the server returned a runtime error! Contestants, please don't let Wade touch your keyboard! 📉😂",
-  "🔬 Wade pretends to be an AI mastermind, but the last time he tried generating an image, the neural network surrendered and deleted its own weights out of pure terror! He typed three words, expected the Mona Lisa, and ended up with a mutant badger wearing sunglasses inside a microwave. Stick to your chimichangas, Wade! 🌮💀"
+  "🕸️ Wade likes to talk big, but let's remember this is an elite technical forensics competition and he is an armed mercenary who literally asked security if he could submit answers by stabbing the monitor with a katana. The only reason he understands neural hallucinations is because his entire medical record is an uncontrolled biological disaster. Do not take technical advice from a man who uses edged weapons as trackpad pointers! 🦨😷",
+  "🕷️ Wade's tournament strategy is essentially playing Russian roulette with a 4-option multiple-choice exam. In his practice test for Stage 0, he clicked every single answer without reading the questions, scored minus 120 points, and then filed an official complaint claiming the scoring database had 'negative aura'. If your teammate starts guessing like Wade, take their mouse away immediately! 📉😂",
+  "🔬 Have you ever seen Wade attempt AI prompt engineering? He gave the diffusion model four hundred random buzzwords, and the GPU ran out of video memory trying to figure out what a 'tactical explosive avocado' was supposed to look like. He doesn't understand diffusion models—he thinks neural networks are caught in commercial fishing nets. Stick to actual pixel analysis, contestants! 🌮💀"
 ]
 
 // Deadpool Technical Questions (Scoring, Rules, AI Detection, Prompts)
@@ -116,7 +108,7 @@ const DEADPOOL_TECH_FAQ = [
 const DEADPOOL_NON_TECH_FAQ = [
   {
     q: "Hey, are you like ChatGPT or JARVIS?",
-    a: "Hey! I am a mercenary with swords, not JARVIS! Do I look like a British AI butler in a titanium suit?! I slice through bad pixels and break the fourth wall. Ask me about tournament scoring or tell me to troll Spidey!"
+    a: "Do I look like a polite British voice trapped in Tony Stark's thermostat? I am Wade Wilson. I get paid in cash to break things and mock bad life choices. If you want a robot to summarize a PDF, go ask Siri. If you want to survive this leaderboard, listen up."
   },
   {
     q: "Troll Spider-Man right now! 🎯",
@@ -124,23 +116,23 @@ const DEADPOOL_NON_TECH_FAQ = [
   },
   {
     q: "Can we bribe the judges with pizza or snacks?",
-    a: "Tempting offer! But the tournament coordinators are strictly professional—they will gladly eat your pizza and still deduct -5 marks if your answer is wrong! Focus on the pixels!"
+    a: "I mean, I'll take the pizza. But the coordinators? They'll eat your entire large pepperoni, smile warmly at you, and then let the automated script deduct five points without batting an eye. These people run on cold logic and zero sleep. Your pizza has no power here."
   },
   {
     q: "Why is the website background so futuristic and sleek?",
-    a: "Because the organizers stayed up until 4 AM perfecting CSS glow animations instead of sleeping! You think this cyber multiverse aesthetic came from a free template?! Enjoy the visual spectacle, rookie!"
+    a: "Because the developers clearly prioritized dark mode aesthetic over their own circadian rhythms. Look at those glowing cyber lines—that's what forty-eight straight hours of caffeine and existential dread look like rendered in CSS. Appreciate the suffering that went into your UI!"
   },
   {
     q: "Can I inspect element or view page source to find the answers?",
-    a: "Look at you, Mr. Hacker! You think the organizers learned web development from a five-minute tutorial? Everything is verified server-side on Spring Boot. Stop inspecting element and use your eyeballs!"
+    a: "Oh look, we have a cyber-criminal prodigy! You press F12 in Chrome and suddenly you think you're Neo in the Matrix. Newsflash: the answers are verified on the backend server. The only thing you'll find in the page source is your own reflection looking desperate. Use your eyes on the pixels, rookie."
   },
   {
     q: "What happens if our squad gets -40 in Stage 0?",
-    a: "Then your team score goes down in tournament history like the Titanic! The coordinators will probably make you clean all the lab keyboards with a toothbrush. Stop guessing blindly!"
+    a: "Minus forty? At that point, you haven't just lost the round—you've achieved negative academic standing. The organizers might actually contact your university and revoke your high school diploma. Stop guessing and leave the ones you don't know blank!"
   },
   {
     q: "Can we use ChatGPT on our phones during the round?",
-    a: "Oh please try! The automated webcam proctor monitors your face. The moment your eyes dart down like a guilty suspect, the system flags your workstation and banishes your team to the shadow realm!"
+    a: "Go ahead, look down at your phone. The proctoring system has face-tracking algorithms that detect guilt faster than your mother. The moment your eyes wander south of the webcam, your screen locks and you're watching the rest of the tournament from the lobby."
   },
   {
     q: "Is Spider-Man wearing actual pajamas right now?",
@@ -180,7 +172,7 @@ const SPIDEY_TECH_FAQ = [
 const SPIDEY_NON_TECH_FAQ = [
   {
     q: "What does your Spider-Sense say about Deadpool?",
-    a: "My Spider-Sense has had a massive headache ever since Wade entered the room! He tried to plug a toaster directly into the main server rack! Don't listen to his chaotic advice—stick to science and logic!"
+    a: "My Spider-Sense usually warns me about life-threatening kinetic hazards. Around Wade, it's just a constant low-frequency migraine telling me that someone with zero impulse control is standing behind me with loaded firearms. Ignore him and stick to the scientific methods."
   },
   {
     q: "Roast Deadpool right back! 🕷️⚡",
@@ -188,19 +180,19 @@ const SPIDEY_NON_TECH_FAQ = [
   },
   {
     q: "Why does Wade carry two swords in a computer competition?",
-    a: "Security tried to confiscate them at the entrance, but he insisted they were 'high-precision optical debugging tools'. Please do not encourage his delusions!"
+    a: "Security questioned him at registration, and he claimed they were 'analog cable management devices'. He doesn't even know how to write a print statement. Please do not validate his behavior."
   },
   {
     q: "How to stay calm when the 40-second timer turns red?",
-    a: "Take a deep breath! Web-shooters require precision, and so does pixel forensics. Zoom in on the eyes, check the shadow angles, eliminate two bad choices, and lock in your answer with 5 seconds to spare!"
+    a: "Forty seconds is plenty of time if you don't waste the first thirty panicking. In Round 1, zoom straight to iris reflections and hand contours. If the light source doesn't match both pupils, it's synthetic. Eliminate two options, lock it in, and breathe."
   },
   {
     q: "Can I stuff 500 buzzwords into Stage 3 to get 100% Cosine score?",
-    a: "That is a classic beginner's trap! CLIP neural networks evaluate semantic coherence, not raw word count. If your prompt looks like a dictionary threw up, your similarity score will plummet! Be descriptive, artistic, and concise!"
+    a: "No, that's how people get single-digit similarity scores. CLIP embeddings evaluate semantic meaning and syntactic relationships. If you dump fifty synonyms for 'photorealistic' into the box, the vector distances get completely distorted. Describe the lighting, composition, and subject with precision."
   },
   {
     q: "What should our team do if we panic in Stage 2?",
-    a: "Execute the 3-Point Scan: Eyes, Ears, Edges! Take one deep breath. Peter Parker has fought extraterrestrial symbiotes; you can definitely handle an AI-generated portrait with weird earlobes!"
+    a: "Execute the 3-Point Scan: Eyes, Ears, Edges. Don't look at the whole picture at once—AI is good at broad strokes, but it consistently fails fine boundary transitions where hair meets skin or where collars meet necks."
   },
   {
     q: "Can our team share answers in a chat group?",
@@ -435,15 +427,15 @@ export default function Home() {
     const userText = deadpoolInput.trim()
     setDeadpoolInput('')
 
-    let answer = "Hey! I am a mercenary with swords, not JARVIS or ChatGPT! I don't calculate your team attendance, I slice through bad pixels and hunt for pizza. Check the Technical Rules or Fun & Trolls tabs above, or click 'Ask Spidey-bug'!"
+    let answer = "I am a mercenary with weapons, not ChatGPT. I don't give resume advice or write poems. Ask me about the tournament rules, tell me to roast Spidey, or click one of the quick questions below!"
 
     if (query.includes('jarvis') || query.includes('ai bot') || query.includes('robot') || query.includes('chatgpt') || query.includes('assistant')) {
-      answer = "Hey! I am a mercenary with swords, not JARVIS! You think Tony Stark built me? No way! I am pure chaotic energy fueled by coffee and maximum effort!"
+      answer = "Do I look like a British AI assistant trapped in Tony Stark's thermostat? I am Wade Wilson. I get paid in cash to break things and mock bad life choices. If you want a robot to summarize a PDF, go ask Siri. If you want to survive this leaderboard, focus up!"
     } else if (query.includes('troll') || query.includes('roast spidey') || query.includes('roast spider') || query.includes('attack spidey')) {
       handleDeadpoolAsk("Troll Spider-Man right now! 🎯", "TROLL_SPIDEY_GAG")
       return
     } else if (query.includes('joke') || query.includes('laugh') || query.includes('funny')) {
-      answer = "Why did the AI cross the road? Trick question: it hallucinated the road, gave the chicken 3 heads, and added volumetric fog in Unreal Engine 5!"
+      answer = "A joke? Look at your team's score in Stage 0 when someone guesses five questions in a row with a minus-five penalty. That's not an exam score, that's a credit card statement!"
     } else if (query.includes('pajama') || query.includes('onesie') || query.includes('suit')) {
       answer = DEADPOOL_NON_TECH_FAQ[7].a
     } else if (query.includes('background') || query.includes('theme') || query.includes('design') || query.includes('look')) {
@@ -490,13 +482,13 @@ export default function Home() {
     const userText = spideyInput.trim()
     setSpideyInput('')
 
-    let answer = "Hmm, my Spider-Sense didn't catch that clearly. Try asking about Stage 0 negative marks, Round 1 AI generators (Midjourney vs Flux), or click one of the quick questions below!"
+    let answer = "My Spider-Sense didn't catch that clearly. Try asking about Stage 0 negative marking rules, Round 1 generator signatures (Midjourney vs Flux), or click one of the questions below!"
 
     if (query.includes('roast') || query.includes('burn') || query.includes('troll wade') || query.includes('troll deadpool')) {
       handleSpideyAsk("Roast Deadpool right back! 🕷️⚡", "ROAST_DEADPOOL_GAG")
       return
     } else if (query.includes('joke') || query.includes('funny')) {
-      answer = "Why does Spider-Man make great web apps? Because his Spider-Sense catches uncaught exceptions before they hit production!"
+      answer = "You want a tech joke? Wade tried to git push an actual katana directly into the repository and filed an official bug report because GitHub wouldn't accept edged weapons."
     } else if (query.includes('sword') || query.includes('katana')) {
       answer = SPIDEY_NON_TECH_FAQ[2].a
     } else if (query.includes('deadpool') || query.includes('wade') || query.includes('pizza') || query.includes('snack') || query.includes('bribe')) {
