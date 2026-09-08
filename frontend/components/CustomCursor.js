@@ -119,17 +119,27 @@ export default function CustomCursor() {
 
     const onMouseDown = (e) => {
       setIsClicking(true)
-      // Spawn shockwave ring
+      // Spawn dual shockwave rings (Multiverse Crimson + Cyber Cyan)
       shockwaves.push({
         x: e.clientX,
         y: e.clientY,
         radius: 4,
-        maxRadius: 42,
-        alpha: 0.9,
-        color: Math.random() > 0.5 ? '#E01B22' : '#38BDF8'
+        maxRadius: 48,
+        alpha: 0.95,
+        color: '#E01B22',
+        lineWidth: 2.5
       })
-      // Burst particles
-      addParticles(e.clientX, e.clientY, 12, 3.2)
+      shockwaves.push({
+        x: e.clientX,
+        y: e.clientY,
+        radius: 1,
+        maxRadius: 36,
+        alpha: 0.85,
+        color: '#38BDF8',
+        lineWidth: 1.8
+      })
+      // Burst particles with higher count and dynamic spread
+      addParticles(e.clientX, e.clientY, 16, 3.6)
     }
 
     const onMouseUp = () => {
@@ -252,7 +262,7 @@ export default function CustomCursor() {
         ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2)
         ctx.strokeStyle = sw.color
         ctx.globalAlpha = sw.alpha
-        ctx.lineWidth = 2
+        ctx.lineWidth = sw.lineWidth || 2
         ctx.shadowColor = sw.color
         ctx.shadowBlur = 12
         ctx.stroke()
@@ -303,6 +313,10 @@ export default function CustomCursor() {
         <div className="cursor-bracket bracket-tr" />
         <div className="cursor-bracket bracket-bl" />
         <div className="cursor-bracket bracket-br" />
+
+        {/* Reticle Crosshair Ticks */}
+        <div className="cursor-crosshair-h" />
+        <div className="cursor-crosshair-v" />
 
         {/* Hover Target Badge */}
         {isHovered && hoverType && (

@@ -185,55 +185,60 @@ export default function LeaderboardPage() {
               </div>
             </div>
           ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-              <thead>
-                <tr style={{ borderBottom: '2px solid rgba(255,255,255,0.08)' }}>
-                  <th style={{ padding: '12px 10px', color: 'var(--text-secondary)', width: '60px' }}>Rank</th>
-                  <th style={{ padding: '12px 10px', color: 'var(--text-secondary)' }}>Team Name</th>
-                  <th style={{ padding: '12px 10px', color: 'var(--text-secondary)', textAlign: 'center' }}>Current Stage</th>
-                  <th style={{ padding: '12px 10px', color: 'var(--text-secondary)', textAlign: 'center' }}>Total Score</th>
-                  <th style={{ padding: '12px 10px', color: 'var(--text-secondary)', textAlign: 'center' }}>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {leaderboard.map((team, idx) => (
-                  <tr 
-                    key={team.id}
-                    style={{
-                      borderBottom: '1px solid rgba(255,255,255,0.04)',
-                      background: team.isEliminated ? 'rgba(224,27,34,0.04)' : (idx === 0 ? 'rgba(250,204,21,0.04)' : 'transparent')
-                    }}
-                  >
-                    <td style={{ padding: '14px 10px', fontWeight: 'bold', fontSize: '1rem', color: idx === 0 ? '#FACC15' : (idx === 1 ? '#C0C0C0' : (idx === 2 ? '#CD7F32' : 'inherit')) }}>
-                      {idx === 0 ? '🥇 1' : (idx === 1 ? '🥈 2' : (idx === 2 ? '🥉 3' : `#${idx + 1}`))}
-                    </td>
-                    <td style={{ padding: '14px 10px' }}>
-                      <div style={{ fontWeight: '600', color: '#FFF' }}>{team.teamName}</div>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>TID: {team.teamId} • {team.teamSize} Members</span>
-                    </td>
-                    <td style={{ padding: '14px 10px', textAlign: 'center' }}>
-                      <span className="badge" style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}>
-                        {STAGE_NAMES[team.currentRound] || `Stage ${team.currentRound}`}
-                      </span>
-                    </td>
-                    <td style={{ padding: '14px 10px', textAlign: 'center', fontWeight: 'bold', fontSize: '1.2rem', color: '#FF4D4D' }}>
-                      {team.totalScore}
-                    </td>
-                    <td style={{ padding: '14px 10px', textAlign: 'center' }}>
-                      {team.isEliminated ? (
-                        <span className="badge" style={{ background: 'rgba(224,27,34,0.15)', borderColor: '#E01B22', color: '#FF4D4D', fontSize: '0.75rem' }}>
-                          Eliminated
-                        </span>
-                      ) : (
-                        <span className="badge" style={{ background: 'rgba(74,222,128,0.15)', borderColor: '#4ADE80', color: '#4ADE80', fontSize: '0.75rem' }}>
-                          Qualified / Active
-                        </span>
-                      )}
-                    </td>
+            <div className="table-responsive" style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ borderBottom: '2px solid rgba(224,27,34,0.3)', background: 'rgba(255,255,255,0.02)' }}>
+                    <th style={{ padding: '14px 12px', color: '#FF6B6B', width: '80px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Rank</th>
+                    <th style={{ padding: '14px 12px', color: 'var(--text-secondary)', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Team Dossier</th>
+                    <th style={{ padding: '14px 12px', color: 'var(--text-secondary)', textAlign: 'center', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Current Stage</th>
+                    <th style={{ padding: '14px 12px', color: 'var(--text-secondary)', textAlign: 'center', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Live Score</th>
+                    <th style={{ padding: '14px 12px', color: 'var(--text-secondary)', textAlign: 'center', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Tournament Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {leaderboard.map((team, idx) => (
+                    <tr 
+                      key={team.id}
+                      style={{
+                        borderBottom: '1px solid rgba(255,255,255,0.04)',
+                        background: team.isEliminated 
+                          ? 'rgba(224,27,34,0.03)' 
+                          : (idx === 0 ? 'rgba(250,204,21,0.05)' : (idx === 1 ? 'rgba(192,192,192,0.03)' : (idx === 2 ? 'rgba(205,127,50,0.03)' : 'transparent'))),
+                        transition: 'background 0.2s ease'
+                      }}
+                    >
+                      <td style={{ padding: '16px 12px', fontWeight: '900', fontSize: '1.05rem', color: idx === 0 ? '#FACC15' : (idx === 1 ? '#E2E8F0' : (idx === 2 ? '#F97316' : 'var(--text-secondary)')) }}>
+                        {idx === 0 ? '👑 #1' : (idx === 1 ? '🥈 #2' : (idx === 2 ? '🥉 #3' : `#${idx + 1}`))}
+                      </td>
+                      <td style={{ padding: '16px 12px' }}>
+                        <div style={{ fontWeight: '700', fontSize: '1.02rem', color: '#FFF', letterSpacing: '0.5px' }}>{team.teamName}</div>
+                        <span style={{ fontSize: '0.74rem', color: 'var(--text-dim)' }}>TID: {team.teamId} • {team.teamSize || 2} Pilots</span>
+                      </td>
+                      <td style={{ padding: '16px 12px', textAlign: 'center' }}>
+                        <span className="badge" style={{ fontSize: '0.76rem', background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.12)', color: '#FFF' }}>
+                          {STAGE_NAMES[team.currentRound] || `Stage ${team.currentRound}`}
+                        </span>
+                      </td>
+                      <td style={{ padding: '16px 12px', textAlign: 'center', fontWeight: '900', fontSize: '1.35rem', color: '#FFF', fontFamily: 'var(--font-display)', textShadow: '0 0 12px rgba(224,27,34,0.6)' }}>
+                        {team.totalScore} <span style={{ fontSize: '0.75rem', color: '#FF6B6B' }}>PTS</span>
+                      </td>
+                      <td style={{ padding: '16px 12px', textAlign: 'center' }}>
+                        {team.isEliminated ? (
+                          <span className="badge badge-eliminated" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
+                            Eliminated
+                          </span>
+                        ) : (
+                          <span className="badge badge-active" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
+                            Qualified • Active
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>

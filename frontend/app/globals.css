@@ -1905,7 +1905,7 @@ h1, h2, h3, h4, h5, h6 {
    CUSTOM MULTIVERSE CYBER CURSOR & PAGE TRAIL ANIMATION
    ========================================================================== */
 @media (pointer: fine) {
-  body, a, button, input, textarea, select, [role="button"], label, .card-hover-lift, .chat-chip, .comic-btn {
+  *, *::before, *::after, html, body, a, button, input, textarea, select, [role="button"], label, .card-hover-lift, .chat-chip, .comic-btn {
     cursor: none !important;
   }
 }
@@ -1928,29 +1928,30 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   pointer-events: none;
   z-index: 999999;
-  width: 7px;
-  height: 7px;
-  margin-top: -3.5px;
-  margin-left: -3.5px;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  margin-left: -4px;
   border-radius: 50%;
   background: #FFFFFF;
-  box-shadow: 0 0 8px #EF4444, 0 0 16px #38BDF8;
+  box-shadow: 0 0 10px #FF3B3B, 0 0 18px #38BDF8, 0 0 26px rgba(250, 204, 21, 0.6);
   will-change: transform;
-  transition: background 0.2s ease, width 0.2s ease, height 0.2s ease, margin 0.2s ease;
+  transition: background 0.2s ease, width 0.2s ease, height 0.2s ease, margin 0.2s ease, box-shadow 0.2s ease;
 }
 
 .cyber-cursor-dot.dot-hover {
-  width: 10px;
-  height: 10px;
-  margin-top: -5px;
-  margin-left: -5px;
+  width: 12px;
+  height: 12px;
+  margin-top: -6px;
+  margin-left: -6px;
   background: #FACC15;
-  box-shadow: 0 0 12px #FACC15, 0 0 24px #EF4444;
+  box-shadow: 0 0 14px #FACC15, 0 0 28px #EF4444, 0 0 40px rgba(56, 189, 248, 0.8);
 }
 
 .cyber-cursor-dot.dot-clicking {
-  transform: scale(0.55);
+  transform: scale(0.5);
   background: #FF2222;
+  box-shadow: 0 0 25px #FF0000;
 }
 
 /* Smooth Interpolating Follower Ring / Targeting Reticle */
@@ -1960,97 +1961,140 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   pointer-events: none;
   z-index: 999995;
-  width: 38px;
-  height: 38px;
-  margin-top: -19px;
-  margin-left: -19px;
+  width: 42px;
+  height: 42px;
+  margin-top: -21px;
+  margin-left: -21px;
   border-radius: 50%;
-  border: 1.5px solid rgba(224, 27, 34, 0.7);
-  box-shadow: 0 0 14px rgba(224, 27, 34, 0.4), inset 0 0 8px rgba(56, 189, 248, 0.3);
+  border: 1.5px solid rgba(224, 27, 34, 0.75);
+  background: radial-gradient(circle, rgba(224, 27, 34, 0.05) 0%, rgba(56, 189, 248, 0.02) 60%, transparent 100%);
+  box-shadow: 0 0 16px rgba(224, 27, 34, 0.5), inset 0 0 10px rgba(56, 189, 248, 0.35);
   will-change: transform;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
-              height 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
-              margin 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+              height 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+              margin 0.25s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.2s ease,
-              box-shadow 0.2s ease;
+              box-shadow 0.2s ease,
+              background 0.2s ease;
+}
+
+/* Outer Compass Tick Ring */
+.cyber-cursor-ring::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
+  border-radius: 50%;
+  border: 1px dashed rgba(250, 204, 21, 0.4);
+  pointer-events: none;
+  animation: reticleSpin 12s linear infinite;
+  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
 /* Hover Target Lock State */
 .cyber-cursor-ring.cursor-hover {
-  width: 54px;
-  height: 54px;
-  margin-top: -27px;
-  margin-left: -27px;
+  width: 58px;
+  height: 58px;
+  margin-top: -29px;
+  margin-left: -29px;
   border-color: #38BDF8;
-  border-style: dashed;
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.8), inset 0 0 12px rgba(250, 204, 21, 0.45);
-  animation: reticleSpin 7s linear infinite;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, rgba(224, 27, 34, 0.04) 60%, transparent 100%);
+  box-shadow: 0 0 26px rgba(56, 189, 248, 0.85), inset 0 0 14px rgba(250, 204, 21, 0.5);
+}
+
+.cyber-cursor-ring.cursor-hover::before {
+  border-color: rgba(56, 189, 248, 0.8);
+  animation-duration: 5s;
 }
 
 /* Click Shock Compression */
 .cyber-cursor-ring.cursor-clicking {
-  width: 26px;
-  height: 26px;
-  margin-top: -13px;
-  margin-left: -13px;
+  width: 28px;
+  height: 28px;
+  margin-top: -14px;
+  margin-left: -14px;
   border-color: #FACC15;
-  box-shadow: 0 0 24px rgba(250, 204, 21, 0.9);
+  box-shadow: 0 0 30px rgba(250, 204, 21, 0.95), inset 0 0 15px rgba(239, 68, 68, 0.8);
 }
 
 /* Corner Reticle Brackets */
 .cursor-bracket {
   position: absolute;
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-color: #FACC15;
-  opacity: 0.85;
+  opacity: 0.9;
+  transition: all 0.2s ease;
 }
 
 .bracket-tl {
-  top: -2px;
-  left: -2px;
-  border-top: 1.5px solid #FACC15;
-  border-left: 1.5px solid #FACC15;
+  top: -3px;
+  left: -3px;
+  border-top: 1.8px solid #FACC15;
+  border-left: 1.8px solid #FACC15;
 }
 
 .bracket-tr {
-  top: -2px;
-  right: -2px;
-  border-top: 1.5px solid #FACC15;
-  border-right: 1.5px solid #FACC15;
+  top: -3px;
+  right: -3px;
+  border-top: 1.8px solid #FACC15;
+  border-right: 1.8px solid #FACC15;
 }
 
 .bracket-bl {
-  bottom: -2px;
-  left: -2px;
-  border-bottom: 1.5px solid #FACC15;
-  border-left: 1.5px solid #FACC15;
+  bottom: -3px;
+  left: -3px;
+  border-bottom: 1.8px solid #FACC15;
+  border-left: 1.8px solid #FACC15;
 }
 
 .bracket-br {
-  bottom: -2px;
-  right: -2px;
-  border-bottom: 1.5px solid #FACC15;
-  border-right: 1.5px solid #FACC15;
+  bottom: -3px;
+  right: -3px;
+  border-bottom: 1.8px solid #FACC15;
+  border-right: 1.8px solid #FACC15;
+}
+
+/* Reticle Crosshair Ticks */
+.cursor-crosshair-h {
+  position: absolute;
+  width: 14px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+.cursor-crosshair-v {
+  position: absolute;
+  width: 1px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
 }
 
 /* Dynamic Targeting Monospace Label */
 .cursor-target-label {
   position: absolute;
-  bottom: -20px;
+  bottom: -24px;
   left: 50%;
   transform: translateX(-50%);
   font-family: var(--font-display);
-  font-size: 0.62rem;
+  font-size: 0.65rem;
   font-weight: 800;
-  letter-spacing: 1.2px;
+  letter-spacing: 1.5px;
   color: #FACC15;
+  background: rgba(14, 7, 10, 0.85);
+  border: 1px solid rgba(250, 204, 21, 0.4);
+  padding: 1px 6px;
+  border-radius: 4px;
   text-shadow: 0 0 6px rgba(0, 0, 0, 0.95), 0 0 10px rgba(250, 204, 21, 0.7);
   white-space: nowrap;
   pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 @keyframes reticleSpin {
@@ -2061,6 +2105,63 @@ h1, h2, h3, h4, h5, h6 {
     transform: rotate(360deg);
   }
 }
+
+/* ==========================================================================
+   STAGE 0 QUIZ RESPONSIVE LAYOUT & MODAL STYLES
+   ========================================================================== */
+.quiz-stage-layout {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .quiz-stage-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Modal for Prelim Quiz Submit Confirmation */
+.quiz-confirm-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(8, 3, 5, 0.88);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 20px;
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+.quiz-confirm-modal {
+  width: 100%;
+  max-width: 520px;
+  background: linear-gradient(145deg, rgba(26, 12, 18, 0.98), rgba(14, 7, 10, 0.98));
+  border: 1.5px solid #E01B22;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.9), 0 0 30px rgba(224, 27, 34, 0.35);
+  position: relative;
+  text-align: center;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 
 
 

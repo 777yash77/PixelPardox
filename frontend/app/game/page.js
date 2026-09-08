@@ -74,6 +74,7 @@ export default function GameArena() {
   const [prelimTimeLeft, setPrelimTimeLeft] = useState(30 * 60)
   const [currentPrelimIdx, setCurrentPrelimIdx] = useState(0)
   const [flaggedQuestions, setFlaggedQuestions] = useState(new Set())
+  const [showConfirmSubmitModal, setShowConfirmSubmitModal] = useState(false)
 
   // Tournament Protocol Acknowledgment Modal
   const [showAcknowledgeModal, setShowAcknowledgeModal] = useState(false)
@@ -173,6 +174,43 @@ export default function GameArena() {
     const storedParticipant = localStorage.getItem('participantName') || 'Unknown'
     setParticipantName(storedParticipant)
     
+    // Restore Prelims Quiz Progress if actively in progress
+    const savedStartTime = localStorage.getItem('prelimStartTime_' + storedParticipant)
+    if (savedStartTime) {
+      const startEpoch = parseInt(savedStartTime, 10)
+      const elapsed = Math.floor((Date.now() - startEpoch) / 1000)
+      if (elapsed < 1800) {
+        setPrelimTimeLeft(1800 - elapsed)
+        setPrelimStatus('IN_PROGRESS')
+      } else {
+        setPrelimTimeLeft(0)
+        setPrelimStatus('COMPLETED')
+      }
+    }
+    const savedAnswers = localStorage.getItem('prelimAnswers_' + storedParticipant)
+    if (savedAnswers) {
+      try {
+        setPrelimAnswers(JSON.parse(savedAnswers))
+      } catch (e) {
+        console.error("Failed to parse saved prelim answers", e)
+      }
+    }
+    const savedFlagged = localStorage.getItem('prelimFlagged_' + storedParticipant)
+    if (savedFlagged) {
+      try {
+        setFlaggedQuestions(new Set(JSON.parse(savedFlagged)))
+      } catch (e) {
+        console.error("Failed to parse saved prelim flagged questions", e)
+      }
+    }
+    const savedIdx = localStorage.getItem('prelimIdx_' + storedParticipant)
+    if (savedIdx) {
+      const idx = parseInt(savedIdx, 10)
+      if (!isNaN(idx) && idx >= 0) {
+        setCurrentPrelimIdx(idx)
+      }
+    }
+
     // Fetch initial data
     fetchTeamProfile(storedToken)
     fetchGameState()
@@ -481,7 +519,96 @@ export default function GameArena() {
     }
   }
 
+  // Sync answers to state & localStorage
+  const handleAnswerSelect = (questionId, optionValue) => {
+    setPrelimAnswers(prev => {
+      const next = { ...prev, [questionId]: optionValue }
+      if (participantName) {
+        localStorage.setItem('prelimAnswers_' + participantName, JSON.stringify(next))
+      }
+      return next
+    })
+  }
+
+  // Clear answer from question
+  const handleClearAnswer = (questionId) => {
+    setPrelimAnswers(prev => {
+      const next = { ...prev }
+      delete next[questionId]
+      if (participantName) {
+        localStorage.setItem('prelimAnswers_' + participantName, JSON.stringify(next))
+      }
+      return next
+    })
+  }
+
+  // Toggle flag status for question
+  const handleToggleFlag = (questionId) => {
+    setFlaggedQuestions(prev => {
+      const next = new Set(prev)
+      if (next.has(questionId)) next.delete(questionId)
+      else next.add(questionId)
+      if (participantName) {
+        localStorage.setItem('prelimFlagged_' + participantName, JSON.stringify(Array.from(next)))
+      }
+      return next
+    })
+  }
+
+  // Question navigation with index persistence
+  const handleSelectQuestion = (idx) => {
+    if (idx >= 0 && idx < (prelimQuestions.length || 30)) {
+      setCurrentPrelimIdx(idx)
+      if (participantName) {
+        localStorage.setItem('prelimIdx_' + participantName, idx.toString())
+      }
+    }
+  }
+
+  // Keyboard navigation for Stage 0 Quiz
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Don't intercept if typing in chat, inputs, or when modals are active
+      if (['INPUT', 'TEXTAREA'].includes(e.target?.tagName)) return
+      if (showAcknowledgeModal || showConfirmSubmitModal) return
+      if (gameState.activeRound !== 1 || prelimStatus !== 'IN_PROGRESS') return
+      if (!prelimQuestions || prelimQuestions.length === 0) return
+
+      const total = prelimQuestions.length || 30
+      const currentQ = prelimQuestions[currentPrelimIdx]
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault()
+        handleSelectQuestion(Math.max(0, currentPrelimIdx - 1))
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault()
+        handleSelectQuestion(Math.min(total - 1, currentPrelimIdx + 1))
+      } else if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault()
+        if (currentQ) handleToggleFlag(currentQ.id)
+      } else if (currentQ) {
+        if (e.key === '1' || e.key === 'a' || e.key === 'A') {
+          e.preventDefault()
+          handleAnswerSelect(currentQ.id, currentQ.optionA)
+        } else if (e.key === '2' || e.key === 'b' || e.key === 'B') {
+          e.preventDefault()
+          handleAnswerSelect(currentQ.id, currentQ.optionB)
+        } else if (e.key === '3' || e.key === 'c' || e.key === 'C') {
+          e.preventDefault()
+          handleAnswerSelect(currentQ.id, currentQ.optionC)
+        } else if (e.key === '4' || e.key === 'd' || e.key === 'D') {
+          e.preventDefault()
+          handleAnswerSelect(currentQ.id, currentQ.optionD)
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [gameState.activeRound, prelimStatus, prelimQuestions, currentPrelimIdx, showAcknowledgeModal, showConfirmSubmitModal, participantName])
+
   const handlePrelimSubmit = async () => {
+    setShowConfirmSubmitModal(false)
     try {
       const res = await fetch('http://localhost:8080/api/game/prelims/submit', {
         method: 'POST',
@@ -491,7 +618,19 @@ export default function GameArena() {
       if (res.ok) {
         setPrelimStatus('COMPLETED')
         localStorage.removeItem('prelimStartTime_' + participantName)
+        localStorage.removeItem('prelimAnswers_' + participantName)
+        localStorage.removeItem('prelimFlagged_' + participantName)
+        localStorage.removeItem('prelimIdx_' + participantName)
         fetchTeamProfile(token)
+      } else {
+        const data = await res.json()
+        if (data.message === 'Quiz already submitted' || data.message?.includes('COMPLETED')) {
+          setPrelimStatus('COMPLETED')
+          localStorage.removeItem('prelimStartTime_' + participantName)
+          localStorage.removeItem('prelimAnswers_' + participantName)
+          localStorage.removeItem('prelimFlagged_' + participantName)
+          localStorage.removeItem('prelimIdx_' + participantName)
+        }
       }
     } catch (err) {
       console.error(err)
@@ -988,31 +1127,45 @@ export default function GameArena() {
                       )}
 
                       {/* Single-Question Navigator Layout */}
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 220px', gap: '20px', alignItems: 'start' }}>
+                      <div className="quiz-stage-layout">
 
                         {/* LEFT: Single Question Panel */}
                         <div>
-                          {prelimQuestions.length > 0 && (() => {
-                            const q = prelimQuestions[currentPrelimIdx]
+                          {prelimQuestions.length === 0 ? (
+                            <div className="glass-panel" style={{ padding: '40px', textAlign: 'center' }}>
+                              <div className="pulse-glow" style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#E01B22', margin: '0 auto 16px' }} />
+                              <div style={{ color: '#FACC15', fontWeight: 'bold', fontSize: '1.05rem', marginBottom: '6px' }}>
+                                Establishing Neural Connection...
+                              </div>
+                              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                                Retrieving Stage 0 Prelims question bank from secure tournament host.
+                              </p>
+                            </div>
+                          ) : (() => {
+                            const totalQuestions = prelimQuestions.length
+                            const safeIdx = Math.min(Math.max(0, currentPrelimIdx), totalQuestions - 1)
+                            const q = prelimQuestions[safeIdx]
+                            if (!q) return null
+
                             const isAnswered = !!prelimAnswers[q.id]
                             const isFlagged = flaggedQuestions.has(q.id)
-                            const totalAnswered = Object.keys(prelimAnswers).length
+
                             return (
-                              <div className="stagger-fade-in" key={q.id} style={{ animationDuration: '0.3s' }}>
-                                {/* Question Header */}
+                              <div className="stagger-fade-in" key={q.id} style={{ animationDuration: '0.25s' }}>
+                                {/* Question Header & Status */}
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
                                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                                     <span style={{
                                       background: isAnswered ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255, 255, 255, 0.06)',
                                       color: isAnswered ? '#4ADE80' : '#FFF',
-                                      fontSize: '0.75rem',
+                                      fontSize: '0.78rem',
                                       fontWeight: '800',
-                                      padding: '4px 12px',
+                                      padding: '5px 14px',
                                       borderRadius: '6px',
-                                      border: `1px solid ${isAnswered ? '#4ADE80' : 'rgba(255,255,255,0.15)'}`,
+                                      border: `1px solid ${isAnswered ? '#4ADE80' : 'rgba(255,255,255,0.18)'}`,
                                       letterSpacing: '0.5px'
                                     }}>
-                                      Q {currentPrelimIdx + 1} / 30
+                                      QUESTION {safeIdx + 1} OF {totalQuestions}
                                     </span>
                                     {isAnswered && (
                                       <span style={{ fontSize: '0.8rem', color: '#4ADE80', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -1025,48 +1178,45 @@ export default function GameArena() {
                                       </span>
                                     )}
                                     {!isAnswered && !isFlagged && (
-                                      <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>Not answered</span>
+                                      <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>○ Not answered</span>
                                     )}
                                   </div>
-                                  {/* Flag/Unflag button */}
+
+                                  {/* Flag / Unflag Button */}
                                   <button
                                     type="button"
-                                    onClick={() => {
-                                      setFlaggedQuestions(prev => {
-                                        const next = new Set(prev)
-                                        if (next.has(q.id)) next.delete(q.id)
-                                        else next.add(q.id)
-                                        return next
-                                      })
-                                    }}
+                                    onClick={() => handleToggleFlag(q.id)}
                                     style={{
-                                      background: isFlagged ? 'rgba(250,204,21,0.15)' : 'rgba(255,255,255,0.05)',
-                                      border: `1px solid ${isFlagged ? '#FACC15' : 'rgba(255,255,255,0.12)'}`,
+                                      background: isFlagged ? 'rgba(250,204,21,0.18)' : 'rgba(255,255,255,0.05)',
+                                      border: `1.5px solid ${isFlagged ? '#FACC15' : 'rgba(255,255,255,0.14)'}`,
                                       color: isFlagged ? '#FACC15' : 'var(--text-secondary)',
-                                      padding: '5px 12px',
+                                      padding: '6px 14px',
                                       borderRadius: '6px',
-                                      fontSize: '0.78rem',
+                                      fontSize: '0.8rem',
                                       fontWeight: 'bold',
                                       cursor: 'pointer',
                                       transition: 'all 0.2s ease',
                                       display: 'flex',
                                       alignItems: 'center',
-                                      gap: '5px'
+                                      gap: '6px',
+                                      boxShadow: isFlagged ? '0 0 12px rgba(250,204,21,0.35)' : 'none'
                                     }}
+                                    title="Shortcut: Press 'F' to toggle flag"
                                   >
-                                    {isFlagged ? '🚩 Unflag' : '🏳️ Flag for Review'}
+                                    {isFlagged ? '🚩 Flagged (Press F)' : '🏳️ Flag for Review (F)'}
                                   </button>
                                 </div>
 
-                                {/* Question Text */}
+                                {/* Question Text Card */}
                                 <div style={{
-                                  background: 'rgba(255,255,255,0.03)',
-                                  border: '1px solid rgba(255,255,255,0.08)',
-                                  borderRadius: '10px',
-                                  padding: '20px 22px',
-                                  marginBottom: '18px'
+                                  background: 'linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)',
+                                  border: '1.5px solid rgba(255, 255, 255, 0.09)',
+                                  borderRadius: '12px',
+                                  padding: '22px 24px',
+                                  marginBottom: '18px',
+                                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
                                 }}>
-                                  <p style={{ fontWeight: '600', fontSize: '1.05rem', color: 'var(--text-white)', lineHeight: '1.65', margin: 0 }}>
+                                  <p style={{ fontWeight: '600', fontSize: '1.08rem', color: 'var(--text-white)', lineHeight: '1.65', margin: 0 }}>
                                     {q.questionText}
                                   </p>
                                 </div>
@@ -1080,15 +1230,18 @@ export default function GameArena() {
                                       <div
                                         key={opt}
                                         className={`quiz-option-card ${isSelected ? 'selected' : ''}`}
-                                        onClick={() => setPrelimAnswers({ ...prelimAnswers, [q.id]: q[opt] })}
+                                        onClick={() => handleAnswerSelect(q.id, q[opt])}
                                         style={{ cursor: 'pointer', transition: 'all 0.18s ease' }}
+                                        title={`Shortcut: Press ${optIdx + 1} or ${letter}`}
                                       >
-                                        <div className="option-letter-badge" style={{ background: isSelected ? '#E01B22' : undefined }}>{letter}</div>
+                                        <div className="option-letter-badge" style={{ background: isSelected ? '#E01B22' : undefined }}>
+                                          {letter}
+                                        </div>
                                         <span style={{
                                           color: isSelected ? '#FFF' : 'var(--text-primary)',
-                                          fontSize: '0.93rem',
-                                          lineHeight: '1.4',
-                                          fontWeight: isSelected ? '600' : 'normal'
+                                          fontSize: '0.94rem',
+                                          lineHeight: '1.45',
+                                          fontWeight: isSelected ? '700' : 'normal'
                                         }}>
                                           {q[opt]}
                                         </span>
@@ -1097,150 +1250,156 @@ export default function GameArena() {
                                   })}
                                 </div>
 
-                                {/* Prev / Next / Clear nav row */}
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
+                                {/* Controls row: Prev / Clear / Next */}
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                                   <button
                                     type="button"
-                                    disabled={currentPrelimIdx === 0}
-                                    onClick={() => setCurrentPrelimIdx(i => i - 1)}
+                                    disabled={safeIdx === 0}
+                                    onClick={() => handleSelectQuestion(safeIdx - 1)}
                                     style={{
-                                      padding: '10px 20px',
-                                      background: currentPrelimIdx === 0 ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.08)',
-                                      border: '1px solid rgba(255,255,255,0.12)',
-                                      color: currentPrelimIdx === 0 ? 'var(--text-dim)' : '#FFF',
+                                      padding: '11px 22px',
+                                      background: safeIdx === 0 ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.09)',
+                                      border: '1px solid rgba(255,255,255,0.14)',
+                                      color: safeIdx === 0 ? 'var(--text-dim)' : '#FFF',
                                       borderRadius: '8px',
                                       fontWeight: '700',
-                                      cursor: currentPrelimIdx === 0 ? 'not-allowed' : 'pointer',
+                                      cursor: safeIdx === 0 ? 'not-allowed' : 'pointer',
                                       fontSize: '0.88rem',
                                       transition: 'all 0.2s ease'
                                     }}
                                   >
-                                    ← Prev
+                                    ← Prev (←)
                                   </button>
 
-                                  <div style={{ display: 'flex', gap: '8px' }}>
+                                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                     {isAnswered && (
                                       <button
                                         type="button"
-                                        onClick={() => {
-                                          const updated = { ...prelimAnswers }
-                                          delete updated[q.id]
-                                          setPrelimAnswers(updated)
-                                        }}
+                                        onClick={() => handleClearAnswer(q.id)}
                                         style={{
-                                          padding: '10px 16px',
-                                          background: 'rgba(239,68,68,0.1)',
-                                          border: '1px solid rgba(239,68,68,0.4)',
+                                          padding: '10px 18px',
+                                          background: 'rgba(239,68,68,0.12)',
+                                          border: '1px solid rgba(239,68,68,0.45)',
                                           color: '#EF4444',
                                           borderRadius: '8px',
-                                          fontWeight: '600',
+                                          fontWeight: '700',
                                           cursor: 'pointer',
-                                          fontSize: '0.82rem'
+                                          fontSize: '0.84rem',
+                                          transition: 'all 0.2s ease'
                                         }}
                                       >
-                                        ✕ Clear
+                                        ✕ Clear Answer
                                       </button>
                                     )}
                                   </div>
 
-                                  {currentPrelimIdx < 29 ? (
+                                  {safeIdx < totalQuestions - 1 ? (
                                     <button
                                       type="button"
-                                      onClick={() => setCurrentPrelimIdx(i => i + 1)}
+                                      onClick={() => handleSelectQuestion(safeIdx + 1)}
                                       style={{
-                                        padding: '10px 20px',
-                                        background: 'rgba(224,27,34,0.18)',
-                                        border: '1px solid rgba(224,27,34,0.45)',
+                                        padding: '11px 24px',
+                                        background: 'rgba(224,27,34,0.22)',
+                                        border: '1px solid rgba(224,27,34,0.5)',
                                         color: '#FFF',
                                         borderRadius: '8px',
                                         fontWeight: '700',
                                         cursor: 'pointer',
                                         fontSize: '0.88rem',
-                                        transition: 'all 0.2s ease'
+                                        transition: 'all 0.2s ease',
+                                        boxShadow: '0 0 12px rgba(224,27,34,0.25)'
                                       }}
                                     >
-                                      Next →
+                                      Next → (→)
                                     </button>
                                   ) : (
                                     <button
                                       type="button"
-                                      onClick={handlePrelimSubmit}
+                                      onClick={() => setShowConfirmSubmitModal(true)}
                                       style={{
-                                        padding: '10px 20px',
+                                        padding: '11px 26px',
                                         background: 'linear-gradient(135deg, #E01B22, #FF4D4D)',
                                         border: 'none',
                                         color: '#FFF',
                                         borderRadius: '8px',
                                         fontWeight: '800',
                                         cursor: 'pointer',
-                                        fontSize: '0.88rem',
-                                        boxShadow: '0 0 14px rgba(224,27,34,0.5)'
+                                        fontSize: '0.92rem',
+                                        boxShadow: '0 0 20px rgba(224,27,34,0.6)'
                                       }}
                                     >
-                                      ⚡ Submit Quiz
+                                      ⚡ Finalize &amp; Submit Quiz
                                     </button>
                                   )}
+                                </div>
+
+                                {/* Hotkey reminder */}
+                                <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textAlign: 'center', marginTop: '14px', letterSpacing: '0.4px' }}>
+                                  💡 Hotkeys: <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>←</kbd> <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>→</kbd> to Navigate • <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>1-4</kbd> / <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>A-D</kbd> to Select • <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>F</kbd> to Flag
                                 </div>
                               </div>
                             )
                           })()}
                         </div>
 
-                        {/* RIGHT: Question Navigator Panel */}
+                        {/* RIGHT: Sticky Question Navigator Panel */}
                         <div style={{ position: 'sticky', top: '20px' }}>
                           <div style={{
-                            background: 'rgba(255,255,255,0.03)',
-                            border: '1px solid rgba(255,255,255,0.08)',
+                            background: 'linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%)',
+                            border: '1px solid rgba(255,255,255,0.09)',
                             borderRadius: '12px',
                             padding: '16px',
-                            marginBottom: '12px'
+                            marginBottom: '14px',
+                            boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
                           }}>
-                            <div style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
-                              Question Navigator
+                            <div style={{ fontSize: '0.74rem', color: '#FACC15', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
+                              Question Matrix ({prelimQuestions.length || 30})
                             </div>
+
                             {/* Legend */}
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>
-                              <span style={{ fontSize: '0.65rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
+                              <span style={{ fontSize: '0.66rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
                                 <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#4ADE80', display: 'inline-block' }} /> Answered
                               </span>
-                              <span style={{ fontSize: '0.65rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
+                              <span style={{ fontSize: '0.66rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
                                 <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#FACC15', display: 'inline-block' }} /> Flagged
                               </span>
-                              <span style={{ fontSize: '0.65rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
+                              <span style={{ fontSize: '0.66rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
                                 <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: 'rgba(255,255,255,0.12)', display: 'inline-block' }} /> Unanswered
                               </span>
                             </div>
+
                             {/* Number Grid */}
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '5px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px' }}>
                               {prelimQuestions.map((q, idx) => {
                                 const isAnswered = !!prelimAnswers[q.id]
                                 const isFlagged = flaggedQuestions.has(q.id)
                                 const isCurrent = idx === currentPrelimIdx
-                                let bg = 'rgba(255,255,255,0.07)'
+                                let bg = 'rgba(255,255,255,0.06)'
                                 let border = '1px solid rgba(255,255,255,0.1)'
                                 let color = 'var(--text-secondary)'
-                                if (isAnswered) { bg = 'rgba(74,222,128,0.15)'; border = '1px solid #4ADE80'; color = '#4ADE80' }
-                                if (isFlagged && !isAnswered) { bg = 'rgba(250,204,21,0.15)'; border = '1px solid #FACC15'; color = '#FACC15' }
-                                if (isFlagged && isAnswered) { bg = 'rgba(250,204,21,0.1)'; border = '1.5px solid #FACC15'; color = '#FACC15' }
+                                if (isAnswered) { bg = 'rgba(74,222,128,0.16)'; border = '1px solid #4ADE80'; color = '#4ADE80' }
+                                if (isFlagged && !isAnswered) { bg = 'rgba(250,204,21,0.18)'; border = '1.5px solid #FACC15'; color = '#FACC15' }
+                                if (isFlagged && isAnswered) { bg = 'rgba(250,204,21,0.14)'; border = '1.8px solid #FACC15'; color = '#FACC15' }
                                 if (isCurrent) { border = '2px solid #E01B22'; color = '#FFF' }
                                 return (
                                   <button
                                     key={q.id}
                                     type="button"
-                                    onClick={() => setCurrentPrelimIdx(idx)}
+                                    onClick={() => handleSelectQuestion(idx)}
                                     style={{
-                                      background: isCurrent ? 'rgba(224,27,34,0.25)' : bg,
+                                      background: isCurrent ? 'rgba(224,27,34,0.3)' : bg,
                                       border,
                                       color,
-                                      borderRadius: '5px',
-                                      padding: '5px 2px',
-                                      fontSize: '0.72rem',
+                                      borderRadius: '6px',
+                                      padding: '6px 2px',
+                                      fontSize: '0.74rem',
                                       fontWeight: isCurrent ? '800' : '600',
                                       cursor: 'pointer',
                                       transition: 'all 0.15s ease',
                                       lineHeight: '1',
                                       textAlign: 'center',
-                                      boxShadow: isCurrent ? '0 0 8px rgba(224,27,34,0.4)' : 'none'
+                                      boxShadow: isCurrent ? '0 0 10px rgba(224,27,34,0.5)' : 'none'
                                     }}
                                     title={`Q${idx + 1}: ${isAnswered ? 'Answered' : isFlagged ? 'Flagged' : 'Unanswered'}`}
                                   >
@@ -1252,20 +1411,20 @@ export default function GameArena() {
                           </div>
 
                           {/* Summary Stats */}
-                          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '10px', padding: '12px 14px', marginBottom: '12px' }}>
-                            <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Progress</div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem' }}>
+                          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '10px', padding: '14px', marginBottom: '14px' }}>
+                            <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Progress Telemetry</div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
                                 <span style={{ color: '#4ADE80' }}>✓ Answered</span>
                                 <strong style={{ color: '#FFF' }}>{Object.keys(prelimAnswers).length}</strong>
                               </div>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem' }}>
-                                <span style={{ color: '#FACC15' }}>🚩 Flagged</span>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
+                                <span style={{ color: '#FACC15' }}>🚩 Flagged for Review</span>
                                 <strong style={{ color: '#FFF' }}>{flaggedQuestions.size}</strong>
                               </div>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem' }}>
-                                <span style={{ color: 'var(--text-dim)' }}>○ Unanswered</span>
-                                <strong style={{ color: '#FFF' }}>{30 - Object.keys(prelimAnswers).length}</strong>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
+                                <span style={{ color: 'var(--text-dim)' }}>○ Left Blank</span>
+                                <strong style={{ color: '#FFF' }}>{Math.max(0, (prelimQuestions.length || 30) - Object.keys(prelimAnswers).length)}</strong>
                               </div>
                             </div>
                             <div className="arena-progress-container" style={{ margin: '10px 0 0', height: '6px' }}>
@@ -1273,14 +1432,14 @@ export default function GameArena() {
                             </div>
                           </div>
 
-                          {/* Final Submit Button */}
+                          {/* Final Submit Button in Navigator */}
                           <button
                             type="button"
                             className="btn-primary"
-                            style={{ width: '100%', padding: '12px', fontSize: '0.88rem', borderRadius: '8px' }}
-                            onClick={handlePrelimSubmit}
+                            style={{ width: '100%', padding: '13px', fontSize: '0.92rem', borderRadius: '8px', boxShadow: '0 0 16px rgba(224,27,34,0.45)' }}
+                            onClick={() => setShowConfirmSubmitModal(true)}
                           >
-                            ⚡ Submit Quiz
+                            ⚡ Finalize &amp; Submit
                           </button>
                         </div>
                       </div>
@@ -2129,6 +2288,95 @@ export default function GameArena() {
                 }}
               >
                 Confirm &amp; Launch Quiz 🚀
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* STAGE 0 SUBMIT CONFIRMATION MODAL                         */}
+      {/* ========================================================= */}
+      {showConfirmSubmitModal && (
+        <div className="quiz-confirm-backdrop">
+          <div className="quiz-confirm-modal">
+            <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(224,27,34,0.15)', border: '2px solid #E01B22', margin: '0 auto 16px', boxShadow: '0 0 20px rgba(224,27,34,0.4)' }}>
+              <span style={{ fontSize: '1.8rem' }}>🔒</span>
+            </div>
+
+            <h3 style={{ fontSize: '1.4rem', color: '#FFF', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
+              Finalize Stage 0 Prelims?
+            </h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: '1.5', marginBottom: '20px' }}>
+              Review your submission telemetry before locking in your answers. Once submitted, answers cannot be edited.
+            </p>
+
+            {/* Telemetry Breakdown Card */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '10px',
+              marginBottom: '20px',
+              textAlign: 'center'
+            }}>
+              <div style={{ background: 'rgba(74,222,128,0.1)', border: '1px solid #4ADE80', borderRadius: '8px', padding: '12px 8px' }}>
+                <div style={{ fontSize: '0.7rem', color: '#4ADE80', fontWeight: 'bold' }}>ANSWERED</div>
+                <div style={{ fontSize: '1.3rem', fontWeight: '900', color: '#FFF' }}>{Object.keys(prelimAnswers).length}</div>
+                <div style={{ fontSize: '0.65rem', color: '#86EFAC' }}>+10 pts if correct</div>
+              </div>
+
+              <div style={{ background: 'rgba(250,204,21,0.1)', border: '1px solid #FACC15', borderRadius: '8px', padding: '12px 8px' }}>
+                <div style={{ fontSize: '0.7rem', color: '#FACC15', fontWeight: 'bold' }}>FLAGGED</div>
+                <div style={{ fontSize: '1.3rem', fontWeight: '900', color: '#FFF' }}>{flaggedQuestions.size}</div>
+                <div style={{ fontSize: '0.65rem', color: '#FDE047' }}>Needs review</div>
+              </div>
+
+              <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '12px 8px' }}>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', fontWeight: 'bold' }}>LEFT BLANK</div>
+                <div style={{ fontSize: '1.3rem', fontWeight: '900', color: '#FFF' }}>
+                  {Math.max(0, (prelimQuestions.length || 30) - Object.keys(prelimAnswers).length)}
+                </div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)' }}>0 pts (Safe)</div>
+              </div>
+            </div>
+
+            {/* Negative Marking Reassurance Alert */}
+            <div style={{
+              background: 'rgba(224, 27, 34, 0.08)',
+              border: '1px solid rgba(224, 27, 34, 0.35)',
+              borderRadius: '8px',
+              padding: '12px 14px',
+              textAlign: 'left',
+              marginBottom: '24px',
+              fontSize: '0.82rem',
+              color: 'var(--text-secondary)',
+              lineHeight: '1.45'
+            }}>
+              <strong style={{ color: '#FF6B6B', display: 'block', marginBottom: '2px' }}>⚠️ Scoring Reminder:</strong>
+              Leaving questions blank protects your team average from the <strong>-5 penalty</strong>. Random guesses can severely harm your placement!
+            </div>
+
+            {/* Action Buttons */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => setShowConfirmSubmitModal(false)}
+                style={{ padding: '11px 22px', fontSize: '0.88rem' }}
+              >
+                ← Keep Reviewing
+              </button>
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={handlePrelimSubmit}
+                style={{
+                  padding: '11px 26px',
+                  fontSize: '0.92rem',
+                  boxShadow: '0 0 20px rgba(224, 27, 34, 0.6)'
+                }}
+              >
+                ⚡ Yes, Lock In &amp; Submit
               </button>
             </div>
           </div>
