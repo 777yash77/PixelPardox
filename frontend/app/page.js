@@ -544,12 +544,12 @@ export default function Home() {
         <line x1="0" y1="0" x2="75" y2="100" stroke="#E01B22" strokeWidth="0.5" opacity="0.5" />
       </svg>
 
-      {/* TOP-RIGHT: REALISTIC SWINGING SPIDER-MAN WITH ELASTIC SILK */}
+      {/* TOP-RIGHT: REALISTIC SWINGING SPIDER-MAN FULL BODY MODEL WITH ELASTIC SILK */}
       <div 
         style={{
           position: 'absolute',
           top: 0,
-          right: '7%',
+          right: '5%',
           zIndex: 40,
           pointerEvents: 'auto',
           cursor: 'pointer'
@@ -557,41 +557,40 @@ export default function Home() {
         onClick={() => {
           setShowSpideyThwip(true)
           setIsSpideyChatOpen(true)
-          setTimeout(() => setShowSpideyThwip(false), 1200)
+          setTimeout(() => setShowSpideyThwip(false), 1400)
         }}
         onMouseEnter={() => setShowSpideyThwip(true)}
         onMouseLeave={() => setShowSpideyThwip(false)}
-        title="Click Spidey to Chat!"
+        title="Click Spider-Man to Chat!"
       >
         <div className="spidey-swinging-pro" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {/* Elastic Silk Line */}
           <div className="web-elastic-line" style={{
             width: '2.5px',
-            background: 'linear-gradient(to bottom, #FFFFFF 0%, rgba(255,255,255,0.9) 60%, #E01B22 100%)',
-            boxShadow: '0 0 10px rgba(255,255,255,0.8), 0 0 18px rgba(224,27,34,0.6)'
+            background: 'linear-gradient(to bottom, #FFFFFF 0%, rgba(255,255,255,0.95) 50%, #E01B22 100%)',
+            boxShadow: '0 0 10px rgba(255,255,255,0.85), 0 0 18px rgba(224,27,34,0.65)'
           }} />
 
-          {/* Upside-Down Spidey Avatar */}
+          {/* Full Model Spider-Man Container */}
           <div style={{
             position: 'relative',
-            width: '74px',
-            height: '90px',
-            transform: 'rotate(180deg)',
-            filter: 'drop-shadow(0 8px 18px rgba(224,27,34,0.7))'
+            width: '100px',
+            height: '160px',
+            filter: 'drop-shadow(0 10px 22px rgba(224,27,34,0.75))'
           }}>
             {/* THWIP Action Pop */}
             {showSpideyThwip && (
               <div className="comic-badge-thwip">THWIP!</div>
             )}
 
-            {/* Spider-Sense Radiating Crown */}
+            {/* Spider-Sense Radiating Crown (Around Head) */}
             <div className="spider-sense-intense" style={{
               position: 'absolute',
-              top: '-18px',
+              bottom: '-14px',
               left: '50%',
               transform: 'translateX(-50%)',
-              width: '56px',
-              height: '28px',
+              width: '64px',
+              height: '32px',
               pointerEvents: 'none'
             }}>
               <svg viewBox="0 0 56 28" fill="none">
@@ -601,89 +600,192 @@ export default function Home() {
               </svg>
             </div>
 
-            {/* Spider-Man Mask SVG */}
-            <svg viewBox="0 0 64 80" style={{ width: '100%', height: '100%' }}>
-              <path 
-                d="M32 4 C16 4, 6 22, 6 48 C6 66, 20 76, 32 76 C44 76, 58 66, 58 48 C58 22, 48 4, 32 4 Z" 
-                fill="#D81E27" 
-                stroke="#0A0607" 
-                strokeWidth="2.8" 
-              />
-              <path d="M32 4 L32 76 M6 48 Q32 48 58 48 M10 32 Q32 30 54 32 M12 62 Q32 66 52 62 M18 16 Q32 18 46 16" stroke="#7A0A10" strokeWidth="1.2" fill="none" opacity="0.9" />
-              <line x1="32" y1="48" x2="10" y2="24" stroke="#7A0A10" strokeWidth="1" />
-              <line x1="32" y1="48" x2="54" y2="24" stroke="#7A0A10" strokeWidth="1" />
-              <line x1="32" y1="48" x2="16" y2="70" stroke="#7A0A10" strokeWidth="1" />
-              <line x1="32" y1="48" x2="48" y2="70" stroke="#7A0A10" strokeWidth="1" />
-              <polygon points="12,38 28,45 27,33 14,27" fill="#FFFFFF" stroke="#0A0607" strokeWidth="3" strokeLinejoin="round" />
-              <polygon points="50,38 35,36 37,33 50,27" fill="#FFFFFF" stroke="#0A0607" strokeWidth="3" strokeLinejoin="round" />
+            {/* Complete Full-Body Hanging Spider-Man SVG */}
+            <svg viewBox="0 0 110 170" width="100" height="160" style={{ overflow: 'visible' }}>
+              {/* Feet Web Clamp */}
+              <circle cx="55" cy="12" r="5" fill="none" stroke="#FFFFFF" strokeWidth="2.5" />
+              <path d="M49 12 C49 8, 61 8, 61 12" stroke="#E01B22" strokeWidth="2" fill="none" />
+
+              {/* Legs (Upside-Down Acrobat Hang) */}
+              <path d="M50 14 L30 36 L24 64 L36 68 L44 44 L54 20 Z" fill="#1E3A8A" stroke="#0A0607" strokeWidth="2" />
+              <path d="M48 12 L34 26 L42 32 L54 16 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="1.8" />
+              <path d="M40 20 L48 24 M44 16 L50 20" stroke="#7A0A10" strokeWidth="1" />
+
+              <path d="M60 14 L80 36 L86 64 L74 68 L66 44 L56 20 Z" fill="#1E3A8A" stroke="#0A0607" strokeWidth="2" />
+              <path d="M62 12 L76 26 L68 32 L56 16 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="1.8" />
+              <path d="M70 20 L62 24 M66 16 L60 20" stroke="#7A0A10" strokeWidth="1" />
+
+              {/* Waist & Belt */}
+              <path d="M36 62 C44 58, 66 58, 74 62 L72 74 C60 76, 50 76, 38 74 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="2" />
+              <path d="M37 68 C48 66, 62 66, 73 68" stroke="#7A0A10" strokeWidth="1.2" fill="none" />
+
+              {/* Torso */}
+              <path d="M32 76 L24 102 C28 106, 34 108, 38 106 L40 74 Z" fill="#1E3A8A" stroke="#0A0607" strokeWidth="1.8" />
+              <path d="M78 76 L86 102 C82 106, 76 108, 72 106 L70 74 Z" fill="#1E3A8A" stroke="#0A0607" strokeWidth="1.8" />
+              <path d="M38 74 C44 72, 66 72, 72 74 L70 108 C55 110, 55 110, 40 108 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="2" />
+              
+              {/* Chest Web Grid */}
+              <path d="M55 74 L55 109 M38 82 Q55 86 72 82 M38 92 Q55 96 72 92 M39 101 Q55 104 71 101" stroke="#7A0A10" strokeWidth="1.2" fill="none" />
+              
+              {/* Spider Emblem on Chest */}
+              <ellipse cx="55" cy="90" rx="3.5" ry="5.5" fill="#0A0607" />
+              <path d="M54 88 Q46 80 43 78 M56 88 Q64 80 67 78" stroke="#0A0607" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+              <path d="M54 90 Q44 86 42 88 M56 90 Q66 86 68 88" stroke="#0A0607" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+              <path d="M54 92 Q44 98 43 104 M56 92 Q66 98 67 104" stroke="#0A0607" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+              <path d="M54 93 Q48 104 46 107 M56 93 Q62 104 64 107" stroke="#0A0607" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+
+              {/* Arms */}
+              <path d="M32 76 L18 90 L14 112 L22 116 L26 98 L36 84 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="1.8" />
+              <circle cx="16" cy="116" r="4.5" fill="#D81E27" stroke="#0A0607" strokeWidth="1.5" />
+              <path d="M13 120 L11 125 M16 121 L16 126 M19 119 L21 123" stroke="#D81E27" strokeWidth="2" strokeLinecap="round" />
+              <path d="M20 92 L26 96 M16 104 L23 107" stroke="#7A0A10" strokeWidth="1" />
+
+              <path d="M78 76 L92 90 L96 112 L88 116 L84 98 L74 84 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="1.8" />
+              <circle cx="94" cy="116" r="4.5" fill="#D81E27" stroke="#0A0607" strokeWidth="1.5" />
+              <path d="M97 120 L99 125 M94 121 L94 126 M91 119 L89 123" stroke="#D81E27" strokeWidth="2" strokeLinecap="round" />
+              <path d="M90 92 L84 96 M94 104 L87 107" stroke="#7A0A10" strokeWidth="1" />
+
+              {/* Mask & Head */}
+              <path d="M47 108 L47 115 L63 115 L63 108 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="1.5" />
+              <path d="M55 113 C38 113, 30 126, 30 142 C30 159, 43 169, 55 169 C67 169, 80 159, 80 142 C80 126, 72 113, 55 113 Z" fill="#D81E27" stroke="#0A0607" strokeWidth="2.5" />
+              
+              <path d="M55 113 L55 169 M31 138 Q55 142 79 138 M33 150 Q55 154 77 150 M38 126 Q55 129 72 126" stroke="#7A0A10" strokeWidth="1.2" fill="none" opacity="0.9" />
+              <line x1="55" y1="141" x2="36" y2="128" stroke="#7A0A10" strokeWidth="1" />
+              <line x1="55" y1="141" x2="74" y2="128" stroke="#7A0A10" strokeWidth="1" />
+              <line x1="55" y1="141" x2="38" y2="158" stroke="#7A0A10" strokeWidth="1" />
+              <line x1="55" y1="141" x2="72" y2="158" stroke="#7A0A10" strokeWidth="1" />
+
+              {/* White Mask Eyes with Sharp Black Edge */}
+              <polygon points="36,136 48,143 47,132 37,126" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.8" strokeLinejoin="round" />
+              <polygon points="74,136 62,143 63,132 73,126" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.8" strokeLinejoin="round" />
             </svg>
+          </div>
+
+          {/* Spider-Man Callout Tag */}
+          <div className="mascot-tag-pill spidey-tag">
+            <span>🕷️ SPIDER-MAN • MENTOR</span>
+            <span className="mascot-tag-sub">Click to Chat</span>
           </div>
         </div>
       </div>
 
-      {/* TOP-LEFT: DEADPOOL ROASTING INVASION (UPPER BANTER) */}
+      {/* TOP-LEFT: RAPPELLING DEADPOOL FULL BODY MODEL WITH TACTICAL CABLE */}
       <div 
         style={{
           position: 'absolute',
-          top: 14,
-          left: '7%',
+          top: 0,
+          left: '5%',
           zIndex: 40,
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px'
+          pointerEvents: 'auto',
+          cursor: 'pointer'
         }}
         onClick={() => {
           setShowDeadpoolPop(true)
           setIsDeadpoolChatOpen(true)
-          setTimeout(() => setShowDeadpoolPop(false), 1200)
+          setTimeout(() => setShowDeadpoolPop(false), 1400)
         }}
-        title="Click Deadpool to chat!"
+        onMouseEnter={() => setShowDeadpoolPop(true)}
+        onMouseLeave={() => setShowDeadpoolPop(false)}
+        title="Click Deadpool to Chat!"
       >
-        <div className="deadpool-floating" style={{ position: 'relative' }}>
-          {showDeadpoolPop && (
-            <div className="comic-badge-maximum">MAXIMUM EFFORT!</div>
-          )}
-          {/* Deadpool Mask Head */}
+        <div className="deadpool-swinging-pro" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {/* Tactical Steel Cable Line */}
+          <div className="deadpool-cable-line" />
+
+          {/* Full Model Deadpool Container */}
           <div style={{
-            width: '58px',
-            height: '58px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #831015 100%)',
-            border: '2.5px solid #000',
-            boxShadow: '0 6px 18px rgba(226,54,54,0.6), 0 0 12px rgba(0,0,0,0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'relative'
+            position: 'relative',
+            width: '100px',
+            height: '160px',
+            filter: 'drop-shadow(0 10px 22px rgba(226,54,54,0.75))'
           }}>
-            {/* Katana Cross on Back */}
-            <div style={{ position: 'absolute', top: '-10px', width: '70px', height: '4px', background: '#9CA3AF', border: '1px solid #111827', transform: 'rotate(35deg)', zIndex: -1, borderRadius: '2px' }} />
-            <div style={{ position: 'absolute', top: '-10px', width: '70px', height: '4px', background: '#9CA3AF', border: '1px solid #111827', transform: 'rotate(-35deg)', zIndex: -1, borderRadius: '2px' }} />
-            
-            <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
-              <circle cx="32" cy="32" r="28" fill="#C51B24" />
-              <ellipse cx="20" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(8 20 32)" />
-              <ellipse cx="44" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(-8 44 32)" />
-              <path d="M15,31 Q20,29 25,32 Q20,35 15,31 Z" fill="#FFFFFF" />
-              <path d="M49,31 Q44,29 39,32 Q44,35 49,31 Z" fill="#FFFFFF" />
+            {/* MAXIMUM EFFORT Action Pop */}
+            {showDeadpoolPop && (
+              <div className="comic-badge-maximum">MAXIMUM EFFORT!</div>
+            )}
+
+            {/* Complete Full-Body Rappelling Deadpool SVG */}
+            <svg viewBox="0 0 110 170" width="100" height="160" style={{ overflow: 'visible' }}>
+              {/* Tactical Carabiner at top */}
+              <rect x="51" y="2" width="8" height="14" rx="3" fill="#64748B" stroke="#0F172A" strokeWidth="1.8" />
+
+              {/* Crossed Katanas on Back (X Shape) */}
+              <line x1="20" y1="40" x2="94" y2="114" stroke="#0A0607" strokeWidth="5.5" strokeLinecap="round" />
+              <line x1="20" y1="40" x2="94" y2="114" stroke="#CBD5E1" strokeWidth="3" strokeLinecap="round" />
+              <rect x="15" y="35" width="16" height="6" rx="1.5" fill="#EF4444" stroke="#0A0607" strokeWidth="1" transform="rotate(45 23 38)" />
+              <circle cx="15" cy="34" r="3" fill="#FACC15" stroke="#0A0607" strokeWidth="1" />
+
+              <line x1="90" y1="40" x2="16" y2="114" stroke="#0A0607" strokeWidth="5.5" strokeLinecap="round" />
+              <line x1="90" y1="40" x2="16" y2="114" stroke="#CBD5E1" strokeWidth="3" strokeLinecap="round" />
+              <rect x="79" y="35" width="16" height="6" rx="1.5" fill="#EF4444" stroke="#0A0607" strokeWidth="1" transform="rotate(-45 87 38)" />
+              <circle cx="95" cy="34" r="3" fill="#FACC15" stroke="#0A0607" strokeWidth="1" />
+
+              {/* Head & Mask */}
+              <path d="M55 16 C39 16, 32 27, 32 44 C32 60, 42 68, 55 68 C68 68, 78 60, 78 44 C78 27, 71 16, 55 16 Z" fill="#DC2626" stroke="#0A0607" strokeWidth="2.5" />
+              <ellipse cx="44" cy="42" rx="9" ry="14" fill="#0F080A" stroke="#0A0607" strokeWidth="1.5" transform="rotate(6 44 42)" />
+              <ellipse cx="66" cy="42" rx="9" ry="14" fill="#0F080A" stroke="#0A0607" strokeWidth="1.5" transform="rotate(-6 66 42)" />
+              <path d="M39 41 Q44 38 49 42 Q44 45 39 41 Z" fill="#FFFFFF" />
+              <path d="M71 41 Q66 38 61 42 Q66 45 71 41 Z" fill="#FFFFFF" />
+
+              {/* Neck & Chest */}
+              <rect x="47" y="66" width="16" height="8" rx="2" fill="#18090C" stroke="#0A0607" strokeWidth="1.5" />
+              <path d="M30 74 L24 98 L36 102 L38 74 Z" fill="#18090C" stroke="#0A0607" strokeWidth="2" />
+              <path d="M80 74 L86 98 L74 102 L72 74 Z" fill="#18090C" stroke="#0A0607" strokeWidth="2" />
+              <path d="M38 74 C44 72, 66 72, 72 74 L74 106 C60 108, 50 108, 36 106 Z" fill="#DC2626" stroke="#0A0607" strokeWidth="2" />
+              
+              {/* Harness Straps */}
+              <path d="M34 76 L72 104" stroke="#471418" strokeWidth="4" strokeLinecap="round" />
+              <path d="M34 76 L72 104" stroke="#18090C" strokeWidth="2.5" strokeLinecap="round" />
+              <path d="M76 76 L38 104" stroke="#471418" strokeWidth="4" strokeLinecap="round" />
+              <path d="M76 76 L38 104" stroke="#18090C" strokeWidth="2.5" strokeLinecap="round" />
+              <circle cx="55" cy="90" r="4.5" fill="#64748B" stroke="#0A0607" strokeWidth="1.5" />
+
+              {/* Utility Belt & Pouches */}
+              <rect x="34" y="104" width="42" height="9" rx="2" fill="#291518" stroke="#0A0607" strokeWidth="2" />
+              <rect x="36" y="103" width="7" height="11" rx="1.5" fill="#4B272C" stroke="#0A0607" strokeWidth="1.2" />
+              <rect x="45" y="103" width="6" height="11" rx="1.5" fill="#4B272C" stroke="#0A0607" strokeWidth="1.2" />
+              <rect x="59" y="103" width="6" height="11" rx="1.5" fill="#4B272C" stroke="#0A0607" strokeWidth="1.2" />
+              <rect x="67" y="103" width="7" height="11" rx="1.5" fill="#4B272C" stroke="#0A0607" strokeWidth="1.2" />
+              
+              {/* Deadpool Belt Buckle */}
+              <circle cx="55" cy="108.5" r="6" fill="#DC2626" stroke="#0A0607" strokeWidth="1.8" />
+              <line x1="55" y1="102.5" x2="55" y2="114.5" stroke="#0A0607" strokeWidth="1.2" />
+              <ellipse cx="52.5" cy="108.5" rx="1.6" ry="2.4" fill="#0A0607" />
+              <ellipse cx="57.5" cy="108.5" rx="1.6" ry="2.4" fill="#0A0607" />
+              <circle cx="52.2" cy="108.2" r="0.6" fill="#FFFFFF" />
+              <circle cx="57.2" cy="108.2" r="0.6" fill="#FFFFFF" />
+
+              {/* Right Arm Holding Cable */}
+              <path d="M72 74 L86 86 L88 38 L78 36 L76 74 Z" fill="#DC2626" stroke="#0A0607" strokeWidth="2" />
+              <path d="M78 36 L88 38 L86 26 L76 24 Z" fill="#18090C" stroke="#0A0607" strokeWidth="1.8" />
+              <rect x="75" y="22" width="13" height="12" rx="4" fill="#18090C" stroke="#0A0607" strokeWidth="1.5" />
+
+              {/* Left Arm Making Peace Sign ✌️ */}
+              <path d="M38 74 L22 86 L18 106 L28 108 L34 94 L40 76 Z" fill="#DC2626" stroke="#0A0607" strokeWidth="2" />
+              <circle cx="18" cy="112" r="5" fill="#18090C" stroke="#0A0607" strokeWidth="1.5" />
+              <line x1="15" y1="112" x2="10" y2="122" stroke="#18090C" strokeWidth="3" strokeLinecap="round" />
+              <line x1="19" y1="112" x2="18" y2="124" stroke="#18090C" strokeWidth="3" strokeLinecap="round" />
+
+              {/* Legs & Combat Boots */}
+              <path d="M38 113 L34 140 L38 162 L48 162 L50 140 L48 113 Z" fill="#DC2626" stroke="#0A0607" strokeWidth="2" />
+              <path d="M44 113 L48 113 L50 140 L46 140 Z" fill="#18090C" />
+              <rect x="34" y="132" width="14" height="10" rx="3" fill="#18090C" stroke="#0A0607" strokeWidth="1.5" />
+              <line x1="34" y1="124" x2="48" y2="124" stroke="#18090C" strokeWidth="2.5" />
+
+              <path d="M72 113 L76 140 L72 162 L62 162 L60 140 L62 113 Z" fill="#DC2626" stroke="#0A0607" strokeWidth="2" />
+              <path d="M66 113 L62 113 L60 140 L64 140 Z" fill="#18090C" />
+              <rect x="62" y="132" width="14" height="10" rx="3" fill="#18090C" stroke="#0A0607" strokeWidth="1.5" />
+
+              <path d="M34 154 L50 154 L52 166 L30 166 Z" fill="#18090C" stroke="#0A0607" strokeWidth="1.8" />
+              <path d="M76 154 L60 154 L58 166 L80 166 Z" fill="#18090C" stroke="#0A0607" strokeWidth="1.8" />
             </svg>
           </div>
-        </div>
 
-        <div style={{
-          background: 'rgba(226, 54, 54, 0.15)',
-          border: '1px solid #E23636',
-          borderRadius: '8px',
-          padding: '6px 12px',
-          color: '#FFF',
-          fontSize: '0.78rem',
-          fontWeight: 'bold',
-          display: 'flex',
-          flexDirection: 'column'
-        }}>
-          <span style={{ color: '#FACC15', fontSize: '0.7rem' }}>⚔️ DEADPOOL • MERC-BOT</span>
-          <span>Click to Open Chatbot</span>
+          {/* Deadpool Callout Tag */}
+          <div className="mascot-tag-pill deadpool-tag">
+            <span>⚔️ DEADPOOL • MERC-BOT</span>
+            <span className="mascot-tag-sub">Click to Chat</span>
+          </div>
         </div>
       </div>
 
