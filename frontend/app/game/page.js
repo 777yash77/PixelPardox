@@ -73,6 +73,10 @@ export default function GameArena() {
   const [prelimStatus, setPrelimStatus] = useState('NOT_STARTED')
   const [prelimTimeLeft, setPrelimTimeLeft] = useState(30 * 60)
 
+  // Tournament Protocol Acknowledgment Modal
+  const [showAcknowledgeModal, setShowAcknowledgeModal] = useState(false)
+  const [hasAcknowledged, setHasAcknowledged] = useState(false)
+
   // Webcam Ref
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
@@ -705,6 +709,27 @@ export default function GameArena() {
             >
               🌮 Wade Clue
             </button>
+            <button
+              type="button"
+              onClick={() => setShowAcknowledgeModal(true)}
+              style={{
+                background: 'rgba(250, 204, 21, 0.12)',
+                border: '1px solid #FACC15',
+                color: '#FACC15',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                fontSize: '0.76rem',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                transition: 'all 0.2s ease'
+              }}
+              title="Review Tournament Protocols & Context"
+            >
+              📜 Protocols
+            </button>
           </div>
 
           {/* Cyber Score Pill */}
@@ -867,8 +892,12 @@ export default function GameArena() {
                         <p style={{ color: 'var(--text-secondary)', marginBottom: '24px', maxWidth: '520px', margin: '0 auto 24px' }}>
                           Ready your optical acuity and neural logic. Once initiated, your personal 30-minute timer begins.
                         </p>
-                        <button className="btn-primary" style={{ padding: '14px 32px', fontSize: '1.05rem' }} onClick={handlePrelimStart}>
-                          ⚡ Acknowledge &amp; Start 30-Min Quiz →
+                        <button 
+                          className="btn-primary" 
+                          style={{ padding: '14px 32px', fontSize: '1.05rem', boxShadow: '0 0 20px rgba(224, 27, 34, 0.45)' }} 
+                          onClick={() => setShowAcknowledgeModal(true)}
+                        >
+                          ⚡ Acknowledge Protocols &amp; Start Quiz →
                         </button>
                       </div>
                     </div>
@@ -1773,6 +1802,132 @@ export default function GameArena() {
           </div>
         </div>
       </div>
+
+      {/* ========================================================= */}
+      {/* TOURNAMENT PROTOCOL ACKNOWLEDGEMENT POPUP MODAL          */}
+      {/* ========================================================= */}
+      {showAcknowledgeModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(5, 2, 4, 0.88)',
+          backdropFilter: 'blur(12px)',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }}>
+          <div className="comic-card" style={{
+            maxWidth: '580px',
+            width: '100%',
+            background: '#0F080B',
+            border: '2px solid #E01B22',
+            borderRadius: '16px',
+            padding: '28px',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.95), 0 0 32px rgba(224, 27, 34, 0.4)',
+            animation: 'scalePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            position: 'relative'
+          }}>
+            {/* Top Header */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '18px', borderBottom: '1px solid rgba(224, 27, 34, 0.3)', paddingBottom: '14px' }}>
+              <span style={{ fontSize: '2.2rem' }}>🛡️</span>
+              <div>
+                <h3 style={{ fontSize: '1.35rem', color: '#FFF', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>
+                  Tournament Protocol Acknowledgement
+                </h3>
+                <span style={{ fontSize: '0.75rem', color: '#FACC15', fontWeight: '800', letterSpacing: '1px' }}>
+                  LOGIN 2026 • STAGE 0 PRELIMS CONTEXT
+                </span>
+              </div>
+            </div>
+
+            {/* Context & Ground Rules */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px', fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+              <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '12px 14px', borderRadius: '8px', borderLeft: '3px solid #38BDF8' }}>
+                <strong style={{ color: '#38BDF8', display: 'block', marginBottom: '2px' }}>⏱️ Strict 30-Minute Timer</strong>
+                Your personal countdown begins immediately upon confirmation. Once active, the timer cannot be paused, reset, or refreshed. The quiz auto-submits strictly at 00:00.
+              </div>
+
+              <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '12px 14px', borderRadius: '8px', borderLeft: '3px solid #EF4444' }}>
+                <strong style={{ color: '#FF4D4D', display: 'block', marginBottom: '2px' }}>⚠️ Scoring &amp; Penalty Context</strong>
+                Each correct answer awards <strong>+10 Points</strong>. Each incorrect guess deducts <strong>-5 Points (Negative Marking)</strong>. Unanswered questions yield 0 points. Do not blind-guess!
+              </div>
+
+              <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '12px 14px', borderRadius: '8px', borderLeft: '3px solid #FACC15' }}>
+                <strong style={{ color: '#FACC15', display: 'block', marginBottom: '2px' }}>📷 Automated Silent Invigilation</strong>
+                Webcam snapshots are captured periodically in the background during the test to verify academic honesty and individual completion.
+              </div>
+            </div>
+
+            {/* Required Consent Checkbox */}
+            <label style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '12px',
+              background: hasAcknowledged ? 'rgba(74, 222, 128, 0.12)' : 'rgba(224, 27, 34, 0.08)',
+              border: `1.5px solid ${hasAcknowledged ? '#4ADE80' : 'rgba(224, 27, 34, 0.5)'}`,
+              borderRadius: '10px',
+              padding: '14px',
+              cursor: 'pointer',
+              transition: 'all 0.25s ease',
+              marginBottom: '22px'
+            }}>
+              <input 
+                type="checkbox"
+                checked={hasAcknowledged}
+                onChange={(e) => setHasAcknowledged(e.target.checked)}
+                style={{
+                  marginTop: '3px',
+                  width: '18px',
+                  height: '18px',
+                  cursor: 'pointer',
+                  accentColor: '#E01B22'
+                }}
+              />
+              <span style={{ fontSize: '0.86rem', color: '#FFF', lineHeight: '1.45' }}>
+                I have read and acknowledge the tournament context: <strong>30 questions in 30 minutes</strong>, the <strong>-5 penalty for wrong answers</strong>, and consent to <strong>automated webcam proctoring</strong>.
+              </span>
+            </label>
+
+            {/* Action Buttons */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => {
+                  setShowAcknowledgeModal(false)
+                  setHasAcknowledged(false)
+                }}
+                style={{ padding: '10px 20px', fontSize: '0.88rem' }}
+              >
+                Cancel / Return
+              </button>
+              <button
+                type="button"
+                className="btn-primary"
+                disabled={!hasAcknowledged}
+                onClick={() => {
+                  setShowAcknowledgeModal(false)
+                  handlePrelimStart()
+                }}
+                style={{
+                  padding: '10px 24px',
+                  fontSize: '0.92rem',
+                  opacity: hasAcknowledged ? 1 : 0.45,
+                  cursor: hasAcknowledged ? 'pointer' : 'not-allowed',
+                  boxShadow: hasAcknowledged ? '0 0 20px rgba(224, 27, 34, 0.65)' : 'none'
+                }}
+              >
+                Confirm &amp; Launch Quiz 🚀
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
