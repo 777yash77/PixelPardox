@@ -802,11 +802,11 @@ export default function GameArena() {
   }
 
   return (
-    <div className="page-transition" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <video ref={videoRef} autoPlay playsInline muted style={{ display: 'none' }} />
+    <div className="page-transition" suppressHydrationWarning style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <video ref={videoRef} autoPlay playsInline muted suppressHydrationWarning style={{ display: 'none' }} />
       <canvas ref={canvasRef} width="160" height="120" style={{ display: 'none' }} />
       {/* Top Cyber HUD Navigation Banner */}
-      <nav className="arena-hud-nav">
+      <nav className="arena-hud-nav" suppressHydrationWarning>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
