@@ -1206,28 +1206,35 @@ export default function GameArena() {
                             )}
                           </div>
 
-                          {gameState.activeRound === 4 ? (
-                            <div style={{ width: '100%', height: '360px', overflow: 'hidden', position: 'relative' }}>
-                              <img 
-                                src={`http://localhost:8080${currentQuestion.imageUrl}`} 
-                                alt="zoomed" 
-                                style={{ 
-                                  width: '100%', 
-                                  height: '100%', 
-                                  objectFit: 'cover', 
-                                  transform: `scale(${100 / (gameState.zoomLevel || 10)})`,
-                                  transformOrigin: 'center',
-                                  transition: 'transform 0.5s ease'
-                                }} 
-                              />
-                            </div>
+                          {currentQuestion.imageUrl ? (
+                            gameState.activeRound === 4 ? (
+                              <div style={{ width: '100%', height: '360px', overflow: 'hidden', position: 'relative' }}>
+                                <img 
+                                  src={`http://localhost:8080${currentQuestion.imageUrl}`} 
+                                  alt="zoomed" 
+                                  style={{ 
+                                    width: '100%', 
+                                    height: '100%', 
+                                    objectFit: 'cover', 
+                                    transform: `scale(${100 / (gameState.zoomLevel || 10)})`,
+                                    transformOrigin: 'center',
+                                    transition: 'transform 0.5s ease'
+                                  }} 
+                                />
+                              </div>
+                            ) : (
+                              <div style={{ width: '100%', background: '#070405', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '300px' }}>
+                                <img 
+                                  src={`http://localhost:8080${currentQuestion.imageUrl}`} 
+                                  alt="quiz visual" 
+                                  style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '420px', objectFit: 'contain' }}
+                                />
+                              </div>
+                            )
                           ) : (
-                            <div style={{ width: '100%', background: '#070405', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '300px' }}>
-                              <img 
-                                src={`http://localhost:8080${currentQuestion.imageUrl}`} 
-                                alt="quiz visual" 
-                                style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '420px', objectFit: 'contain' }}
-                              />
+                            <div style={{ width: '100%', minHeight: '260px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '10px', color: 'var(--text-secondary)' }}>
+                              <span className="pulse-dot" style={{ width: '12px', height: '12px', background: '#E01B22' }} />
+                              <span style={{ fontSize: '0.85rem', letterSpacing: '1px', textTransform: 'uppercase' }}>Acquiring Visual Uplink...</span>
                             </div>
                           )}
                         </div>
