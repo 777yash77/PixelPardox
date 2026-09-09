@@ -643,8 +643,8 @@ export default function Home() {
         style={{
           position: 'absolute',
           top: 0,
-          right: '5%',
-          zIndex: 40,
+          right: 'clamp(12px, 3.2vw, 42px)',
+          zIndex: 35,
           pointerEvents: 'auto',
           cursor: 'pointer'
         }}
@@ -683,11 +683,11 @@ export default function Home() {
             {/* Spider-Sense Radiating Crown (Around Head) */}
             <div className="spider-sense-intense" style={{
               position: 'absolute',
-              bottom: '-12px',
+              bottom: '-10px',
               left: '50%',
               transform: 'translateX(-50%)',
-              width: '64px',
-              height: '32px',
+              width: '46px',
+              height: '23px',
               pointerEvents: 'none'
             }}>
               <svg viewBox="0 0 56 28" fill="none">
@@ -724,8 +724,8 @@ export default function Home() {
         style={{
           position: 'absolute',
           top: 0,
-          left: '4.5%',
-          zIndex: 40,
+          left: 'clamp(12px, 3.2vw, 42px)',
+          zIndex: 35,
           pointerEvents: 'auto',
           cursor: 'pointer'
         }}
@@ -777,8 +777,8 @@ export default function Home() {
           <div className="deadpool-combat-platform">
             <div className="platform-thruster-left" />
             <div className="platform-thruster-right" />
-            <span style={{ fontSize: '0.6rem', color: '#EF4444', fontFamily: 'monospace', fontWeight: 900, letterSpacing: '0.8px' }}>⚡ PERCH-01</span>
-            <span style={{ fontSize: '0.6rem', color: '#FACC15', fontFamily: 'monospace', fontWeight: 900 }}>COMBAT READY</span>
+            <span style={{ fontSize: '0.52rem', color: '#EF4444', fontFamily: 'monospace', fontWeight: 900, letterSpacing: '0.8px' }}>⚡ PERCH-01</span>
+            <span style={{ fontSize: '0.52rem', color: '#FACC15', fontFamily: 'monospace', fontWeight: 900 }}>COMBAT READY</span>
           </div>
 
           {/* Deadpool Callout Tag */}
@@ -790,10 +790,10 @@ export default function Home() {
       </div>
 
       {/* Main Content Container */}
-      <div className="container page-transition" style={{ maxWidth: '1100px', margin: '0 auto', padding: '36px 20px' }}>
+      <div className="container page-transition" style={{ maxWidth: '1140px', margin: '0 auto', padding: '42px 24px' }}>
         
         {/* Multiverse Header Banner */}
-        <header style={{ textAlign: 'center', marginBottom: '44px', position: 'relative' }}>
+        <header style={{ textAlign: 'center', marginBottom: '58px', position: 'relative' }}>
           {/* Live Multiverse Status Telemetry Banner */}
           <div style={{
             display: 'inline-flex',
@@ -840,76 +840,92 @@ export default function Home() {
           </div>
 
           <h1 className="glitch-text hero-floating-anim" data-text="PIXEL PARADOX" style={{ 
-            fontSize: 'clamp(2.8rem, 7vw, 5rem)', 
-            letterSpacing: '4px',
+            fontSize: 'clamp(2.8rem, 7vw, 5.2rem)', 
+            letterSpacing: '5px',
             lineHeight: 1.05,
-            marginBottom: '8px',
+            marginBottom: '12px',
             textTransform: 'uppercase',
-            filter: 'drop-shadow(0 0 24px rgba(224, 27, 34, 0.45))'
+            background: 'linear-gradient(180deg, #FFFFFF 20%, #FFA8A8 60%, #E01B22 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            filter: 'drop-shadow(0 0 35px rgba(224, 27, 34, 0.65)) drop-shadow(0 4px 14px rgba(0,0,0,0.9))'
           }}>
             PIXEL PARADOX
           </h1>
 
           <div style={{ 
-            display: 'inline-block',
-            fontSize: 'clamp(1.1rem, 2.5vw, 1.6rem)', 
-            fontWeight: '700', 
-            color: '#FF4D4D', 
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontSize: 'clamp(0.95rem, 2.2vw, 1.35rem)', 
+            fontWeight: '800', 
+            color: '#FF6B6B', 
             letterSpacing: '3px',
             textTransform: 'uppercase',
-            textShadow: '0 0 18px rgba(224,27,34,0.75)',
-            marginBottom: '16px'
+            background: 'rgba(224, 27, 34, 0.12)',
+            border: '1px solid rgba(224, 27, 34, 0.35)',
+            padding: '6px 20px',
+            borderRadius: '30px',
+            textShadow: '0 0 16px rgba(224,27,34,0.7)',
+            marginBottom: '20px',
+            backdropFilter: 'blur(10px)',
+            boxShadow: '0 4px 20px rgba(224, 27, 34, 0.2)'
           }}>
-            THE REALITY GLITCH — REAL OR AI?
+            <span style={{ color: '#FACC15' }}>⚡</span>
+            <span>THE REALITY GLITCH — REAL OR AI?</span>
+            <span style={{ color: '#38BDF8' }}>⚡</span>
           </div>
 
-          <p style={{ maxWidth: '820px', margin: '0 auto', color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.65' }}>
+          <p style={{ maxWidth: '820px', margin: '0 auto', color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.7' }}>
             Step inside the high-stakes Multiverse of Generative AI. Decode neural hallucinations, separate authentic photos from synthetic deepfakes, and prove your team is the sharpest in the multiverse!
           </p>
 
-          {/* Interactive Live Tournament Metrics Ribbon */}
+          {/* Quick Action CTA Hub */}
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
-            gap: '14px',
-            maxWidth: '960px',
-            margin: '34px auto 0',
-            textAlign: 'left'
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '16px',
+            marginTop: '28px',
+            flexWrap: 'wrap'
           }}>
-            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3.5px solid #E01B22', background: 'rgba(224, 27, 34, 0.08)', boxShadow: '0 4px 16px rgba(0,0,0,0.5)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                <span style={{ fontSize: '0.72rem', color: '#FF6B6B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 0: PRELIMS</span>
-                <span style={{ fontSize: '1rem' }}>📝</span>
-              </div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>30 Qs / 30 Mins</div>
-              <div style={{ fontSize: '0.75rem', color: '#FACC15', marginTop: '3px', fontWeight: '600' }}>+10 Correct / -5 Penalty</div>
-            </div>
+            <Link href="/login" style={{ textDecoration: 'none' }}>
+              <button className="hero-cta-red">
+                <span>⚔️ ENTER BATTLE ARENA</span>
+                <span>➔</span>
+              </button>
+            </Link>
 
-            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3.5px solid #38BDF8', background: 'rgba(56, 189, 248, 0.08)', boxShadow: '0 4px 16px rgba(0,0,0,0.5)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 1: DETECTIVE</span>
-                <span style={{ fontSize: '1rem' }}>🔍</span>
-              </div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>10 Pixels / 40s</div>
-              <div style={{ fontSize: '0.75rem', color: '#4ADE80', marginTop: '3px', fontWeight: '600' }}>Deepfake Forensics &amp; Model ID</div>
-            </div>
+            <Link href="/register" style={{ textDecoration: 'none' }}>
+              <button className="hero-cta-cyan">
+                <span>🛡️ REGISTER SQUAD</span>
+              </button>
+            </Link>
 
-            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3.5px solid #A855F7', background: 'rgba(168, 85, 247, 0.08)', boxShadow: '0 4px 16px rgba(0,0,0,0.5)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                <span style={{ fontSize: '0.72rem', color: '#C084FC', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 2: GLITCH HUNT</span>
-                <span style={{ fontSize: '1rem' }}>⚡</span>
-              </div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>7 Challenges / 45s</div>
-              <div style={{ fontSize: '0.75rem', color: '#E9D5FF', marginTop: '3px', fontWeight: '600' }}>Artifact Forensics</div>
-            </div>
+            <Link href="/leaderboard" style={{ textDecoration: 'none' }}>
+              <button className="hero-cta-gold">
+                <span>🏆 LIVE STANDINGS</span>
+              </button>
+            </Link>
+          </div>
 
-            <div className="interactive-stat-box" style={{ padding: '16px 18px', borderRadius: '12px', borderLeft: '3.5px solid #FACC15', background: 'rgba(250, 204, 21, 0.08)', boxShadow: '0 4px 16px rgba(0,0,0,0.5)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                <span style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>STAGE 3: GRAND FINALE</span>
-                <span style={{ fontSize: '1rem' }}>🎯</span>
-              </div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>5 Prompts / 75s</div>
-              <div style={{ fontSize: '0.75rem', color: '#38BDF8', marginTop: '3px', fontWeight: '600' }}>Semantic Prompt Cosine Duel</div>
+          {/* Horizontal Slim Specs Bar */}
+          <div className="hero-specs-strip">
+            <div className="spec-chip">
+              <span style={{ color: '#E01B22' }}>●</span>
+              <span>Stage 0: 30 MCQs / 30m</span>
+            </div>
+            <div className="spec-chip">
+              <span style={{ color: '#38BDF8' }}>●</span>
+              <span>Stage 1: Real vs 7 AI Models</span>
+            </div>
+            <div className="spec-chip">
+              <span style={{ color: '#FACC15' }}>●</span>
+              <span>Scoring: +10 Correct / -5 Penalty</span>
+            </div>
+            <div className="spec-chip">
+              <span style={{ color: '#4ADE80' }}>●</span>
+              <span>Live Silent Webcam Invigilation</span>
             </div>
           </div>
         </header>
@@ -918,23 +934,21 @@ export default function Home() {
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-          gap: '22px', 
-          marginBottom: '52px' 
+          gap: '26px', 
+          marginBottom: '64px' 
         }}>
           <Link href="/register" style={{ textDecoration: 'none' }}>
-            <div className="comic-card card-hover-lift" style={{ 
+            <div className="comic-card card-hover-lift cyber-card-red" style={{ 
               padding: '28px', 
               height: '100%', 
               display: 'flex', 
               flexDirection: 'column', 
               justifyContent: 'space-between', 
-              borderLeft: '4px solid #E01B22', 
-              background: 'linear-gradient(145deg, rgba(24, 10, 14, 0.95) 0%, rgba(12, 5, 8, 0.98) 100%)',
               boxShadow: '0 8px 30px rgba(0,0,0,0.6)',
               position: 'relative',
               overflow: 'hidden'
             }}>
-              <div style={{ position: 'absolute', top: 0, right: 0, width: '90px', height: '90px', background: 'radial-gradient(circle at top right, rgba(224,27,34,0.2) 0%, transparent 70%)', pointerEvents: 'none' }} />
+              <div style={{ position: 'absolute', top: 0, right: 0, width: '90px', height: '90px', background: 'radial-gradient(circle at top right, rgba(224,27,34,0.25) 0%, transparent 70%)', pointerEvents: 'none' }} />
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
                   <span style={{ fontSize: '0.72rem', color: '#FF6B6B', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(224,27,34,0.18)', padding: '4px 12px', borderRadius: '4px', border: '1px solid rgba(224,27,34,0.5)' }}>
@@ -956,19 +970,17 @@ export default function Home() {
           </Link>
 
           <Link href="/login" style={{ textDecoration: 'none' }}>
-            <div className="comic-card card-hover-lift" style={{ 
+            <div className="comic-card card-hover-lift cyber-card-cyan" style={{ 
               padding: '28px', 
               height: '100%', 
               display: 'flex', 
               flexDirection: 'column', 
               justifyContent: 'space-between', 
-              borderLeft: '4px solid #38BDF8', 
-              background: 'linear-gradient(145deg, rgba(8, 16, 26, 0.95) 0%, rgba(5, 9, 15, 0.98) 100%)',
               boxShadow: '0 8px 30px rgba(0,0,0,0.6)',
               position: 'relative',
               overflow: 'hidden'
             }}>
-              <div style={{ position: 'absolute', top: 0, right: 0, width: '90px', height: '90px', background: 'radial-gradient(circle at top right, rgba(56,189,248,0.2) 0%, transparent 70%)', pointerEvents: 'none' }} />
+              <div style={{ position: 'absolute', top: 0, right: 0, width: '90px', height: '90px', background: 'radial-gradient(circle at top right, rgba(56,189,248,0.25) 0%, transparent 70%)', pointerEvents: 'none' }} />
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
                   <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(56,189,248,0.18)', padding: '4px 12px', borderRadius: '4px', border: '1px solid rgba(56,189,248,0.5)' }}>
@@ -990,19 +1002,17 @@ export default function Home() {
           </Link>
 
           <Link href="/leaderboard" style={{ textDecoration: 'none' }}>
-            <div className="comic-card card-hover-lift" style={{ 
+            <div className="comic-card card-hover-lift cyber-card-gold" style={{ 
               padding: '28px', 
               height: '100%', 
               display: 'flex', 
               flexDirection: 'column', 
               justifyContent: 'space-between', 
-              borderLeft: '4px solid #FACC15', 
-              background: 'linear-gradient(145deg, rgba(20, 18, 10, 0.95) 0%, rgba(10, 9, 5, 0.98) 100%)',
               boxShadow: '0 8px 30px rgba(0,0,0,0.6)',
               position: 'relative',
               overflow: 'hidden'
             }}>
-              <div style={{ position: 'absolute', top: 0, right: 0, width: '90px', height: '90px', background: 'radial-gradient(circle at top right, rgba(250,204,21,0.2) 0%, transparent 70%)', pointerEvents: 'none' }} />
+              <div style={{ position: 'absolute', top: 0, right: 0, width: '90px', height: '90px', background: 'radial-gradient(circle at top right, rgba(250,204,21,0.25) 0%, transparent 70%)', pointerEvents: 'none' }} />
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
                   <span style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(250,204,21,0.18)', padding: '4px 12px', borderRadius: '4px', border: '1px solid rgba(250,204,21,0.5)' }}>
@@ -1247,9 +1257,11 @@ export default function Home() {
               </button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '14px', position: 'relative' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', position: 'relative' }}>
+              <div className="roast-vs-emblem">VS</div>
+
               {/* Deadpool's Roast */}
-              <div className="comic-balloon-deadpool" style={{ background: 'rgba(226, 54, 54, 0.15)', border: '1.5px solid #E23636', borderRadius: '12px', padding: '16px' }}>
+              <div className="comic-balloon-deadpool" style={{ background: 'rgba(226, 54, 54, 0.15)', border: '1.5px solid #E23636', borderRadius: '12px', padding: '18px', boxShadow: '0 8px 24px rgba(224, 27, 34, 0.2)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span style={{ fontSize: '1.2rem' }}>🌮</span>
@@ -1257,17 +1269,17 @@ export default function Home() {
                       DEADPOOL • MERC-WITH-A-MOUTH
                     </span>
                   </div>
-                  <span style={{ fontSize: '0.7rem', color: '#FACC15', background: 'rgba(0,0,0,0.5)', padding: '2px 6px', borderRadius: '4px' }}>
-                    Red Corner
+                  <span style={{ fontSize: '0.7rem', color: '#FACC15', background: 'rgba(0,0,0,0.6)', border: '1px solid #E23636', padding: '2px 8px', borderRadius: '4px', fontWeight: 'bold' }}>
+                    🔴 Red Corner
                   </span>
                 </div>
-                <p style={{ fontSize: '0.88rem', color: '#FEE2E2', lineHeight: '1.55' }}>
+                <p style={{ fontSize: '0.88rem', color: '#FEE2E2', lineHeight: '1.6' }}>
                   {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].deadpool}
                 </p>
               </div>
 
               {/* Spider-Man's Comeback */}
-              <div className="comic-balloon-spidey" style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1.5px solid #38BDF8', borderRadius: '12px', padding: '16px' }}>
+              <div className="comic-balloon-spidey" style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1.5px solid #38BDF8', borderRadius: '12px', padding: '18px', boxShadow: '0 8px 24px rgba(56, 189, 248, 0.2)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span style={{ fontSize: '1.2rem' }}>🕷️</span>
@@ -1275,14 +1287,14 @@ export default function Home() {
                       SPIDER-MAN • SCIENTIFIC RETORT
                     </span>
                   </div>
-                  <span style={{ fontSize: '0.7rem', color: '#38BDF8', background: 'rgba(0,0,0,0.5)', padding: '2px 6px', borderRadius: '4px' }}>
-                    Blue Corner
+                  <span style={{ fontSize: '0.7rem', color: '#38BDF8', background: 'rgba(0,0,0,0.6)', border: '1px solid #38BDF8', padding: '2px 8px', borderRadius: '4px', fontWeight: 'bold' }}>
+                    🔵 Blue Corner
                   </span>
                 </div>
-                <p style={{ fontSize: '0.88rem', color: '#E0F2FE', lineHeight: '1.55' }}>
+                <p style={{ fontSize: '0.88rem', color: '#E0F2FE', lineHeight: '1.6' }}>
                   {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].spidey}
                 </p>
-                <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: '1px dashed rgba(56, 189, 248, 0.3)', fontSize: '0.82rem', color: '#FACC15', fontStyle: 'italic' }}>
+                <div style={{ marginTop: '12px', paddingTop: '8px', borderTop: '1px dashed rgba(56, 189, 248, 0.3)', fontSize: '0.82rem', color: '#FACC15', fontStyle: 'italic' }}>
                   {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].deadpoolEnd}
                 </div>
               </div>
@@ -1291,32 +1303,41 @@ export default function Home() {
         </section>
 
         {/* Multiverse Protocol Lore Card */}
-        <section className="comic-card" style={{ padding: '32px', marginBottom: '48px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
+        <section className="comic-card" style={{ padding: '32px', marginBottom: '48px', borderLeft: '4px solid #E01B22' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '20px' }}>
             <span style={{ fontSize: '1.8rem' }}>🕷️</span>
             <div>
-              <h3 style={{ fontSize: '1.3rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
+              <h3 style={{ fontSize: '1.35rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
                 Rules of Engagement • Multiverse Protocol
               </h3>
-              <span style={{ fontSize: '0.8rem', color: '#FF4D4D' }}>FAIR PLAY &amp; PROTOCOLS STRICTLY ENFORCED</span>
+              <span style={{ fontSize: '0.78rem', color: '#FF4D4D', fontWeight: 'bold', letterSpacing: '1px' }}>FAIR PLAY &amp; PROTOCOLS STRICTLY ENFORCED</span>
             </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px', fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
-              <strong style={{ color: '#FFF' }}>1. Automated Stage 0 &amp; 1:</strong>
+            <div style={{ background: 'rgba(255,255,255,0.025)', padding: '18px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                <span style={{ background: '#E01B22', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>01</span>
+                <strong style={{ color: '#FFF' }}>Automated Scoring Matrix:</strong>
+              </div>
               <p style={{ marginTop: '4px' }}>
                 Quiz (30 questions, strictly 30 min timer) and Round 1 (10 pixels, 40s each) calculate scores automatically with instant leaderboard broadcast.
               </p>
             </div>
-            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
-              <strong style={{ color: '#FFF' }}>2. Silent Invigilation:</strong>
+            <div style={{ background: 'rgba(255,255,255,0.025)', padding: '18px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                <span style={{ background: '#38BDF8', color: '#000', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>02</span>
+                <strong style={{ color: '#FFF' }}>Silent Invigilation:</strong>
+              </div>
               <p style={{ marginTop: '4px' }}>
                 During Stage 0, participant webcams capture snapshots to ensure honest testing. The organizer console monitors all feeds in real time.
               </p>
             </div>
-            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
-              <strong style={{ color: '#FFF' }}>3. Stage Timers Are Absolute:</strong>
+            <div style={{ background: 'rgba(255,255,255,0.025)', padding: '18px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                <span style={{ background: '#FACC15', color: '#000', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>03</span>
+                <strong style={{ color: '#FFF' }}>Stage Timers Are Absolute:</strong>
+              </div>
               <p style={{ marginTop: '4px' }}>
                 When the timer expires, answers lock and submit automatically. Stay focused and keep an eye on the cyber timer!
               </p>
@@ -1499,12 +1520,12 @@ export default function Home() {
           onClick={() => setIsDeadpoolChatOpen(prev => !prev)}
         >
           <div style={{
-            width: '64px',
-            height: '64px',
+            width: '44px',
+            height: '44px',
             borderRadius: '50%',
             background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #7F1D1D 100%)',
-            border: '2.5px solid #E23636',
-            boxShadow: '0 8px 24px rgba(226, 54, 54, 0.7), 0 0 16px rgba(0, 0, 0, 0.8)',
+            border: '2px solid #E23636',
+            boxShadow: '0 4px 16px rgba(226, 54, 54, 0.7), 0 0 10px rgba(0, 0, 0, 0.8)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1684,9 +1705,9 @@ export default function Home() {
           {/* Spider-Sense Radiating Aura */}
           <div className="spider-sense-active" style={{
             position: 'absolute',
-            top: '-18px',
-            width: '60px',
-            height: '30px',
+            top: '-14px',
+            width: '46px',
+            height: '23px',
             pointerEvents: 'none'
           }}>
             <svg viewBox="0 0 60 30" fill="none">
@@ -1697,12 +1718,12 @@ export default function Home() {
 
           {/* Spider-Man Hanging Circle Avatar */}
           <div className="spidey-floating" style={{
-            width: '64px',
-            height: '64px',
+            width: '44px',
+            height: '44px',
             borderRadius: '50%',
             background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #7F1D1D 100%)',
             border: '2px solid #E01B22',
-            boxShadow: '0 8px 24px rgba(224, 27, 34, 0.6), 0 0 16px rgba(250, 204, 21, 0.3)',
+            boxShadow: '0 4px 16px rgba(224, 27, 34, 0.6), 0 0 10px rgba(250, 204, 21, 0.3)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

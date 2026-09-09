@@ -3,13 +3,18 @@ package com.pixelparadox.controller;
 import com.pixelparadox.model.QuizAttempt;
 import com.pixelparadox.model.Submission;
 import com.pixelparadox.model.User;
+import com.pixelparadox.model.WebcamRecording;
 import com.pixelparadox.repository.QuizAttemptRepository;
 import com.pixelparadox.repository.SubmissionRepository;
 import com.pixelparadox.repository.UserRepository;
+import com.pixelparadox.repository.WebcamRecordingRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,13 +29,16 @@ public class AdminTeamController {
     private final UserRepository userRepository;
     private final SubmissionRepository submissionRepository;
     private final QuizAttemptRepository quizAttemptRepository;
+    private final WebcamRecordingRepository webcamRecordingRepository;
 
     public AdminTeamController(UserRepository userRepository, 
                                SubmissionRepository submissionRepository,
-                               QuizAttemptRepository quizAttemptRepository) {
+                               QuizAttemptRepository quizAttemptRepository,
+                               WebcamRecordingRepository webcamRecordingRepository) {
         this.userRepository = userRepository;
         this.submissionRepository = submissionRepository;
         this.quizAttemptRepository = quizAttemptRepository;
+        this.webcamRecordingRepository = webcamRecordingRepository;
     }
 
     @GetMapping("/teams")
@@ -78,7 +86,24 @@ public class AdminTeamController {
             quizAttemptRepository.flush();
         }
 
-        // Step 3: Now safely delete the user
+        // Step 3: Delete webcam recordings and physical files for this team
+        if (user.getTeamId() != null) {
+            List<WebcamRecording> recordings = webcamRecordingRepository.findByTeamId(user.getTeamId());
+            for (WebcamRecording rec : recordings) {
+                String url = rec.getVideoUrl();
+                if (url != null && url.startsWith("/uploads/videos/")) {
+                    try {
+                        Files.deleteIfExists(Paths.get(url.substring(1)));
+                    } catch (IOException ignored) {}
+                }
+            }
+            if (!recordings.isEmpty()) {
+                webcamRecordingRepository.deleteAll(recordings);
+                webcamRecordingRepository.flush();
+            }
+        }
+
+        // Step 4: Now safely delete the user
         userRepository.delete(user);
 
         return ResponseEntity.ok(Map.of("message", "Team deleted successfully."));
@@ -99,8 +124,26 @@ public class AdminTeamController {
         if ("ROLE_ADMIN".equals(user.getRole()))
             return ResponseEntity.badRequest().body(Map.of("message", "Cannot edit admin accounts."));
 
-        if (request.teamName() != null && !request.teamName().isBlank()) user.setTeamName(request.teamName());
-        if (request.teamId() != null && !request.teamId().isBlank()) user.setTeamId(request.teamId());
+        if (request.teamName() != null && !request.teamName().isBlank()) {
+            String newName = request.teamName().trim();
+            if (!newName.equalsIgnoreCase(user.getTeamName())) {
+                if (userRepository.findByTeamName(newName).isPresent()) {
+                    return ResponseEntity.badRequest().body(Map.of("message", "Team name '" + newName + "' is already in use by another team."));
+                }
+                user.setTeamName(newName);
+            }
+        }
+
+        if (request.teamId() != null && !request.teamId().isBlank()) {
+            String newId = request.teamId().trim();
+            if (!newId.equalsIgnoreCase(user.getTeamId())) {
+                if (userRepository.findByTeamId(newId).isPresent()) {
+                    return ResponseEntity.badRequest().body(Map.of("message", "Team ID '" + newId + "' is already in use by another team."));
+                }
+                user.setTeamId(newId);
+            }
+        }
+
         if (request.teamSize() != null && request.teamSize() >= 2 && request.teamSize() <= 4) {
             user.setTeamSize(request.teamSize());
         }

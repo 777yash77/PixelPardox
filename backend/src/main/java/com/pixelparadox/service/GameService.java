@@ -14,9 +14,14 @@ import com.pixelparadox.model.QuizQuestion;
 import com.pixelparadox.model.QuizAttempt;
 import com.pixelparadox.repository.QuizQuestionRepository;
 import com.pixelparadox.repository.QuizAttemptRepository;
+import com.pixelparadox.model.WebcamRecording;
+import com.pixelparadox.repository.WebcamRecordingRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +36,7 @@ public class GameService {
     private final UserRepository userRepository;
     private final QuizQuestionRepository quizQuestionRepository;
     private final QuizAttemptRepository quizAttemptRepository;
+    private final WebcamRecordingRepository webcamRecordingRepository;
     private final GameWebSocketHandler gameWebSocketHandler;
     private final ObjectMapper objectMapper;
 
@@ -40,6 +46,7 @@ public class GameService {
                        UserRepository userRepository,
                        QuizQuestionRepository quizQuestionRepository,
                        QuizAttemptRepository quizAttemptRepository,
+                       WebcamRecordingRepository webcamRecordingRepository,
                        GameWebSocketHandler gameWebSocketHandler,
                        ObjectMapper objectMapper) {
         this.gameStateRepository = gameStateRepository;
@@ -48,6 +55,7 @@ public class GameService {
         this.userRepository = userRepository;
         this.quizQuestionRepository = quizQuestionRepository;
         this.quizAttemptRepository = quizAttemptRepository;
+        this.webcamRecordingRepository = webcamRecordingRepository;
         this.gameWebSocketHandler = gameWebSocketHandler;
         this.objectMapper = objectMapper;
     }
@@ -341,11 +349,29 @@ public class GameService {
         // Reset Quiz Attempts
         quizAttemptRepository.deleteAll();
 
+        // Reset Webcam Recordings and physical video files
+        List<WebcamRecording> recordings = webcamRecordingRepository.findAll();
+        for (WebcamRecording rec : recordings) {
+            String url = rec.getVideoUrl();
+            if (url != null && url.startsWith("/uploads/videos/")) {
+                try {
+                    Files.deleteIfExists(Paths.get(url.substring(1)));
+                } catch (IOException ignored) {}
+            }
+        }
+        webcamRecordingRepository.deleteAll();
+
         broadcastGameState(state);
         broadcastLeaderboard();
     }
 
     // PRELIMS LOGIC
+
+    public Optional<QuizAttempt> getQuizAttempt(String email, String participantName) {
+        Optional<User> team = userRepository.findByTeamId(email);
+        if (team.isEmpty()) return Optional.empty();
+        return quizAttemptRepository.findByTeamIdAndParticipantName(team.get().getId(), participantName);
+    }
 
     public List<QuizQuestion> getQuizQuestions() {
         return quizQuestionRepository.findAllByOrderByOrderNumAsc();

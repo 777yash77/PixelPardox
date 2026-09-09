@@ -5,6 +5,7 @@ import com.pixelparadox.model.ImageQuestion;
 import com.pixelparadox.model.Submission;
 import com.pixelparadox.model.User;
 import com.pixelparadox.repository.ImageQuestionRepository;
+import com.pixelparadox.repository.SubmissionRepository;
 import com.pixelparadox.repository.UserRepository;
 import com.pixelparadox.repository.WebcamRecordingRepository;
 import com.pixelparadox.model.WebcamRecording;
@@ -35,15 +36,18 @@ public class GameController {
     private final ImageQuestionRepository imageQuestionRepository;
     private final UserRepository userRepository;
     private final WebcamRecordingRepository webcamRecordingRepository;
+    private final SubmissionRepository submissionRepository;
 
     public GameController(GameService gameService,
                           ImageQuestionRepository imageQuestionRepository,
                           UserRepository userRepository,
-                          WebcamRecordingRepository webcamRecordingRepository) {
+                          WebcamRecordingRepository webcamRecordingRepository,
+                          SubmissionRepository submissionRepository) {
         this.gameService = gameService;
         this.imageQuestionRepository = imageQuestionRepository;
         this.userRepository = userRepository;
         this.webcamRecordingRepository = webcamRecordingRepository;
+        this.submissionRepository = submissionRepository;
     }
 
     // Request Records
@@ -169,9 +173,27 @@ public class GameController {
     public ResponseEntity<?> deleteImage(@PathVariable Long id) {
         return imageQuestionRepository.findById(id)
                 .map(question -> {
-                    // Try to delete physical file
+                    // Step 1: Cascade delete any submissions referencing this question to prevent FK violation
+                    List<Submission> submissions = submissionRepository.findByImageQuestionId(id);
+                    if (!submissions.isEmpty()) {
+                        submissionRepository.deleteAll(submissions);
+                        submissionRepository.flush();
+                    }
+
+                    // Step 2: If this question is active in GameState, reset activeQuestionId
+                    GameState currentState = gameService.getOrCreateGameState();
+                    if (currentState != null && id.equals(currentState.getActiveQuestionId())) {
+                        gameService.updateGameState(
+                                currentState.getActiveRound(),
+                                null,
+                                currentState.getTimerDuration(),
+                                currentState.getZoomLevel()
+                        );
+                    }
+
+                    // Step 3: Try to delete physical file
                     String fileUrl = question.getImageUrl();
-                    if (fileUrl.startsWith("/uploads/")) {
+                    if (fileUrl != null && fileUrl.startsWith("/uploads/")) {
                         String filePath = fileUrl.substring(1); // removes leading slash
                         try {
                             Files.deleteIfExists(Paths.get(filePath));
@@ -179,6 +201,8 @@ public class GameController {
                             // Log warning
                         }
                     }
+
+                    // Step 4: Delete the question entity
                     imageQuestionRepository.delete(question);
                     return ResponseEntity.ok(Map.of("message", "Question deleted successfully"));
                 })
@@ -260,6 +284,14 @@ public class GameController {
             return safe;
         }).toList();
         return ResponseEntity.ok(questions);
+    }
+
+    @GetMapping("/prelims/attempt")
+    public ResponseEntity<?> getQuizAttempt(@RequestParam String participantName) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return gameService.getQuizAttempt(email, participantName)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/prelims/start")

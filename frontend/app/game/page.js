@@ -91,6 +91,8 @@ export default function GameArena() {
   const [activeClue, setActiveClue] = useState(null)
   const [isDeadpoolChatOpen, setIsDeadpoolChatOpen] = useState(false)
   const [isSpideyChatOpen, setIsSpideyChatOpen] = useState(false)
+  const [isDeadpoolCollapsed, setIsDeadpoolCollapsed] = useState(false)
+  const [isSpideyCollapsed, setIsSpideyCollapsed] = useState(false)
   const [spideyQuoteIdx, setSpideyQuoteIdx] = useState(0)
   const [deadpoolQuoteIdx, setDeadpoolQuoteIdx] = useState(0)
   const [isDeadpoolTyping, setIsDeadpoolTyping] = useState(false)
@@ -217,6 +219,7 @@ export default function GameArena() {
     fetchQuestions(storedToken)
     fetchPrelimQuestions(storedToken)
     fetchLeaderboard()
+    checkPrelimAttempt(storedToken, storedParticipant)
 
     // Start Webcam
     startWebcam()
@@ -323,10 +326,48 @@ export default function GameArena() {
         const profile = data.find(u => u.teamId === teamId)
         if (profile) {
           setTeam(profile)
+        } else {
+          const storedTeamName = localStorage.getItem('teamName') || ''
+          setTeam(prev => ({
+            ...prev,
+            teamId: teamId || prev.teamId,
+            teamName: storedTeamName || prev.teamName
+          }))
         }
       }
     } catch (e) {
       console.error(e)
+    }
+  }
+
+  const checkPrelimAttempt = async (tok, pName) => {
+    if (!tok || !pName || pName === 'Unknown') return
+    try {
+      const res = await fetch(`http://localhost:8080/api/game/prelims/attempt?participantName=${encodeURIComponent(pName)}`, {
+        headers: { 'Authorization': `Bearer ${tok}` }
+      })
+      if (res.ok) {
+        const attempt = await res.json()
+        if (attempt.status === 'COMPLETED') {
+          setPrelimStatus('COMPLETED')
+          localStorage.removeItem('prelimStartTime_' + pName)
+          localStorage.removeItem('prelimAnswers_' + pName)
+          localStorage.removeItem('prelimFlagged_' + pName)
+          localStorage.removeItem('prelimIdx_' + pName)
+        } else if (attempt.status === 'IN_PROGRESS' && attempt.startedAt) {
+          const elapsed = Math.floor((Date.now() - attempt.startedAt) / 1000)
+          if (elapsed < 1800) {
+            setPrelimTimeLeft(1800 - elapsed)
+            setPrelimStatus('IN_PROGRESS')
+            localStorage.setItem('prelimStartTime_' + pName, attempt.startedAt.toString())
+          } else {
+            setPrelimTimeLeft(0)
+            setPrelimStatus('COMPLETED')
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Failed to check prelim attempt', e)
     }
   }
 
@@ -503,6 +544,14 @@ export default function GameArena() {
       })
       if (res.ok) {
         const attempt = await res.json()
+        if (attempt.status === 'COMPLETED') {
+          setPrelimStatus('COMPLETED')
+          localStorage.removeItem('prelimStartTime_' + participantName)
+          localStorage.removeItem('prelimAnswers_' + participantName)
+          localStorage.removeItem('prelimFlagged_' + participantName)
+          localStorage.removeItem('prelimIdx_' + participantName)
+          return
+        }
         const startEpoch = attempt.startedAt || Date.now()
         localStorage.setItem('prelimStartTime_' + participantName, startEpoch.toString())
         const elapsed = Math.floor((Date.now() - startEpoch) / 1000)
@@ -586,6 +635,11 @@ export default function GameArena() {
       } else if (e.key === 'f' || e.key === 'F') {
         e.preventDefault()
         if (currentQ) handleToggleFlag(currentQ.id)
+      } else if (e.key === '^' || (e.shiftKey && e.key === '6') || e.key === 'h' || e.key === 'H') {
+        e.preventDefault()
+        const shouldHide = !isDeadpoolCollapsed || !isSpideyCollapsed
+        setIsDeadpoolCollapsed(shouldHide)
+        setIsSpideyCollapsed(shouldHide)
       } else if (currentQ) {
         if (e.key === '1' || e.key === 'a' || e.key === 'A') {
           e.preventDefault()
@@ -605,7 +659,7 @@ export default function GameArena() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [gameState.activeRound, prelimStatus, prelimQuestions, currentPrelimIdx, showAcknowledgeModal, showConfirmSubmitModal, participantName])
+  }, [gameState.activeRound, prelimStatus, prelimQuestions, currentPrelimIdx, showAcknowledgeModal, showConfirmSubmitModal, participantName, isDeadpoolCollapsed, isSpideyCollapsed])
 
   const handlePrelimSubmit = async () => {
     setShowConfirmSubmitModal(false)
@@ -890,7 +944,7 @@ export default function GameArena() {
       </nav>
 
       {/* Main Container */}
-      <main className="container" style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr', paddingBottom: '60px' }}>
+      <main className={`container ${gameState.activeRound === 1 ? 'quiz-container-wide' : ''}`} style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr', paddingBottom: '60px' }}>
         
         {/* ELIMINATED VIEW */}
         {team.isEliminated ? (
@@ -914,7 +968,7 @@ export default function GameArena() {
           </div>
         ) : (
           /* GAME STATE VIEWS */
-          <div style={{ maxWidth: '1100px', margin: '0 auto', width: '100%' }}>
+          <div style={{ maxWidth: gameState.activeRound === 1 ? '1560px' : '1100px', margin: '0 auto', width: '100%', transition: 'max-width 0.3s ease' }}>
             
             {/* ROUND 0: WAITING IN LOBBY */}
             {gameState.activeRound === 0 && (
@@ -1153,76 +1207,95 @@ export default function GameArena() {
                             return (
                               <div className="stagger-fade-in" key={q.id} style={{ animationDuration: '0.25s' }}>
                                 {/* Question Header & Status */}
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
                                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                                     <span style={{
                                       background: isAnswered ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255, 255, 255, 0.06)',
                                       color: isAnswered ? '#4ADE80' : '#FFF',
-                                      fontSize: '0.78rem',
+                                      fontSize: '0.82rem',
                                       fontWeight: '800',
-                                      padding: '5px 14px',
-                                      borderRadius: '6px',
-                                      border: `1px solid ${isAnswered ? '#4ADE80' : 'rgba(255,255,255,0.18)'}`,
-                                      letterSpacing: '0.5px'
+                                      padding: '6px 16px',
+                                      borderRadius: '8px',
+                                      border: `1.5px solid ${isAnswered ? '#4ADE80' : 'rgba(255,255,255,0.18)'}`,
+                                      letterSpacing: '0.6px'
                                     }}>
                                       QUESTION {safeIdx + 1} OF {totalQuestions}
                                     </span>
                                     {isAnswered && (
-                                      <span style={{ fontSize: '0.8rem', color: '#4ADE80', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                      <span style={{ fontSize: '0.82rem', color: '#4ADE80', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
                                         ✓ Answered
                                       </span>
                                     )}
                                     {isFlagged && (
-                                      <span style={{ fontSize: '0.8rem', color: '#FACC15', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                      <span style={{ fontSize: '0.82rem', color: '#FACC15', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
                                         🚩 Flagged for Review
                                       </span>
                                     )}
                                     {!isAnswered && !isFlagged && (
-                                      <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>○ Not answered</span>
+                                      <span style={{ fontSize: '0.82rem', color: 'var(--text-dim)' }}>○ Not answered</span>
                                     )}
                                   </div>
 
-                                  {/* Flag / Unflag Button */}
-                                  <button
-                                    type="button"
-                                    onClick={() => handleToggleFlag(q.id)}
-                                    style={{
-                                      background: isFlagged ? 'rgba(250,204,21,0.18)' : 'rgba(255,255,255,0.05)',
-                                      border: `1.5px solid ${isFlagged ? '#FACC15' : 'rgba(255,255,255,0.14)'}`,
-                                      color: isFlagged ? '#FACC15' : 'var(--text-secondary)',
-                                      padding: '6px 14px',
-                                      borderRadius: '6px',
-                                      fontSize: '0.8rem',
-                                      fontWeight: 'bold',
-                                      cursor: 'pointer',
-                                      transition: 'all 0.2s ease',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      gap: '6px',
-                                      boxShadow: isFlagged ? '0 0 12px rgba(250,204,21,0.35)' : 'none'
-                                    }}
-                                    title="Shortcut: Press 'F' to toggle flag"
-                                  >
-                                    {isFlagged ? '🚩 Flagged (Press F)' : '🏳️ Flag for Review (F)'}
-                                  </button>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                                    {/* Quick Bot Toggle Button */}
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const shouldHide = !isDeadpoolCollapsed || !isSpideyCollapsed
+                                        setIsDeadpoolCollapsed(shouldHide)
+                                        setIsSpideyCollapsed(shouldHide)
+                                      }}
+                                      className={`quiz-bot-toggle-btn ${(!isDeadpoolCollapsed || !isSpideyCollapsed) ? '' : 'bots-hidden'}`}
+                                      title="Toggle AI Coach Bots on/off (Hotkey: ^ or H)"
+                                    >
+                                      <span style={{ fontSize: '0.95rem', fontWeight: '900', lineHeight: 1 }}>
+                                        {(!isDeadpoolCollapsed || !isSpideyCollapsed) ? '⌵' : '^'}
+                                      </span>
+                                      <span>{(!isDeadpoolCollapsed || !isSpideyCollapsed) ? 'Hide Bots' : 'Pop Up Bots (^)'}</span>
+                                    </button>
+
+                                    {/* Flag / Unflag Button */}
+                                    <button
+                                      type="button"
+                                      onClick={() => handleToggleFlag(q.id)}
+                                      style={{
+                                        background: isFlagged ? 'rgba(250,204,21,0.18)' : 'rgba(255,255,255,0.05)',
+                                        border: `1.5px solid ${isFlagged ? '#FACC15' : 'rgba(255,255,255,0.14)'}`,
+                                        color: isFlagged ? '#FACC15' : 'var(--text-secondary)',
+                                        padding: '6px 14px',
+                                        borderRadius: '6px',
+                                        fontSize: '0.8rem',
+                                        fontWeight: 'bold',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s ease',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '6px',
+                                        boxShadow: isFlagged ? '0 0 12px rgba(250,204,21,0.35)' : 'none'
+                                      }}
+                                      title="Shortcut: Press 'F' to toggle flag"
+                                    >
+                                      {isFlagged ? '🚩 Flagged (Press F)' : '🏳️ Flag for Review (F)'}
+                                    </button>
+                                  </div>
                                 </div>
 
                                 {/* Question Text Card */}
                                 <div style={{
-                                  background: 'linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)',
-                                  border: '1.5px solid rgba(255, 255, 255, 0.09)',
+                                  background: 'linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.015) 100%)',
+                                  border: '1.5px solid rgba(255, 255, 255, 0.1)',
                                   borderRadius: '12px',
-                                  padding: '22px 24px',
-                                  marginBottom: '18px',
+                                  padding: '24px 28px',
+                                  marginBottom: '20px',
                                   boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
                                 }}>
-                                  <p style={{ fontWeight: '600', fontSize: '1.08rem', color: 'var(--text-white)', lineHeight: '1.65', margin: 0 }}>
+                                  <p style={{ fontWeight: '600', fontSize: '1.14rem', color: 'var(--text-white)', lineHeight: '1.7', margin: 0 }}>
                                     {q.questionText}
                                   </p>
                                 </div>
 
-                                {/* Options */}
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '11px', marginBottom: '22px' }}>
+                                {/* Options in Responsive 2-Column Grid */}
+                                <div className="quiz-options-grid">
                                   {['optionA', 'optionB', 'optionC', 'optionD'].map((opt, optIdx) => {
                                     const letter = ['A', 'B', 'C', 'D'][optIdx]
                                     const isSelected = prelimAnswers[q.id] === q[opt]
@@ -1239,8 +1312,8 @@ export default function GameArena() {
                                         </div>
                                         <span style={{
                                           color: isSelected ? '#FFF' : 'var(--text-primary)',
-                                          fontSize: '0.94rem',
-                                          lineHeight: '1.45',
+                                          fontSize: '0.96rem',
+                                          lineHeight: '1.5',
                                           fontWeight: isSelected ? '700' : 'normal'
                                         }}>
                                           {q[opt]}
@@ -1334,8 +1407,8 @@ export default function GameArena() {
                                 </div>
 
                                 {/* Hotkey reminder */}
-                                <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textAlign: 'center', marginTop: '14px', letterSpacing: '0.4px' }}>
-                                  💡 Hotkeys: <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>←</kbd> <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>→</kbd> to Navigate • <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>1-4</kbd> / <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>A-D</kbd> to Select • <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>F</kbd> to Flag
+                                <div style={{ fontSize: '0.74rem', color: 'var(--text-dim)', textAlign: 'center', marginTop: '16px', letterSpacing: '0.4px' }}>
+                                  💡 Hotkeys: <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>←</kbd> <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>→</kbd> to Navigate • <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>1-4</kbd> / <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>A-D</kbd> to Select • <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>F</kbd> to Flag • <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>^</kbd> or <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>H</kbd> to Toggle Bots
                                 </div>
                               </div>
                             )
@@ -1571,7 +1644,7 @@ export default function GameArena() {
                     {/* Image Viewport with Cyber Forensics Frame */}
                     {currentQuestion && (
                       <div className="flex-center" style={{ marginBottom: '24px' }}>
-                        <div className="image-viewport-frame" style={{ width: '100%', maxWidth: '640px' }}>
+                        <div className="image-viewport-frame" style={{ width: '100%', maxWidth: '768px' }}>
                           <div className="hud-corner-tl" />
                           <div className="hud-corner-tr" />
                           <div className="hud-corner-bl" />
@@ -1602,7 +1675,7 @@ export default function GameArena() {
 
                           {currentQuestion.imageUrl ? (
                             gameState.activeRound === 4 ? (
-                              <div style={{ width: '100%', height: '360px', overflow: 'hidden', position: 'relative' }}>
+                              <div style={{ width: '100%', height: '432px', overflow: 'hidden', position: 'relative' }}>
                                 <img 
                                   src={`http://localhost:8080${currentQuestion.imageUrl}`} 
                                   alt="zoomed" 
@@ -1617,16 +1690,16 @@ export default function GameArena() {
                                 />
                               </div>
                             ) : (
-                              <div style={{ width: '100%', background: '#070405', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '300px' }}>
+                              <div style={{ width: '100%', background: '#070405', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '360px' }}>
                                 <img 
                                   src={`http://localhost:8080${currentQuestion.imageUrl}`} 
                                   alt="quiz visual" 
-                                  style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '420px', objectFit: 'contain' }}
+                                  style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '504px', objectFit: 'contain' }}
                                 />
                               </div>
                             )
                           ) : (
-                            <div style={{ width: '100%', minHeight: '260px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '10px', color: 'var(--text-secondary)' }}>
+                            <div style={{ width: '100%', minHeight: '312px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '10px', color: 'var(--text-secondary)' }}>
                               <span className="pulse-dot" style={{ width: '12px', height: '12px', background: '#E01B22' }} />
                               <span style={{ fontSize: '0.85rem', letterSpacing: '1px', textTransform: 'uppercase' }}>Acquiring Visual Uplink...</span>
                             </div>
@@ -1927,333 +2000,410 @@ export default function GameArena() {
       {/* ========================================================= */}
       {/* LEFT SIDE: DEADPOOL MERC-BOT COMPANION IN GAME ARENA */}
       {/* ========================================================= */}
-      <div className="sticky-deadpool-bar">
-        {isDeadpoolChatOpen ? (
-          <div className="deadpool-chat-window">
-            <div style={{ background: 'linear-gradient(135deg, #E23636 0%, #850B12 100%)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#FFF', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <svg viewBox="0 0 64 64" style={{ width: '90%', height: '90%' }}>
-                    <circle cx="32" cy="32" r="28" fill="#C51B24" />
-                    <ellipse cx="20" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(8 20 32)" />
-                    <ellipse cx="44" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(-8 44 32)" />
-                    <path d="M15,31 Q20,29 25,32 Q20,35 15,31 Z" fill="#FFFFFF" />
-                    <path d="M49,31 Q44,29 39,32 Q44,35 49,31 Z" fill="#FFFFFF" />
-                  </svg>
+      {isDeadpoolCollapsed ? (
+        <button
+          type="button"
+          className="bot-dock-tab deadpool-dock"
+          onClick={() => setIsDeadpoolCollapsed(false)}
+          title="Click ^ to pop up Deadpool Coach"
+        >
+          <span className="dock-chevron">^</span>
+          <span>🌮 Deadpool Coach</span>
+        </button>
+      ) : (
+        <div className="sticky-deadpool-bar">
+          {isDeadpoolChatOpen ? (
+            <div className="deadpool-chat-window">
+              <div style={{ background: 'linear-gradient(135deg, #E23636 0%, #850B12 100%)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#FFF', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg viewBox="0 0 64 64" style={{ width: '90%', height: '90%' }}>
+                      <circle cx="32" cy="32" r="28" fill="#C51B24" />
+                      <ellipse cx="20" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(8 20 32)" />
+                      <ellipse cx="44" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(-8 44 32)" />
+                      <path d="M15,31 Q20,29 25,32 Q20,35 15,31 Z" fill="#FFFFFF" />
+                      <path d="M49,31 Q44,29 39,32 Q44,35 49,31 Z" fill="#FFFFFF" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Deadpool's Arena Coach</div>
+                    <div style={{ fontSize: '0.7rem', color: '#FACC15' }}>● Clue Provider &amp; Hype Man</div>
+                  </div>
                 </div>
-                <div>
-                  <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Deadpool's Arena Coach</div>
-                  <div style={{ fontSize: '0.7rem', color: '#FACC15' }}>● Clue Provider &amp; Hype Man</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setIsDeadpoolCollapsed(true)}
+                    className="bot-collapse-btn deadpool-btn"
+                    title="Hide Wade (^ to pop back up)"
+                  >
+                    ^ Hide
+                  </button>
+                  <button 
+                    onClick={() => setIsDeadpoolChatOpen(false)}
+                    style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '1.2rem', cursor: 'pointer', padding: '4px' }}
+                    title="Close Chat"
+                  >
+                    ✕
+                  </button>
                 </div>
               </div>
-              <button 
-                onClick={() => setIsDeadpoolChatOpen(false)}
-                style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '1.2rem', cursor: 'pointer', padding: '4px' }}
-              >
-                ✕
-              </button>
-            </div>
 
-            <div style={{ padding: '14px', maxHeight: '250px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-              {deadpoolMessages.map((msg, idx) => (
-                <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-bot'}>
-                  <div style={{ fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '2px', color: msg.sender === 'user' ? '#FFF' : '#FF4D4D' }}>
-                    {msg.sender === 'user' ? 'You' : 'Deadpool'}
+              <div style={{ padding: '14px', maxHeight: '250px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+                {deadpoolMessages.map((msg, idx) => (
+                  <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-bot'}>
+                    <div style={{ fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '2px', color: msg.sender === 'user' ? '#FFF' : '#FF4D4D' }}>
+                      {msg.sender === 'user' ? 'You' : 'Deadpool'}
+                    </div>
+                    <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
                   </div>
-                  <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
-                </div>
-              ))}
-              {isDeadpoolTyping && (
-                <div className="chat-bubble-bot" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ fontSize: '0.75rem', color: '#FF4D4D', fontWeight: 'bold' }}>Deadpool is crafting a clue</span>
-                  <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
-                </div>
-              )}
-              <div ref={deadpoolChatBottomRef} />
-            </div>
+                ))}
+                {isDeadpoolTyping && (
+                  <div className="chat-bubble-bot" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '0.75rem', color: '#FF4D4D', fontWeight: 'bold' }}>Deadpool is crafting a clue</span>
+                    <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
+                  </div>
+                )}
+                <div ref={deadpoolChatBottomRef} />
+              </div>
 
-            <div style={{ padding: '8px 12px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <button 
+              <div style={{ padding: '8px 12px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <button 
+                  type="button"
+                  onClick={() => handleGetClue('deadpool')}
+                  className="clue-btn-deadpool"
+                  style={{ width: '100%', justifyContent: 'center', padding: '8px 12px', fontSize: '0.8rem' }}
+                >
+                  🌮 Reveal Active Clue for this Round!
+                </button>
+              </div>
+
+              <form onSubmit={handleSendDeadpoolArena} style={{ display: 'flex', padding: '10px 12px', borderTop: '1px solid rgba(255,255,255,0.08)', background: '#0A0406' }}>
+                <input 
+                  type="text"
+                  placeholder="Ask Wade anything..."
+                  value={deadpoolInput}
+                  onChange={(e) => setDeadpoolInput(e.target.value)}
+                  style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', borderRadius: '6px', padding: '8px 12px', fontSize: '0.82rem', outline: 'none' }}
+                />
+                <button 
+                  type="submit"
+                  style={{ background: '#E23636', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
+                >
+                  Send
+                </button>
+              </form>
+            </div>
+          ) : (
+            <div 
+              className="deadpool-speech card-hover-lift" 
+              onClick={() => setIsDeadpoolChatOpen(true)}
+              style={{ cursor: 'pointer' }}
+              title="Click to talk to Deadpool!"
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                <span style={{ fontSize: '0.68rem', color: '#FF4D4D', fontWeight: 'bold', letterSpacing: '0.5px' }}>🌮 DEADPOOL COACH</span>
+                <button
+                  type="button"
+                  className="bot-collapse-btn deadpool-btn"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setIsDeadpoolCollapsed(true)
+                  }}
+                  title="Hide Wade (^ to pop back up)"
+                >
+                  ^ Hide
+                </button>
+              </div>
+              {DEADPOOL_GAME_QUOTES[deadpoolQuoteIdx]}
+              <div style={{ fontSize: '0.7rem', color: '#FACC15', marginTop: '4px', textAlign: 'left' }}>
+                [Click Deadpool for Coach Clues 💬]
+              </div>
+            </div>
+          )}
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div 
+              className="deadpool-floating"
+              style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              onClick={() => setIsDeadpoolChatOpen(prev => !prev)}
+              title="Click to chat with Deadpool"
+            >
+              <div style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #7F1D1D 100%)',
+                border: '2px solid #E23636',
+                boxShadow: '0 4px 16px rgba(226, 54, 54, 0.7), 0 0 10px rgba(0, 0, 0, 0.8)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden'
+              }}>
+                <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
+                  <circle cx="32" cy="32" r="28" fill="#C51B24" />
+                  <ellipse cx="20" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(8 20 32)" />
+                  <ellipse cx="44" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(-8 44 32)" />
+                  <path d="M15,31 Q20,29 25,32 Q20,35 15,31 Z" fill="#FFFFFF" />
+                  <path d="M49,31 Q44,29 39,32 Q44,35 49,31 Z" fill="#FFFFFF" />
+                </svg>
+              </div>
+            </div>
+            {!isDeadpoolChatOpen && (
+              <button
                 type="button"
-                onClick={() => handleGetClue('deadpool')}
-                className="clue-btn-deadpool"
-                style={{ width: '100%', justifyContent: 'center', padding: '8px 12px', fontSize: '0.8rem' }}
+                className="bot-collapse-btn deadpool-btn"
+                onClick={() => setIsDeadpoolCollapsed(true)}
+                title="Hide Wade (^ to pop back up)"
+                style={{ height: 'fit-content' }}
               >
-                🌮 Reveal Active Clue for this Round!
+                ^ Hide
               </button>
-            </div>
-
-            <form onSubmit={handleSendDeadpoolArena} style={{ display: 'flex', padding: '10px 12px', borderTop: '1px solid rgba(255,255,255,0.08)', background: '#0A0406' }}>
-              <input 
-                type="text"
-                placeholder="Ask Wade anything..."
-                value={deadpoolInput}
-                onChange={(e) => setDeadpoolInput(e.target.value)}
-                style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', borderRadius: '6px', padding: '8px 12px', fontSize: '0.82rem', outline: 'none' }}
-              />
-              <button 
-                type="submit"
-                style={{ background: '#E23636', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
-              >
-                Send
-              </button>
-            </form>
-          </div>
-        ) : (
-          <div 
-            className="deadpool-speech card-hover-lift" 
-            onClick={() => setIsDeadpoolChatOpen(true)}
-            style={{ cursor: 'pointer' }}
-            title="Click to talk to Deadpool!"
-          >
-            {DEADPOOL_GAME_QUOTES[deadpoolQuoteIdx]}
-            <div style={{ fontSize: '0.7rem', color: '#FACC15', marginTop: '4px', textAlign: 'left' }}>
-              [Click Deadpool for Coach Clues 💬]
-            </div>
-          </div>
-        )}
-
-        <div 
-          className="deadpool-floating"
-          style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          onClick={() => setIsDeadpoolChatOpen(prev => !prev)}
-        >
-          <div style={{
-            width: '60px',
-            height: '60px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #7F1D1D 100%)',
-            border: '2.5px solid #E23636',
-            boxShadow: '0 8px 24px rgba(226, 54, 54, 0.7), 0 0 16px rgba(0, 0, 0, 0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflow: 'hidden'
-          }}>
-            <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
-              <circle cx="32" cy="32" r="28" fill="#C51B24" />
-              <ellipse cx="20" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(8 20 32)" />
-              <ellipse cx="44" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(-8 44 32)" />
-              <path d="M15,31 Q20,29 25,32 Q20,35 15,31 Z" fill="#FFFFFF" />
-              <path d="M49,31 Q44,29 39,32 Q44,35 49,31 Z" fill="#FFFFFF" />
-            </svg>
+            )}
           </div>
         </div>
-      </div>
+      )}
 
       {/* ========================================================= */}
       {/* RIGHT SIDE: SPIDER-MAN WEB-BOT COMPANION IN GAME ARENA */}
       {/* ========================================================= */}
-      <div className="sticky-spidey-bar">
-        {isSpideyChatOpen ? (
-          <div className="spidey-chat-window">
-            <div style={{ background: 'linear-gradient(135deg, #0284C7 0%, #1E3A8A 100%)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#D81E27', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid #FFF' }}>
-                  <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
-                    <circle cx="32" cy="32" r="30" fill="#D81E27" />
-                    <path d="M32 2 L32 62 M2 32 L62 32" stroke="#850B12" strokeWidth="1.5" />
-                    <polygon points="14,30 29,36 28,24 16,18" fill="#FFFFFF" stroke="#000" strokeWidth="2" />
-                    <polygon points="50,30 35,36 36,24 48,18" fill="#FFFFFF" stroke="#000" strokeWidth="2" />
-                  </svg>
+      {isSpideyCollapsed ? (
+        <button
+          type="button"
+          className="bot-dock-tab spidey-dock"
+          onClick={() => setIsSpideyCollapsed(false)}
+          title="Click ^ to pop up Spider-Man Intel"
+        >
+          <span>🕸️ Spider-Man</span>
+          <span className="dock-chevron">^</span>
+        </button>
+      ) : (
+        <div className="sticky-spidey-bar">
+          {isSpideyChatOpen ? (
+            <div className="spidey-chat-window">
+              <div style={{ background: 'linear-gradient(135deg, #0284C7 0%, #1E3A8A 100%)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#D81E27', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid #FFF' }}>
+                    <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
+                      <circle cx="32" cy="32" r="30" fill="#D81E27" />
+                      <path d="M32 2 L32 62 M2 32 L62 32" stroke="#850B12" strokeWidth="1.5" />
+                      <polygon points="14,30 29,36 28,24 16,18" fill="#FFFFFF" stroke="#000" strokeWidth="2" />
+                      <polygon points="50,30 35,36 36,24 48,18" fill="#FFFFFF" stroke="#000" strokeWidth="2" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Spidey's Forensic Web-Bot</div>
+                    <div style={{ fontSize: '0.7rem', color: '#38BDF8' }}>● Tactical Intel &amp; Science</div>
+                  </div>
                 </div>
-                <div>
-                  <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Spidey's Forensic Web-Bot</div>
-                  <div style={{ fontSize: '0.7rem', color: '#38BDF8' }}>● Tactical Intel &amp; Science</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setIsSpideyCollapsed(true)}
+                    className="bot-collapse-btn spidey-btn"
+                    title="Hide Spidey (^ to pop back up)"
+                  >
+                    ^ Hide
+                  </button>
+                  <button 
+                    onClick={() => setIsSpideyChatOpen(false)}
+                    style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '1.2rem', cursor: 'pointer', padding: '4px' }}
+                    title="Close Chat"
+                  >
+                    ✕
+                  </button>
                 </div>
               </div>
-              <button 
-                onClick={() => setIsSpideyChatOpen(false)}
-                style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '1.2rem', cursor: 'pointer', padding: '4px' }}
-              >
-                ✕
-              </button>
-            </div>
 
-            <div style={{ padding: '14px', maxHeight: '250px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-              {spideyMessages.map((msg, idx) => (
-                <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-spidey'}>
-                  <div style={{ fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '2px', color: msg.sender === 'user' ? '#FFF' : '#38BDF8' }}>
-                    {msg.sender === 'user' ? 'You' : 'Spider-Man'}
+              <div style={{ padding: '14px', maxHeight: '250px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+                {spideyMessages.map((msg, idx) => (
+                  <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-spidey'}>
+                    <div style={{ fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '2px', color: msg.sender === 'user' ? '#FFF' : '#38BDF8' }}>
+                      {msg.sender === 'user' ? 'You' : 'Spider-Man'}
+                    </div>
+                    <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
                   </div>
-                  <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
-                </div>
-              ))}
-              {isSpideyTyping && (
-                <div className="chat-bubble-spidey" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ fontSize: '0.75rem', color: '#38BDF8', fontWeight: 'bold' }}>Spider-Man is calculating optics</span>
-                  <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
-                </div>
-              )}
-              <div ref={spideyChatBottomRef} />
-            </div>
+                ))}
+                {isSpideyTyping && (
+                  <div className="chat-bubble-spidey" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '0.75rem', color: '#38BDF8', fontWeight: 'bold' }}>Spider-Man is calculating optics</span>
+                    <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
+                  </div>
+                )}
+                <div ref={spideyChatBottomRef} />
+              </div>
 
-            <div style={{ padding: '8px 12px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <button 
+              <div style={{ padding: '8px 12px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <button 
+                  type="button"
+                  onClick={() => handleGetClue('spidey')}
+                  className="clue-btn-spidey"
+                  style={{ width: '100%', justifyContent: 'center', padding: '8px 12px', fontSize: '0.8rem' }}
+                >
+                  🕸️ Reveal Optical Clue for this Round!
+                </button>
+              </div>
+
+              <form onSubmit={handleSendSpideyArena} style={{ display: 'flex', padding: '10px 12px', borderTop: '1px solid rgba(255,255,255,0.08)', background: '#060B12' }}>
+                <input 
+                  type="text"
+                  placeholder="Ask Spider-Man anything..."
+                  value={spideyInput}
+                  onChange={(e) => setSpideyInput(e.target.value)}
+                  style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(56,189,248,0.2)', color: '#FFF', borderRadius: '6px', padding: '8px 12px', fontSize: '0.82rem', outline: 'none' }}
+                />
+                <button 
+                  type="submit"
+                  style={{ background: '#0284C7', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
+                >
+                  Send
+                </button>
+              </form>
+            </div>
+          ) : (
+            <div 
+              className="spidey-speech card-hover-lift" 
+              onClick={() => setIsSpideyChatOpen(true)}
+              style={{ cursor: 'pointer' }}
+              title="Click to talk to Spider-Man!"
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                <button
+                  type="button"
+                  className="bot-collapse-btn spidey-btn"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setIsSpideyCollapsed(true)
+                  }}
+                  title="Hide Spidey (^ to pop back up)"
+                >
+                  ^ Hide
+                </button>
+                <span style={{ fontSize: '0.68rem', color: '#38BDF8', fontWeight: 'bold', letterSpacing: '0.5px' }}>🕸️ SPIDEY INTEL</span>
+              </div>
+              {SPIDEY_GAME_QUOTES[spideyQuoteIdx]}
+              <div style={{ fontSize: '0.7rem', color: '#FACC15', marginTop: '4px', textAlign: 'right' }}>
+                [Click Spidey for Science Clues 💬]
+              </div>
+            </div>
+          )}
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {!isSpideyChatOpen && (
+              <button
                 type="button"
-                onClick={() => handleGetClue('spidey')}
-                className="clue-btn-spidey"
-                style={{ width: '100%', justifyContent: 'center', padding: '8px 12px', fontSize: '0.8rem' }}
+                className="bot-collapse-btn spidey-btn"
+                onClick={() => setIsSpideyCollapsed(true)}
+                title="Hide Spidey (^ to pop back up)"
+                style={{ height: 'fit-content' }}
               >
-                🕸️ Reveal Optical Clue for this Round!
+                ^ Hide
               </button>
+            )}
+            <div 
+              style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              onClick={() => setIsSpideyChatOpen(prev => !prev)}
+              title="Click to chat with Spider-Man"
+            >
+              <div className="spider-sense-active" style={{
+                position: 'absolute',
+                top: '-13px',
+                width: '42px',
+                height: '21px',
+                pointerEvents: 'none'
+              }}>
+                <svg viewBox="0 0 60 30" fill="none">
+                  <path d="M12,25 Q30,2 48,25" stroke="#FACC15" strokeWidth="3" strokeLinecap="round" />
+                  <path d="M5,20 Q30,-8 55,20" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 2" />
+                </svg>
+              </div>
+
+              <div className="spidey-floating" style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #7F1D1D 100%)',
+                border: '2px solid #E01B22',
+                boxShadow: '0 4px 16px rgba(224, 27, 34, 0.6), 0 0 10px rgba(250, 204, 21, 0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden'
+              }}>
+                <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
+                  <circle cx="32" cy="32" r="30" fill="#D81E27" stroke="#180407" strokeWidth="2" />
+                  <path d="M32 2 L32 62 M2 32 L62 32 M10 10 L54 54 M10 54 L54 10" stroke="#850B12" strokeWidth="1.2" />
+                  <polygon points="14,30 29,36 28,24 16,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
+                  <polygon points="50,30 35,36 36,24 48,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
+                </svg>
+              </div>
             </div>
-
-            <form onSubmit={handleSendSpideyArena} style={{ display: 'flex', padding: '10px 12px', borderTop: '1px solid rgba(255,255,255,0.08)', background: '#060B12' }}>
-              <input 
-                type="text"
-                placeholder="Ask Spider-Man anything..."
-                value={spideyInput}
-                onChange={(e) => setSpideyInput(e.target.value)}
-                style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(56,189,248,0.2)', color: '#FFF', borderRadius: '6px', padding: '8px 12px', fontSize: '0.82rem', outline: 'none' }}
-              />
-              <button 
-                type="submit"
-                style={{ background: '#0284C7', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
-              >
-                Send
-              </button>
-            </form>
-          </div>
-        ) : (
-          <div 
-            className="spidey-speech card-hover-lift" 
-            onClick={() => setIsSpideyChatOpen(true)}
-            style={{ cursor: 'pointer' }}
-            title="Click to talk to Spider-Man!"
-          >
-            {SPIDEY_GAME_QUOTES[spideyQuoteIdx]}
-            <div style={{ fontSize: '0.7rem', color: '#FACC15', marginTop: '4px', textAlign: 'right' }}>
-              [Click Spidey for Science Clues 💬]
-            </div>
-          </div>
-        )}
-
-        <div 
-          style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          onClick={() => setIsSpideyChatOpen(prev => !prev)}
-        >
-          <div className="spider-sense-active" style={{
-            position: 'absolute',
-            top: '-16px',
-            width: '50px',
-            height: '25px',
-            pointerEvents: 'none'
-          }}>
-            <svg viewBox="0 0 60 30" fill="none">
-              <path d="M12,25 Q30,2 48,25" stroke="#FACC15" strokeWidth="3" strokeLinecap="round" />
-              <path d="M5,20 Q30,-8 55,20" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 2" />
-            </svg>
-          </div>
-
-          <div className="spidey-floating" style={{
-            width: '60px',
-            height: '60px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #7F1D1D 100%)',
-            border: '2px solid #E01B22',
-            boxShadow: '0 8px 24px rgba(224, 27, 34, 0.6), 0 0 16px rgba(250, 204, 21, 0.3)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflow: 'hidden'
-          }}>
-            <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
-              <circle cx="32" cy="32" r="30" fill="#D81E27" stroke="#180407" strokeWidth="2" />
-              <path d="M32 2 L32 62 M2 32 L62 32 M10 10 L54 54 M10 54 L54 10" stroke="#850B12" strokeWidth="1.2" />
-              <polygon points="14,30 29,36 28,24 16,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
-              <polygon points="50,30 35,36 36,24 48,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
-            </svg>
           </div>
         </div>
-      </div>
+      )}
 
       {/* ========================================================= */}
       {/* TOURNAMENT PROTOCOL ACKNOWLEDGEMENT POPUP MODAL          */}
       {/* ========================================================= */}
       {showAcknowledgeModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'rgba(5, 2, 4, 0.88)',
-          backdropFilter: 'blur(12px)',
-          zIndex: 9999,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px'
-        }}>
-          <div className="comic-card" style={{
-            maxWidth: '580px',
-            width: '100%',
-            background: '#0F080B',
-            border: '2px solid #E01B22',
-            borderRadius: '16px',
-            padding: '28px',
-            boxShadow: '0 20px 50px rgba(0,0,0,0.95), 0 0 32px rgba(224, 27, 34, 0.4)',
-            animation: 'scalePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
-            position: 'relative'
-          }}>
+        <div className="acknowledge-backdrop">
+          <div className="acknowledge-modal-container">
+            {/* Top Futuristic Laser Scanner */}
+            <div className="acknowledge-laser-line" />
+
             {/* Top Header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '18px', borderBottom: '1px solid rgba(224, 27, 34, 0.3)', paddingBottom: '14px' }}>
-              <span style={{ fontSize: '2.2rem' }}>🛡️</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px', borderBottom: '1px solid rgba(224, 27, 34, 0.3)', paddingBottom: '16px' }}>
+              <div className="acknowledge-shield-avatar">
+                🛡️
+              </div>
               <div>
-                <h3 style={{ fontSize: '1.35rem', color: '#FFF', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>
+                <h3 style={{ fontSize: '1.4rem', color: '#FFF', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>
                   Tournament Protocol Acknowledgement
                 </h3>
-                <span style={{ fontSize: '0.75rem', color: '#FACC15', fontWeight: '800', letterSpacing: '1px' }}>
-                  LOGIN 2026 • STAGE 0 PRELIMS CONTEXT
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                  <span className="live-pulse-dot" style={{ width: '7px', height: '7px', background: '#FACC15', boxShadow: '0 0 8px #FACC15' }} />
+                  <span style={{ fontSize: '0.74rem', color: '#FACC15', fontWeight: '800', letterSpacing: '1.2px' }}>
+                    LOGIN 2026 • STAGE 0 PRELIMS CONTEXT
+                  </span>
+                </div>
               </div>
             </div>
 
-            {/* Context & Ground Rules */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px', fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-              <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '12px 14px', borderRadius: '8px', borderLeft: '3px solid #38BDF8' }}>
-                <strong style={{ color: '#38BDF8', display: 'block', marginBottom: '2px' }}>⏱️ Strict 30-Minute Timer</strong>
+            {/* Context & Ground Rules with Staggered Cascades */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '22px', fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+              <div className="acknowledge-rule-card" style={{ borderLeft: '3.5px solid #38BDF8', animation: 'ruleCardSlideIn 0.35s ease-out 0.08s both' }}>
+                <strong style={{ color: '#38BDF8', display: 'block', marginBottom: '2px', fontSize: '0.92rem' }}>⏱️ Strict 30-Minute Countdown</strong>
                 Your personal countdown begins immediately upon confirmation. Once active, the timer cannot be paused, reset, or refreshed. The quiz auto-submits strictly at 00:00.
               </div>
 
-              <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '12px 14px', borderRadius: '8px', borderLeft: '3px solid #EF4444' }}>
-                <strong style={{ color: '#FF4D4D', display: 'block', marginBottom: '2px' }}>⚠️ Scoring &amp; Penalty Context</strong>
+              <div className="acknowledge-rule-card" style={{ borderLeft: '3.5px solid #EF4444', animation: 'ruleCardSlideIn 0.35s ease-out 0.16s both' }}>
+                <strong style={{ color: '#FF4D4D', display: 'block', marginBottom: '2px', fontSize: '0.92rem' }}>⚠️ Scoring &amp; Negative Marking Context</strong>
                 Each correct answer awards <strong>+10 Points</strong>. Each incorrect guess deducts <strong>-5 Points (Negative Marking)</strong>. Unanswered questions yield 0 points. Do not blind-guess!
               </div>
 
-              <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '12px 14px', borderRadius: '8px', borderLeft: '3px solid #FACC15' }}>
-                <strong style={{ color: '#FACC15', display: 'block', marginBottom: '2px' }}>📷 Automated Silent Invigilation</strong>
+              <div className="acknowledge-rule-card" style={{ borderLeft: '3.5px solid #FACC15', animation: 'ruleCardSlideIn 0.35s ease-out 0.24s both' }}>
+                <strong style={{ color: '#FACC15', display: 'block', marginBottom: '2px', fontSize: '0.92rem' }}>📷 Automated Silent Invigilation</strong>
                 Webcam snapshots are captured periodically in the background during the test to verify academic honesty and individual completion.
               </div>
             </div>
 
-            {/* Required Consent Checkbox */}
-            <label style={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '12px',
-              background: hasAcknowledged ? 'rgba(74, 222, 128, 0.12)' : 'rgba(224, 27, 34, 0.08)',
-              border: `1.5px solid ${hasAcknowledged ? '#4ADE80' : 'rgba(224, 27, 34, 0.5)'}`,
-              borderRadius: '10px',
-              padding: '14px',
-              cursor: 'pointer',
-              transition: 'all 0.25s ease',
-              marginBottom: '22px'
-            }}>
+            {/* Required Consent Checkbox with Active Pulse */}
+            <label className={`acknowledge-consent-box ${hasAcknowledged ? 'consented' : 'unconsented'}`} style={{ marginBottom: '24px' }}>
               <input 
                 type="checkbox"
                 checked={hasAcknowledged}
                 onChange={(e) => setHasAcknowledged(e.target.checked)}
                 style={{
                   marginTop: '3px',
-                  width: '18px',
-                  height: '18px',
+                  width: '20px',
+                  height: '20px',
                   cursor: 'pointer',
-                  accentColor: '#E01B22'
+                  accentColor: '#22C55E',
+                  transition: 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)'
                 }}
               />
-              <span style={{ fontSize: '0.86rem', color: '#FFF', lineHeight: '1.45' }}>
+              <span style={{ fontSize: '0.88rem', color: '#FFF', lineHeight: '1.5' }}>
                 I have read and acknowledge the tournament context: <strong>30 questions in 30 minutes</strong>, the <strong>-5 penalty for wrong answers</strong>, and consent to <strong>automated webcam proctoring</strong>.
               </span>
             </label>
@@ -2267,24 +2417,23 @@ export default function GameArena() {
                   setShowAcknowledgeModal(false)
                   setHasAcknowledged(false)
                 }}
-                style={{ padding: '10px 20px', fontSize: '0.88rem' }}
+                style={{ padding: '11px 22px', fontSize: '0.9rem' }}
               >
                 Cancel / Return
               </button>
               <button
                 type="button"
-                className="btn-primary"
+                className={`btn-primary ${hasAcknowledged ? 'acknowledge-launch-btn-active' : ''}`}
                 disabled={!hasAcknowledged}
                 onClick={() => {
                   setShowAcknowledgeModal(false)
                   handlePrelimStart()
                 }}
                 style={{
-                  padding: '10px 24px',
-                  fontSize: '0.92rem',
-                  opacity: hasAcknowledged ? 1 : 0.45,
-                  cursor: hasAcknowledged ? 'pointer' : 'not-allowed',
-                  boxShadow: hasAcknowledged ? '0 0 20px rgba(224, 27, 34, 0.65)' : 'none'
+                  padding: '11px 26px',
+                  fontSize: '0.95rem',
+                  opacity: hasAcknowledged ? 1 : 0.4,
+                  cursor: hasAcknowledged ? 'pointer' : 'not-allowed'
                 }}
               >
                 Confirm &amp; Launch Quiz 🚀

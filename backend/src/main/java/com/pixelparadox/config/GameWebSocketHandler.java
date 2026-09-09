@@ -36,7 +36,10 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
     }
 
     public void broadcast(String message) {
-        System.out.println("Broadcasting WebSocket message: " + message);
+        if (!message.contains("\"type\":\"CAMERA_FRAME\"")) {
+            String logMsg = message.length() > 200 ? message.substring(0, 200) + "... [truncated]" : message;
+            System.out.println("Broadcasting WebSocket message: " + logMsg);
+        }
         for (WebSocketSession session : sessions) {
             if (session.isOpen()) {
                 try {

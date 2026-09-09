@@ -83,7 +83,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(Map.of("message", "Invalid Team ID or password. (User not found)"));
         }
         User user = userOpt.get();
-        System.out.println(">>> User found in DB: " + user.getTeamId() + ", role: " + user.getRole() + ", hash: " + user.getPassword());
+        System.out.println(">>> User found in DB: " + user.getTeamId() + ", role: " + user.getRole());
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.teamId(), request.password())

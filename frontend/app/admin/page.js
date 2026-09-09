@@ -579,7 +579,8 @@ export default function AdminDashboard() {
       if (res.ok) {
         fetchImages(token)
       } else {
-        alert('Failed to delete image')
+        const err = await res.json().catch(() => ({}))
+        alert(err.message || 'Failed to delete image')
       }
     } catch (e) {
       console.error(e)

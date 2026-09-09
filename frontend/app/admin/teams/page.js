@@ -59,7 +59,10 @@ export default function AdminTeams() {
         }
       })
       
-      if (!res.ok) throw new Error('Failed to delete team')
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.message || 'Failed to delete team')
+      }
       
       setTeams(teams.filter(t => t.id !== deleteId))
       setDeleteId(null)
@@ -82,12 +85,15 @@ export default function AdminTeams() {
         body: JSON.stringify({
           teamName: editTeam.teamName,
           teamId: editTeam.teamId,
-          teamSize: editTeam.teamSize,
+          teamSize: editTeam.teamSize ? parseInt(editTeam.teamSize, 10) : 2,
           isVerified: editTeam.isVerified
         })
       })
       
-      if (!res.ok) throw new Error('Failed to update team')
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.message || 'Failed to update team')
+      }
       
       const updatedTeam = await res.json()
       setTeams(teams.map(t => t.id === updatedTeam.id ? updatedTeam : t))
