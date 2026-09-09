@@ -15,4 +15,5 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     List<Submission> findByUser(User user);
     List<Submission> findByImageQuestionId(Long imageQuestionId);
     List<Submission> findByRoundNumberAndIsGradedFalse(int roundNumber);
+    List<Submission> findByIsGradedFalse();
 }

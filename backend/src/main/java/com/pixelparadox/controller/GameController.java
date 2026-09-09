@@ -241,7 +241,7 @@ public class GameController {
     }
 
     @GetMapping("/submissions")
-    public ResponseEntity<List<Submission>> getSubmissionsForGrading(@RequestParam int round) {
+    public ResponseEntity<List<Submission>> getSubmissionsForGrading(@RequestParam(required = false, defaultValue = "0") int round) {
         return ResponseEntity.ok(gameService.getSubmissionsForGrading(round));
     }
 
@@ -374,7 +374,9 @@ public class GameController {
                 directory.mkdirs();
             }
 
-            String fileName = System.currentTimeMillis() + "_" + teamId + "_" + participantName.replaceAll("\\s+", "_") + ".webm";
+            String cleanTeam = (teamId != null ? teamId : "team").replaceAll("[^a-zA-Z0-9_-]", "_");
+            String cleanPilot = (participantName != null ? participantName : "pilot").replaceAll("[^a-zA-Z0-9_-]", "_");
+            String fileName = System.currentTimeMillis() + "_" + cleanTeam + "_" + cleanPilot + ".webm";
             Path path = Paths.get(uploadDir, fileName);
             Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 

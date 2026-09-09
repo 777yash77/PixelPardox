@@ -3,7 +3,9 @@ package com.pixelparadox.config;
 import com.pixelparadox.model.GameState;
 import com.pixelparadox.model.User;
 import com.pixelparadox.repository.GameStateRepository;
+import com.pixelparadox.repository.QuizQuestionRepository;
 import com.pixelparadox.repository.UserRepository;
+import com.pixelparadox.service.GameService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,11 +18,19 @@ public class DataInitializer implements ApplicationRunner {
 
     private final UserRepository userRepository;
     private final GameStateRepository gameStateRepository;
+    private final QuizQuestionRepository quizQuestionRepository;
+    private final GameService gameService;
     private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(UserRepository userRepository, GameStateRepository gameStateRepository, PasswordEncoder passwordEncoder) {
+    public DataInitializer(UserRepository userRepository,
+                           GameStateRepository gameStateRepository,
+                           QuizQuestionRepository quizQuestionRepository,
+                           GameService gameService,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.gameStateRepository = gameStateRepository;
+        this.quizQuestionRepository = quizQuestionRepository;
+        this.gameService = gameService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -47,7 +57,7 @@ public class DataInitializer implements ApplicationRunner {
             System.out.println(">>> Updated admin credentials to standard: " + adminEmail);
         }
 
-        // 3. Seed second admin user
+        // 2. Seed second admin user
         String secondAdminEmail = "25mx356@gmail.com";
         Optional<User> secondAdminOpt = userRepository.findByTeamId(secondAdminEmail);
         if (secondAdminOpt.isEmpty()) {
@@ -65,6 +75,20 @@ public class DataInitializer implements ApplicationRunner {
             secondAdmin.setRole("ROLE_ADMIN");
             userRepository.save(secondAdmin);
             System.out.println(">>> Updated second admin credentials: " + secondAdminEmail);
+        }
+
+        // 3. Ensure GameState exists
+        if (gameStateRepository.findById(1L).isEmpty()) {
+            GameState state = new GameState();
+            state.setActiveRound(0);
+            gameStateRepository.save(state);
+            System.out.println(">>> Initialized default GameState (Round 0 Lobby)");
+        }
+
+        // 4. Auto-seed default 30 Stage 0 Prelims questions if question bank is empty
+        if (quizQuestionRepository.count() == 0) {
+            gameService.seedDefaultPrelimQuestions();
+            System.out.println(">>> Auto-seeded 30 curated Stage 0 Prelims questions for LOGIN 2026");
         }
     }
 }

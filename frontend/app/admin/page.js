@@ -65,6 +65,7 @@ export default function AdminDashboard() {
 
   // Grading State
   const [submissions, setSubmissions] = useState([])
+  const [gradingFilterRound, setGradingFilterRound] = useState(0) // 0 = all pending
   const [gradeScores, setGradeScores] = useState({}) // submissionId -> score
   const [gradingStatus, setGradingStatus] = useState('')
 
@@ -94,16 +95,16 @@ export default function AdminDashboard() {
     fetchQuizQuestions(storedToken)
   }, [])
 
-  // Refetch grading submissions when tab changes
+  // Refetch grading submissions when tab changes or filter updates
   useEffect(() => {
     if (activeTab === 'grading' && token) {
-      fetchSubmissionsForGrading()
+      fetchSubmissionsForGrading(gradingFilterRound)
     } else if (activeTab === 'leaderboard') {
       fetchLeaderboard()
     } else if (activeTab === 'quiz' && token) {
       fetchQuizQuestions(token)
     }
-  }, [activeTab, gameState.activeRound])
+  }, [activeTab, gameState.activeRound, gradingFilterRound])
 
   // Timer Countdown Effect
   useEffect(() => {
@@ -189,19 +190,18 @@ export default function AdminDashboard() {
     }
   }
 
-  const fetchSubmissionsForGrading = async () => {
+  const fetchSubmissionsForGrading = async (roundParam) => {
     try {
       const currentToken = token || (typeof window !== 'undefined' ? localStorage.getItem('token') : '')
-      const res = await fetch(`http://localhost:8080/api/game/submissions?round=${gameState.activeRound}`, {
+      const r = roundParam !== undefined ? roundParam : gradingFilterRound
+      const res = await fetch(`http://localhost:8080/api/game/submissions?round=${r}`, {
         headers: { 'Authorization': `Bearer ${currentToken}` }
       })
       if (res.ok) {
         const data = await res.json()
-        const isEvaluatingOrBreakRound = gameState.activeRound === 6 || gameState.activeRound === 7
-
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           setSubmissions(data)
-        } else if (!isEvaluatingOrBreakRound) {
+        } else {
           setSubmissions([])
         }
       }
@@ -1361,19 +1361,51 @@ export default function AdminDashboard() {
         {/* ========================================================= */}
         {activeTab === 'grading' && (
           <div className="glass-panel" style={{ padding: '24px' }}>
-            <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
-              Pending Submissions — {STAGE_NAMES[gameState.activeRound] || `Round ${gameState.activeRound}`}
-            </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '12px', flexWrap: 'wrap', gap: '12px' }}>
+              <div>
+                <h3 style={{ fontSize: '1.25rem', margin: '0 0 4px 0' }}>
+                  Grading Station — Pending Submissions ({submissions.length})
+                </h3>
+                <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                  Active Stage: <strong style={{ color: '#38BDF8' }}>{STAGE_NAMES[gameState.activeRound] || `Round ${gameState.activeRound}`}</strong>
+                </p>
+              </div>
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Filter Stage:</span>
+                <select 
+                  className="form-input" 
+                  style={{ width: 'auto', padding: '6px 12px', fontSize: '0.85rem' }}
+                  value={gradingFilterRound}
+                  onChange={(e) => {
+                    const r = parseInt(e.target.value, 10)
+                    setGradingFilterRound(r)
+                    fetchSubmissionsForGrading(r)
+                  }}
+                >
+                  <option value={0}>All Pending Submissions (Stage 2 & 3)</option>
+                  <option value={3}>Stage 2 - The Glitch Hunt</option>
+                  <option value={4}>Stage 3 - Prompt Wars</option>
+                  <option value={2}>Stage 1 - Pixel Detective</option>
+                </select>
+                <button 
+                  onClick={() => fetchSubmissionsForGrading(gradingFilterRound)} 
+                  className="btn-secondary" 
+                  style={{ padding: '6px 14px', fontSize: '0.85rem' }}
+                >
+                  🔄 Refresh
+                </button>
+              </div>
+            </div>
             
             {gradingStatus && <div style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid #38BDF8', color: '#38BDF8', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px' }}>{gradingStatus}</div>}
             
-            {gameState.activeRound <= 2 && (
+            {gameState.activeRound <= 2 && gradingFilterRound <= 2 && (
               <div style={{ background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38BDF8', borderRadius: '8px', padding: '14px 18px', marginBottom: '18px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ fontSize: '1.4rem' }}>⚡</span>
                 <div>
                   <div style={{ fontWeight: 'bold', fontSize: '0.95rem', marginBottom: '2px' }}>Automated Real-Time Scoring Active</div>
                   <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>
-                    Grading system is not applicable for {gameState.activeRound === 1 ? 'Stage 0 (MCQ Quiz)' : 'Stage 1 (Pixel Detective)'}. Scores are automatically calculated and updated on the real-time leaderboard immediately upon submission.
+                    Stage 0 (MCQ Quiz) and Stage 1 (Pixel Detective) scores are automatically calculated and updated on the real-time leaderboard immediately upon submission. Use the filter dropdown above to inspect Stage 2 (Glitch Hunt) and Stage 3 (Prompt Wars) manual grading queues at any time.
                   </div>
                 </div>
               </div>
@@ -1552,13 +1584,15 @@ export default function AdminDashboard() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {/* Stage 0 -> Stage 1 */}
                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <h4 style={{ fontSize: '0.95rem', marginBottom: '6px' }}>Stage 0 Prelims Cutoff</h4>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <h4 style={{ fontSize: '0.95rem', margin: 0 }}>Stage 0 Prelims Cutoff</h4>
+                    {gameState.activeRound === 1 && <span style={{ fontSize: '0.75rem', background: 'rgba(56,189,248,0.2)', color: '#38BDF8', padding: '2px 8px', borderRadius: '10px' }}>Active Stage</span>}
+                  </div>
                   <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>Qualifies the <strong>Top 50%</strong> of teams for Stage 1: Pixel Detective.</p>
                   <button 
                     onClick={() => handleAdvanceTeams(50, true)} 
                     className="btn-primary" 
                     style={{ width: '100%', padding: '10px' }}
-                    disabled={gameState.activeRound !== 1}
                   >
                     Advance Top 50% Teams
                   </button>
@@ -1566,13 +1600,15 @@ export default function AdminDashboard() {
 
                 {/* Stage 1 -> Stage 2 */}
                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <h4 style={{ fontSize: '0.95rem', marginBottom: '6px' }}>Stage 1 Pixel Detective Cutoff</h4>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <h4 style={{ fontSize: '0.95rem', margin: 0 }}>Stage 1 Pixel Detective Cutoff</h4>
+                    {gameState.activeRound === 2 && <span style={{ fontSize: '0.75rem', background: 'rgba(56,189,248,0.2)', color: '#38BDF8', padding: '2px 8px', borderRadius: '10px' }}>Active Stage</span>}
+                  </div>
                   <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>Qualifies the <strong>Top 10</strong> teams for Stage 2: Glitch Hunt.</p>
                   <button 
                     onClick={() => handleAdvanceTeams(10, false)} 
                     className="btn-primary" 
                     style={{ width: '100%', padding: '10px' }}
-                    disabled={gameState.activeRound !== 2}
                   >
                     Advance Top 10 Teams
                   </button>
@@ -1580,15 +1616,50 @@ export default function AdminDashboard() {
 
                 {/* Stage 2 -> Stage 3 */}
                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <h4 style={{ fontSize: '0.95rem', marginBottom: '6px' }}>Stage 2 Glitch Hunt Cutoff</h4>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <h4 style={{ fontSize: '0.95rem', margin: 0 }}>Stage 2 Glitch Hunt Cutoff</h4>
+                    {gameState.activeRound === 3 && <span style={{ fontSize: '0.75rem', background: 'rgba(56,189,248,0.2)', color: '#38BDF8', padding: '2px 8px', borderRadius: '10px' }}>Active Stage</span>}
+                  </div>
                   <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>Qualifies the <strong>Top 5</strong> finalists for Stage 3: Prompt Wars.</p>
                   <button 
                     onClick={() => handleAdvanceTeams(5, false)} 
                     className="btn-primary" 
                     style={{ width: '100%', padding: '10px' }}
-                    disabled={gameState.activeRound !== 3}
                   >
                     Advance Top 5 Finalists
+                  </button>
+                </div>
+
+                {/* Custom Advancement */}
+                <div style={{ background: 'rgba(56, 189, 248, 0.05)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
+                  <h4 style={{ fontSize: '0.95rem', marginBottom: '6px', color: '#38BDF8' }}>Custom Cutoff Advancement</h4>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>Advance any number or percentage of top teams to the next stage.</p>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
+                    <input 
+                      type="number" 
+                      min={1} 
+                      max={100}
+                      className="form-input" 
+                      style={{ padding: '8px' }}
+                      value={customAdvance.value} 
+                      onChange={e => setCustomAdvance({ ...customAdvance, value: Math.max(1, parseInt(e.target.value) || 1) })} 
+                    />
+                    <select 
+                      className="form-input" 
+                      style={{ padding: '8px' }}
+                      value={customAdvance.isPercent ? 'pct' : 'count'}
+                      onChange={e => setCustomAdvance({ ...customAdvance, isPercent: e.target.value === 'pct' })}
+                    >
+                      <option value="count">Teams (Count)</option>
+                      <option value="pct">Percent (%)</option>
+                    </select>
+                  </div>
+                  <button 
+                    onClick={() => handleAdvanceTeams(customAdvance.value, customAdvance.isPercent)} 
+                    className="btn-primary" 
+                    style={{ width: '100%', padding: '10px', background: 'linear-gradient(135deg, #0284C7 0%, #E01B22 100%)' }}
+                  >
+                    Advance Top {customAdvance.value} {customAdvance.isPercent ? '%' : 'Teams'}
                   </button>
                 </div>
               </div>

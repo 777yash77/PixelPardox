@@ -53,6 +53,7 @@ public class AdminTeamController {
             m.put("teamName", u.getTeamName());
             m.put("teamId", u.getTeamId());
             m.put("teamSize", u.getTeamSize());
+            m.put("memberNames", u.getMemberNames() != null ? u.getMemberNames() : "");
             m.put("score", u.getScore());
             m.put("roundNumber", u.getRoundNumber());
             m.put("isEliminated", u.isEliminated());
@@ -112,7 +113,8 @@ public class AdminTeamController {
     public record UpdateTeamRequest(
             String teamName,
             String teamId,
-            Integer teamSize
+            Integer teamSize,
+            String memberNames
     ) {}
 
     @PutMapping("/teams/{id}")
@@ -148,6 +150,10 @@ public class AdminTeamController {
             user.setTeamSize(request.teamSize());
         }
 
+        if (request.memberNames() != null) {
+            user.setMemberNames(request.memberNames().trim());
+        }
+
         userRepository.save(user);
         
         Map<String, Object> m = new HashMap<>();
@@ -155,6 +161,7 @@ public class AdminTeamController {
         m.put("teamName", user.getTeamName());
         m.put("teamId", user.getTeamId());
         m.put("teamSize", user.getTeamSize());
+        m.put("memberNames", user.getMemberNames() != null ? user.getMemberNames() : "");
         m.put("score", user.getScore());
         m.put("roundNumber", user.getRoundNumber());
         m.put("isEliminated", user.isEliminated());

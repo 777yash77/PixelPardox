@@ -28,6 +28,16 @@ export default function Login() {
       if (params.get('teamId')) {
         setFormData(prev => ({ ...prev, teamId: params.get('teamId') }))
       }
+      const savedMembers = localStorage.getItem('memberNames')
+      if (savedMembers) {
+        const members = savedMembers.split(',').map(s => s.trim()).filter(Boolean)
+        setMemberNamesList(members)
+      }
+      const token = localStorage.getItem('token')
+      const role = localStorage.getItem('role')
+      if (token && role === 'ROLE_TEAM' && !localStorage.getItem('participantName')) {
+        setStep(2)
+      }
     }
   }, [])
 

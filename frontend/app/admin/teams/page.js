@@ -86,7 +86,7 @@ export default function AdminTeams() {
           teamName: editTeam.teamName,
           teamId: editTeam.teamId,
           teamSize: editTeam.teamSize ? parseInt(editTeam.teamSize, 10) : 2,
-          isVerified: editTeam.isVerified
+          memberNames: editTeam.memberNames || ''
         })
       })
       
@@ -140,6 +140,7 @@ export default function AdminTeams() {
                 <tr style={{ background: 'rgba(0,0,0,0.3)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: '600' }}>Team Name</th>
                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: '600' }}>Team ID</th>
+                  <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: '600' }}>Members / Pilots</th>
                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: '600', textAlign: 'center' }}>Size</th>
                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: '600', textAlign: 'center' }}>Score</th>
                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: '600', textAlign: 'right' }}>Actions</th>
@@ -148,7 +149,7 @@ export default function AdminTeams() {
               <tbody>
                 {teams.length === 0 ? (
                   <tr>
-                    <td colSpan="5" style={{ padding: '32px', textAlign: 'center', color: 'var(--text-dim)' }}>
+                    <td colSpan="6" style={{ padding: '32px', textAlign: 'center', color: 'var(--text-dim)' }}>
                       No teams registered yet.
                     </td>
                   </tr>
@@ -160,6 +161,19 @@ export default function AdminTeams() {
                           <strong style={{ color: '#fff' }}>{team.teamName}</strong>
                         </td>
                         <td style={{ padding: '16px', color: '#FF4D4D', fontFamily: 'monospace' }}>{team.teamId}</td>
+                        <td style={{ padding: '16px', color: '#E8E8E8', fontSize: '0.85rem' }}>
+                          {team.memberNames ? (
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                              {team.memberNames.split(',').map((name, i) => (
+                                <span key={i} style={{ background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '4px', padding: '2px 6px', fontSize: '0.78rem', color: '#38BDF8' }}>
+                                  {name.trim()}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span style={{ color: 'var(--text-dim)', fontStyle: 'italic' }}>None specified</span>
+                          )}
+                        </td>
                         <td style={{ padding: '16px', textAlign: 'center', color: 'var(--text-secondary)' }}>{team.teamSize || 2} members</td>
                         <td style={{ padding: '16px', textAlign: 'center', fontWeight: 'bold', color: '#38BDF8' }}>{team.score || 0}</td>
                         <td style={{ padding: '16px', textAlign: 'right' }}>
@@ -238,9 +252,19 @@ export default function AdminTeams() {
                 <label className="form-label" style={{ fontSize: '0.85rem' }}>Team ID</label>
                 <input type="text" value={editTeam.teamId} onChange={e => setEditTeam({...editTeam, teamId: e.target.value})} className="form-input" required />
               </div>
-              <div style={{ marginBottom: '20px' }}>
+              <div style={{ marginBottom: '14px' }}>
                 <label className="form-label" style={{ fontSize: '0.85rem' }}>Team Size (2 - 4)</label>
                 <input type="number" min={2} max={4} value={editTeam.teamSize || 2} onChange={e => setEditTeam({...editTeam, teamSize: parseInt(e.target.value)})} className="form-input" required />
+              </div>
+              <div style={{ marginBottom: '20px' }}>
+                <label className="form-label" style={{ fontSize: '0.85rem' }}>Team Members / Pilots (comma-separated)</label>
+                <input 
+                  type="text" 
+                  value={editTeam.memberNames || ''} 
+                  onChange={e => setEditTeam({...editTeam, memberNames: e.target.value})} 
+                  className="form-input" 
+                  placeholder="e.g. Peter Parker, Miles Morales, Gwen Stacy" 
+                />
               </div>
 
               <div style={{ display: 'flex', gap: '12px' }}>
