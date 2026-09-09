@@ -1464,6 +1464,97 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(-1px);
 }
 
+/* Hide / Show Animations Mascot Buttons */
+.hide-animations-badge-btn {
+  margin-top: 6px;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #E2E8F0;
+  border-radius: 14px;
+  padding: 4px 12px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 50;
+  user-select: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.hide-animations-badge-btn:hover {
+  background: rgba(239, 68, 68, 0.4);
+  border-color: #EF4444;
+  color: #FFF;
+  transform: translateY(-1px);
+}
+
+.top-clean-action-bar {
+  position: fixed;
+  top: 14px;
+  right: 20px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(10, 15, 30, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.7), 0 0 16px rgba(56, 189, 248, 0.2);
+  padding: 6px 10px;
+  border-radius: 30px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.top-clean-help-btn {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.45) 0%, rgba(30, 58, 138, 0.65) 100%);
+  border: 1px solid #38BDF8;
+  color: #FFF;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.top-clean-help-btn:hover {
+  background: #0284C7;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
+  transform: translateY(-1px);
+}
+
+.top-clean-show-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #BAE6FD;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+}
+
+.top-clean-show-btn:hover {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: #38BDF8;
+  color: #FFF;
+  transform: translateY(-1px);
+}
+
 /* Interactive Tab Selector for Rounds */
 .round-tab-btn {
   padding: 10px 18px;

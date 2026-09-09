@@ -356,6 +356,25 @@ export default function Home() {
   const [coordHoverSpidey, setCoordHoverSpidey] = useState(false)
   const [copiedEmail, setCopiedEmail] = useState(null)
 
+  // Mascot Animations State (Hide/Show Spiderman & Deadpool at top of screen)
+  const [hideMascotAnimations, setHideMascotAnimations] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('hideMascotAnimations')
+      if (saved === 'true') {
+        setHideMascotAnimations(true)
+      }
+    }
+  }, [])
+
+  const handleToggleMascots = (hide) => {
+    setHideMascotAnimations(hide)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('hideMascotAnimations', hide ? 'true' : 'false')
+    }
+  }
+
   const handleCopyEmail = (email) => {
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       navigator.clipboard.writeText(email)
@@ -745,6 +764,7 @@ export default function Home() {
       </svg>
 
       {/* TOP-RIGHT: REALISTIC SWINGING SPIDER-MAN FULL BODY MODEL WITH ELASTIC SILK */}
+      {!hideMascotAnimations && (
       <div 
         style={{
           position: 'absolute',
@@ -885,10 +905,25 @@ export default function Home() {
               </div>
             )}
           </div>
+
+          {/* Hide Animations Button near Help */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              handleToggleMascots(true)
+            }}
+            className="hide-animations-badge-btn"
+            title="Stop Spider-Man and Deadpool from appearing at the top of the screen"
+          >
+            🚫 Hide Animations
+          </button>
         </div>
       </div>
+      )}
 
       {/* TOP-LEFT: TACTICAL PERCH DEADPOOL FULL BODY MODEL ON CYBER PLATFORM */}
+      {!hideMascotAnimations && (
       <div 
         style={{
           position: 'absolute',
@@ -1018,8 +1053,44 @@ export default function Home() {
               </div>
             )}
           </div>
+
+          {/* Hide Animations Button near Help */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              handleToggleMascots(true)
+            }}
+            className="hide-animations-badge-btn"
+            title="Stop Spider-Man and Deadpool from appearing at the top of the screen"
+          >
+            🚫 Hide Animations
+          </button>
         </div>
       </div>
+      )}
+
+      {/* Clean Persistent Help & Show Animations Bar when Mascots are Hidden */}
+      {hideMascotAnimations && (
+        <div className="top-clean-action-bar">
+          <button
+            type="button"
+            onClick={() => setShowHelpModal(true)}
+            className="top-clean-help-btn"
+            title="Contact Student Coordinators (Help Desk)"
+          >
+            📞 Help &amp; Coordinators
+          </button>
+          <button
+            type="button"
+            onClick={() => handleToggleMascots(false)}
+            className="top-clean-show-btn"
+            title="Show Spider-Man and Deadpool animations again at top of screen"
+          >
+            ✨ Show Animations
+          </button>
+        </div>
+      )}
 
       {/* Main Content Container — Expansive Width, Clean Stacked Spacing */}
       <div className="container page-transition" style={{ maxWidth: 'min(1560px, 94vw)', margin: '0 auto', padding: '16px 20px 48px' }}>
@@ -2522,6 +2593,59 @@ export default function Home() {
                 title="Close"
               >
                 ✕
+              </button>
+            </div>
+
+            {/* Mascot Animations Quick Control Banner */}
+            <div style={{
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: '10px',
+              padding: '12px 18px',
+              marginBottom: '20px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '12px'
+            }}>
+              <div>
+                <div style={{ fontWeight: 'bold', color: '#FFF', fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span>🎬 Top Screen Hero Animations</span>
+                  <span style={{
+                    fontSize: '0.68rem',
+                    padding: '2px 8px',
+                    borderRadius: '4px',
+                    background: hideMascotAnimations ? 'rgba(239, 68, 68, 0.2)' : 'rgba(34, 197, 94, 0.2)',
+                    color: hideMascotAnimations ? '#FCA5A5' : '#86EFAC',
+                    fontWeight: 'bold'
+                  }}>
+                    {hideMascotAnimations ? 'ANIMATIONS HIDDEN' : 'ANIMATIONS ACTIVE'}
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                  Stop or allow Spider-Man and Deadpool from appearing at the top of the screen.
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleToggleMascots(!hideMascotAnimations)}
+                style={{
+                  background: hideMascotAnimations ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' : 'rgba(239, 68, 68, 0.15)',
+                  border: hideMascotAnimations ? '1px solid #38BDF8' : '1px solid #EF4444',
+                  color: hideMascotAnimations ? '#FFF' : '#FCA5A5',
+                  padding: '7px 16px',
+                  borderRadius: '6px',
+                  fontWeight: 'bold',
+                  fontSize: '0.8rem',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {hideMascotAnimations ? '✨ Show Top Animations' : '🚫 Hide Animations'}
               </button>
             </div>
 
