@@ -58,9 +58,9 @@ export default function CustomCursor() {
 
     const colors = [
       { r: 224, g: 27,  b: 34  },
-      { r: 56,  g: 189, b: 248 },
-      { r: 250, g: 204, b: 21  },
       { r: 255, g: 77,  b: 77  },
+      { r: 185, g: 28,  b: 28  },
+      { r: 255, g: 140, b: 140 },
     ]
 
     const addParticles = (x, y, count = 2, speed = 1.2) => {
@@ -102,7 +102,7 @@ export default function CustomCursor() {
       setIsClicking(true)
       shockwaves.push(
         { x: e.clientX, y: e.clientY, radius: 4,  maxRadius: 48, alpha: 0.95, color: '#E01B22', lineWidth: 2.5 },
-        { x: e.clientX, y: e.clientY, radius: 1,  maxRadius: 36, alpha: 0.85, color: '#38BDF8', lineWidth: 1.8 }
+        { x: e.clientX, y: e.clientY, radius: 1,  maxRadius: 36, alpha: 0.85, color: '#FF4D4D', lineWidth: 1.8 }
       )
       addParticles(e.clientX, e.clientY, 16, 3.6)
     }
@@ -135,8 +135,8 @@ export default function CustomCursor() {
 
       // Spotlight
       const spot = ctx.createRadialGradient(ringX, ringY, 0, ringX, ringY, 180)
-      spot.addColorStop(0,   'rgba(224,27,34,0.07)')
-      spot.addColorStop(0.4, 'rgba(56,189,248,0.04)')
+      spot.addColorStop(0,   'rgba(224,27,34,0.08)')
+      spot.addColorStop(0.4, 'rgba(224,27,34,0.03)')
       spot.addColorStop(1,   'rgba(0,0,0,0)')
       ctx.fillStyle = spot
       ctx.beginPath()
@@ -152,7 +152,7 @@ export default function CustomCursor() {
           ctx.beginPath()
           ctx.moveTo(p1.x, p1.y)
           ctx.lineTo(p2.x, p2.y)
-          ctx.strokeStyle = i % 2 === 0 ? `rgba(224,27,34,${alpha})` : `rgba(56,189,248,${alpha})`
+          ctx.strokeStyle = i % 2 === 0 ? `rgba(224,27,34,${alpha})` : `rgba(255,77,77,${alpha * 0.8})`
           ctx.lineWidth = ratio * 2.5 + 0.5
           ctx.lineCap = 'round'
           ctx.stroke()
@@ -162,7 +162,7 @@ export default function CustomCursor() {
               ctx.beginPath()
               ctx.moveTo(pOld.x, pOld.y)
               ctx.lineTo(p2.x, p2.y)
-              ctx.strokeStyle = `rgba(250,204,21,${alpha * 0.3})`
+              ctx.strokeStyle = `rgba(255,100,100,${alpha * 0.3})`
               ctx.lineWidth = 0.6
               ctx.stroke()
             }

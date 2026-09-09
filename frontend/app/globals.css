@@ -33,9 +33,9 @@
 body {
   background-color: #070406;
   background-image: 
-    radial-gradient(ellipse 90% 50% at 50% -10%, rgba(224, 27, 34, 0.16) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 100% 25%, rgba(56, 189, 248, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 0% 75%, rgba(224, 27, 34, 0.07) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 50% at 50% -10%, rgba(224, 27, 34, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 100% 25%, rgba(224, 27, 34, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 0% 75%, rgba(180, 20, 25, 0.08) 0%, transparent 50%),
     radial-gradient(circle, rgba(255, 255, 255, 0.032) 1px, transparent 1px);
   background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px;
   background-attachment: fixed;
@@ -865,8 +865,8 @@ h1, h2, h3, h4, h5, h6 {
   position: absolute;
   top: -20px;
   right: -28px;
-  background: #FACC15;
-  color: #000;
+  background: #E01B22;
+  color: #FFF;
   font-family: 'Space Grotesk', Impact, sans-serif;
   font-size: 0.72rem;
   font-weight: 900;
@@ -907,8 +907,8 @@ h1, h2, h3, h4, h5, h6 {
   top: -6px;
   width: 40px;
   height: 20px;
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.95) 0%, rgba(56, 189, 248, 0.6) 45%, transparent 75%);
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 16px rgba(56, 189, 248, 0.6));
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.95) 0%, rgba(224, 27, 34, 0.6) 45%, transparent 75%);
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 16px rgba(224, 27, 34, 0.6));
   border-radius: 50%;
   pointer-events: none;
 }
@@ -922,7 +922,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 130px;
   height: 160px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, rgba(56, 189, 248, 0.05) 55%, transparent 75%);
+  background: radial-gradient(circle, rgba(224, 27, 34, 0.22) 0%, rgba(224, 27, 34, 0.05) 55%, transparent 75%);
   pointer-events: none;
   z-index: -1;
 }
@@ -1586,8 +1586,8 @@ h1, h2, h3, h4, h5, h6 {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #22C55E;
-  box-shadow: 0 0 10px #22C55E;
+  background: #EF4444;
+  box-shadow: 0 0 10px #EF4444, 0 0 16px rgba(239, 68, 68, 0.6);
   animation: pulseGlow 1.5s infinite ease-in-out;
 }
 
@@ -2023,55 +2023,55 @@ h1, h2, h3, h4, h5, h6 {
   transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* 1. Four Golden Yellow Corner Brackets [ ] */
+/* 1. Four Crimson Red Corner Brackets [ ] */
 .cursor-bracket {
   position: absolute;
   width: 9px;
   height: 9px;
-  border-color: #FACC15;
+  border-color: #FF4D4D;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .bracket-tl {
   top: 0;
   left: 0;
-  border-top: 2.5px solid #FACC15;
-  border-left: 2.5px solid #FACC15;
-  filter: drop-shadow(0 0 3px rgba(250, 204, 21, 0.9));
+  border-top: 2.5px solid #FF4D4D;
+  border-left: 2.5px solid #FF4D4D;
+  filter: drop-shadow(0 0 3px rgba(255, 77, 77, 0.9));
 }
 
 .bracket-tr {
   top: 0;
   right: 0;
-  border-top: 2.5px solid #FACC15;
-  border-right: 2.5px solid #FACC15;
-  filter: drop-shadow(0 0 3px rgba(250, 204, 21, 0.9));
+  border-top: 2.5px solid #FF4D4D;
+  border-right: 2.5px solid #FF4D4D;
+  filter: drop-shadow(0 0 3px rgba(255, 77, 77, 0.9));
 }
 
 .bracket-bl {
   bottom: 0;
   left: 0;
-  border-bottom: 2.5px solid #FACC15;
-  border-left: 2.5px solid #FACC15;
-  filter: drop-shadow(0 0 3px rgba(250, 204, 21, 0.9));
+  border-bottom: 2.5px solid #FF4D4D;
+  border-left: 2.5px solid #FF4D4D;
+  filter: drop-shadow(0 0 3px rgba(255, 77, 77, 0.9));
 }
 
 .bracket-br {
   bottom: 0;
   right: 0;
-  border-bottom: 2.5px solid #FACC15;
-  border-right: 2.5px solid #FACC15;
-  filter: drop-shadow(0 0 3px rgba(250, 204, 21, 0.9));
+  border-bottom: 2.5px solid #FF4D4D;
+  border-right: 2.5px solid #FF4D4D;
+  filter: drop-shadow(0 0 3px rgba(255, 77, 77, 0.9));
 }
 
-/* Concentric Yellow Dashed Radar Circle */
+/* Concentric Crimson Dashed Radar Circle */
 .cursor-dashed-ring {
   position: absolute;
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  border: 1.5px dashed #FACC15;
-  box-shadow: 0 0 5px rgba(250,204,21,0.5);
+  border: 1.5px dashed rgba(255, 77, 77, 0.8);
+  box-shadow: 0 0 5px rgba(224, 27, 34, 0.5);
   animation: reticleSpin 14s linear infinite;
   pointer-events: none;
 }
@@ -2088,20 +2088,20 @@ h1, h2, h3, h4, h5, h6 {
   pointer-events: none;
 }
 
-/* On Hover: Crisp Cyber Lock (No big yellow blob!) */
+/* On Hover: Crisp Cyber Lock */
 .cyber-cursor-ring.cursor-hover {
   transform: scale(1.12);
 }
 
 .cyber-cursor-ring.cursor-hover .cursor-bracket {
-  border-color: #FACC15;
-  filter: drop-shadow(0 0 6px #FACC15);
+  border-color: #FF2B32;
+  filter: drop-shadow(0 0 6px #FF2B32);
 }
 
 .cyber-cursor-ring.cursor-hover .cursor-dashed-ring {
-  border-color: #FACC15;
+  border-color: #FF4D4D;
   animation-duration: 5s;
-  box-shadow: 0 0 14px rgba(250, 204, 21, 0.8);
+  box-shadow: 0 0 14px rgba(224, 27, 34, 0.8);
 }
 
 .cyber-cursor-ring.cursor-hover .cursor-red-ring {
@@ -2748,11 +2748,11 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(0) scale(0.98);
 }
 
-/* Hero Action Button Cyan */
+/* Hero Action Button Red Accent */
 .hero-cta-cyan {
-  background: rgba(14, 165, 233, 0.15);
-  color: #38BDF8;
-  border: 1.5px solid rgba(56, 189, 248, 0.55);
+  background: rgba(224, 27, 34, 0.15);
+  color: #FF6B6B;
+  border: 1.5px solid rgba(224, 27, 34, 0.55);
   padding: 13px 26px;
   font-size: 0.95rem;
   font-family: var(--font-display);
@@ -2764,29 +2764,29 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.15);
+  box-shadow: 0 6px 20px rgba(224, 27, 34, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.15);
   transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   text-decoration: none;
   backdrop-filter: blur(14px);
 }
 
 .hero-cta-cyan:hover {
-  background: rgba(14, 165, 233, 0.25);
-  border-color: #BAE6FD;
+  background: rgba(224, 27, 34, 0.3);
+  border-color: #FFA5A5;
   color: #FFFFFF;
   transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 10px 32px rgba(56, 189, 248, 0.5), 0 0 22px rgba(56, 189, 248, 0.35);
+  box-shadow: 0 10px 32px rgba(224, 27, 34, 0.6), 0 0 22px rgba(224, 27, 34, 0.35);
 }
 
 .hero-cta-cyan:active {
   transform: translateY(0) scale(0.98);
 }
 
-/* Hero Action Button Gold */
+/* Hero Action Button Crimson Alt */
 .hero-cta-gold {
-  background: rgba(250, 204, 21, 0.12);
-  color: #FACC15;
-  border: 1.5px solid rgba(250, 204, 21, 0.5);
+  background: rgba(185, 28, 28, 0.15);
+  color: #FF8080;
+  border: 1.5px solid rgba(224, 27, 34, 0.45);
   padding: 13px 24px;
   font-size: 0.95rem;
   font-family: var(--font-display);
@@ -2798,18 +2798,18 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 6px 20px rgba(250, 204, 21, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.15);
+  box-shadow: 0 6px 20px rgba(224, 27, 34, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.15);
   transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   text-decoration: none;
   backdrop-filter: blur(14px);
 }
 
 .hero-cta-gold:hover {
-  background: rgba(250, 204, 21, 0.24);
-  border-color: #FEF08A;
+  background: rgba(224, 27, 34, 0.28);
+  border-color: #FFA5A5;
   color: #FFFFFF;
   transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 10px 30px rgba(250, 204, 21, 0.45), 0 0 20px rgba(250, 204, 21, 0.3);
+  box-shadow: 0 10px 30px rgba(224, 27, 34, 0.55), 0 0 20px rgba(224, 27, 34, 0.3);
 }
 
 .hero-cta-gold:active {
@@ -2831,28 +2831,30 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   gap: 8px;
   background: rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(224, 27, 34, 0.25);
   padding: 7px 16px;
   border-radius: 24px;
   font-size: 0.78rem;
   font-weight: 700;
-  color: #D1D5DB;
+  color: #E2E8F0;
   backdrop-filter: blur(14px);
   transition: all 0.25s ease;
   user-select: none;
 }
 
 .spec-chip:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(224, 27, 34, 0.12);
+  border-color: rgba(224, 27, 34, 0.6);
   color: #FFFFFF;
   transform: translateY(-1.5px);
+  box-shadow: 0 4px 15px rgba(224, 27, 34, 0.25);
 }
 
-/* Cyber Card Polish */
+/* Cyber Card Polish — Unified Red/Crimson Multiverse Palette */
 .cyber-card-red {
   border-left: 4px solid #E01B22 !important;
   background: linear-gradient(155deg, rgba(28, 12, 16, 0.95) 0%, rgba(12, 5, 8, 0.98) 100%) !important;
+  border: 1px solid rgba(224, 27, 34, 0.35);
   transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
@@ -2863,26 +2865,28 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .cyber-card-cyan {
-  border-left: 4px solid #38BDF8 !important;
-  background: linear-gradient(155deg, rgba(10, 20, 32, 0.95) 0%, rgba(5, 10, 18, 0.98) 100%) !important;
+  border-left: 4px solid #EF4444 !important;
+  background: linear-gradient(155deg, rgba(26, 10, 14, 0.95) 0%, rgba(12, 5, 8, 0.98) 100%) !important;
+  border: 1px solid rgba(224, 27, 34, 0.32);
   transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .cyber-card-cyan:hover {
-  border-color: #7DD3FC !important;
-  box-shadow: 0 16px 40px rgba(56, 189, 248, 0.35), 0 0 24px rgba(56, 189, 248, 0.2) !important;
+  border-color: #FF6B6B !important;
+  box-shadow: 0 16px 40px rgba(224, 27, 34, 0.35), 0 0 24px rgba(224, 27, 34, 0.2) !important;
   transform: translateY(-6px) scale(1.015) !important;
 }
 
 .cyber-card-gold {
-  border-left: 4px solid #FACC15 !important;
-  background: linear-gradient(155deg, rgba(24, 22, 12, 0.95) 0%, rgba(12, 11, 6, 0.98) 100%) !important;
+  border-left: 4px solid #B91C1C !important;
+  background: linear-gradient(155deg, rgba(24, 8, 12, 0.95) 0%, rgba(10, 4, 6, 0.98) 100%) !important;
+  border: 1px solid rgba(224, 27, 34, 0.28);
   transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .cyber-card-gold:hover {
-  border-color: #FDE047 !important;
-  box-shadow: 0 16px 40px rgba(250, 204, 21, 0.35), 0 0 24px rgba(250, 204, 21, 0.2) !important;
+  border-color: #FF4D4D !important;
+  box-shadow: 0 16px 40px rgba(224, 27, 34, 0.35), 0 0 24px rgba(224, 27, 34, 0.2) !important;
   transform: translateY(-6px) scale(1.015) !important;
 }
 
@@ -3191,10 +3195,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .auth-nav-tab.active-register {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.25) 0%, rgba(30, 58, 138, 0.4) 100%);
+  background: linear-gradient(135deg, rgba(224, 27, 34, 0.3) 0%, rgba(133, 11, 18, 0.45) 100%);
   color: #FFF;
-  border: 1px solid #38BDF8;
-  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.35);
+  border: 1px solid #E01B22;
+  box-shadow: 0 4px 16px rgba(224, 27, 34, 0.4);
 }
 
 /* Enhanced Cyber Input Field */
@@ -3222,9 +3226,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .auth-input-container.cyan-focus:focus-within {
-  border-color: #38BDF8;
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.45), inset 0 0 10px rgba(56, 189, 248, 0.15);
-  background: rgba(10, 18, 30, 0.98);
+  border-color: #E01B22;
+  box-shadow: 0 0 20px rgba(224, 27, 34, 0.45), inset 0 0 10px rgba(224, 27, 34, 0.15);
+  background: rgba(22, 10, 15, 0.98);
 }
 
 .auth-input-icon {
@@ -3248,8 +3252,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .auth-input-container.cyan-focus:focus-within .auth-input-icon {
-  background: rgba(56, 189, 248, 0.12);
-  border-right-color: rgba(56, 189, 248, 0.35);
+  background: rgba(224, 27, 34, 0.12);
+  border-right-color: rgba(224, 27, 34, 0.35);
 }
 
 .auth-input-field {
@@ -3307,7 +3311,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 900;
   text-transform: uppercase;
-  background: linear-gradient(135deg, #FFFFFF 0%, #FFF1F2 15%, #FFA5A5 35%, #E01B22 55%, #FACC15 80%, #FFFFFF 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFF1F2 15%, #FFA5A5 35%, #E01B22 55%, #FF6B6B 80%, #FFFFFF 100%);
   background-size: 250% 250%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -3369,7 +3373,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .auth-ambient-glow.cyan {
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.32) 0%, rgba(30, 58, 138, 0.14) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(224, 27, 34, 0.32) 0%, rgba(133, 11, 18, 0.14) 50%, transparent 70%);
 }
 
 /* HUD Cyber Corner Accents for Cards */
@@ -3413,23 +3417,23 @@ h1, h2, h3, h4, h5, h6 {
 .cyan-corners .cyber-corner-tr,
 .cyan-corners .cyber-corner-bl,
 .cyan-corners .cyber-corner-br {
-  border-color: #38BDF8;
+  border-color: #E01B22;
 }
 
 /* Registration Success Alert Banner */
 .auth-success-banner {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.16) 0%, rgba(16, 185, 129, 0.08) 100%);
-  border: 1.5px solid #22C55E;
+  background: linear-gradient(135deg, rgba(224, 27, 34, 0.16) 0%, rgba(133, 11, 18, 0.25) 100%);
+  border: 1.5px solid #E01B22;
   border-radius: 10px;
   padding: 14px 18px;
-  color: #86EFAC;
+  color: #FECACA;
   font-size: 0.88rem;
   font-weight: 600;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.25);
+  box-shadow: 0 6px 20px rgba(224, 27, 34, 0.3);
   animation: cyberModalSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -3463,22 +3467,22 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .squad-size-chip:hover {
-  background: rgba(56, 189, 248, 0.1);
-  border-color: rgba(56, 189, 248, 0.45);
+  background: rgba(224, 27, 34, 0.12);
+  border-color: rgba(224, 27, 34, 0.5);
   color: #FFF;
   transform: translateY(-2px);
 }
 
 .squad-size-chip.selected {
-  background: linear-gradient(145deg, rgba(2, 132, 199, 0.28) 0%, rgba(30, 58, 138, 0.4) 100%);
-  border-color: #38BDF8;
+  background: linear-gradient(145deg, rgba(224, 27, 34, 0.28) 0%, rgba(133, 11, 18, 0.45) 100%);
+  border-color: #E01B22;
   color: #FFF;
-  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 20px rgba(224, 27, 34, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
 }
 
 .squad-size-chip.selected span.chip-badge {
-  color: #38BDF8;
+  color: #FF6B6B;
 }
 
 /* Auth Mascot Floating Animations */
@@ -3509,6 +3513,63 @@ h1, h2, h3, h4, h5, h6 {
   .auth-page-mascot-left,
   .auth-page-mascot-right {
     display: none !important;
+  }
+}
+
+/* ==========================================================================
+   EXPANSIVE DUAL-COLUMN COMMAND CENTER LAYOUT (LOGIN & REGISTER)
+   ========================================================================== */
+.auth-command-wrapper {
+  width: 100%;
+  max-width: min(1340px, 95vw);
+  margin: 0 auto;
+  position: relative;
+  z-index: 30;
+  padding: 24px 0;
+}
+
+.auth-command-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 36px;
+  align-items: stretch;
+}
+
+.auth-briefing-panel {
+  background: linear-gradient(160deg, rgba(22, 9, 13, 0.96) 0%, rgba(10, 4, 7, 0.98) 100%);
+  border: 1.5px solid rgba(224, 27, 34, 0.38);
+  border-top: 2px solid rgba(255, 90, 90, 0.6);
+  border-radius: 16px;
+  padding: 36px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(224, 27, 34, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-briefing-item {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(224, 27, 34, 0.2);
+  border-radius: 10px;
+  padding: 16px;
+  transition: all 0.25s ease;
+}
+
+.auth-briefing-item:hover {
+  background: rgba(224, 27, 34, 0.08);
+  border-color: rgba(224, 27, 34, 0.45);
+  transform: translateX(4px);
+}
+
+@media (max-width: 980px) {
+  .auth-command-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .auth-briefing-panel {
+    display: none;
   }
 }
 
