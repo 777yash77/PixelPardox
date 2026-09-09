@@ -240,6 +240,40 @@ const SPIDEY_NON_TECH_FAQ = [
   }
 ]
 
+// Interactive Real vs AI Forensic Benchmark Dataset for Landing Page
+const FORENSIC_BENCHMARKS = [
+  {
+    id: 1,
+    title: "Case Alpha: Synthetic Neural Portrait Target",
+    category: "Diffusion Generation (Midjourney v6)",
+    isAI: true,
+    modelName: "Midjourney v6",
+    badge: "Stage 1 Visual Challenge",
+    clues: [
+      "Iris Specular Reflection: Left cornea has circular ring light reflection; right cornea has rectangular window light (Ambient physics violation).",
+      "Hair Roots & Pores: Hair strands blend directly into scalp skin with zero visible follicle transitions.",
+      "Ear Cartilage: The antihelix folds backward into an impossible single anatomical ridge."
+    ],
+    spideyAnalysis: "Optical physics anomaly confirmed! Dual-pupil corneal reflections must obey a single ambient photon vector in natural lighting.",
+    deadpoolAnalysis: "Wade's diagnosis: This guy's face looks smoother than a freshly buttered frying pan. Classic neural smudge! Don't let it fool your squad!"
+  },
+  {
+    id: 2,
+    title: "Case Beta: Authentic High-ISO DSLR Street Capture",
+    category: "Authentic Optical Lens (Canon EOS R5)",
+    isAI: false,
+    modelName: "Authentic Camera Lens (50mm f/1.4)",
+    badge: "Stage 1 Visual Challenge",
+    clues: [
+      "Sensor Noise Grain: Consistent Poisson distribution noise present across both shadow and highlight zones.",
+      "Chromatic Dispersion: Subtle optical magenta and green fringing along high-contrast building margins.",
+      "Fabric Micro-Weave: Natural imperfect organic threading with micro-lint consistent with real physical textiles."
+    ],
+    spideyAnalysis: "Lens glass exhibits genuine chromatic dispersion. Real multi-element lenses refract light wavelengths unevenly at glass edges.",
+    deadpoolAnalysis: "Look at the dirty sidewalk and micro-lint on the jacket! Generative models are too vain to render realistic urban grime!"
+  }
+]
+
 export default function Home() {
   const [spideyQuoteIndex, setSpideyQuoteIndex] = useState(0)
   const [deadpoolQuoteIndex, setDeadpoolQuoteIndex] = useState(0)
@@ -254,6 +288,11 @@ export default function Home() {
   const [deadpoolJokeIdx, setDeadpoolJokeIdx] = useState(0)
   const [spideyJokeIdx, setSpideyJokeIdx] = useState(0)
   const [comicPopSound, setComicPopSound] = useState('💥 MAXIMUM EFFORT!')
+
+  // Interactive Forensic Benchmark Mini-Game State
+  const [benchmarkCaseIdx, setBenchmarkCaseIdx] = useState(0)
+  const [benchmarkGuess, setBenchmarkGuess] = useState(null) // 'REAL' or 'AI'
+  const [benchmarkFeedback, setBenchmarkFeedback] = useState(null)
 
   // Typing simulation state
   const [isDeadpoolTyping, setIsDeadpoolTyping] = useState(false)
@@ -1127,9 +1166,300 @@ export default function Home() {
         </div>
 
         {/* ========================================================= */}
+        {/* MULTIVERSE STAGE PIPELINE CONDUIT (FLOW FROM 0 TO PODIUM) */}
+        {/* ========================================================= */}
+        <section style={{ marginBottom: '28px' }}>
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(14, 22, 38, 0.75) 0%, rgba(26, 12, 18, 0.75) 100%)',
+            border: '1.5px solid rgba(56, 189, 248, 0.25)',
+            borderRadius: '14px',
+            padding: '20px 24px',
+            boxShadow: '0 8px 30px rgba(0, 0, 0, 0.5)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+              <div>
+                <span style={{ fontSize: '0.74rem', color: '#38BDF8', fontWeight: '800', letterSpacing: '1.4px', textTransform: 'uppercase' }}>
+                  TOURNAMENT BATTLE CONDUIT
+                </span>
+                <h3 style={{ fontSize: '1.35rem', margin: '4px 0 0 0', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                  The 4-Stage Multiverse Gauntlet
+                </h3>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span className="live-pulse-dot" style={{ width: '8px', height: '8px', background: '#34D399' }} />
+                <span style={{ fontSize: '0.76rem', color: '#34D399', fontWeight: 'bold' }}>All 4 Battle Protocols Loaded</span>
+              </div>
+            </div>
+
+            {/* Pipeline Stage Conduit Flow */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
+              gap: '12px',
+              position: 'relative'
+            }}>
+              {/* Stage 0 */}
+              <div style={{
+                background: 'rgba(56, 189, 248, 0.08)',
+                border: '1.5px solid rgba(56, 189, 248, 0.4)',
+                borderRadius: '10px',
+                padding: '14px 16px',
+                position: 'relative'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <span style={{ fontSize: '0.7rem', color: '#38BDF8', fontWeight: '900', letterSpacing: '0.8px' }}>STAGE 0</span>
+                  <span style={{ fontSize: '0.68rem', background: 'rgba(56, 189, 248, 0.15)', color: '#7DD3FC', padding: '2px 6px', borderRadius: '4px' }}>30 Mins</span>
+                </div>
+                <div style={{ fontWeight: 'bold', fontSize: '1.05rem', color: '#FFF', marginBottom: '4px' }}>MCQ Screening</div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>30 Questions • (+10 / -5 Penalty) • Squad Combined</div>
+              </div>
+
+              {/* Stage 1 */}
+              <div style={{
+                background: 'rgba(2, 132, 199, 0.08)',
+                border: '1.5px solid rgba(2, 132, 199, 0.4)',
+                borderRadius: '10px',
+                padding: '14px 16px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <span style={{ fontSize: '0.7rem', color: '#38BDF8', fontWeight: '900', letterSpacing: '0.8px' }}>STAGE 1</span>
+                  <span style={{ fontSize: '0.68rem', background: 'rgba(2, 132, 199, 0.15)', color: '#BAE6FD', padding: '2px 6px', borderRadius: '4px' }}>40s / Pixel</span>
+                </div>
+                <div style={{ fontWeight: 'bold', fontSize: '1.05rem', color: '#FFF', marginBottom: '4px' }}>Pixel Detective</div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>10 Projected Images • Real vs AI &amp; Model Identification</div>
+              </div>
+
+              {/* Stage 2 */}
+              <div style={{
+                background: 'rgba(224, 27, 34, 0.08)',
+                border: '1.5px solid rgba(224, 27, 34, 0.4)',
+                borderRadius: '10px',
+                padding: '14px 16px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <span style={{ fontSize: '0.7rem', color: '#FF7B7B', fontWeight: '900', letterSpacing: '0.8px' }}>STAGE 2</span>
+                  <span style={{ fontSize: '0.68rem', background: 'rgba(224, 27, 34, 0.15)', color: '#FECACA', padding: '2px 6px', borderRadius: '4px' }}>45s / Target</span>
+                </div>
+                <div style={{ fontWeight: 'bold', fontSize: '1.05rem', color: '#FFF', marginBottom: '4px' }}>The Glitch Hunt</div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>7 Inpainting Challenges • Anomaly &amp; Artifact Deduction</div>
+              </div>
+
+              {/* Stage 3 */}
+              <div style={{
+                background: 'rgba(249, 115, 22, 0.08)',
+                border: '1.5px solid rgba(249, 115, 22, 0.4)',
+                borderRadius: '10px',
+                padding: '14px 16px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <span style={{ fontSize: '0.7rem', color: '#FB923C', fontWeight: '900', letterSpacing: '0.8px' }}>STAGE 3</span>
+                  <span style={{ fontSize: '0.68rem', background: 'rgba(249, 115, 22, 0.15)', color: '#FED7AA', padding: '2px 6px', borderRadius: '4px' }}>75s / Duel</span>
+                </div>
+                <div style={{ fontWeight: 'bold', fontSize: '1.05rem', color: '#FFF', marginBottom: '4px' }}>Prompt Wars</div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>5 Showdowns • Reverse Semantic Reconstruction &amp; CLIP</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================= */}
+        {/* INTERACTIVE FORENSIC BENCHMARK MINI-GAME (ENGAGING TOOL)  */}
+        {/* ========================================================= */}
+        <section style={{ marginBottom: '28px' }}>
+          {(() => {
+            const currentBenchmark = FORENSIC_BENCHMARKS[benchmarkCaseIdx % FORENSIC_BENCHMARKS.length]
+            const hasGuessed = benchmarkGuess !== null
+
+            return (
+              <div className="comic-card" style={{
+                padding: '24px 26px',
+                borderTop: '3px solid #38BDF8',
+                borderBottom: '3px solid #E01B22',
+                background: 'linear-gradient(155deg, rgba(8, 14, 28, 0.95) 0%, rgba(20, 8, 14, 0.95) 100%)',
+                boxShadow: '0 12px 36px rgba(0, 0, 0, 0.6)'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '1.3rem' }}>🔬</span>
+                      <span style={{ fontSize: '0.74rem', color: '#F97316', fontWeight: '900', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
+                        INTERACTIVE FORENSIC BENCHMARK
+                      </span>
+                    </div>
+                    <h3 style={{ fontSize: '1.4rem', margin: '4px 0 0 0', color: '#FFF' }}>
+                      {currentBenchmark.title}
+                    </h3>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.76rem', color: '#7DD3FC', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.3)', padding: '4px 10px', borderRadius: '6px' }}>
+                      {currentBenchmark.badge}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setBenchmarkCaseIdx(prev => prev + 1)
+                        setBenchmarkGuess(null)
+                        setBenchmarkFeedback(null)
+                      }}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.08)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        color: '#FFF',
+                        padding: '6px 14px',
+                        borderRadius: '6px',
+                        fontSize: '0.78rem',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      ↻ Next Case ({((benchmarkCaseIdx % FORENSIC_BENCHMARKS.length) + 1)} / {FORENSIC_BENCHMARKS.length})
+                    </button>
+                  </div>
+                </div>
+
+                {/* Forensics Clues Card */}
+                <div style={{
+                  background: 'rgba(0, 0, 0, 0.4)',
+                  border: '1px dashed rgba(56, 189, 248, 0.35)',
+                  borderRadius: '10px',
+                  padding: '16px 20px',
+                  marginBottom: '20px'
+                }}>
+                  <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 'bold', marginBottom: '10px' }}>
+                    Telemetry Sensor Evidence &amp; Observable Anomalies:
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: '20px', color: '#E2E8F0', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                    {currentBenchmark.clues.map((clue, idx) => (
+                      <li key={idx} style={{ marginBottom: '6px' }}>
+                        {clue}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Decision Prompt & Buttons */}
+                {!hasGuessed ? (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '14px' }}>
+                    <span style={{ fontSize: '0.92rem', color: '#FFF', fontWeight: 'bold' }}>
+                      What is your squad's forensic ruling?
+                    </span>
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setBenchmarkGuess('REAL')
+                          setBenchmarkFeedback(!currentBenchmark.isAI)
+                        }}
+                        style={{
+                          background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.3) 0%, rgba(2, 132, 199, 0.6) 100%)',
+                          border: '1.5px solid #38BDF8',
+                          color: '#FFF',
+                          padding: '10px 22px',
+                          borderRadius: '8px',
+                          fontWeight: '800',
+                          fontSize: '0.88rem',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          boxShadow: '0 4px 14px rgba(2, 132, 199, 0.4)'
+                        }}
+                      >
+                        📸 Authentic Real Photo
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setBenchmarkGuess('AI')
+                          setBenchmarkFeedback(currentBenchmark.isAI)
+                        }}
+                        style={{
+                          background: 'linear-gradient(135deg, rgba(224, 27, 34, 0.3) 0%, rgba(224, 27, 34, 0.6) 100%)',
+                          border: '1.5px solid #EF4444',
+                          color: '#FFF',
+                          padding: '10px 22px',
+                          borderRadius: '8px',
+                          fontWeight: '800',
+                          fontSize: '0.88rem',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          boxShadow: '0 4px 14px rgba(224, 27, 34, 0.4)'
+                        }}
+                      >
+                        🤖 AI Generated Target
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  /* Post-Guess Forensic Feedback */
+                  <div className="stagger-fade-in" style={{
+                    background: benchmarkFeedback ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                    border: `1.5px solid ${benchmarkFeedback ? '#10B981' : '#EF4444'}`,
+                    borderRadius: '10px',
+                    padding: '18px 20px'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '10px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span style={{ fontSize: '1.4rem' }}>{benchmarkFeedback ? '🎯' : '⚠️'}</span>
+                        <div>
+                          <strong style={{ fontSize: '1.05rem', color: benchmarkFeedback ? '#34D399' : '#FCA5A5' }}>
+                            {benchmarkFeedback ? 'EXCELLENT FORENSIC DEDUCTION! (+10 PTS)' : 'PHYSICS MISMATCH DETECTED! (-5 PTS PENALTY)'}
+                          </strong>
+                          <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                            Actual Provenance: <strong style={{ color: '#FFF' }}>{currentBenchmark.isAI ? `AI Generated (${currentBenchmark.modelName})` : 'Authentic Optical Photograph'}</strong>
+                          </div>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setBenchmarkCaseIdx(prev => prev + 1)
+                          setBenchmarkGuess(null)
+                          setBenchmarkFeedback(null)
+                        }}
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.12)',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
+                          color: '#FFF',
+                          padding: '7px 16px',
+                          borderRadius: '6px',
+                          fontSize: '0.82rem',
+                          fontWeight: 'bold',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Try Another Case ➔
+                      </button>
+                    </div>
+
+                    {/* Superhero Analysis */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px', marginTop: '12px' }}>
+                      <div style={{ background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '8px', padding: '10px 14px' }}>
+                        <div style={{ fontSize: '0.74rem', color: '#38BDF8', fontWeight: 'bold', marginBottom: '4px' }}>🕷️ Spidey's Scientific Analysis:</div>
+                        <div style={{ fontSize: '0.84rem', color: '#F0F9FF', lineHeight: '1.5' }}>{currentBenchmark.spideyAnalysis}</div>
+                      </div>
+                      <div style={{ background: 'rgba(224, 27, 34, 0.08)', border: '1px solid rgba(224, 27, 34, 0.25)', borderRadius: '8px', padding: '10px 14px' }}>
+                        <div style={{ fontSize: '0.74rem', color: '#FF7B7B', fontWeight: 'bold', marginBottom: '4px' }}>🌮 Deadpool's Combat Advice:</div>
+                        <div style={{ fontSize: '0.84rem', color: '#FEE2E2', lineHeight: '1.5' }}>{currentBenchmark.deadpoolAnalysis}</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          })()}
+        </section>
+
+        {/* ========================================================= */}
         {/* INTERACTIVE ROUND DEEP-DIVE STATION (ALL 4 ROUNDS DETAILED) */}
         {/* ========================================================= */}
-        <section className="comic-card" style={{ padding: '26px 24px', marginBottom: '32px' }}>
+        <section className="comic-card" style={{ padding: '26px 24px', marginBottom: '28px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px', flexWrap: 'wrap', gap: '14px' }}>
             <div>
               <span style={{ color: '#E01B22', fontSize: '0.82rem', fontWeight: 'bold', letterSpacing: '2px', textTransform: 'uppercase' }}>
@@ -1314,7 +1644,7 @@ export default function Home() {
         {/* ========================================================= */}
         {/* HERO BANTER ROAST DUEL CARD (SLIGHTLY BOTTOM SECTION)     */}
         {/* ========================================================= */}
-        <section style={{ maxWidth: '100%', margin: '0 auto 88px' }}>
+        <section style={{ maxWidth: '100%', margin: '0 auto 28px' }}>
           <div className="roast-duel-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

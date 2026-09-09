@@ -82,6 +82,11 @@ export default function GameArena() {
   const [myAttempt, setMyAttempt] = useState(null)
   const [isDebriefRefreshing, setIsDebriefRefreshing] = useState(false)
 
+  // Stage 0 Matrix Filter & Forensic Optics State
+  const [matrixFilter, setMatrixFilter] = useState('ALL') // ALL, UNANSWERED, FLAGGED
+  const [forensicZoom, setForensicZoom] = useState(1) // 1, 1.5, 2, 3
+  const [forensicFilter, setForensicFilter] = useState('NORMAL') // NORMAL, CONTRAST, MONO, INVERT
+
   // Webcam & Question Transition Refs
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
@@ -193,7 +198,10 @@ export default function GameArena() {
         setPrelimStatus('COMPLETED')
       }
     }
+    const storedTeamId = localStorage.getItem('teamId') || 'squad'
     const savedAnswers = localStorage.getItem('prelimAnswers_' + storedParticipant)
+      || (storedTeamId ? localStorage.getItem('prelimAnswers_team_' + storedTeamId) : null)
+      || localStorage.getItem('prelimAnswers_latest')
     if (savedAnswers) {
       try {
         setPrelimAnswers(JSON.parse(savedAnswers))
@@ -202,6 +210,7 @@ export default function GameArena() {
       }
     }
     const savedFlagged = localStorage.getItem('prelimFlagged_' + storedParticipant)
+      || (storedTeamId ? localStorage.getItem('prelimFlagged_team_' + storedTeamId) : null)
     if (savedFlagged) {
       try {
         setFlaggedQuestions(new Set(JSON.parse(savedFlagged)))
@@ -210,6 +219,7 @@ export default function GameArena() {
       }
     }
     const savedIdx = localStorage.getItem('prelimIdx_' + storedParticipant)
+      || (storedTeamId ? localStorage.getItem('prelimIdx_team_' + storedTeamId) : null)
     if (savedIdx) {
       const idx = parseInt(savedIdx, 10)
       if (!isNaN(idx) && idx >= 0) {
@@ -269,6 +279,8 @@ export default function GameArena() {
           setRound1Answer({ chosen: '', bonus: '' })
           setTextSubmission('')
           setShowModelSelect(false)
+          setForensicZoom(1)
+          setForensicFilter('NORMAL')
         }
       } else if (token) {
         // If the question isn't in our local state, fetch questions
@@ -614,13 +626,26 @@ export default function GameArena() {
     }
   }
 
+  // Resilient multi-key local storage sync for Stage 0 Prelims
+  const saveAnswersLocally = (answers) => {
+    if (typeof window === 'undefined') return
+    const json = JSON.stringify(answers)
+    const pName = participantName || localStorage.getItem('participantName')
+    if (pName && pName !== 'Unknown') {
+      localStorage.setItem('prelimAnswers_' + pName, json)
+    }
+    const tId = localStorage.getItem('teamId')
+    if (tId) {
+      localStorage.setItem('prelimAnswers_team_' + tId, json)
+    }
+    localStorage.setItem('prelimAnswers_latest', json)
+  }
+
   // Sync answers to state & localStorage
   const handleAnswerSelect = (questionId, optionValue) => {
     setPrelimAnswers(prev => {
       const next = { ...prev, [questionId]: optionValue }
-      if (participantName) {
-        localStorage.setItem('prelimAnswers_' + participantName, JSON.stringify(next))
-      }
+      saveAnswersLocally(next)
       return next
     })
   }
@@ -630,9 +655,7 @@ export default function GameArena() {
     setPrelimAnswers(prev => {
       const next = { ...prev }
       delete next[questionId]
-      if (participantName) {
-        localStorage.setItem('prelimAnswers_' + participantName, JSON.stringify(next))
-      }
+      saveAnswersLocally(next)
       return next
     })
   }
@@ -643,8 +666,14 @@ export default function GameArena() {
       const next = new Set(prev)
       if (next.has(questionId)) next.delete(questionId)
       else next.add(questionId)
-      if (participantName) {
-        localStorage.setItem('prelimFlagged_' + participantName, JSON.stringify(Array.from(next)))
+      const json = JSON.stringify(Array.from(next))
+      const pName = participantName || localStorage.getItem('participantName')
+      if (pName && pName !== 'Unknown') {
+        localStorage.setItem('prelimFlagged_' + pName, json)
+      }
+      const tId = localStorage.getItem('teamId')
+      if (tId) {
+        localStorage.setItem('prelimFlagged_team_' + tId, json)
       }
       return next
     })
@@ -720,21 +749,41 @@ export default function GameArena() {
         const attempt = await res.json()
         setMyAttempt(attempt)
         setPrelimStatus('COMPLETED')
-        stopWebcam()
-        localStorage.removeItem('prelimStartTime_' + participantName)
-        localStorage.removeItem('prelimAnswers_' + participantName)
-        localStorage.removeItem('prelimFlagged_' + participantName)
-        localStorage.removeItem('prelimIdx_' + participantName)
+        const clearPrelimStorage = () => {
+          if (participantName) {
+            localStorage.removeItem('prelimStartTime_' + participantName)
+            localStorage.removeItem('prelimAnswers_' + participantName)
+            localStorage.removeItem('prelimFlagged_' + participantName)
+            localStorage.removeItem('prelimIdx_' + participantName)
+          }
+          const tId = localStorage.getItem('teamId')
+          if (tId) {
+            localStorage.removeItem('prelimAnswers_team_' + tId)
+            localStorage.removeItem('prelimFlagged_team_' + tId)
+            localStorage.removeItem('prelimIdx_team_' + tId)
+          }
+          localStorage.removeItem('prelimAnswers_latest')
+        }
+        clearPrelimStorage()
         fetchTeamProfile(token)
       } else {
         const data = await res.json()
         if (data.message === 'Quiz already submitted' || data.message?.includes('COMPLETED')) {
           setPrelimStatus('COMPLETED')
           stopWebcam()
-          localStorage.removeItem('prelimStartTime_' + participantName)
-          localStorage.removeItem('prelimAnswers_' + participantName)
-          localStorage.removeItem('prelimFlagged_' + participantName)
-          localStorage.removeItem('prelimIdx_' + participantName)
+          if (participantName) {
+            localStorage.removeItem('prelimStartTime_' + participantName)
+            localStorage.removeItem('prelimAnswers_' + participantName)
+            localStorage.removeItem('prelimFlagged_' + participantName)
+            localStorage.removeItem('prelimIdx_' + participantName)
+          }
+          const tId = localStorage.getItem('teamId')
+          if (tId) {
+            localStorage.removeItem('prelimAnswers_team_' + tId)
+            localStorage.removeItem('prelimFlagged_team_' + tId)
+            localStorage.removeItem('prelimIdx_team_' + tId)
+          }
+          localStorage.removeItem('prelimAnswers_latest')
           fetchTeamProfile(token)
         }
       }
@@ -1558,8 +1607,42 @@ export default function GameArena() {
                             marginBottom: '14px',
                             boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
                           }}>
-                            <div style={{ fontSize: '0.74rem', color: '#F97316', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
-                              Question Matrix ({prelimQuestions.length || 30})
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
+                              <div style={{ fontSize: '0.74rem', color: '#F97316', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                                Question Matrix ({prelimQuestions.length || 30})
+                              </div>
+                              <span style={{ fontSize: '0.68rem', color: '#34D399', background: 'rgba(52, 211, 153, 0.1)', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(52, 211, 153, 0.25)' }}>
+                                💾 Auto-Saved
+                              </span>
+                            </div>
+
+                            {/* Quick Filter Pills for Matrix */}
+                            <div style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
+                              {[
+                                { id: 'ALL', label: `All (${prelimQuestions.length || 30})` },
+                                { id: 'UNANSWERED', label: `Blank (${Math.max(0, (prelimQuestions.length || 30) - Object.keys(prelimAnswers).length)})` },
+                                { id: 'FLAGGED', label: `Flagged (${flaggedQuestions.size})` }
+                              ].map(pill => (
+                                <button
+                                  key={pill.id}
+                                  type="button"
+                                  onClick={() => setMatrixFilter(pill.id)}
+                                  style={{
+                                    flex: 1,
+                                    padding: '4px 2px',
+                                    fontSize: '0.68rem',
+                                    fontWeight: matrixFilter === pill.id ? 'bold' : 'normal',
+                                    background: matrixFilter === pill.id ? 'rgba(56, 189, 248, 0.22)' : 'rgba(255, 255, 255, 0.04)',
+                                    border: `1px solid ${matrixFilter === pill.id ? '#38BDF8' : 'rgba(255, 255, 255, 0.1)'}`,
+                                    color: matrixFilter === pill.id ? '#38BDF8' : 'var(--text-secondary)',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.15s ease'
+                                  }}
+                                >
+                                  {pill.label}
+                                </button>
+                              ))}
                             </div>
 
                             {/* Legend */}
@@ -1581,6 +1664,10 @@ export default function GameArena() {
                                 const isAnswered = !!prelimAnswers[q.id]
                                 const isFlagged = flaggedQuestions.has(q.id)
                                 const isCurrent = idx === currentPrelimIdx
+
+                                // Filter check
+                                const isDimmed = (matrixFilter === 'UNANSWERED' && isAnswered) || (matrixFilter === 'FLAGGED' && !isFlagged)
+
                                 let bg = 'rgba(255,255,255,0.06)'
                                 let border = '1px solid rgba(255,255,255,0.1)'
                                 let color = 'var(--text-secondary)'
@@ -1605,6 +1692,7 @@ export default function GameArena() {
                                       transition: 'all 0.15s ease',
                                       lineHeight: '1',
                                       textAlign: 'center',
+                                      opacity: isDimmed ? 0.3 : 1,
                                       boxShadow: isCurrent ? '0 0 10px rgba(224,27,34,0.5)' : 'none'
                                     }}
                                     title={`Q${idx + 1}: ${isAnswered ? 'Answered' : isFlagged ? 'Flagged' : 'Unanswered'}`}
@@ -1616,12 +1704,12 @@ export default function GameArena() {
                             </div>
                           </div>
 
-                          {/* Summary Stats */}
+                          {/* Summary Stats & Risk HUD */}
                           <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '10px', padding: '14px', marginBottom: '14px' }}>
-                            <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Progress Telemetry</div>
+                            <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Progress &amp; Score Telemetry</div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
-                                <span style={{ color: '#38BDF8' }}>✓ Answered</span>
+                                <span style={{ color: '#38BDF8' }}>✓ Answered (+10 pts each)</span>
                                 <strong style={{ color: '#FFF' }}>{Object.keys(prelimAnswers).length}</strong>
                               </div>
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
@@ -1629,9 +1717,16 @@ export default function GameArena() {
                                 <strong style={{ color: '#FFF' }}>{flaggedQuestions.size}</strong>
                               </div>
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
-                                <span style={{ color: 'var(--text-dim)' }}>○ Left Blank</span>
+                                <span style={{ color: 'var(--text-dim)' }}>○ Left Blank (0 penalty)</span>
                                 <strong style={{ color: '#FFF' }}>{Math.max(0, (prelimQuestions.length || 30) - Object.keys(prelimAnswers).length)}</strong>
                               </div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', paddingTop: '6px', borderTop: '1px dashed rgba(255,255,255,0.1)' }}>
+                                <span style={{ color: '#34D399', fontWeight: 'bold' }}>Potential Max:</span>
+                                <strong style={{ color: '#34D399' }}>+{Object.keys(prelimAnswers).length * 10} pts</strong>
+                              </div>
+                            </div>
+                            <div style={{ marginTop: '10px', padding: '7px 9px', background: 'rgba(239, 68, 68, 0.12)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '6px', fontSize: '0.68rem', color: '#FCA5A5', lineHeight: '1.4' }}>
+                              ⚠️ <strong>Scoring Risk:</strong> -5 penalty for wrong answers. Blank questions incur 0 penalty.
                             </div>
                             <div className="arena-progress-container" style={{ margin: '10px 0 0', height: '6px' }}>
                               <div className="arena-progress-bar" style={{ width: `${(Object.keys(prelimAnswers).length / Math.max(prelimQuestions.length, 1)) * 100}%` }} />
@@ -2191,11 +2286,26 @@ export default function GameArena() {
                                 />
                               </div>
                             ) : (
-                              <div style={{ width: '100%', background: '#070405', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '360px' }}>
+                              <div style={{ width: '100%', background: '#070405', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '360px', overflow: 'hidden', position: 'relative' }}>
                                 <img 
                                   src={`http://localhost:8080${currentQuestion.imageUrl}`} 
                                   alt="quiz visual" 
-                                  style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '504px', objectFit: 'contain' }}
+                                  style={{ 
+                                    width: '100%', 
+                                    height: 'auto', 
+                                    display: 'block', 
+                                    maxHeight: '504px', 
+                                    objectFit: 'contain',
+                                    transform: `scale(${forensicZoom})`,
+                                    filter: forensicFilter === 'CONTRAST'
+                                      ? 'contrast(1.6) saturate(1.3) brightness(1.05)'
+                                      : forensicFilter === 'MONO'
+                                      ? 'grayscale(1) contrast(1.5)'
+                                      : forensicFilter === 'INVERT'
+                                      ? 'invert(1) hue-rotate(180deg) contrast(1.3)'
+                                      : 'none',
+                                    transition: 'transform 0.25s ease, filter 0.2s ease'
+                                  }} 
                                 />
                               </div>
                             )
@@ -2203,6 +2313,93 @@ export default function GameArena() {
                             <div style={{ width: '100%', minHeight: '312px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '10px', color: 'var(--text-secondary)' }}>
                               <span className="pulse-dot" style={{ width: '12px', height: '12px', background: '#E01B22' }} />
                               <span style={{ fontSize: '0.85rem', letterSpacing: '1px', textTransform: 'uppercase' }}>Acquiring Visual Uplink...</span>
+                            </div>
+                          )}
+
+                          {/* Interactive Forensic Optics Toolbar */}
+                          {gameState.activeRound !== 4 && currentQuestion.imageUrl && (
+                            <div style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              background: 'rgba(10, 16, 30, 0.95)',
+                              borderTop: '1px solid rgba(56, 189, 248, 0.3)',
+                              padding: '10px 16px',
+                              flexWrap: 'wrap',
+                              gap: '10px'
+                            }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ fontSize: '0.74rem', color: '#7DD3FC', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                  🔬 Magnifier:
+                                </span>
+                                {[1, 1.5, 2, 3].map(z => (
+                                  <button
+                                    key={z}
+                                    type="button"
+                                    onClick={() => setForensicZoom(z)}
+                                    style={{
+                                      background: forensicZoom === z ? 'rgba(56, 189, 248, 0.3)' : 'rgba(255, 255, 255, 0.05)',
+                                      border: `1px solid ${forensicZoom === z ? '#38BDF8' : 'rgba(255, 255, 255, 0.15)'}`,
+                                      color: forensicZoom === z ? '#38BDF8' : '#CBD5E1',
+                                      padding: '3px 10px',
+                                      borderRadius: '5px',
+                                      fontSize: '0.74rem',
+                                      fontWeight: 'bold',
+                                      cursor: 'pointer',
+                                      transition: 'all 0.15s ease'
+                                    }}
+                                  >
+                                    {z}x
+                                  </button>
+                                ))}
+                                {forensicZoom > 1 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => setForensicZoom(1)}
+                                    style={{
+                                      background: 'none',
+                                      border: 'none',
+                                      color: '#F87171',
+                                      fontSize: '0.72rem',
+                                      cursor: 'pointer',
+                                      textDecoration: 'underline'
+                                    }}
+                                  >
+                                    Reset
+                                  </button>
+                                )}
+                              </div>
+
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                <span style={{ fontSize: '0.74rem', color: '#FF7B7B', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                  ⚡ Filter:
+                                </span>
+                                {[
+                                  { id: 'NORMAL', label: 'RGB' },
+                                  { id: 'CONTRAST', label: 'High Contrast' },
+                                  { id: 'MONO', label: 'Forensic Mono' },
+                                  { id: 'INVERT', label: 'Lumina Invert' }
+                                ].map(f => (
+                                  <button
+                                    key={f.id}
+                                    type="button"
+                                    onClick={() => setForensicFilter(f.id)}
+                                    style={{
+                                      background: forensicFilter === f.id ? 'rgba(224, 27, 34, 0.3)' : 'rgba(255, 255, 255, 0.05)',
+                                      border: `1px solid ${forensicFilter === f.id ? '#E01B22' : 'rgba(255, 255, 255, 0.15)'}`,
+                                      color: forensicFilter === f.id ? '#FF7B7B' : '#CBD5E1',
+                                      padding: '3px 9px',
+                                      borderRadius: '5px',
+                                      fontSize: '0.72rem',
+                                      fontWeight: 'bold',
+                                      cursor: 'pointer',
+                                      transition: 'all 0.15s ease'
+                                    }}
+                                  >
+                                    {f.label}
+                                  </button>
+                                ))}
+                              </div>
                             </div>
                           )}
                         </div>
