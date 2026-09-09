@@ -1792,182 +1792,8 @@ export default function Home() {
             </div>
 
             <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '22px', maxWidth: '860px', fontSize: '0.96rem' }}>
-              Have questions regarding Stage 0 Prelim timing, webcam invigilation permissions, team score aggregation, or technical rules? Reach out directly to our student coordinators:
+              Have questions regarding Stage 0 Prelim timing, webcam invigilation permissions, team score aggregation, or technical rules? Contact details are in the footer below.
             </p>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '26px', marginBottom: '30px' }}>
-              {/* Coordinator 1: Yaswanth R T */}
-              <div style={{
-                background: 'rgba(2, 132, 199, 0.09)',
-                border: '1.5px solid rgba(56, 189, 248, 0.45)',
-                borderRadius: '14px',
-                padding: '26px 28px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                boxShadow: '0 8px 26px rgba(2, 132, 199, 0.22)'
-              }}>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
-                    <div>
-                      <span style={{ fontSize: '0.74rem', background: '#0284C7', color: '#FFF', fontWeight: '800', padding: '3px 10px', borderRadius: '4px', letterSpacing: '0.8px' }}>
-                        STUDENT COORDINATOR
-                      </span>
-                      <h3 style={{ fontSize: '1.4rem', color: '#FFF', marginTop: '8px', marginBottom: '2px' }}>
-                        Yaswanth R T
-                      </h3>
-                      <div style={{ fontSize: '0.84rem', color: '#7DD3FC' }}>
-                        Dept. of Computer Applications • MCA
-                      </div>
-                    </div>
-                    <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'rgba(56, 189, 248, 0.15)', border: '1.5px solid #38BDF8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem' }}>
-                      🧑‍💻
-                    </div>
-                  </div>
-
-                  <div style={{
-                    background: 'rgba(0, 0, 0, 0.4)',
-                    border: '1px solid rgba(56, 189, 248, 0.3)',
-                    borderRadius: '8px',
-                    padding: '12px 16px',
-                    margin: '18px 0',
-                    fontFamily: 'monospace',
-                    fontSize: '0.94rem',
-                    color: '#BAE6FD',
-                    wordBreak: 'break-all'
-                  }}>
-                    25mx360@psgtech.ac.in
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                  <a
-                    href="mailto:25mx360@psgtech.ac.in?subject=Pixel%20Paradox%20Support%20Request"
-                    style={{
-                      flex: 1,
-                      textDecoration: 'none',
-                      background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
-                      color: '#FFF',
-                      padding: '11px 16px',
-                      borderRadius: '8px',
-                      fontWeight: 'bold',
-                      fontSize: '0.85rem',
-                      textAlign: 'center',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      boxShadow: '0 4px 14px rgba(2, 132, 199, 0.4)'
-                    }}
-                  >
-                    ✉️ Email Yaswanth
-                  </a>
-                  <button
-                    type="button"
-                    onClick={() => handleCopyEmail('25mx360@psgtech.ac.in')}
-                    style={{
-                      background: copiedEmail === '25mx360@psgtech.ac.in' ? 'rgba(52, 211, 153, 0.25)' : 'rgba(255, 255, 255, 0.08)',
-                      border: `1px solid ${copiedEmail === '25mx360@psgtech.ac.in' ? '#34D399' : 'rgba(255, 255, 255, 0.2)'}`,
-                      color: copiedEmail === '25mx360@psgtech.ac.in' ? '#34D399' : '#FFF',
-                      padding: '11px 16px',
-                      borderRadius: '8px',
-                      fontWeight: 'bold',
-                      fontSize: '0.85rem',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    {copiedEmail === '25mx360@psgtech.ac.in' ? '✓ Copied!' : '📋 Copy'}
-                  </button>
-                </div>
-              </div>
-
-              {/* Coordinator 2: Vignesh M */}
-              <div style={{
-                background: 'rgba(224, 27, 34, 0.09)',
-                border: '1.5px solid rgba(239, 68, 68, 0.45)',
-                borderRadius: '14px',
-                padding: '26px 28px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                boxShadow: '0 8px 26px rgba(224, 27, 34, 0.22)'
-              }}>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
-                    <div>
-                      <span style={{ fontSize: '0.74rem', background: '#E01B22', color: '#FFF', fontWeight: '800', padding: '3px 10px', borderRadius: '4px', letterSpacing: '0.8px' }}>
-                        STUDENT COORDINATOR
-                      </span>
-                      <h3 style={{ fontSize: '1.4rem', color: '#FFF', marginTop: '8px', marginBottom: '2px' }}>
-                        Vignesh M
-                      </h3>
-                      <div style={{ fontSize: '0.84rem', color: '#FF9B9B' }}>
-                        Dept. of Computer Applications • MCA
-                      </div>
-                    </div>
-                    <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'rgba(239, 68, 68, 0.15)', border: '1.5px solid #EF4444', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem' }}>
-                      🧑‍💻
-                    </div>
-                  </div>
-
-                  <div style={{
-                    background: 'rgba(0, 0, 0, 0.4)',
-                    border: '1px solid rgba(239, 68, 68, 0.3)',
-                    borderRadius: '8px',
-                    padding: '12px 16px',
-                    margin: '18px 0',
-                    fontFamily: 'monospace',
-                    fontSize: '0.94rem',
-                    color: '#FECACA',
-                    wordBreak: 'break-all'
-                  }}>
-                    25MX356@psgtech.ac.in
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                  <a
-                    href="mailto:25MX356@psgtech.ac.in?subject=Pixel%20Paradox%20Support%20Request"
-                    style={{
-                      flex: 1,
-                      textDecoration: 'none',
-                      background: 'linear-gradient(135deg, #E01B22 0%, #B91C1C 100%)',
-                      color: '#FFF',
-                      padding: '11px 16px',
-                      borderRadius: '8px',
-                      fontWeight: 'bold',
-                      fontSize: '0.85rem',
-                      textAlign: 'center',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      boxShadow: '0 4px 14px rgba(224, 27, 34, 0.4)'
-                    }}
-                  >
-                    ✉️ Email Vignesh
-                  </a>
-                  <button
-                    type="button"
-                    onClick={() => handleCopyEmail('25MX356@psgtech.ac.in')}
-                    style={{
-                      background: copiedEmail === '25MX356@psgtech.ac.in' ? 'rgba(52, 211, 153, 0.25)' : 'rgba(255, 255, 255, 0.08)',
-                      border: `1px solid ${copiedEmail === '25MX356@psgtech.ac.in' ? '#34D399' : 'rgba(255, 255, 255, 0.2)'}`,
-                      color: copiedEmail === '25MX356@psgtech.ac.in' ? '#34D399' : '#FFF',
-                      padding: '11px 16px',
-                      borderRadius: '8px',
-                      fontWeight: 'bold',
-                      fontSize: '0.85rem',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    {copiedEmail === '25MX356@psgtech.ac.in' ? '✓ Copied!' : '📋 Copy'}
-                  </button>
-                </div>
-              </div>
-            </div>
 
             {/* Quick Emergency Rules Box */}
             <div style={{
@@ -2053,80 +1879,46 @@ export default function Home() {
                 alignItems: 'center',
                 gap: '18px',
                 boxShadow: '0 4px 24px rgba(2,132,199,0.15), inset 0 1px 0 rgba(56,189,248,0.15)',
-                transition: 'all 0.25s ease',
                 position: 'relative',
                 overflow: 'hidden'
               }}>
                 {/* Cyan glow accent bar */}
                 <div style={{
                   position: 'absolute',
-                  left: 0,
-                  top: 0,
-                  bottom: 0,
+                  left: 0, top: 0, bottom: 0,
                   width: '3px',
                   background: 'linear-gradient(180deg, #38BDF8, #0284C7)',
                   borderRadius: '16px 0 0 16px'
                 }} />
                 {/* Avatar */}
                 <div style={{
-                  width: '52px',
-                  height: '52px',
-                  borderRadius: '50%',
+                  width: '52px', height: '52px', borderRadius: '50%',
                   background: 'linear-gradient(135deg, #0284C7 0%, #075985 100%)',
                   border: '2px solid rgba(56,189,248,0.6)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.5rem',
-                  flexShrink: 0,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '1.5rem', flexShrink: 0,
                   boxShadow: '0 0 14px rgba(56,189,248,0.4)'
                 }}>👨‍💻</div>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
-                    <span style={{ fontSize: '1.05rem', fontWeight: '800', color: '#FFF', letterSpacing: '0.3px' }}>Yaswanth R T</span>
-                    <span style={{ fontSize: '0.62rem', background: 'rgba(56,189,248,0.2)', color: '#7DD3FC', border: '1px solid rgba(56,189,248,0.4)', padding: '1px 7px', borderRadius: '10px', fontWeight: '700', letterSpacing: '0.5px' }}>COORD</span>
+                    <span style={{ fontSize: '1.05rem', fontWeight: '800', color: '#FFF' }}>Yaswanth R T</span>
+                    <span style={{ fontSize: '0.62rem', background: 'rgba(56,189,248,0.2)', color: '#7DD3FC', border: '1px solid rgba(56,189,248,0.4)', padding: '1px 7px', borderRadius: '10px', fontWeight: '700' }}>COORD</span>
                   </div>
-                  <div style={{ fontSize: '0.76rem', color: '#7DD3FC', marginBottom: '10px' }}>MCA • Dept. of Computer Applications</div>
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    <a
-                      href="mailto:25mx360@psgtech.ac.in?subject=Pixel%20Paradox%20Support"
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '5px',
-                        background: 'rgba(2,132,199,0.25)',
-                        border: '1px solid rgba(56,189,248,0.5)',
-                        color: '#BAE6FD',
-                        padding: '5px 12px',
-                        borderRadius: '8px',
-                        fontSize: '0.78rem',
-                        fontWeight: '700',
-                        textDecoration: 'none',
-                        fontFamily: 'monospace',
-                        letterSpacing: '0.3px',
-                        transition: 'all 0.2s ease'
-                      }}
-                    >
-                      ✉️ 25mx360@psgtech.ac.in
-                    </a>
-                    <button
-                      type="button"
-                      onClick={() => handleCopyEmail('25mx360@psgtech.ac.in')}
-                      style={{
-                        background: copiedEmail === '25mx360@psgtech.ac.in' ? 'rgba(52,211,153,0.2)' : 'rgba(255,255,255,0.06)',
-                        border: `1px solid ${copiedEmail === '25mx360@psgtech.ac.in' ? '#34D399' : 'rgba(255,255,255,0.15)'}`,
-                        color: copiedEmail === '25mx360@psgtech.ac.in' ? '#34D399' : '#94A3B8',
-                        padding: '5px 12px',
-                        borderRadius: '8px',
-                        fontSize: '0.76rem',
-                        fontWeight: '700',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                    >
-                      {copiedEmail === '25mx360@psgtech.ac.in' ? '✓ Copied' : '📋 Copy'}
-                    </button>
-                  </div>
+                  <div style={{ fontSize: '0.76rem', color: '#7DD3FC', marginBottom: '12px' }}>MCA • Dept. of Computer Applications</div>
+                  <a
+                    href="mailto:25mx360@psgtech.ac.in?subject=Pixel%20Paradox%20Support"
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '6px',
+                      background: 'linear-gradient(135deg, #0284C7 0%, #075985 100%)',
+                      border: '1px solid rgba(56,189,248,0.6)',
+                      color: '#FFF', padding: '8px 16px', borderRadius: '8px',
+                      fontSize: '0.82rem', fontWeight: '700', textDecoration: 'none',
+                      boxShadow: '0 4px 14px rgba(2,132,199,0.35)',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    ✉️ Email Yaswanth
+                  </a>
                 </div>
               </div>
 
@@ -2140,32 +1932,24 @@ export default function Home() {
                 alignItems: 'center',
                 gap: '18px',
                 boxShadow: '0 4px 24px rgba(224,27,34,0.15), inset 0 1px 0 rgba(239,68,68,0.15)',
-                transition: 'all 0.25s ease',
                 position: 'relative',
                 overflow: 'hidden'
               }}>
                 {/* Red glow accent bar */}
                 <div style={{
                   position: 'absolute',
-                  left: 0,
-                  top: 0,
-                  bottom: 0,
+                  left: 0, top: 0, bottom: 0,
                   width: '3px',
                   background: 'linear-gradient(180deg, #EF4444, #B91C1C)',
                   borderRadius: '16px 0 0 16px'
                 }} />
                 {/* Avatar */}
                 <div style={{
-                  width: '52px',
-                  height: '52px',
-                  borderRadius: '50%',
+                  width: '52px', height: '52px', borderRadius: '50%',
                   background: 'linear-gradient(135deg, #E01B22 0%, #7F1D1D 100%)',
                   border: '2px solid rgba(239,68,68,0.6)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.5rem',
-                  flexShrink: 0,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '1.5rem', flexShrink: 0,
                   boxShadow: '0 0 14px rgba(239,68,68,0.4)'
                 }}>👨‍💻</div>
                 <div style={{ flex: 1 }}>
@@ -2173,47 +1957,21 @@ export default function Home() {
                     <span style={{ fontSize: '1.05rem', fontWeight: '800', color: '#FFF', letterSpacing: '0.3px' }}>Vignesh M</span>
                     <span style={{ fontSize: '0.62rem', background: 'rgba(239,68,68,0.2)', color: '#FCA5A5', border: '1px solid rgba(239,68,68,0.4)', padding: '1px 7px', borderRadius: '10px', fontWeight: '700', letterSpacing: '0.5px' }}>COORD</span>
                   </div>
-                  <div style={{ fontSize: '0.76rem', color: '#FCA5A5', marginBottom: '10px' }}>MCA • Dept. of Computer Applications</div>
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    <a
-                      href="mailto:25MX356@psgtech.ac.in?subject=Pixel%20Paradox%20Support"
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '5px',
-                        background: 'rgba(224,27,34,0.2)',
-                        border: '1px solid rgba(239,68,68,0.5)',
-                        color: '#FECACA',
-                        padding: '5px 12px',
-                        borderRadius: '8px',
-                        fontSize: '0.78rem',
-                        fontWeight: '700',
-                        textDecoration: 'none',
-                        fontFamily: 'monospace',
-                        letterSpacing: '0.3px',
-                        transition: 'all 0.2s ease'
-                      }}
-                    >
-                      ✉️ 25MX356@psgtech.ac.in
-                    </a>
-                    <button
-                      type="button"
-                      onClick={() => handleCopyEmail('25MX356@psgtech.ac.in')}
-                      style={{
-                        background: copiedEmail === '25MX356@psgtech.ac.in' ? 'rgba(52,211,153,0.2)' : 'rgba(255,255,255,0.06)',
-                        border: `1px solid ${copiedEmail === '25MX356@psgtech.ac.in' ? '#34D399' : 'rgba(255,255,255,0.15)'}`,
-                        color: copiedEmail === '25MX356@psgtech.ac.in' ? '#34D399' : '#94A3B8',
-                        padding: '5px 12px',
-                        borderRadius: '8px',
-                        fontSize: '0.76rem',
-                        fontWeight: '700',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                    >
-                      {copiedEmail === '25MX356@psgtech.ac.in' ? '✓ Copied' : '📋 Copy'}
-                    </button>
-                  </div>
+                  <div style={{ fontSize: '0.76rem', color: '#FCA5A5', marginBottom: '12px' }}>MCA • Dept. of Computer Applications</div>
+                  <a
+                    href="mailto:25MX356@psgtech.ac.in?subject=Pixel%20Paradox%20Support"
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '6px',
+                      background: 'linear-gradient(135deg, #E01B22 0%, #7F1D1D 100%)',
+                      border: '1px solid rgba(239,68,68,0.6)',
+                      color: '#FFF', padding: '8px 16px', borderRadius: '8px',
+                      fontSize: '0.82rem', fontWeight: '700', textDecoration: 'none',
+                      boxShadow: '0 4px 14px rgba(224,27,34,0.35)',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    ✉️ Email Vignesh
+                  </a>
                 </div>
               </div>
 
