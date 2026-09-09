@@ -79,6 +79,8 @@ export default function GameArena() {
   // Tournament Protocol Acknowledgment Modal
   const [showAcknowledgeModal, setShowAcknowledgeModal] = useState(false)
   const [hasAcknowledged, setHasAcknowledged] = useState(false)
+  const [myAttempt, setMyAttempt] = useState(null)
+  const [isDebriefRefreshing, setIsDebriefRefreshing] = useState(false)
 
   // Webcam & Question Transition Refs
   const videoRef = useRef(null)
@@ -345,6 +347,7 @@ export default function GameArena() {
   // 4. HTTP API calls
   const fetchTeamProfile = async (tok) => {
     const authToken = tok || token || (typeof window !== 'undefined' ? localStorage.getItem('token') : null)
+    const pName = participantName || (typeof window !== 'undefined' ? localStorage.getItem('participantName') : '')
     try {
       const res = await fetch('http://localhost:8080/api/game/my-team', {
         headers: authToken ? { 'Authorization': `Bearer ${authToken}` } : {}
@@ -352,6 +355,16 @@ export default function GameArena() {
       if (res.ok) {
         const profile = await res.json()
         setTeam(profile)
+        if (profile.attempts && Array.isArray(profile.attempts) && pName) {
+          const matchedAttempt = profile.attempts.find(a => a.participantName?.toLowerCase() === pName.toLowerCase())
+          if (matchedAttempt) {
+            setMyAttempt(matchedAttempt)
+            if (matchedAttempt.status === 'COMPLETED') {
+              setPrelimStatus('COMPLETED')
+              stopWebcam()
+            }
+          }
+        }
       } else {
         const teamId = localStorage.getItem('teamId')
         const storedTeamName = localStorage.getItem('teamName') || ''
@@ -374,6 +387,7 @@ export default function GameArena() {
       })
       if (res.ok) {
         const attempt = await res.json()
+        setMyAttempt(attempt)
         if (attempt.status === 'COMPLETED') {
           setPrelimStatus('COMPLETED')
           stopWebcam()
@@ -381,6 +395,7 @@ export default function GameArena() {
           localStorage.removeItem('prelimAnswers_' + pName)
           localStorage.removeItem('prelimFlagged_' + pName)
           localStorage.removeItem('prelimIdx_' + pName)
+          fetchTeamProfile(tok)
         } else if (attempt.status === 'IN_PROGRESS' && attempt.startedAt) {
           const elapsed = Math.floor((Date.now() - attempt.startedAt) / 1000)
           if (elapsed < 1800) {
@@ -391,6 +406,7 @@ export default function GameArena() {
             setPrelimTimeLeft(0)
             setPrelimStatus('COMPLETED')
             stopWebcam()
+            fetchTeamProfile(tok)
           }
         }
       }
@@ -701,6 +717,8 @@ export default function GameArena() {
         body: JSON.stringify({ participantName, answers: prelimAnswers })
       })
       if (res.ok) {
+        const attempt = await res.json()
+        setMyAttempt(attempt)
         setPrelimStatus('COMPLETED')
         stopWebcam()
         localStorage.removeItem('prelimStartTime_' + participantName)
@@ -717,12 +735,23 @@ export default function GameArena() {
           localStorage.removeItem('prelimAnswers_' + participantName)
           localStorage.removeItem('prelimFlagged_' + participantName)
           localStorage.removeItem('prelimIdx_' + participantName)
+          fetchTeamProfile(token)
         }
       }
     } catch (err) {
       console.error(err)
     }
   }
+
+  // Live polling for squad debrief when prelims are completed
+  useEffect(() => {
+    if (prelimStatus !== 'COMPLETED' || !token) return
+    fetchTeamProfile(token)
+    const interval = setInterval(() => {
+      fetchTeamProfile(token)
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [prelimStatus, token, participantName])
 
   // Auto-scroll chat windows in Arena
   useEffect(() => {
@@ -901,7 +930,7 @@ export default function GameArena() {
                 <span className="live-pulse-dot" />
                 Live Tournament Link
               </span>
-              <span style={{ fontSize: '0.72rem', color: '#FACC15', fontWeight: 'bold', letterSpacing: '1px' }}>
+              <span style={{ fontSize: '0.72rem', color: '#F97316', fontWeight: 'bold', letterSpacing: '1px' }}>
                 LOGIN 2026 • NEURAL ARENA
               </span>
             </div>
@@ -941,9 +970,9 @@ export default function GameArena() {
               type="button"
               onClick={() => setShowAcknowledgeModal(true)}
               style={{
-                background: 'rgba(250, 204, 21, 0.12)',
-                border: '1px solid #FACC15',
-                color: '#FACC15',
+                background: 'rgba(249, 115, 22, 0.12)',
+                border: '1px solid #F97316',
+                color: '#F97316',
                 padding: '6px 12px',
                 borderRadius: '6px',
                 fontSize: '0.76rem',
@@ -962,7 +991,7 @@ export default function GameArena() {
 
           {/* Cyber Score Pill */}
           <div className="cyber-score-pill">
-            <span style={{ fontSize: '0.68rem', color: '#FACC15', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', display: 'block' }}>
+            <span style={{ fontSize: '0.68rem', color: '#F97316', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', display: 'block' }}>
               Live Score
             </span>
             <div style={{ fontSize: '1.35rem', fontWeight: '900', color: '#FFF', textShadow: '0 0 10px rgba(255,59,59,0.7)', fontFamily: 'var(--font-display)' }}>
@@ -1022,7 +1051,7 @@ export default function GameArena() {
                 </div>
 
                 <div style={{ display: 'inline-block', marginBottom: '12px' }}>
-                  <span className="shimmer-badge" style={{ padding: '4px 14px', borderRadius: '6px', fontSize: '0.78rem', color: '#FACC15', border: '1px solid #FACC15' }}>
+                  <span className="shimmer-badge" style={{ padding: '4px 14px', borderRadius: '6px', fontSize: '0.78rem', color: '#F97316', border: '1px solid #F97316' }}>
                     LOBBY TELEMETRY ACTIVE
                   </span>
                 </div>
@@ -1046,25 +1075,25 @@ export default function GameArena() {
                   <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(224,27,34,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
                     <div style={{ fontSize: '0.7rem', color: '#FF6B6B', fontWeight: 'bold' }}>STAGE 0: PRELIMS</div>
                     <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>30 MCQs / 30 Mins</div>
-                    <div style={{ fontSize: '0.72rem', color: '#FACC15' }}>+10 Correct / -5 Wrong</div>
+                    <div style={{ fontSize: '0.72rem', color: '#F97316' }}>+10 Correct / -5 Wrong</div>
                   </div>
 
                   <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(56,189,248,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
                     <div style={{ fontSize: '0.7rem', color: '#38BDF8', fontWeight: 'bold' }}>STAGE 1: DETECTIVE</div>
                     <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>10 Pixels / 40s</div>
-                    <div style={{ fontSize: '0.72rem', color: '#4ADE80' }}>Authenticity &amp; Model ID</div>
+                    <div style={{ fontSize: '0.72rem', color: '#7DD3FC' }}>Authenticity &amp; Model ID</div>
                   </div>
 
-                  <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(168,85,247,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
-                    <div style={{ fontSize: '0.7rem', color: '#C084FC', fontWeight: 'bold' }}>STAGE 2: INPAINTING</div>
+                  <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(56,189,248,0.25)', borderRadius: '8px', padding: '12px 14px' }}>
+                    <div style={{ fontSize: '0.7rem', color: '#38BDF8', fontWeight: 'bold' }}>STAGE 2: INPAINTING</div>
                     <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>7 Challenges / 45s</div>
-                    <div style={{ fontSize: '0.72rem', color: '#DDD6FE' }}>Glitch Artifact Scan</div>
+                    <div style={{ fontSize: '0.72rem', color: '#BAE6FD' }}>Glitch Artifact Scan</div>
                   </div>
 
-                  <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(250,204,21,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
-                    <div style={{ fontSize: '0.7rem', color: '#FACC15', fontWeight: 'bold' }}>STAGE 3: PROMPT DUEL</div>
+                  <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(249,115,22,0.35)', borderRadius: '8px', padding: '12px 14px' }}>
+                    <div style={{ fontSize: '0.7rem', color: '#F97316', fontWeight: 'bold' }}>STAGE 3: PROMPT DUEL</div>
                     <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>5 Prompts / 75s</div>
-                    <div style={{ fontSize: '0.72rem', color: '#93C5FD' }}>Semantic Prompt Match</div>
+                    <div style={{ fontSize: '0.72rem', color: '#FB923C' }}>Semantic Prompt Match</div>
                   </div>
                 </div>
 
@@ -1100,8 +1129,8 @@ export default function GameArena() {
                             <div style={{ fontSize: '0.72rem', color: '#FCA5A5', fontWeight: 'bold' }}>NEGATIVE MARKING</div>
                             <div style={{ fontSize: '1.15rem', color: '#FFF', fontWeight: 'bold' }}>-5 Points</div>
                           </div>
-                          <div style={{ background: 'rgba(250, 204, 21, 0.1)', border: '1px solid #FACC15', borderRadius: '6px', padding: '10px 12px' }}>
-                            <div style={{ fontSize: '0.72rem', color: '#FDE047', fontWeight: 'bold' }}>UNANSWERED</div>
+                          <div style={{ background: 'rgba(249, 115, 22, 0.12)', border: '1px solid #F97316', borderRadius: '6px', padding: '10px 12px' }}>
+                            <div style={{ fontSize: '0.72rem', color: '#FB923C', fontWeight: 'bold' }}>UNANSWERED</div>
                             <div style={{ fontSize: '1.15rem', color: '#FFF', fontWeight: 'bold' }}>0 Points (Safe)</div>
                           </div>
                         </div>
@@ -1160,8 +1189,8 @@ export default function GameArena() {
                               fontFamily: 'var(--font-display)',
                               fontSize: '1.65rem',
                               fontWeight: '900',
-                              color: prelimTimeLeft < 300 ? '#EF4444' : '#FACC15',
-                              textShadow: prelimTimeLeft < 300 ? '0 0 12px rgba(239, 68, 68, 0.8)' : '0 0 10px rgba(250, 204, 21, 0.4)'
+                              color: prelimTimeLeft < 300 ? '#EF4444' : '#F97316',
+                              textShadow: prelimTimeLeft < 300 ? '0 0 12px rgba(239, 68, 68, 0.8)' : '0 0 10px rgba(249, 115, 22, 0.45)'
                             }} className={prelimTimeLeft < 180 ? 'blink' : ''}>
                               {Math.floor(prelimTimeLeft / 60)}:{String(prelimTimeLeft % 60).padStart(2, '0')}
                             </div>
@@ -1173,7 +1202,7 @@ export default function GameArena() {
                       <div style={{ marginBottom: '20px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                           <span>Answered: <strong style={{ color: '#FFF' }}>{Object.keys(prelimAnswers).length}</strong> of 30 questions</span>
-                          <span style={{ color: '#FACC15', fontWeight: 'bold' }}>{Math.round((Object.keys(prelimAnswers).length / 30) * 100)}% Complete</span>
+                          <span style={{ color: '#38BDF8', fontWeight: 'bold' }}>{Math.round((Object.keys(prelimAnswers).length / 30) * 100)}% Complete</span>
                         </div>
                         <div className="arena-progress-container" style={{ margin: 0 }}>
                           <div className="arena-progress-bar" style={{ width: `${(Object.keys(prelimAnswers).length / 30) * 100}%` }} />
@@ -1221,7 +1250,7 @@ export default function GameArena() {
                           {prelimQuestions.length === 0 ? (
                             <div className="glass-panel" style={{ padding: '40px', textAlign: 'center' }}>
                               <div className="pulse-glow" style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#E01B22', margin: '0 auto 16px' }} />
-                              <div style={{ color: '#FACC15', fontWeight: 'bold', fontSize: '1.05rem', marginBottom: '6px' }}>
+                              <div style={{ color: '#F97316', fontWeight: 'bold', fontSize: '1.05rem', marginBottom: '6px' }}>
                                 Establishing Neural Connection...
                               </div>
                               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
@@ -1243,24 +1272,24 @@ export default function GameArena() {
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
                                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                                     <span style={{
-                                      background: isAnswered ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255, 255, 255, 0.06)',
-                                      color: isAnswered ? '#4ADE80' : '#FFF',
+                                      background: isAnswered ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255, 255, 255, 0.06)',
+                                      color: isAnswered ? '#38BDF8' : '#FFF',
                                       fontSize: '0.82rem',
                                       fontWeight: '800',
                                       padding: '6px 16px',
                                       borderRadius: '8px',
-                                      border: `1.5px solid ${isAnswered ? '#4ADE80' : 'rgba(255,255,255,0.18)'}`,
+                                      border: `1.5px solid ${isAnswered ? '#38BDF8' : 'rgba(255,255,255,0.18)'}`,
                                       letterSpacing: '0.6px'
                                     }}>
                                       QUESTION {safeIdx + 1} OF {totalQuestions}
                                     </span>
                                     {isAnswered && (
-                                      <span style={{ fontSize: '0.82rem', color: '#4ADE80', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                      <span style={{ fontSize: '0.82rem', color: '#38BDF8', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
                                         ✓ Answered
                                       </span>
                                     )}
                                     {isFlagged && (
-                                      <span style={{ fontSize: '0.82rem', color: '#FACC15', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                      <span style={{ fontSize: '0.82rem', color: '#F97316', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
                                         🚩 Flagged for Review
                                       </span>
                                     )}
@@ -1292,9 +1321,9 @@ export default function GameArena() {
                                       type="button"
                                       onClick={() => handleToggleFlag(q.id)}
                                       style={{
-                                        background: isFlagged ? 'rgba(250,204,21,0.18)' : 'rgba(255,255,255,0.05)',
-                                        border: `1.5px solid ${isFlagged ? '#FACC15' : 'rgba(255,255,255,0.14)'}`,
-                                        color: isFlagged ? '#FACC15' : 'var(--text-secondary)',
+                                        background: isFlagged ? 'rgba(249, 115, 22, 0.2)' : 'rgba(255,255,255,0.05)',
+                                        border: `1.5px solid ${isFlagged ? '#F97316' : 'rgba(255,255,255,0.14)'}`,
+                                        color: isFlagged ? '#F97316' : 'var(--text-secondary)',
                                         padding: '6px 14px',
                                         borderRadius: '6px',
                                         fontSize: '0.8rem',
@@ -1304,7 +1333,7 @@ export default function GameArena() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         gap: '6px',
-                                        boxShadow: isFlagged ? '0 0 12px rgba(250,204,21,0.35)' : 'none'
+                                        boxShadow: isFlagged ? '0 0 12px rgba(249, 115, 22, 0.4)' : 'none'
                                       }}
                                       title="Shortcut: Press 'F' to toggle flag"
                                     >
@@ -1458,17 +1487,17 @@ export default function GameArena() {
                             marginBottom: '14px',
                             boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
                           }}>
-                            <div style={{ fontSize: '0.74rem', color: '#FACC15', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
+                            <div style={{ fontSize: '0.74rem', color: '#F97316', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
                               Question Matrix ({prelimQuestions.length || 30})
                             </div>
 
                             {/* Legend */}
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
                               <span style={{ fontSize: '0.66rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
-                                <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#4ADE80', display: 'inline-block' }} /> Answered
+                                <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#38BDF8', display: 'inline-block' }} /> Answered
                               </span>
                               <span style={{ fontSize: '0.66rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
-                                <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#FACC15', display: 'inline-block' }} /> Flagged
+                                <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#F97316', display: 'inline-block' }} /> Flagged
                               </span>
                               <span style={{ fontSize: '0.66rem', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
                                 <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: 'rgba(255,255,255,0.12)', display: 'inline-block' }} /> Unanswered
@@ -1484,9 +1513,9 @@ export default function GameArena() {
                                 let bg = 'rgba(255,255,255,0.06)'
                                 let border = '1px solid rgba(255,255,255,0.1)'
                                 let color = 'var(--text-secondary)'
-                                if (isAnswered) { bg = 'rgba(74,222,128,0.16)'; border = '1px solid #4ADE80'; color = '#4ADE80' }
-                                if (isFlagged && !isAnswered) { bg = 'rgba(250,204,21,0.18)'; border = '1.5px solid #FACC15'; color = '#FACC15' }
-                                if (isFlagged && isAnswered) { bg = 'rgba(250,204,21,0.14)'; border = '1.8px solid #FACC15'; color = '#FACC15' }
+                                if (isAnswered) { bg = 'rgba(56,189,248,0.16)'; border = '1px solid #38BDF8'; color = '#38BDF8' }
+                                if (isFlagged && !isAnswered) { bg = 'rgba(249,115,22,0.2)'; border = '1.5px solid #F97316'; color = '#F97316' }
+                                if (isFlagged && isAnswered) { bg = 'rgba(249,115,22,0.15)'; border = '1.8px solid #F97316'; color = '#F97316' }
                                 if (isCurrent) { border = '2px solid #E01B22'; color = '#FFF' }
                                 return (
                                   <button
@@ -1521,11 +1550,11 @@ export default function GameArena() {
                             <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Progress Telemetry</div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
-                                <span style={{ color: '#4ADE80' }}>✓ Answered</span>
+                                <span style={{ color: '#38BDF8' }}>✓ Answered</span>
                                 <strong style={{ color: '#FFF' }}>{Object.keys(prelimAnswers).length}</strong>
                               </div>
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
-                                <span style={{ color: '#FACC15' }}>🚩 Flagged for Review</span>
+                                <span style={{ color: '#F97316' }}>🚩 Flagged for Review</span>
                                 <strong style={{ color: '#FFF' }}>{flaggedQuestions.size}</strong>
                               </div>
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
@@ -1552,26 +1581,394 @@ export default function GameArena() {
                     </div>
                   )}
 
-                  {prelimStatus === 'COMPLETED' && (
-                    <div style={{ textAlign: 'center', padding: '30px 20px' }}>
-                      <div className="lock-in-pulse" style={{ width: '84px', height: '84px', borderRadius: '50%', background: 'rgba(224,27,34,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', border: '2.5px solid var(--color-primary-blue)' }}>
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--color-neon-blue)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline className="draw-check" points="20 6 9 17 4 12" />
-                        </svg>
+                  {prelimStatus === 'COMPLETED' && (() => {
+                    const registeredList = team.memberNames
+                      ? team.memberNames.split(',').map(m => m.trim()).filter(Boolean)
+                      : []
+                    const attemptNames = (team.attempts || []).map(a => a.participantName).filter(Boolean)
+                    const allTeammateNames = Array.from(new Set([
+                      ...registeredList,
+                      ...attemptNames,
+                      participantName
+                    ])).filter(Boolean)
+
+                    const teammateCards = allTeammateNames.map(name => {
+                      const isMe = name.toLowerCase() === (participantName || '').toLowerCase()
+                      const att = (isMe && myAttempt) ? myAttempt : (team.attempts || []).find(a => a.participantName?.toLowerCase() === name.toLowerCase())
+                      return {
+                        name,
+                        isMe,
+                        status: att ? att.status : 'NOT_STARTED',
+                        score: att?.status === 'COMPLETED' ? (att.score || 0) : 0,
+                        completedAt: att?.completedAt
+                      }
+                    })
+
+                    const squadTotalScore = team.score !== undefined && team.score !== null
+                      ? team.score
+                      : teammateCards.reduce((sum, t) => sum + t.score, 0)
+                    const myScore = myAttempt?.score !== undefined
+                      ? myAttempt.score
+                      : (teammateCards.find(t => t.isMe)?.score || 0)
+                    const completedCount = teammateCards.filter(t => t.status === 'COMPLETED').length
+
+                    return (
+                      <div style={{ padding: '10px 0', width: '100%', maxWidth: '1400px', margin: '0 auto' }}>
+                        
+                        {/* Top Mission Concluded Banner */}
+                        <div className="glass-panel" style={{ 
+                          padding: '24px 30px', 
+                          borderRadius: '16px', 
+                          border: '1.5px solid rgba(56, 189, 248, 0.4)', 
+                          background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.12) 0%, rgba(224, 27, 34, 0.12) 50%, rgba(6, 8, 18, 0.95) 100%)',
+                          boxShadow: '0 12px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(56, 189, 248, 0.2)',
+                          marginBottom: '28px',
+                          position: 'relative',
+                          overflow: 'hidden'
+                        }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                            <div>
+                              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                                <span className="live-pulse-dot" style={{ width: '10px', height: '10px', background: '#38BDF8' }} />
+                                <span style={{ fontSize: '0.78rem', color: '#7DD3FC', fontWeight: '900', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
+                                  COMBAT TELEMETRY SYNCHRONIZED • PRELIMS CONCLUDED
+                                </span>
+                              </div>
+                              <h2 style={{ fontSize: 'clamp(1.6rem, 3.2vw, 2.2rem)', fontWeight: '900', margin: '0 0 8px 0', letterSpacing: '1px' }}>
+                                <span style={{ color: '#38BDF8' }}>SQUAD DEBRIEF</span> &amp; <span style={{ color: '#E01B22' }}>SCORE CONVERGENCE</span>
+                              </h2>
+                              <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', margin: 0, maxWidth: '700px', lineHeight: '1.5' }}>
+                                Pilot submissions under Team ID <strong style={{ color: '#FFF' }}>{team.teamId || 'YOUR SQUAD'}</strong> are aggregated into your cumulative squad standing in real time.
+                              </p>
+                            </div>
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                              <button
+                                onClick={async () => {
+                                  setIsDebriefRefreshing(true)
+                                  await fetchTeamProfile(token)
+                                  setTimeout(() => setIsDebriefRefreshing(false), 600)
+                                }}
+                                className="btn-secondary"
+                                style={{ 
+                                  padding: '10px 18px', 
+                                  fontSize: '0.85rem', 
+                                  display: 'flex', 
+                                  alignItems: 'center', 
+                                  gap: '8px', 
+                                  borderColor: '#38BDF8', 
+                                  color: '#38BDF8',
+                                  cursor: 'pointer'
+                                }}
+                              >
+                                <span style={{ display: 'inline-block', transform: isDebriefRefreshing ? 'rotate(360deg)' : 'none', transition: 'transform 0.6s ease' }}>🔄</span>
+                                {isDebriefRefreshing ? 'Syncing...' : 'Refresh Telemetry'}
+                              </button>
+                              <div style={{ padding: '8px 14px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', textAlign: 'right' }}>
+                                <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Central Uplink</div>
+                                <div style={{ fontSize: '0.82rem', fontWeight: 'bold', color: '#10B981' }}>● LIVE BROADCAST</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 4 Metric Stats Cards Grid */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '18px', marginBottom: '28px' }}>
+                          {/* Card 1: Pilot Personal Score */}
+                          <div className="comic-card card-hover-lift" style={{ 
+                            padding: '22px', 
+                            borderRadius: '12px', 
+                            borderTop: '4px solid #38BDF8', 
+                            background: 'rgba(56, 189, 248, 0.06)',
+                            boxShadow: '0 8px 24px rgba(0,0,0,0.35)'
+                          }}>
+                            <div style={{ fontSize: '0.74rem', color: '#7DD3FC', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '4px' }}>
+                              YOUR PILOT LOG
+                            </div>
+                            <div style={{ fontSize: '1.05rem', fontWeight: 'bold', color: '#FFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              {participantName || 'Pilot'} <span style={{ fontSize: '0.75rem', color: '#38BDF8' }}>(You)</span>
+                            </div>
+                            <div style={{ fontSize: '2.3rem', fontWeight: '900', color: '#38BDF8', fontFamily: 'var(--font-display)', margin: '10px 0 6px 0', textShadow: '0 0 16px rgba(56, 189, 248, 0.4)' }}>
+                              {myScore >= 0 ? `+${myScore}` : myScore} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>pts</span>
+                            </div>
+                            <div style={{ fontSize: '0.76rem', color: '#34D399', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              ✓ Answers Evaluated (+10 / -5)
+                            </div>
+                          </div>
+
+                          {/* Card 2: Squad Aggregate Score (Computed Sum) */}
+                          <div className="comic-card card-hover-lift" style={{ 
+                            padding: '22px', 
+                            borderRadius: '12px', 
+                            borderTop: '4px solid #F97316', 
+                            background: 'linear-gradient(145deg, rgba(249, 115, 22, 0.1) 0%, rgba(224, 27, 34, 0.1) 100%)',
+                            boxShadow: '0 8px 24px rgba(249, 115, 22, 0.15)'
+                          }}>
+                            <div style={{ fontSize: '0.74rem', color: '#FB923C', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '4px' }}>
+                              SQUAD TOTAL SCORE (SUMMED)
+                            </div>
+                            <div style={{ fontSize: '1.05rem', fontWeight: 'bold', color: '#FFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              {team.teamName || 'Squad Team'}
+                            </div>
+                            <div style={{ fontSize: '2.3rem', fontWeight: '900', color: '#F97316', fontFamily: 'var(--font-display)', margin: '10px 0 6px 0', textShadow: '0 0 16px rgba(249, 115, 22, 0.4)' }}>
+                              {squadTotalScore} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>pts</span>
+                            </div>
+                            <div style={{ fontSize: '0.76rem', color: '#FB923C', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              ⚡ Teammate Scores Combined
+                            </div>
+                          </div>
+
+                          {/* Card 3: Tournament Standing */}
+                          <div className="comic-card card-hover-lift" style={{ 
+                            padding: '22px', 
+                            borderRadius: '12px', 
+                            borderTop: '4px solid #E01B22', 
+                            background: 'rgba(224, 27, 34, 0.06)',
+                            boxShadow: '0 8px 24px rgba(0,0,0,0.35)'
+                          }}>
+                            <div style={{ fontSize: '0.74rem', color: '#FF7B7B', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '4px' }}>
+                              MULTIVERSE RANKING
+                            </div>
+                            <div style={{ fontSize: '1.05rem', fontWeight: 'bold', color: '#FFF' }}>
+                              Leaderboard Standing
+                            </div>
+                            <div style={{ fontSize: '2.3rem', fontWeight: '900', color: '#FFF', fontFamily: 'var(--font-display)', margin: '10px 0 6px 0' }}>
+                              #{team.rank || 1} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>of {team.totalTeams || 1} Squads</span>
+                            </div>
+                            <div style={{ fontSize: '0.76rem', color: team.isEliminated ? '#EF4444' : '#34D399', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              {team.isEliminated ? '⚠️ Elimination Zone' : '🛡️ Qualified Standing'}
+                            </div>
+                          </div>
+
+                          {/* Card 4: Squad Readiness */}
+                          <div className="comic-card card-hover-lift" style={{ 
+                            padding: '22px', 
+                            borderRadius: '12px', 
+                            borderTop: '4px solid #818CF8', 
+                            background: 'rgba(129, 140, 248, 0.06)',
+                            boxShadow: '0 8px 24px rgba(0,0,0,0.35)'
+                          }}>
+                            <div style={{ fontSize: '0.74rem', color: '#A5B4FC', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '4px' }}>
+                              SQUAD DEPLOYMENT
+                            </div>
+                            <div style={{ fontSize: '1.05rem', fontWeight: 'bold', color: '#FFF' }}>
+                              Pilots Finished
+                            </div>
+                            <div style={{ fontSize: '2.3rem', fontWeight: '900', color: '#A5B4FC', fontFamily: 'var(--font-display)', margin: '10px 0 6px 0' }}>
+                              {completedCount} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>/ {allTeammateNames.length} Concluded</span>
+                            </div>
+                            <div style={{ fontSize: '0.76rem', color: completedCount === allTeammateNames.length ? '#34D399' : '#F59E0B' }}>
+                              {completedCount === allTeammateNames.length ? '✓ Entire Squad Completed' : '⏳ Awaiting Teammate Submissions'}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Squad Teammates Breakdown & Computation Equation */}
+                        <div className="glass-panel" style={{ padding: '26px 30px', borderRadius: '16px', marginBottom: '28px', border: '1px solid rgba(255,255,255,0.08)' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+                            <div>
+                              <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', margin: '0 0 4px 0', color: '#FFF' }}>
+                                👥 Squad Members Roster &amp; Score Convergence
+                              </h3>
+                              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
+                                Every teammate registered under Team ID <span style={{ color: '#38BDF8', fontWeight: 'bold' }}>{team.teamId}</span> contributes directly to this combined total.
+                              </p>
+                            </div>
+                            <span className="badge" style={{ background: 'rgba(56, 189, 248, 0.1)', borderColor: '#38BDF8', color: '#38BDF8', padding: '6px 14px', fontSize: '0.82rem' }}>
+                              Squad Size: {team.teamSize || allTeammateNames.length} Pilots
+                            </span>
+                          </div>
+
+                          {/* Live Computation Formula Bar */}
+                          <div style={{ 
+                            background: 'rgba(0, 0, 0, 0.35)', 
+                            border: '1.5px dashed rgba(56, 189, 248, 0.35)', 
+                            borderRadius: '12px', 
+                            padding: '16px 20px', 
+                            marginBottom: '24px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexWrap: 'wrap',
+                            gap: '12px'
+                          }}>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>
+                              SCORE FORMULA:
+                            </span>
+                            {teammateCards.map((pilot, idx) => (
+                              <div key={pilot.name} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                {idx > 0 && <span style={{ color: '#F97316', fontWeight: 'bold', fontSize: '1.2rem' }}>+</span>}
+                                <div style={{ 
+                                  background: pilot.isMe ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.05)', 
+                                  border: `1px solid ${pilot.isMe ? '#38BDF8' : 'rgba(255,255,255,0.15)'}`,
+                                  padding: '6px 14px', 
+                                  borderRadius: '8px', 
+                                  display: 'flex', 
+                                  alignItems: 'center', 
+                                  gap: '8px'
+                                }}>
+                                  <span style={{ fontSize: '0.85rem', color: pilot.isMe ? '#38BDF8' : '#FFF', fontWeight: '600' }}>
+                                    🧑‍🚀 {pilot.name} {pilot.isMe ? '(You)' : ''}:
+                                  </span>
+                                  <span style={{ fontWeight: '900', color: pilot.status === 'COMPLETED' ? '#34D399' : '#F59E0B', fontSize: '0.95rem' }}>
+                                    {pilot.status === 'COMPLETED' ? `${pilot.score >= 0 ? `+${pilot.score}` : pilot.score} pts` : 'Pending...'}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                            <span style={{ color: '#38BDF8', fontWeight: 'bold', fontSize: '1.3rem' }}>=</span>
+                            <div style={{ 
+                              background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.25) 0%, rgba(224, 27, 34, 0.25) 100%)', 
+                              border: '1.5px solid #F97316', 
+                              padding: '6px 16px', 
+                              borderRadius: '8px',
+                              boxShadow: '0 0 12px rgba(249, 115, 22, 0.3)'
+                            }}>
+                              <span style={{ fontSize: '0.8rem', color: '#FB923C', fontWeight: 'bold', textTransform: 'uppercase' }}>Squad Total: </span>
+                              <span style={{ fontSize: '1.1rem', fontWeight: '900', color: '#FFF' }}>{squadTotalScore} PTS</span>
+                            </div>
+                          </div>
+
+                          {/* Teammate Individual Dossier Cards */}
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+                            {teammateCards.map((pilot) => (
+                              <div 
+                                key={pilot.name} 
+                                className="comic-card" 
+                                style={{ 
+                                  padding: '18px 20px', 
+                                  borderRadius: '12px',
+                                  border: pilot.isMe ? '1.5px solid #38BDF8' : '1px solid rgba(255,255,255,0.1)',
+                                  background: pilot.isMe ? 'rgba(56, 189, 248, 0.05)' : 'rgba(255,255,255,0.02)',
+                                  position: 'relative'
+                                }}
+                              >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <div style={{ 
+                                      width: '40px', 
+                                      height: '40px', 
+                                      borderRadius: '50%', 
+                                      background: pilot.isMe ? 'rgba(56, 189, 248, 0.2)' : 'rgba(224, 27, 34, 0.15)',
+                                      border: `2px solid ${pilot.isMe ? '#38BDF8' : '#E01B22'}`,
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      fontSize: '1.1rem'
+                                    }}>
+                                      {pilot.isMe ? '🕷️' : '⚔️'}
+                                    </div>
+                                    <div>
+                                      <div style={{ fontWeight: 'bold', fontSize: '1rem', color: '#FFF' }}>
+                                        {pilot.name} {pilot.isMe && <span style={{ fontSize: '0.72rem', color: '#38BDF8' }}>(You)</span>}
+                                      </div>
+                                      <div style={{ fontSize: '0.74rem', color: 'var(--text-dim)' }}>
+                                        {pilot.isMe ? 'Active Local Terminal' : 'Teammate Terminal'}
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {pilot.status === 'COMPLETED' ? (
+                                    <span className="badge" style={{ background: 'rgba(16, 185, 129, 0.15)', borderColor: '#10B981', color: '#34D399', fontSize: '0.72rem' }}>
+                                      ✓ Finished
+                                    </span>
+                                  ) : pilot.status === 'IN_PROGRESS' ? (
+                                    <span className="badge" style={{ background: 'rgba(245, 158, 11, 0.15)', borderColor: '#F59E0B', color: '#FBBF24', fontSize: '0.72rem' }}>
+                                      ⏳ In Progress
+                                    </span>
+                                  ) : (
+                                    <span className="badge" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.15)', color: 'var(--text-dim)', fontSize: '0.72rem' }}>
+                                      ⏸ Awaiting
+                                    </span>
+                                  )}
+                                </div>
+
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'rgba(0,0,0,0.25)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                                  <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Score Contribution:</span>
+                                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: pilot.status === 'COMPLETED' ? '#38BDF8' : 'var(--text-dim)' }}>
+                                    {pilot.status === 'COMPLETED' ? `${pilot.score >= 0 ? `+${pilot.score}` : pilot.score} pts` : 'Awaiting Submit'}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Tournament Progression Roadmap */}
+                        <div className="glass-panel" style={{ padding: '24px 30px', borderRadius: '16px', marginBottom: '28px', border: '1px solid rgba(255,255,255,0.08)' }}>
+                          <div style={{ fontSize: '0.78rem', color: '#38BDF8', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px' }}>
+                            ARENA FLIGHT PROTOCOL
+                          </div>
+                          <h3 style={{ fontSize: '1.2rem', margin: '0 0 16px 0', color: '#FFF' }}>
+                            Tournament Progression Status
+                          </h3>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+                            {/* Stage 0 */}
+                            <div style={{ padding: '14px 16px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.08)', border: '1.5px solid #10B981' }}>
+                              <div style={{ fontSize: '0.75rem', color: '#34D399', fontWeight: 'bold', marginBottom: '4px' }}>STAGE 0 • PRELIMS</div>
+                              <div style={{ fontSize: '0.92rem', fontWeight: 'bold', color: '#FFF' }}>Multiverse MCQ Quiz</div>
+                              <div style={{ fontSize: '0.75rem', color: '#34D399', marginTop: '6px' }}>✓ Completed &amp; Scored</div>
+                            </div>
+
+                            {/* Stage 1 */}
+                            <div style={{ padding: '14px 16px', borderRadius: '10px', background: 'rgba(56, 189, 248, 0.1)', border: '1.5px solid #38BDF8' }}>
+                              <div style={{ fontSize: '0.75rem', color: '#38BDF8', fontWeight: 'bold', marginBottom: '4px' }}>STAGE 1 • NEXT UP</div>
+                              <div style={{ fontSize: '0.92rem', fontWeight: 'bold', color: '#FFF' }}>Pixel Detective</div>
+                              <div style={{ fontSize: '0.75rem', color: '#7DD3FC', marginTop: '6px' }}>⏳ Awaiting Organizer Launch</div>
+                            </div>
+
+                            {/* Stage 2 */}
+                            <div style={{ padding: '14px 16px', borderRadius: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.08)', opacity: 0.65 }}>
+                              <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontWeight: 'bold', marginBottom: '4px' }}>STAGE 2 • UPCOMING</div>
+                              <div style={{ fontSize: '0.92rem', fontWeight: 'bold', color: '#FFF' }}>The Glitch Hunt</div>
+                              <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '6px' }}>🔒 Locked</div>
+                            </div>
+
+                            {/* Stage 3 */}
+                            <div style={{ padding: '14px 16px', borderRadius: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.08)', opacity: 0.65 }}>
+                              <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontWeight: 'bold', marginBottom: '4px' }}>STAGE 3 • UPCOMING</div>
+                              <div style={{ fontSize: '0.92rem', fontWeight: 'bold', color: '#FFF' }}>Prompt Wars</div>
+                              <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '6px' }}>🔒 Locked</div>
+                            </div>
+                          </div>
+
+                          <div style={{ marginTop: '20px', padding: '14px 18px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.06)', border: '1px solid rgba(56, 189, 248, 0.2)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <span style={{ fontSize: '1.4rem' }}>📡</span>
+                            <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                              <strong style={{ color: '#FFF' }}>Console Synced to Main Stage:</strong> Do not close or refresh this tab. Once the coordinators initiate Stage 1 on the auditorium projector, this dashboard will automatically transition to the visual challenge screen.
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Spider-Man & Deadpool Debrief Quotes */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '18px' }}>
+                          {/* Spidey Quote */}
+                          <div className="comic-card" style={{ padding: '18px 22px', borderLeft: '4px solid #38BDF8', background: 'rgba(56, 189, 248, 0.05)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                              <span style={{ fontSize: '1.4rem' }}>🕷️</span>
+                              <span style={{ fontWeight: 'bold', color: '#38BDF8', fontSize: '0.9rem' }}>Spider-Man's Debrief Intel</span>
+                            </div>
+                            <p style={{ margin: 0, fontSize: '0.86rem', color: '#E0E7FF', lineHeight: '1.5', fontStyle: 'italic' }}>
+                              "Outstanding focus! Every correct answer scored +10 points and successfully protected your squad from the -5 penalty traps. Stand by for the visual stages—synthetic artifacts will test your optical analysis skills!"
+                            </p>
+                          </div>
+
+                          {/* Deadpool Quote */}
+                          <div className="comic-card" style={{ padding: '18px 22px', borderLeft: '4px solid #E01B22', background: 'rgba(224, 27, 34, 0.05)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                              <span style={{ fontSize: '1.4rem' }}>⚔️</span>
+                              <span style={{ fontWeight: 'bold', color: '#FF4D4D', fontSize: '0.9rem' }}>Deadpool's Tactical Commentary</span>
+                            </div>
+                            <p style={{ margin: 0, fontSize: '0.86rem', color: '#FFE4E6', lineHeight: '1.5', fontStyle: 'italic' }}>
+                              "Maximum Effort! The scores are locked and loaded into the main tournament mainframe! If your teammate is still sweating on their questions, tell them not to choke! We've got a podium to conquer!"
+                            </p>
+                          </div>
+                        </div>
+
                       </div>
-                      <h2 className="scale-pop" style={{ marginBottom: '12px', color: 'var(--color-neon-blue)', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                        Prelims Quiz Submitted!
-                      </h2>
-                      <p style={{ color: 'var(--text-secondary)', maxWidth: '500px', margin: '0 auto 20px', lineHeight: '1.6' }}>
-                        Your answers have been stored and scored. Please wait for other participants to conclude. The screen will automatically progress when coordinators initiate Stage 1.
-                      </p>
-                      <div className="shimmer-bg" style={{ padding: '12px 24px', borderRadius: '8px', display: 'inline-block', border: '1px solid var(--card-border)' }}>
-                        <span className="typing-cursor" style={{ fontSize: '0.85rem', color: '#FACC15', fontWeight: 'bold' }}>
-                          Synchronizing with Main Leaderboard...
-                        </span>
-                      </div>
-                    </div>
-                  )}
+                    )
+                  })()}
                 </div>
               </div>
             )}
@@ -1614,7 +2011,7 @@ export default function GameArena() {
                           <span className="badge badge-active" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
                             ROUND {gameState.activeRound - 1} ACTIVE
                           </span>
-                          <span style={{ fontSize: '0.75rem', color: '#FACC15', fontWeight: 'bold' }}>
+                          <span style={{ fontSize: '0.75rem', color: '#F97316', fontWeight: 'bold' }}>
                             QUESTION #{gameState.activeQuestionId}
                           </span>
                         </div>
@@ -1700,7 +2097,7 @@ export default function GameArena() {
                               NEURAL FORENSIC FEED • ACTIVE
                             </span>
                             {gameState.activeRound === 4 && (
-                              <span style={{ background: 'rgba(0,0,0,0.75)', border: '1px solid #FACC15', color: '#FACC15', padding: '3px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold' }}>
+                              <span style={{ background: 'rgba(0,0,0,0.75)', border: '1px solid #F97316', color: '#F97316', padding: '3px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold' }}>
                                 FOCAL REVEAL: {gameState.zoomLevel || 10}%
                               </span>
                             )}
@@ -1804,7 +2201,7 @@ export default function GameArena() {
                                       🎯 {currentQuestion?.bonusQuestion || 'Identify the AI Generator Model (+Bonus Pts)'}:
                                     </label>
                                     {round1Answer.bonus && (
-                                      <span style={{ fontSize: '0.75rem', color: '#FACC15', fontWeight: 'bold' }}>
+                                      <span style={{ fontSize: '0.75rem', color: '#F97316', fontWeight: 'bold' }}>
                                         Selected: {round1Answer.bonus}
                                       </span>
                                     )}
@@ -1845,7 +2242,7 @@ export default function GameArena() {
                                   Glitch Hunt: Document Neural Artifacts &amp; Visual Anomalies
                                 </h4>
                                 {currentQuestion?.isLightning && (
-                                  <span className="shimmer-badge" style={{ padding: '3px 10px', borderRadius: '4px', fontSize: '0.72rem', color: '#FACC15', border: '1px solid #FACC15' }}>
+                                  <span className="shimmer-badge" style={{ padding: '3px 10px', borderRadius: '4px', fontSize: '0.72rem', color: '#F97316', border: '1px solid #F97316' }}>
                                     ⚡ LIGHTNING ROUND • SPEED BONUS
                                   </span>
                                 )}
@@ -2060,7 +2457,7 @@ export default function GameArena() {
                   </div>
                   <div>
                     <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Deadpool's Arena Coach</div>
-                    <div style={{ fontSize: '0.7rem', color: '#FACC15' }}>● Clue Provider &amp; Hype Man</div>
+                    <div style={{ fontSize: '0.7rem', color: '#F97316' }}>● Clue Provider &amp; Hype Man</div>
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -2149,7 +2546,7 @@ export default function GameArena() {
                 </button>
               </div>
               {DEADPOOL_GAME_QUOTES[deadpoolQuoteIdx]}
-              <div style={{ fontSize: '0.7rem', color: '#FACC15', marginTop: '4px', textAlign: 'left' }}>
+              <div style={{ fontSize: '0.7rem', color: '#F97316', marginTop: '4px', textAlign: 'left' }}>
                 [Click Deadpool for Coach Clues 💬]
               </div>
             </div>
@@ -2168,7 +2565,7 @@ export default function GameArena() {
                 borderRadius: '50%',
                 background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #7F1D1D 100%)',
                 border: '2px solid #E23636',
-                boxShadow: '0 4px 16px rgba(226, 54, 54, 0.7), 0 0 10px rgba(0, 0, 0, 0.8)',
+                boxShadow: '0 4px 16px rgba(226, 54, 54, 0.7), 0 0 10px rgba(249, 115, 22, 0.3)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -2201,180 +2598,169 @@ export default function GameArena() {
       {/* ========================================================= */}
       {/* RIGHT SIDE: SPIDER-MAN WEB-BOT COMPANION IN GAME ARENA */}
       {/* ========================================================= */}
-      {isSpideyCollapsed ? (
-        <button
-          type="button"
-          className="bot-dock-tab spidey-dock"
-          onClick={() => setIsSpideyCollapsed(false)}
-          title="Click ^ to pop up Spider-Man Intel"
-        >
-          <span>🕸️ Spider-Man</span>
-          <span className="dock-chevron">^</span>
-        </button>
-      ) : (
-        <div className="sticky-spidey-bar">
-          {isSpideyChatOpen ? (
-            <div className="spidey-chat-window">
-              <div style={{ background: 'linear-gradient(135deg, #0284C7 0%, #1E3A8A 100%)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#D81E27', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid #FFF' }}>
-                    <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
-                      <circle cx="32" cy="32" r="30" fill="#D81E27" />
-                      <path d="M32 2 L32 62 M2 32 L62 32" stroke="#850B12" strokeWidth="1.5" />
-                      <polygon points="14,30 29,36 28,24 16,18" fill="#FFFFFF" stroke="#000" strokeWidth="2" />
-                      <polygon points="50,30 35,36 36,24 48,18" fill="#FFFFFF" stroke="#000" strokeWidth="2" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Spidey's Forensic Web-Bot</div>
-                    <div style={{ fontSize: '0.7rem', color: '#38BDF8' }}>● Tactical Intel &amp; Science</div>
-                  </div>
+      {/* Spider-Man Floating Coach Bot */}
+      <div className={`spidey-floating-bot-container ${isSpideyCollapsed ? 'bot-collapsed' : ''}`}>
+        {isSpideyChatOpen ? (
+          <div className="comic-card spidey-chat-window">
+            <div style={{ background: 'linear-gradient(135deg, #0284C7 0%, #034D75 100%)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#FFF', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg viewBox="0 0 64 64" style={{ width: '90%', height: '90%' }}>
+                    <circle cx="32" cy="32" r="30" fill="#D81E27" stroke="#180407" strokeWidth="2" />
+                    <path d="M32 2 L32 62 M2 32 L62 32 M10 10 L54 54 M10 54 L54 10" stroke="#850B12" strokeWidth="1.2" />
+                    <polygon points="14,30 29,36 28,24 16,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
+                    <polygon points="50,30 35,36 36,24 48,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
+                  </svg>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <button
-                    type="button"
-                    onClick={() => setIsSpideyCollapsed(true)}
-                    className="bot-collapse-btn spidey-btn"
-                    title="Hide Spidey (^ to pop back up)"
-                  >
-                    ^ Hide
-                  </button>
-                  <button 
-                    onClick={() => setIsSpideyChatOpen(false)}
-                    style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '1.2rem', cursor: 'pointer', padding: '4px' }}
-                    title="Close Chat"
-                  >
-                    ✕
-                  </button>
+                <div>
+                  <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Spider-Man's Intel</div>
+                  <div style={{ fontSize: '0.7rem', color: '#7DD3FC' }}>● Forensic Optical Science</div>
                 </div>
               </div>
-
-              <div style={{ padding: '14px', maxHeight: '250px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-                {spideyMessages.map((msg, idx) => (
-                  <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-spidey'}>
-                    <div style={{ fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '2px', color: msg.sender === 'user' ? '#FFF' : '#38BDF8' }}>
-                      {msg.sender === 'user' ? 'You' : 'Spider-Man'}
-                    </div>
-                    <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
-                  </div>
-                ))}
-                {isSpideyTyping && (
-                  <div className="chat-bubble-spidey" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '0.75rem', color: '#38BDF8', fontWeight: 'bold' }}>Spider-Man is calculating optics</span>
-                    <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
-                  </div>
-                )}
-                <div ref={spideyChatBottomRef} />
-              </div>
-
-              <div style={{ padding: '8px 12px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <button 
-                  type="button"
-                  onClick={() => handleGetClue('spidey')}
-                  className="clue-btn-spidey"
-                  style={{ width: '100%', justifyContent: 'center', padding: '8px 12px', fontSize: '0.8rem' }}
-                >
-                  🕸️ Reveal Optical Clue for this Round!
-                </button>
-              </div>
-
-              <form onSubmit={handleSendSpideyArena} style={{ display: 'flex', padding: '10px 12px', borderTop: '1px solid rgba(255,255,255,0.08)', background: '#060B12' }}>
-                <input 
-                  type="text"
-                  placeholder="Ask Spider-Man anything..."
-                  value={spideyInput}
-                  onChange={(e) => setSpideyInput(e.target.value)}
-                  style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(56,189,248,0.2)', color: '#FFF', borderRadius: '6px', padding: '8px 12px', fontSize: '0.82rem', outline: 'none' }}
-                />
-                <button 
-                  type="submit"
-                  style={{ background: '#0284C7', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
-                >
-                  Send
-                </button>
-              </form>
-            </div>
-          ) : (
-            <div 
-              className="spidey-speech card-hover-lift" 
-              onClick={() => setIsSpideyChatOpen(true)}
-              style={{ cursor: 'pointer' }}
-              title="Click to talk to Spider-Man!"
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <button
                   type="button"
+                  onClick={() => setIsSpideyCollapsed(true)}
                   className="bot-collapse-btn spidey-btn"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setIsSpideyCollapsed(true)
-                  }}
                   title="Hide Spidey (^ to pop back up)"
                 >
                   ^ Hide
                 </button>
-                <span style={{ fontSize: '0.68rem', color: '#38BDF8', fontWeight: 'bold', letterSpacing: '0.5px' }}>🕸️ SPIDEY INTEL</span>
-              </div>
-              {SPIDEY_GAME_QUOTES[spideyQuoteIdx]}
-              <div style={{ fontSize: '0.7rem', color: '#FACC15', marginTop: '4px', textAlign: 'right' }}>
-                [Click Spidey for Science Clues 💬]
+                <button 
+                  onClick={() => setIsSpideyChatOpen(false)}
+                  style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '1.2rem', cursor: 'pointer', padding: '4px' }}
+                  title="Close Chat"
+                >
+                  ✕
+                </button>
               </div>
             </div>
-          )}
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {!isSpideyChatOpen && (
+            <div style={{ padding: '14px', maxHeight: '250px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+              {spideyMessages.map((msg, idx) => (
+                <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-spidey'}>
+                  <div style={{ fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '2px', color: msg.sender === 'user' ? '#FFF' : '#38BDF8' }}>
+                    {msg.sender === 'user' ? 'You' : 'Spider-Man'}
+                  </div>
+                  <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
+                </div>
+              ))}
+              {isSpideyTyping && (
+                <div className="chat-bubble-spidey" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ fontSize: '0.75rem', color: '#38BDF8', fontWeight: 'bold' }}>Peter is examining pixels</span>
+                  <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
+                </div>
+              )}
+              <div ref={spideyChatBottomRef} />
+            </div>
+
+            <div style={{ padding: '8px 12px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <button 
+                type="button"
+                onClick={() => handleGetClue('spidey')}
+                className="clue-btn-spidey"
+                style={{ width: '100%', justifyContent: 'center', padding: '8px 12px', fontSize: '0.8rem' }}
+              >
+                🕸️ Reveal Optical Analysis Clue!
+              </button>
+            </div>
+
+            <form onSubmit={handleSendSpideyArena} style={{ display: 'flex', padding: '10px 12px', borderTop: '1px solid rgba(255,255,255,0.08)', background: '#040810' }}>
+              <input 
+                type="text"
+                placeholder="Ask Peter about forensic optics..."
+                value={spideyInput}
+                onChange={(e) => setSpideyInput(e.target.value)}
+                style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', borderRadius: '6px', padding: '8px 12px', fontSize: '0.82rem', outline: 'none' }}
+              />
+              <button 
+                type="submit"
+                style={{ background: '#0284C7', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
+              >
+                Send
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div 
+            className="spidey-speech card-hover-lift" 
+            onClick={() => setIsSpideyChatOpen(true)}
+            style={{ cursor: 'pointer' }}
+            title="Click to talk to Spider-Man!"
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
               <button
                 type="button"
                 className="bot-collapse-btn spidey-btn"
-                onClick={() => setIsSpideyCollapsed(true)}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setIsSpideyCollapsed(true)
+                }}
                 title="Hide Spidey (^ to pop back up)"
-                style={{ height: 'fit-content' }}
               >
                 ^ Hide
               </button>
-            )}
-            <div 
-              style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              onClick={() => setIsSpideyChatOpen(prev => !prev)}
-              title="Click to chat with Spider-Man"
-            >
-              <div className="spider-sense-active" style={{
-                position: 'absolute',
-                top: '-13px',
-                width: '42px',
-                height: '21px',
-                pointerEvents: 'none'
-              }}>
-                <svg viewBox="0 0 60 30" fill="none">
-                  <path d="M12,25 Q30,2 48,25" stroke="#FACC15" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M5,20 Q30,-8 55,20" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 2" />
-                </svg>
-              </div>
+              <span style={{ fontSize: '0.68rem', color: '#38BDF8', fontWeight: 'bold', letterSpacing: '0.5px' }}>🕸️ SPIDEY INTEL</span>
+            </div>
+            {SPIDEY_GAME_QUOTES[spideyQuoteIdx]}
+            <div style={{ fontSize: '0.7rem', color: '#F97316', marginTop: '4px', textAlign: 'right' }}>
+              [Click Spidey for Science Clues 💬]
+            </div>
+          </div>
+        )}
 
-              <div className="spidey-floating" style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '50%',
-                background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #7F1D1D 100%)',
-                border: '2px solid #E01B22',
-                boxShadow: '0 4px 16px rgba(224, 27, 34, 0.6), 0 0 10px rgba(250, 204, 21, 0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                overflow: 'hidden'
-              }}>
-                <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
-                  <circle cx="32" cy="32" r="30" fill="#D81E27" stroke="#180407" strokeWidth="2" />
-                  <path d="M32 2 L32 62 M2 32 L62 32 M10 10 L54 54 M10 54 L54 10" stroke="#850B12" strokeWidth="1.2" />
-                  <polygon points="14,30 29,36 28,24 16,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
-                  <polygon points="50,30 35,36 36,24 48,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
-                </svg>
-              </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {!isSpideyChatOpen && (
+            <button
+              type="button"
+              className="bot-collapse-btn spidey-btn"
+              onClick={() => setIsSpideyCollapsed(true)}
+              title="Hide Spidey (^ to pop back up)"
+              style={{ height: 'fit-content' }}
+            >
+              ^ Hide
+            </button>
+          )}
+          <div 
+            style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            onClick={() => setIsSpideyChatOpen(prev => !prev)}
+            title="Click to chat with Spider-Man"
+          >
+            <div className="spider-sense-active" style={{
+              position: 'absolute',
+              top: '-13px',
+              width: '42px',
+              height: '21px',
+              pointerEvents: 'none'
+            }}>
+              <svg viewBox="0 0 60 30" fill="none">
+                <path d="M12,25 Q30,2 48,25" stroke="#F97316" strokeWidth="3" strokeLinecap="round" />
+                <path d="M5,20 Q30,-8 55,20" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 2" />
+              </svg>
+            </div>
+
+            <div className="spidey-floating" style={{
+              width: '44px',
+              height: '44px',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #7F1D1D 100%)',
+              border: '2px solid #E01B22',
+              boxShadow: '0 4px 16px rgba(224, 27, 34, 0.6), 0 0 10px rgba(249, 115, 22, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden'
+            }}>
+              <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
+                <circle cx="32" cy="32" r="30" fill="#D81E27" stroke="#180407" strokeWidth="2" />
+                <path d="M32 2 L32 62 M2 32 L62 32 M10 10 L54 54 M10 54 L54 10" stroke="#850B12" strokeWidth="1.2" />
+                <polygon points="14,30 29,36 28,24 16,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
+                <polygon points="50,30 35,36 36,24 48,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
+              </svg>
             </div>
           </div>
         </div>
-      )}
+      </div>
 
       {/* ========================================================= */}
       {/* TOURNAMENT PROTOCOL ACKNOWLEDGEMENT POPUP MODAL          */}
@@ -2395,8 +2781,8 @@ export default function GameArena() {
                   Tournament Protocol Acknowledgement
                 </h3>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-                  <span className="live-pulse-dot" style={{ width: '7px', height: '7px', background: '#FACC15', boxShadow: '0 0 8px #FACC15' }} />
-                  <span style={{ fontSize: '0.74rem', color: '#FACC15', fontWeight: '800', letterSpacing: '1.2px' }}>
+                  <span className="live-pulse-dot" style={{ width: '7px', height: '7px', background: '#F97316', boxShadow: '0 0 8px #F97316' }} />
+                  <span style={{ fontSize: '0.74rem', color: '#F97316', fontWeight: '800', letterSpacing: '1.2px' }}>
                     LOGIN 2026 • STAGE 0 PRELIMS CONTEXT
                   </span>
                 </div>
@@ -2415,8 +2801,8 @@ export default function GameArena() {
                 Each correct answer awards <strong>+10 Points</strong>. Each incorrect guess deducts <strong>-5 Points (Negative Marking)</strong>. Unanswered questions yield 0 points. Do not blind-guess!
               </div>
 
-              <div className="acknowledge-rule-card" style={{ borderLeft: '3.5px solid #FACC15', animation: 'ruleCardSlideIn 0.35s ease-out 0.24s both' }}>
-                <strong style={{ color: '#FACC15', display: 'block', marginBottom: '2px', fontSize: '0.92rem' }}>📷 Automated Silent Invigilation</strong>
+              <div className="acknowledge-rule-card" style={{ borderLeft: '3.5px solid #F97316', animation: 'ruleCardSlideIn 0.35s ease-out 0.24s both' }}>
+                <strong style={{ color: '#F97316', display: 'block', marginBottom: '2px', fontSize: '0.92rem' }}>📷 Automated Silent Invigilation</strong>
                 Webcam snapshots are captured periodically in the background during the test to verify academic honesty and individual completion.
               </div>
             </div>
@@ -2432,7 +2818,7 @@ export default function GameArena() {
                   width: '20px',
                   height: '20px',
                   cursor: 'pointer',
-                  accentColor: '#22C55E',
+                  accentColor: '#38BDF8',
                   transition: 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)'
                 }}
               />
@@ -2501,16 +2887,16 @@ export default function GameArena() {
               marginBottom: '20px',
               textAlign: 'center'
             }}>
-              <div style={{ background: 'rgba(74,222,128,0.1)', border: '1px solid #4ADE80', borderRadius: '8px', padding: '12px 8px' }}>
-                <div style={{ fontSize: '0.7rem', color: '#4ADE80', fontWeight: 'bold' }}>ANSWERED</div>
+              <div style={{ background: 'rgba(56,189,248,0.1)', border: '1px solid #38BDF8', borderRadius: '8px', padding: '12px 8px' }}>
+                <div style={{ fontSize: '0.7rem', color: '#38BDF8', fontWeight: 'bold' }}>ANSWERED</div>
                 <div style={{ fontSize: '1.3rem', fontWeight: '900', color: '#FFF' }}>{Object.keys(prelimAnswers).length}</div>
-                <div style={{ fontSize: '0.65rem', color: '#86EFAC' }}>+10 pts if correct</div>
+                <div style={{ fontSize: '0.65rem', color: '#7DD3FC' }}>+10 pts if correct</div>
               </div>
 
-              <div style={{ background: 'rgba(250,204,21,0.1)', border: '1px solid #FACC15', borderRadius: '8px', padding: '12px 8px' }}>
-                <div style={{ fontSize: '0.7rem', color: '#FACC15', fontWeight: 'bold' }}>FLAGGED</div>
+              <div style={{ background: 'rgba(249,115,22,0.1)', border: '1px solid #F97316', borderRadius: '8px', padding: '12px 8px' }}>
+                <div style={{ fontSize: '0.7rem', color: '#F97316', fontWeight: 'bold' }}>FLAGGED</div>
                 <div style={{ fontSize: '1.3rem', fontWeight: '900', color: '#FFF' }}>{flaggedQuestions.size}</div>
-                <div style={{ fontSize: '0.65rem', color: '#FDE047' }}>Needs review</div>
+                <div style={{ fontSize: '0.65rem', color: '#FB923C' }}>Needs review</div>
               </div>
 
               <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '12px 8px' }}>

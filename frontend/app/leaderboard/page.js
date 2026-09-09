@@ -33,7 +33,10 @@ export default function LeaderboardPage() {
 
   const fetchLeaderboard = async () => {
     try {
-      const res = await fetch('http://localhost:8080/api/game/leaderboard')
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+      const res = await fetch('http://localhost:8080/api/game/leaderboard', {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+      })
       if (res.ok) {
         const data = await res.json()
         setLeaderboard(data)
@@ -55,6 +58,14 @@ export default function LeaderboardPage() {
     try {
       const ws = new WebSocket('ws://localhost:8080/ws')
       wsRef.current = ws
+
+      ws.onopen = () => {
+        try {
+          ws.send(JSON.stringify({ type: 'REGISTER_ADMIN' }))
+        } catch (e) {
+          console.error('Failed to send REGISTER_ADMIN on ws', e)
+        }
+      }
 
       ws.onmessage = (event) => {
         try {
@@ -217,8 +228,8 @@ export default function LeaderboardPage() {
   const top3 = leaderboard.slice(0, 3)
 
   return (
-    <div style={{ minHeight: '100vh', padding: '32px 20px', background: '#0A0607', color: '#E8E8E8' }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+    <div style={{ minHeight: '100vh', padding: '32px 20px', background: '#060812', color: '#E8E8E8' }}>
+      <div style={{ maxWidth: '1750px', margin: '0 auto', width: '100%' }}>
         {/* Navigation & Header */}
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
           <div>
@@ -231,7 +242,7 @@ export default function LeaderboardPage() {
               LIVE LEADERBOARD
             </h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: 0 }}>
-              Real-time standings across all stages • Visible to authorized administrators
+              Real-time standings across all stages • Visible to authorized administrators &amp; live projectors
             </p>
           </div>
 
@@ -249,7 +260,7 @@ export default function LeaderboardPage() {
         <div className="glass-panel" style={{ padding: '14px 20px', marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span className="live-pulse-dot" style={{ width: '9px', height: '9px', background: '#38BDF8' }} />
-            <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#7DD3FC' }}>TELEMETRY UPLINK ACTIVE</span>
+            <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#7DD3FC' }}>TELEMETRY UPLINK ACTIVE • REAL-TIME SQUAD SCORES</span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
@@ -279,40 +290,40 @@ export default function LeaderboardPage() {
 
         {/* Top 3 Cyber Podium */}
         {top3.length >= 3 && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px', marginBottom: '32px', alignItems: 'flex-end' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '32px', alignItems: 'flex-end' }}>
             {/* 2nd Place */}
-            <div className="comic-card card-hover-lift" style={{ padding: '20px', textAlign: 'center', borderTop: '4px solid #38BDF8', background: 'rgba(56, 189, 248, 0.05)', boxShadow: '0 8px 24px rgba(56, 189, 248, 0.15)', height: '210px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div className="comic-card card-hover-lift" style={{ padding: '20px', textAlign: 'center', borderTop: '4px solid #38BDF8', background: 'rgba(56, 189, 248, 0.08)', boxShadow: '0 8px 24px rgba(56, 189, 248, 0.2)', height: '210px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div style={{ fontSize: '2rem', marginBottom: '4px' }}>🥈</div>
               <div style={{ fontSize: '0.75rem', color: '#7DD3FC', fontWeight: '800', letterSpacing: '1px' }}>2ND PLACE • SILVER</div>
               <h3 style={{ fontSize: '1.2rem', margin: '8px 0 4px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', color: '#FFF' }}>
                 {top3[1].teamName}
               </h3>
               <div style={{ fontSize: '1.6rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>
-                {top3[1].totalScore} <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>pts</span>
+                {(top3[1].score ?? top3[1].totalScore ?? 0)} <span style={{ fontSize: '0.75rem', color: '#38BDF8' }}>pts</span>
               </div>
             </div>
 
-            {/* 1st Place */}
-            <div className="comic-card card-hover-lift" style={{ padding: '24px', textAlign: 'center', borderTop: '4px solid #FACC15', height: '240px', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(250, 204, 21, 0.08)', boxShadow: '0 12px 32px rgba(250, 204, 21, 0.25)', transform: 'scale(1.03)' }}>
+            {/* 1st Place - Fiery Orangish & Crimson Red */}
+            <div className="comic-card card-hover-lift" style={{ padding: '24px', textAlign: 'center', borderTop: '4px solid #F97316', height: '240px', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'linear-gradient(155deg, rgba(249, 115, 22, 0.12) 0%, rgba(224, 27, 34, 0.15) 60%, rgba(10, 16, 32, 0.95) 100%)', boxShadow: '0 12px 32px rgba(249, 115, 22, 0.3), 0 0 20px rgba(224, 27, 34, 0.25)', transform: 'scale(1.03)' }}>
               <div style={{ fontSize: '2.6rem', marginBottom: '4px' }}>👑</div>
-              <div style={{ fontSize: '0.82rem', color: '#FACC15', fontWeight: '900', letterSpacing: '1.5px' }}>CHAMPION • 1ST PLACE</div>
+              <div style={{ fontSize: '0.82rem', color: '#F97316', fontWeight: '900', letterSpacing: '1.5px' }}>CHAMPION • 1ST PLACE</div>
               <h3 style={{ fontSize: '1.35rem', margin: '8px 0 4px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', color: '#FFF' }}>
                 {top3[0].teamName}
               </h3>
-              <div style={{ fontSize: '2.1rem', fontWeight: '900', color: '#FACC15', fontFamily: 'var(--font-display)' }}>
-                {top3[0].totalScore} <span style={{ fontSize: '0.85rem', color: 'var(--text-dim)' }}>pts</span>
+              <div style={{ fontSize: '2.1rem', fontWeight: '900', color: '#F97316', fontFamily: 'var(--font-display)', textShadow: '0 0 14px rgba(249, 115, 22, 0.5)' }}>
+                {(top3[0].score ?? top3[0].totalScore ?? 0)} <span style={{ fontSize: '0.85rem', color: '#FB923C' }}>pts</span>
               </div>
             </div>
 
             {/* 3rd Place */}
-            <div className="comic-card card-hover-lift" style={{ padding: '20px', textAlign: 'center', borderTop: '4px solid #EF4444', background: 'rgba(239, 68, 68, 0.05)', boxShadow: '0 8px 24px rgba(239, 68, 68, 0.15)', height: '190px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div className="comic-card card-hover-lift" style={{ padding: '20px', textAlign: 'center', borderTop: '4px solid #EF4444', background: 'rgba(239, 68, 68, 0.08)', boxShadow: '0 8px 24px rgba(239, 68, 68, 0.2)', height: '190px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div style={{ fontSize: '1.8rem', marginBottom: '4px' }}>🥉</div>
               <div style={{ fontSize: '0.75rem', color: '#FF7B7B', fontWeight: '800', letterSpacing: '1px' }}>3RD PLACE • BRONZE</div>
               <h3 style={{ fontSize: '1.15rem', margin: '8px 0 4px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', color: '#FFF' }}>
                 {top3[2].teamName}
               </h3>
               <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#FFF', fontFamily: 'var(--font-display)' }}>
-                {top3[2].totalScore} <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>pts</span>
+                {(top3[2].score ?? top3[2].totalScore ?? 0)} <span style={{ fontSize: '0.75rem', color: '#FF7B7B' }}>pts</span>
               </div>
             </div>
           </div>
@@ -334,38 +345,50 @@ export default function LeaderboardPage() {
                 <thead>
                   <tr style={{ borderBottom: '2px solid rgba(56, 189, 248, 0.3)', background: 'rgba(255,255,255,0.02)' }}>
                     <th style={{ padding: '14px 12px', color: '#38BDF8', width: '80px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Rank</th>
-                    <th style={{ padding: '14px 12px', color: 'var(--text-secondary)', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Team Dossier</th>
+                    <th style={{ padding: '14px 12px', color: 'var(--text-secondary)', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Team Dossier &amp; Squad Roster</th>
                     <th style={{ padding: '14px 12px', color: 'var(--text-secondary)', textAlign: 'center', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Current Stage</th>
-                    <th style={{ padding: '14px 12px', color: 'var(--text-secondary)', textAlign: 'center', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Live Score</th>
+                    <th style={{ padding: '14px 12px', color: 'var(--text-secondary)', textAlign: 'center', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Computed Squad Score</th>
                     <th style={{ padding: '14px 12px', color: 'var(--text-secondary)', textAlign: 'center', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Tournament Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {leaderboard.map((team, idx) => (
                     <tr 
-                      key={team.id}
+                      key={team.id} 
                       style={{
                         borderBottom: '1px solid rgba(255,255,255,0.04)',
                         background: team.isEliminated 
                           ? 'rgba(224,27,34,0.03)' 
-                          : (idx === 0 ? 'rgba(250,204,21,0.05)' : (idx === 1 ? 'rgba(56,189,248,0.04)' : (idx === 2 ? 'rgba(239,68,68,0.04)' : 'transparent'))),
+                          : (idx === 0 ? 'rgba(249,115,22,0.06)' : (idx === 1 ? 'rgba(56,189,248,0.04)' : (idx === 2 ? 'rgba(239,68,68,0.04)' : 'transparent'))),
                         transition: 'background 0.2s ease'
                       }}
                     >
-                      <td style={{ padding: '16px 12px', fontWeight: '900', fontSize: '1.05rem', color: idx === 0 ? '#FACC15' : (idx === 1 ? '#38BDF8' : (idx === 2 ? '#FF7B7B' : 'var(--text-secondary)')) }}>
+                      <td style={{ padding: '16px 12px', fontWeight: '900', fontSize: '1.05rem', color: idx === 0 ? '#F97316' : (idx === 1 ? '#38BDF8' : (idx === 2 ? '#FF7B7B' : 'var(--text-secondary)')) }}>
                         {idx === 0 ? '👑 #1' : (idx === 1 ? '🥈 #2' : (idx === 2 ? '🥉 #3' : `#${idx + 1}`))}
                       </td>
                       <td style={{ padding: '16px 12px' }}>
-                        <div style={{ fontWeight: '700', fontSize: '1.02rem', color: '#FFF', letterSpacing: '0.5px' }}>{team.teamName}</div>
-                        <span style={{ fontSize: '0.74rem', color: 'var(--text-dim)' }}>TID: {team.teamId} • {team.teamSize || 2} Pilots</span>
+                        <div style={{ fontWeight: '700', fontSize: '1.05rem', color: '#FFF', letterSpacing: '0.5px' }}>{team.teamName}</div>
+                        <div style={{ fontSize: '0.76rem', color: 'var(--text-dim)', marginTop: '3px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                          <span style={{ color: '#38BDF8', fontWeight: '600' }}>TID: {team.teamId}</span>
+                          <span>•</span>
+                          <span>{team.teamSize || 2} Pilots</span>
+                          {team.memberNames && (
+                            <>
+                              <span>•</span>
+                              <span style={{ color: '#E0E7FF', background: 'rgba(56, 189, 248, 0.1)', padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
+                                🧑‍🚀 {team.memberNames}
+                              </span>
+                            </>
+                          )}
+                        </div>
                       </td>
                       <td style={{ padding: '16px 12px', textAlign: 'center' }}>
                         <span className="badge" style={{ fontSize: '0.76rem', background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.12)', color: '#FFF' }}>
-                          {STAGE_NAMES[team.currentRound] || `Stage ${team.currentRound}`}
+                          {STAGE_NAMES[team.roundNumber !== undefined ? team.roundNumber : (team.currentRound || 1)] || `Stage ${team.roundNumber ?? 1}`}
                         </span>
                       </td>
                       <td style={{ padding: '16px 12px', textAlign: 'center', fontWeight: '900', fontSize: '1.35rem', color: '#FFF', fontFamily: 'var(--font-display)', textShadow: '0 0 12px rgba(56,189,248,0.5)' }}>
-                        {team.totalScore} <span style={{ fontSize: '0.75rem', color: '#38BDF8' }}>PTS</span>
+                        {(team.score ?? team.totalScore ?? 0)} <span style={{ fontSize: '0.75rem', color: '#38BDF8' }}>PTS</span>
                       </td>
                       <td style={{ padding: '16px 12px', textAlign: 'center' }}>
                         {team.isEliminated ? (

@@ -107,15 +107,15 @@ export default function AdminTeams() {
 
   return (
     <div style={{
-      minHeight: '100vh', padding: '40px 16px', background: '#0A0607', color: '#E8E8E8',
+      minHeight: '100vh', padding: '40px 16px', background: '#060812', color: '#E8E8E8',
       fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
-      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+      <div style={{ maxWidth: '1750px', width: '100%', margin: '0 auto' }}>
         
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
           <div>
             <h1 style={{ margin: '0 0 8px', fontSize: '2rem', fontWeight: 'bold' }}>
-              <span style={{ color: 'var(--color-primary-blue, #E01B22)' }}>Registered Teams</span> Management
+              <span style={{ background: 'linear-gradient(135deg, #38BDF8 0%, #E01B22 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Registered Teams</span> Management
             </h1>
             <p style={{ margin: 0, color: 'var(--text-secondary, #A0A0A0)' }}>Inspect, edit, and manage teams participating in Pixel Paradox</p>
           </div>
@@ -161,7 +161,7 @@ export default function AdminTeams() {
                         </td>
                         <td style={{ padding: '16px', color: '#FF4D4D', fontFamily: 'monospace' }}>{team.teamId}</td>
                         <td style={{ padding: '16px', textAlign: 'center', color: 'var(--text-secondary)' }}>{team.teamSize || 2} members</td>
-                        <td style={{ padding: '16px', textAlign: 'center', fontWeight: 'bold', color: 'var(--color-primary-blue, #E01B22)' }}>{team.score || 0}</td>
+                        <td style={{ padding: '16px', textAlign: 'center', fontWeight: 'bold', color: '#38BDF8' }}>{team.score || 0}</td>
                         <td style={{ padding: '16px', textAlign: 'right' }}>
                           <button 
                             onClick={() => setEditTeam({...team})}
@@ -226,7 +226,7 @@ export default function AdminTeams() {
           <div className="glass-panel" style={{
             padding: '32px', borderRadius: '16px', maxWidth: '500px', width: '100%', maxHeight: '90vh', overflowY: 'auto'
           }}>
-            <h3 style={{ margin: '0 0 20px', fontSize: '1.4rem', color: 'var(--color-primary-blue, #E01B22)' }}>
+            <h3 style={{ margin: '0 0 20px', fontSize: '1.4rem', color: '#38BDF8' }}>
               Edit Team: {editTeam.teamName}
             </h3>
             <form onSubmit={handleUpdate}>

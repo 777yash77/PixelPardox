@@ -17,11 +17,16 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
   const [registeredSuccess, setRegisteredSuccess] = useState(false)
 
+  const [memberNamesList, setMemberNamesList] = useState([])
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search)
       if (params.get('registered') === '1') {
         setRegisteredSuccess(true)
+      }
+      if (params.get('teamId')) {
+        setFormData(prev => ({ ...prev, teamId: params.get('teamId') }))
       }
     }
   }, [])
@@ -50,6 +55,13 @@ export default function Login() {
         localStorage.setItem('role', data.role)
         localStorage.setItem('teamName', data.teamName)
         localStorage.setItem('teamId', data.teamId)
+        localStorage.setItem('teamSize', data.teamSize || '2')
+        localStorage.setItem('memberNames', data.memberNames || '')
+
+        if (data.memberNames) {
+          const members = data.memberNames.split(',').map(s => s.trim()).filter(Boolean)
+          setMemberNamesList(members)
+        }
 
         if (data.role === 'ROLE_ADMIN') {
           router.push('/admin')
@@ -371,19 +383,50 @@ export default function Login() {
                     <span style={{ fontSize: '1.8rem' }}>🧑‍🚀</span>
                   </div>
 
-                  <div style={{ background: 'rgba(224, 27, 34, 0.08)', border: '1px solid rgba(224, 27, 34, 0.3)', borderRadius: '10px', padding: '14px 16px', marginBottom: '22px' }}>
-                    <span style={{ fontSize: '0.78rem', color: '#FF6B6B', fontWeight: 'bold', display: 'block', marginBottom: '4px', letterSpacing: '1px' }}>
-                      STAGE 0 INDIVIDUAL TELEMETRY
+                  <div style={{ background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '10px', padding: '14px 16px', marginBottom: '22px' }}>
+                    <span style={{ fontSize: '0.78rem', color: '#38BDF8', fontWeight: 'bold', display: 'block', marginBottom: '4px', letterSpacing: '1px' }}>
+                      STAGE 0 SQUAD TELEMETRY
                     </span>
                     <p style={{ fontSize: '0.86rem', color: '#FFF', margin: 0, lineHeight: '1.5' }}>
-                      Each registered teammate attempts Stage 0 independently. Your individual score directly factors into your squad's overall average.
+                      All registered pilots in Squad <strong>{formData.teamId.toUpperCase()}</strong> attempt Stage 0 independently. Your individual score directly adds into your squad's total leaderboard score.
                     </p>
                   </div>
+
+                  {memberNamesList.length > 0 && (
+                    <div style={{ marginBottom: '20px' }}>
+                      <span style={{ fontSize: '0.74rem', color: '#7DD3FC', fontWeight: 'bold', letterSpacing: '0.8px', display: 'block', marginBottom: '8px', textTransform: 'uppercase' }}>
+                        Select Your Registered Pilot Profile:
+                      </span>
+                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        {memberNamesList.map(name => {
+                          const isChosen = participantName === name
+                          return (
+                            <button
+                              key={name}
+                              type="button"
+                              onClick={() => setParticipantName(name)}
+                              className="btn-secondary"
+                              style={{
+                                padding: '8px 14px',
+                                fontSize: '0.82rem',
+                                borderColor: isChosen ? '#38BDF8' : 'rgba(255,255,255,0.2)',
+                                background: isChosen ? 'rgba(56,189,248,0.2)' : 'rgba(255,255,255,0.05)',
+                                color: isChosen ? '#38BDF8' : '#FFF',
+                                fontWeight: isChosen ? '800' : '600'
+                              }}
+                            >
+                              👤 {name} {isChosen && '✓'}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )}
 
                   <form onSubmit={handleSelectParticipant}>
                     <div style={{ textAlign: 'left', marginBottom: '22px' }}>
                       <label htmlFor="participantName" style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-primary)', fontWeight: '700', letterSpacing: '0.8px', marginBottom: '6px' }}>
-                        PILOT / PARTICIPANT NAME
+                        PILOT / PARTICIPANT NAME {memberNamesList.length > 0 && '(OR TYPE CUSTOM)'}
                       </label>
                       <div className="auth-input-container">
                         <span className="auth-input-icon">👤</span>

@@ -694,7 +694,7 @@ export default function Home() {
               <svg viewBox="0 0 56 28" fill="none">
                 <path d="M10,24 Q28,-2 46,24" stroke="#38BDF8" strokeWidth="3" strokeLinecap="round" />
                 <path d="M4,18 Q28,-10 52,18" stroke="#0088FF" strokeWidth="2.4" strokeLinecap="round" strokeDasharray="4 2" />
-                <path d="M18,25 Q28,8 38,25" stroke="#FACC15" strokeWidth="2" strokeLinecap="round" />
+                <path d="M18,25 Q28,8 38,25" stroke="#F97316" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </div>
 
@@ -779,7 +779,7 @@ export default function Home() {
             <div className="platform-thruster-left" />
             <div className="platform-thruster-right" />
             <span style={{ fontSize: '0.62rem', color: '#EF4444', fontFamily: 'monospace', fontWeight: 900, letterSpacing: '0.8px' }}>⚡ PERCH-01</span>
-            <span style={{ fontSize: '0.62rem', color: '#FACC15', fontFamily: 'monospace', fontWeight: 900 }}>COMBAT READY</span>
+            <span style={{ fontSize: '0.62rem', color: '#F97316', fontFamily: 'monospace', fontWeight: 900 }}>COMBAT READY</span>
           </div>
 
           {/* Deadpool Callout Tag */}
@@ -1314,7 +1314,7 @@ export default function Home() {
                 </div>
                 <div>
                   <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Deadpool's Merc-Bot</div>
-                  <div style={{ fontSize: '0.7rem', color: '#FACC15' }}>● Fourth Wall Breaker • Online</div>
+                  <div style={{ fontSize: '0.7rem', color: '#F97316' }}>● Fourth Wall Breaker • Online</div>
                 </div>
               </div>
               <button 
@@ -1376,21 +1376,21 @@ export default function Home() {
                 className="popping-suggestion-pill"
                 onClick={() => handleDeadpoolAsk("Ask Spidey-bug, he may know! 🕸️", "REFER_TO_SPIDEY")}
                 style={{
-                  background: 'linear-gradient(135deg, rgba(250, 204, 21, 0.18) 0%, rgba(226, 54, 54, 0.28) 100%)',
-                  border: '1.5px solid #FACC15',
+                  background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(226, 54, 54, 0.28) 100%)',
+                  border: '1.5px solid #F97316',
                   borderRadius: '8px',
                   padding: '7px 10px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  color: '#FACC15',
+                  color: '#F97316',
                   fontSize: '0.76rem',
                   fontWeight: 'bold'
                 }}
                 title="Click to transfer to Spider-Man!"
               >
                 <span>💥 'Ask Spidey-bug he may know!' 🕸️</span>
-                <span style={{ background: '#FACC15', color: '#000', padding: '2px 8px', borderRadius: '4px', fontSize: '0.68rem' }}>SWITCH ➔</span>
+                <span style={{ background: '#F97316', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.68rem', fontWeight: 800 }}>SWITCH ➔</span>
               </div>
 
               <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '2px' }}>
@@ -1443,7 +1443,7 @@ export default function Home() {
             title="Click to open Deadpool's Chatbot!"
           >
             {DEADPOOL_QUOTES[deadpoolQuoteIndex]}
-            <div style={{ fontSize: '0.7rem', color: '#FACC15', marginTop: '4px', textAlign: 'left' }}>
+            <div style={{ fontSize: '0.7rem', color: '#F97316', marginTop: '4px', textAlign: 'left' }}>
               [Click Deadpool to Chat 💬]
             </div>
           </div>

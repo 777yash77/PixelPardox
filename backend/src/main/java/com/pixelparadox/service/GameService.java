@@ -399,6 +399,22 @@ public class GameService {
         return quizAttemptRepository.findByTeamIdAndParticipantName(team.get().getId(), pName);
     }
 
+    public List<QuizAttempt> getTeamQuizAttempts(String teamId) {
+        Optional<User> team = userRepository.findByTeamId(teamId);
+        if (team.isEmpty()) return java.util.Collections.emptyList();
+        return quizAttemptRepository.findByTeamId(team.get().getId());
+    }
+
+    public int getTeamRank(Long teamId) {
+        List<User> teams = userRepository.findByRoleOrderByScoreDesc("ROLE_TEAM");
+        for (int i = 0; i < teams.size(); i++) {
+            if (teams.get(i).getId().equals(teamId)) {
+                return i + 1;
+            }
+        }
+        return 0;
+    }
+
     public List<QuizQuestion> getQuizQuestions() {
         return quizQuestionRepository.findAllByOrderByOrderNumAsc();
     }
@@ -507,16 +523,15 @@ public class GameService {
     private void updateTeamPrelimsScore(User team) {
         List<QuizAttempt> attempts = quizAttemptRepository.findByTeamId(team.getId());
 
-        double totalScoreSum = 0.0;
+        int totalScoreSum = 0;
         for (QuizAttempt att : attempts) {
             if ("COMPLETED".equals(att.getStatus())) {
                 totalScoreSum += att.getScore();
             }
         }
 
-        int memberCount = team.getTeamSize();
-        if (memberCount <= 0) memberCount = 1;
-        team.setScore((int) Math.round(totalScoreSum / memberCount));
+        // Teammates' scores are added directly together to compute total squad score
+        team.setScore(totalScoreSum);
         userRepository.save(team);
         broadcastLeaderboard();
     }

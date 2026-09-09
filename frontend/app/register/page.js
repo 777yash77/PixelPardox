@@ -9,6 +9,8 @@ export default function Register() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [memberNames, setMemberNames] = useState(['', '', '', ''])
+  const [teamExistsNotice, setTeamExistsNotice] = useState(null)
 
   const [formData, setFormData] = useState({
     teamName: '',
@@ -25,23 +27,42 @@ export default function Register() {
     setFormData({ ...formData, teamSize: size })
   }
 
+  const handleMemberNameChange = (index, value) => {
+    const updated = [...memberNames]
+    updated[index] = value
+    setMemberNames(updated)
+  }
+
   const handleRegister = async (e) => {
     e.preventDefault()
     setError('')
+    setTeamExistsNotice(null)
     if (!formData.teamName.trim() || !formData.teamId.trim() || !formData.password.trim()) {
-      setError('All fields are required.')
+      setError('Team name, Team ID, and Password are required.')
       return
     }
     setLoading(true)
     try {
+      const activeMembers = memberNames.slice(0, parseInt(formData.teamSize)).map(s => s.trim()).filter(Boolean)
       const res = await fetch('http://localhost:8080/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, teamSize: parseInt(formData.teamSize) }),
+        body: JSON.stringify({
+          ...formData,
+          teamSize: parseInt(formData.teamSize),
+          memberNames: activeMembers
+        }),
       })
       const data = await res.json()
       if (res.ok) {
-        router.push('/login?registered=1')
+        if (data.status === 'TEAM_EXISTS') {
+          setTeamExistsNotice({
+            message: data.message,
+            teamId: data.teamId
+          })
+        } else {
+          router.push(`/login?teamId=${encodeURIComponent(formData.teamId)}&registered=1`)
+        }
       } else {
         setError(data.message || 'Registration failed')
       }
@@ -395,23 +416,47 @@ export default function Register() {
                   </div>
                 </div>
 
-                {/* Dynamic Squad Roster Matrix */}
+                {/* Dynamic Squad Roster Matrix with Pilot Names */}
                 <div style={{ marginBottom: '22px' }}>
-                  <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '8px' }}>
-                    Active Squad Roster Allocation:
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                      Pilot Member Names (Registered Teammates):
+                    </span>
+                    <span style={{ fontSize: '0.68rem', color: '#38BDF8' }}>
+                      {formData.teamSize} Pilots in Squad
+                    </span>
                   </div>
-                  <div className="squad-roster-matrix">
-                    {[1, 2, 3, 4].map((slot) => {
-                      const isActive = slot <= parseInt(formData.teamSize)
+                  <div style={{ display: 'grid', gridTemplateColumns: `repeat(${parseInt(formData.teamSize)}, 1fr)`, gap: '10px' }}>
+                    {[...Array(parseInt(formData.teamSize))].map((_, idx) => {
+                      const slot = idx + 1
                       return (
-                        <div key={slot} className={`squad-roster-slot ${isActive ? 'active' : ''}`}>
-                          <div className="slot-badge">{slot === 1 ? 'LEAD' : `P0${slot}`}</div>
-                          <div className="slot-title">{slot === 1 ? 'Squad Lead' : `Pilot 0${slot}`}</div>
-                          <div className="slot-status">{isActive ? '✓ ACTIVE' : 'STANDBY'}</div>
+                        <div key={slot} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '8px', padding: '10px' }}>
+                          <div style={{ fontSize: '0.68rem', color: '#38BDF8', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>
+                            {slot === 1 ? '👑 Lead Pilot' : `Pilot 0${slot}`}
+                          </div>
+                          <input
+                            type="text"
+                            placeholder={slot === 1 ? 'e.g. Yash' : `Teammate ${slot}`}
+                            value={memberNames[idx] || ''}
+                            onChange={(e) => handleMemberNameChange(idx, e.target.value)}
+                            style={{
+                              width: '100%',
+                              padding: '8px 10px',
+                              background: 'rgba(0,0,0,0.4)',
+                              border: '1px solid rgba(255,255,255,0.12)',
+                              borderRadius: '6px',
+                              color: '#FFF',
+                              fontSize: '0.82rem',
+                              outline: 'none'
+                            }}
+                          />
                         </div>
                       )
                     })}
                   </div>
+                  <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)', margin: '8px 0 0 0' }}>
+                    Teammates will log in with this shared Team ID and select or enter their pilot name to take the quiz.
+                  </p>
                 </div>
 
                 {/* Submit Button */}

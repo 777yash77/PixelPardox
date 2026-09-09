@@ -262,9 +262,29 @@ public class GameController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Authentication required"));
         }
         String teamId = auth.getName();
-        return userRepository.findByTeamId(teamId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Optional<User> userOpt = userRepository.findByTeamId(teamId);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        User user = userOpt.get();
+        List<com.pixelparadox.model.QuizAttempt> attempts = gameService.getTeamQuizAttempts(teamId);
+        int rank = gameService.getTeamRank(user.getId());
+        long totalTeams = userRepository.countByRole("ROLE_TEAM");
+
+        Map<String, Object> profile = new HashMap<>();
+        profile.put("id", user.getId());
+        profile.put("teamName", user.getTeamName());
+        profile.put("teamId", user.getTeamId());
+        profile.put("teamSize", user.getTeamSize());
+        profile.put("score", user.getScore());
+        profile.put("roundNumber", user.getRoundNumber());
+        profile.put("isEliminated", user.isEliminated());
+        profile.put("memberNames", user.getMemberNames() != null ? user.getMemberNames() : "");
+        profile.put("attempts", attempts);
+        profile.put("rank", rank);
+        profile.put("totalTeams", totalTeams);
+
+        return ResponseEntity.ok(profile);
     }
 
     @GetMapping("/leaderboard")

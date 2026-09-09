@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -40,7 +42,8 @@ public class AuthController {
         String teamName,
         String teamId,
         String password,
-        Integer teamSize
+        Integer teamSize,
+        List<String> memberNames
     ) {}
 
     public record LoginRequest(String teamId, String password) {}
@@ -57,10 +60,23 @@ public class AuthController {
         String cleanTeamName = request.teamName().trim();
         String cleanTeamId = request.teamId().trim();
 
+        // Check if Team ID already exists
+        Optional<User> existingUserOpt = userRepository.findByTeamId(cleanTeamId);
+        if (existingUserOpt.isPresent()) {
+            User existing = existingUserOpt.get();
+            if (passwordEncoder.matches(request.password(), existing.getPassword())) {
+                return ResponseEntity.ok(Map.of(
+                    "status", "TEAM_EXISTS",
+                    "message", "Squad '" + existing.getTeamName() + "' is already registered! All teammates use this shared Team ID. You can now log in.",
+                    "teamId", existing.getTeamId(),
+                    "teamName", existing.getTeamName()
+                ));
+            }
+            return ResponseEntity.badRequest().body(Map.of("message", "Team ID '" + cleanTeamId + "' is already taken. Please choose another Team ID or sign in."));
+        }
+
         if (userRepository.findByTeamName(cleanTeamName).isPresent())
             return ResponseEntity.badRequest().body(Map.of("message", "Team name already registered."));
-        if (userRepository.findByTeamId(cleanTeamId).isPresent())
-            return ResponseEntity.badRequest().body(Map.of("message", "Team ID already registered."));
 
         int size = (request.teamSize() != null && request.teamSize() >= 2 && request.teamSize() <= 4) ? request.teamSize() : 2;
         User user = new User(
@@ -70,10 +86,21 @@ public class AuthController {
                 "ROLE_TEAM",
                 size
         );
+
+        if (request.memberNames() != null && !request.memberNames().isEmpty()) {
+            String membersJoined = request.memberNames().stream()
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .collect(Collectors.joining(", "));
+            user.setMemberNames(membersJoined);
+        }
+
         userRepository.save(user);
 
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "Registration successful. You can now log in.");
+        resp.put("teamId", cleanTeamId);
+        resp.put("teamName", cleanTeamName);
         return ResponseEntity.ok(resp);
     }
 
@@ -100,6 +127,8 @@ public class AuthController {
             response.put("teamId", user.getTeamId());
             response.put("role", user.getRole());
             response.put("score", user.getScore());
+            response.put("teamSize", user.getTeamSize());
+            response.put("memberNames", user.getMemberNames() != null ? user.getMemberNames() : "");
             response.put("roundNumber", user.getRoundNumber());
             response.put("isEliminated", user.isEliminated());
             System.out.println(">>> Login successful for: " + user.getTeamId());

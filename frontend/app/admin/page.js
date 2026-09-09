@@ -157,7 +157,10 @@ export default function AdminDashboard() {
 
   const fetchLeaderboard = async () => {
     try {
-      const res = await fetch('http://localhost:8080/api/game/leaderboard')
+      const currentToken = token || (typeof window !== 'undefined' ? localStorage.getItem('token') : '')
+      const res = await fetch('http://localhost:8080/api/game/leaderboard', {
+        headers: currentToken ? { 'Authorization': `Bearer ${currentToken}` } : {}
+      })
       if (res.ok) {
         const data = await res.json()
         setLeaderboard(data)
@@ -650,16 +653,33 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#0A0607', color: '#E8E8E8' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#060812', color: '#E8E8E8' }}>
       {/* Navigation Header */}
-      <nav className="glass-panel" style={{ margin: '16px', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)' }}>
+      <nav className="glass-panel" style={{ margin: '16px auto', width: 'calc(100% - 32px)', maxWidth: '1750px', padding: '16px 28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold', letterSpacing: '1px' }}>
-            <span style={{ color: 'var(--color-primary-blue, #E01B22)' }}>PIXEL PARADOX</span> ORGANIZER
+            <span style={{ background: 'linear-gradient(135deg, #38BDF8 0%, #E01B22 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>PIXEL PARADOX</span> ORGANIZER
           </h1>
           <span className="badge badge-active" style={{ background: 'rgba(224,27,34,0.15)', borderColor: '#E01B22', color: '#FF4D4D' }}>Admin Panel</span>
         </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <Link 
+            href="/leaderboard" 
+            target="_blank" 
+            className="btn-primary" 
+            style={{ 
+              padding: '8px 16px', 
+              fontSize: '0.85rem', 
+              textDecoration: 'none', 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              gap: '6px',
+              background: 'linear-gradient(135deg, #0284C7 0%, #E01B22 100%)',
+              boxShadow: '0 0 14px rgba(56, 189, 248, 0.4)'
+            }}
+          >
+            🏆 Big-Screen Leaderboard ↗
+          </Link>
           <button onClick={() => router.push('/admin/teams')} className="btn-secondary" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
             👥 Registered Teams
           </button>
@@ -673,7 +693,7 @@ export default function AdminDashboard() {
       </nav>
 
       {/* Tab Selectors */}
-      <div style={{ padding: '0 24px', display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
+      <div style={{ padding: '0 16px', width: '100%', maxWidth: '1750px', margin: '0 auto 16px auto', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
         <button 
           onClick={() => setActiveTab('control')} 
           className={activeTab === 'control' ? 'btn-primary' : 'btn-secondary'}
@@ -718,12 +738,12 @@ export default function AdminDashboard() {
         </button>
       </div>
 
-      <main className="container" style={{ flex: 1, paddingBottom: '60px' }}>
+      <main style={{ flex: 1, padding: '0 16px 60px 16px', width: '100%', maxWidth: '1750px', margin: '0 auto' }}>
         {/* ========================================================= */}
         {/* TAB 1: CONTROL ROOM */}
         {/* ========================================================= */}
         {activeTab === 'control' && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(380px, 460px) 1fr', gap: '24px' }}>
             {/* Global Game State Config */}
             <div className="glass-panel" style={{ padding: '24px' }}>
               <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
@@ -733,7 +753,7 @@ export default function AdminDashboard() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '20px' }}>
                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
                   <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Current Stage:</span>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--color-primary-blue, #E01B22)', marginTop: '4px' }}>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#38BDF8', marginTop: '4px' }}>
                     {STAGE_NAMES[gameState.activeRound] || `Round ${gameState.activeRound}`}
                   </div>
                 </div>
@@ -777,7 +797,7 @@ export default function AdminDashboard() {
                 <div style={{ marginTop: '24px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '20px' }}>
                   <h4 style={{ marginBottom: '12px' }}>Timer Controls</h4>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--color-primary-blue, #E01B22)', fontFamily: 'var(--font-display)' }}>
+                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#38BDF8', fontFamily: 'var(--font-display)' }}>
                       {timerText}
                     </div>
                     <div>
@@ -816,7 +836,7 @@ export default function AdminDashboard() {
                     </div>
                     <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
                       <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Status:</span>
-                      <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#4ADE80', marginTop: '8px' }}>
+                      <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#38BDF8', marginTop: '8px' }}>
                         ● Active / Open
                       </div>
                     </div>
@@ -859,7 +879,7 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                   ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '450px', overflowY: 'auto', paddingRight: '4px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '12px', maxHeight: '520px', overflowY: 'auto', paddingRight: '4px' }}>
                       {images
                         .filter(img => img.roundNumber === gameState.activeRound)
                         .map((img) => (
@@ -871,8 +891,8 @@ export default function AdminDashboard() {
                               display: 'flex', 
                               gap: '12px', 
                               alignItems: 'center', 
-                              borderColor: gameState.activeQuestionId === img.id ? 'var(--color-primary-blue, #E01B22)' : 'var(--card-border)',
-                              background: gameState.activeQuestionId === img.id ? 'rgba(224,27,34,0.08)' : 'var(--card-bg)'
+                              borderColor: gameState.activeQuestionId === img.id ? '#38BDF8' : 'var(--card-border)',
+                              background: gameState.activeQuestionId === img.id ? 'rgba(56,189,248,0.1)' : 'var(--card-bg)'
                             }}
                           >
                             <img 
@@ -882,7 +902,7 @@ export default function AdminDashboard() {
                             />
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <div style={{ fontSize: '0.9rem', fontWeight: '600', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                                Question ID: {img.id} {img.isLightning && <span style={{ color: '#E01B22', fontSize: '0.75rem' }}>[Lightning]</span>}
+                                Question ID: {img.id} {img.isLightning && <span style={{ color: '#F97316', fontSize: '0.75rem', fontWeight: 'bold' }}>[Lightning ⚡]</span>}
                               </div>
                               <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                                 {img.isAi ? `AI (${img.modelUsed})` : 'Real'}
@@ -942,7 +962,7 @@ export default function AdminDashboard() {
         {/* TAB 2: QUIZ MANAGER (STAGE 0 PRELIMS MCQS) */}
         {/* ========================================================= */}
         {activeTab === 'quiz' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.8fr', gap: '28px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(380px, 460px) 1fr', gap: '28px' }}>
             {/* Form: Add / Edit Question */}
             <div className="glass-panel" style={{ padding: '24px', height: 'fit-content' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
@@ -957,7 +977,7 @@ export default function AdminDashboard() {
               </div>
 
               {quizStatus.success && (
-                <div style={{ background: 'rgba(74, 222, 128, 0.1)', border: '1px solid #4ADE80', color: '#4ADE80', borderRadius: '8px', padding: '10px 14px', fontSize: '0.85rem', marginBottom: '16px' }}>
+                <div style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid #38BDF8', color: '#38BDF8', borderRadius: '8px', padding: '10px 14px', fontSize: '0.85rem', marginBottom: '16px' }}>
                   {quizStatus.success}
                 </div>
               )}
@@ -983,7 +1003,7 @@ export default function AdminDashboard() {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '14px' }}>
                   <div>
-                    <label className="form-label" style={{ fontSize: '0.8rem', color: quizForm.correctOption === 'A' ? '#4ADE80' : 'var(--text-secondary)' }}>
+                    <label className="form-label" style={{ fontSize: '0.8rem', color: quizForm.correctOption === 'A' ? '#38BDF8' : 'var(--text-secondary)' }}>
                       Option A {quizForm.correctOption === 'A' && '✓ (Correct)'}
                     </label>
                     <input 
@@ -998,7 +1018,7 @@ export default function AdminDashboard() {
                   </div>
 
                   <div>
-                    <label className="form-label" style={{ fontSize: '0.8rem', color: quizForm.correctOption === 'B' ? '#4ADE80' : 'var(--text-secondary)' }}>
+                    <label className="form-label" style={{ fontSize: '0.8rem', color: quizForm.correctOption === 'B' ? '#38BDF8' : 'var(--text-secondary)' }}>
                       Option B {quizForm.correctOption === 'B' && '✓ (Correct)'}
                     </label>
                     <input 
@@ -1013,7 +1033,7 @@ export default function AdminDashboard() {
                   </div>
 
                   <div>
-                    <label className="form-label" style={{ fontSize: '0.8rem', color: quizForm.correctOption === 'C' ? '#4ADE80' : 'var(--text-secondary)' }}>
+                    <label className="form-label" style={{ fontSize: '0.8rem', color: quizForm.correctOption === 'C' ? '#38BDF8' : 'var(--text-secondary)' }}>
                       Option C {quizForm.correctOption === 'C' && '✓ (Correct)'}
                     </label>
                     <input 
@@ -1028,7 +1048,7 @@ export default function AdminDashboard() {
                   </div>
 
                   <div>
-                    <label className="form-label" style={{ fontSize: '0.8rem', color: quizForm.correctOption === 'D' ? '#4ADE80' : 'var(--text-secondary)' }}>
+                    <label className="form-label" style={{ fontSize: '0.8rem', color: quizForm.correctOption === 'D' ? '#38BDF8' : 'var(--text-secondary)' }}>
                       Option D {quizForm.correctOption === 'D' && '✓ (Correct)'}
                     </label>
                     <input 
@@ -1110,7 +1130,7 @@ export default function AdminDashboard() {
                   </span>
                 </div>
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  <button onClick={handleSeedDefaults} className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem', borderColor: '#4ADE80', color: '#4ADE80' }}>
+                  <button onClick={handleSeedDefaults} className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem', borderColor: '#38BDF8', color: '#38BDF8', background: 'rgba(56,189,248,0.08)' }}>
                     ⚡ Seed 20 Curated Questions
                   </button>
                   <button onClick={handleClearAllQuestions} className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem', borderColor: '#E01B22', color: '#FF4D4D' }}>
@@ -1133,10 +1153,10 @@ export default function AdminDashboard() {
                     <div 
                       key={q.id} 
                       style={{ 
-                        background: editingQuizId === q.id ? 'rgba(224,27,34,0.1)' : 'rgba(255,255,255,0.02)', 
+                        background: editingQuizId === q.id ? 'rgba(56,189,248,0.1)' : 'rgba(255,255,255,0.02)', 
                         borderRadius: '8px', 
                         padding: '16px', 
-                        border: editingQuizId === q.id ? '1px solid var(--color-primary-blue, #E01B22)' : '1px solid rgba(255,255,255,0.06)' 
+                        border: editingQuizId === q.id ? '1px solid #38BDF8' : '1px solid rgba(255,255,255,0.06)' 
                       }}
                     >
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
@@ -1170,7 +1190,7 @@ export default function AdminDashboard() {
                         {q.questionText}
                       </p>
 
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '0.85rem' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px', fontSize: '0.85rem' }}>
                         {[
                           { key: 'A', text: q.optionA },
                           { key: 'B', text: q.optionB },
@@ -1184,9 +1204,9 @@ export default function AdminDashboard() {
                               style={{ 
                                 padding: '8px 12px', 
                                 borderRadius: '6px', 
-                                background: isCorrect ? 'rgba(74, 222, 128, 0.12)' : 'rgba(0,0,0,0.2)', 
-                                border: isCorrect ? '1px solid #4ADE80' : '1px solid rgba(255,255,255,0.04)',
-                                color: isCorrect ? '#4ADE80' : 'var(--text-secondary)',
+                                background: isCorrect ? 'rgba(56, 189, 248, 0.12)' : 'rgba(0,0,0,0.2)', 
+                                border: isCorrect ? '1px solid #38BDF8' : '1px solid rgba(255,255,255,0.04)',
+                                color: isCorrect ? '#38BDF8' : 'var(--text-secondary)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: '8px'
@@ -1211,14 +1231,14 @@ export default function AdminDashboard() {
         {/* TAB 3: MEDIA MANAGER (STAGES 1 - 3) */}
         {/* ========================================================= */}
         {activeTab === 'media' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '32px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(380px, 460px) 1fr', gap: '28px' }}>
             {/* Upload Panel */}
             <div className="glass-panel" style={{ padding: '24px' }}>
               <h3 style={{ fontSize: '1.25rem', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
                 Upload Visual Question
               </h3>
               
-              {uploadStatus.success && <div style={{ background: 'rgba(74, 222, 128, 0.1)', border: '1px solid #4ADE80', color: '#4ADE80', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px' }}>{uploadStatus.success}</div>}
+              {uploadStatus.success && <div style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid #38BDF8', color: '#38BDF8', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px' }}>{uploadStatus.success}</div>}
               {uploadStatus.error && <div style={{ background: 'rgba(224,27,34,0.1)', border: '1px solid #E01B22', color: '#FF4D4D', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px' }}>{uploadStatus.error}</div>}
 
               <form onSubmit={handleUploadSubmit}>
@@ -1308,15 +1328,15 @@ export default function AdminDashboard() {
                   const roundImgs = images.filter(img => img.roundNumber === round)
                   return (
                     <div key={round} style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '16px' }}>
-                      <h4 style={{ fontSize: '1rem', color: 'var(--color-primary-blue, #E01B22)', marginBottom: '10px' }}>
+                      <h4 style={{ fontSize: '1rem', color: '#38BDF8', marginBottom: '10px' }}>
                         {label} ({roundImgs.length})
                       </h4>
                       {roundImgs.length === 0 ? (
                         <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>No visual questions uploaded yet</p>
                       ) : (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', gap: '10px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
                           {roundImgs.map(img => (
-                            <div key={img.id} style={{ position: 'relative', width: '80px', height: '80px', borderRadius: '6px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+                            <div key={img.id} style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
                               <img src={`http://localhost:8080${img.imageUrl}`} alt="item" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                               <button 
                                 onClick={() => handleDeleteImage(img.id)}
@@ -1345,7 +1365,7 @@ export default function AdminDashboard() {
               Pending Submissions — {STAGE_NAMES[gameState.activeRound] || `Round ${gameState.activeRound}`}
             </h3>
             
-            {gradingStatus && <div style={{ background: 'rgba(74, 222, 128, 0.1)', border: '1px solid #4ADE80', color: '#4ADE80', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px' }}>{gradingStatus}</div>}
+            {gradingStatus && <div style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid #38BDF8', color: '#38BDF8', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px' }}>{gradingStatus}</div>}
             
             {gameState.activeRound <= 2 && (
               <div style={{ background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38BDF8', borderRadius: '8px', padding: '14px 18px', marginBottom: '18px', display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -1366,7 +1386,7 @@ export default function AdminDashboard() {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {submissions.map((sub) => (
-                  <div key={sub.id} className="glass-panel" style={{ padding: '20px', display: 'grid', gridTemplateColumns: '150px 1fr 200px', gap: '20px', alignItems: 'center' }}>
+                  <div key={sub.id} className="glass-panel" style={{ padding: '20px', display: 'grid', gridTemplateColumns: '180px 1fr 220px', gap: '24px', alignItems: 'center' }}>
                     <div style={{ textAlign: 'center' }}>
                       {sub.imageQuestion && sub.imageQuestion.imageUrl ? (
                         <img 
@@ -1385,7 +1405,7 @@ export default function AdminDashboard() {
                     </div>
                     
                     <div>
-                      <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--color-primary-blue, #E01B22)', marginBottom: '8px' }}>
+                      <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#38BDF8', marginBottom: '8px' }}>
                         Team: {sub.user.teamName}
                       </div>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
@@ -1432,12 +1452,30 @@ export default function AdminDashboard() {
         {/* TAB 5: LEADERBOARD & ADVANCEMENT */}
         {/* ========================================================= */}
         {activeTab === 'leaderboard' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '32px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.8fr) minmax(360px, 1fr)', gap: '28px' }}>
             {/* Live Standings Table */}
             <div className="glass-panel" style={{ padding: '24px' }}>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
-                Live Leaderboard Standings
-              </h3>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '12px', flexWrap: 'wrap', gap: '12px' }}>
+                <h3 style={{ fontSize: '1.25rem', margin: 0 }}>
+                  Live Leaderboard Standings
+                </h3>
+                <Link 
+                  href="/leaderboard" 
+                  target="_blank" 
+                  className="btn-primary" 
+                  style={{ 
+                    padding: '6px 14px', 
+                    fontSize: '0.82rem', 
+                    textDecoration: 'none', 
+                    display: 'inline-flex', 
+                    alignItems: 'center', 
+                    gap: '6px',
+                    background: 'linear-gradient(135deg, #0284C7 0%, #E01B22 100%)'
+                  }}
+                >
+                  🚀 Open Full Big-Screen Projector View ↗
+                </Link>
+              </div>
               
               {leaderboard.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-dim)' }}>No teams registered yet.</div>
@@ -1446,7 +1484,7 @@ export default function AdminDashboard() {
                   <thead>
                     <tr style={{ borderBottom: '2px solid rgba(255,255,255,0.08)' }}>
                       <th style={{ padding: '12px 8px', color: 'var(--text-secondary)' }}>Rank</th>
-                      <th style={{ padding: '12px 8px', color: 'var(--text-secondary)' }}>Team</th>
+                      <th style={{ padding: '12px 8px', color: 'var(--text-secondary)' }}>Team Dossier</th>
                       <th style={{ padding: '12px 8px', color: 'var(--text-secondary)', textAlign: 'center' }}>Stage</th>
                       <th style={{ padding: '12px 8px', color: 'var(--text-secondary)', textAlign: 'center' }}>Total Score</th>
                       <th style={{ padding: '12px 8px', color: 'var(--text-secondary)', textAlign: 'center' }}>State</th>
@@ -1464,7 +1502,17 @@ export default function AdminDashboard() {
                         <td style={{ padding: '14px 8px', fontWeight: 'bold' }}>{idx + 1}</td>
                         <td style={{ padding: '14px 8px' }}>
                           <div style={{ fontWeight: '600' }}>{team.teamName}</div>
-                          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>TID: {team.teamId} (Size: {team.teamSize})</span>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                            <span style={{ color: '#38BDF8' }}>TID: {team.teamId}</span>
+                            <span>•</span>
+                            <span>Size: {team.teamSize}</span>
+                            {team.memberNames && (
+                              <>
+                                <span>•</span>
+                                <span style={{ color: '#E0E7FF' }}>🧑‍🚀 {team.memberNames}</span>
+                              </>
+                            )}
+                          </div>
                         </td>
                         <td style={{ padding: '14px 8px', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                           Stage {team.roundNumber !== undefined ? (team.roundNumber - 1) : 0}
@@ -1496,7 +1544,7 @@ export default function AdminDashboard() {
               </p>
 
               {advancementStatus && (
-                <div style={{ background: 'rgba(74, 222, 128, 0.1)', border: '1px solid #4ADE80', color: '#4ADE80', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px', textAlign: 'center' }}>
+                <div style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid #38BDF8', color: '#38BDF8', borderRadius: '8px', padding: '12px', fontSize: '0.85rem', marginBottom: '16px', textAlign: 'center' }}>
                   {advancementStatus}
                 </div>
               )}
@@ -1556,7 +1604,7 @@ export default function AdminDashboard() {
             <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
               Live Invigilation Cameras ({Object.keys(webcams).length} Active)
             </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '18px' }}>
               {Object.entries(webcams).map(([teamId, data]) => {
                 const isStale = Date.now() - data.timestamp > 15000
                 return (

@@ -31,6 +31,9 @@ public class User {
     @Column(nullable = false)
     private int teamSize = 2;
 
+    @Column(columnDefinition = "TEXT")
+    private String memberNames;
+
     private int roundNumber = 1;
     private int score = 0;
     @JsonProperty("isEliminated")
@@ -67,4 +70,6 @@ public class User {
     public void setEliminated(boolean eliminated) { this.isEliminated = eliminated; }
     public int getTeamSize() { return teamSize; }
     public void setTeamSize(int teamSize) { this.teamSize = teamSize; }
+    public String getMemberNames() { return memberNames; }
+    public void setMemberNames(String memberNames) { this.memberNames = memberNames; }
 }

@@ -53,12 +53,12 @@ export default function AdminRecordings() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', padding: '40px', background: '#0A0607', color: '#E8E8E8' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <div style={{ minHeight: '100vh', padding: '40px', background: '#060812', color: '#E8E8E8' }}>
+      <div style={{ maxWidth: '1750px', width: '100%', margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
           <div>
             <h1 style={{ fontSize: '2rem', marginBottom: '8px', fontWeight: 'bold' }}>
-              <span style={{ color: 'var(--color-primary-blue, #E01B22)' }}>Webcam Recordings</span> (Prelims Anti-Cheat)
+              <span style={{ background: 'linear-gradient(135deg, #38BDF8 0%, #E01B22 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Webcam Recordings</span> (Prelims Anti-Cheat)
             </h1>
             <p style={{ color: 'var(--text-secondary, #A0A0A0)', margin: 0 }}>
               Review silent 1-minute webcam recordings captured during Stage 0 Prelims to ensure fair competition.
@@ -77,17 +77,17 @@ export default function AdminRecordings() {
             <p style={{ fontSize: '0.85rem' }}>Recordings will appear here automatically as participants begin their Stage 0 Prelims.</p>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '24px' }}>
             {recordings.map(rec => (
-              <div key={rec.id} className="glass-panel" style={{ padding: '16px', borderRadius: '12px' }}>
+              <div key={rec.id} className="glass-panel" style={{ padding: '16px', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
                 <div style={{ marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
                     <h3 style={{ fontSize: '1.1rem', margin: '0 0 4px 0', fontWeight: 'bold', color: '#fff' }}>
                       {rec.participantName}
                     </h3>
-                    <span style={{ fontSize: '0.8rem', color: '#FF4D4D' }}>Team ID: {rec.teamId}</span>
+                    <span style={{ fontSize: '0.8rem', color: '#38BDF8', fontWeight: '600' }}>Team ID: {rec.teamId}</span>
                   </div>
-                  <span className="badge badge-active" style={{ fontSize: '0.7rem', background: 'rgba(224,27,34,0.15)', borderColor: '#E01B22', color: '#FF4D4D' }}>
+                  <span className="badge badge-active" style={{ fontSize: '0.7rem', background: 'rgba(56,189,248,0.15)', borderColor: '#38BDF8', color: '#38BDF8' }}>
                     Stage 0
                   </span>
                 </div>
@@ -95,7 +95,7 @@ export default function AdminRecordings() {
                 <video 
                   src={`http://localhost:8080${rec.videoUrl}`} 
                   controls 
-                  style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '8px', background: '#000', marginBottom: '16px', border: '1px solid rgba(255,255,255,0.1)' }}
+                  style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '8px', background: '#000', marginBottom: '16px', border: '1px solid rgba(56,189,248,0.2)' }}
                 />
                 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

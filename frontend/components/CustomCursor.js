@@ -56,14 +56,14 @@ export default function CustomCursor() {
     const particles = []
     const shockwaves = []
 
-    // Multiverse Chromatic Spectrum: Spidey Blue & Cyan, Deadpool Crimson, Spark Gold, Cosmic Purple
+    // Multiverse Chromatic Spectrum: Spidey Blue & Cyan, Dark Sapphire Blue, Deadpool Crimson, Scarlet Red, Fiery Orangish
     const colors = [
-      { r: 0,   g: 136, b: 255 }, // Spidey Electric Blue
-      { r: 56,  g: 189, b: 248 }, // Neon Cyan
-      { r: 224, g: 27,  b: 34  }, // Deadpool Crimson
-      { r: 255, g: 77,  b: 77  }, // Bright Coral Red
-      { r: 250, g: 204, b: 21  }, // Kinetic Spark Gold
-      { r: 168, g: 85,  b: 247 }, // Cosmic Purple
+      { r: 2,   g: 132, b: 199 }, // Spidey Electric Blue
+      { r: 56,  g: 189, b: 248 }, // Neon Blue / Cyan
+      { r: 29,  g: 78,  b: 216 }, // Deep Sapphire Blue
+      { r: 224, g: 27,  b: 34  }, // Deadpool Crimson Red
+      { r: 239, g: 68,  b: 68  }, // Bright Scarlet Red
+      { r: 249, g: 115, b: 22  }, // Fiery Orangish Accent
       { r: 255, g: 255, b: 255 }, // Pure White Starlight
     ]
 
@@ -110,11 +110,11 @@ export default function CustomCursor() {
 
     const onMouseDown = (e) => {
       setIsClicking(true)
-      // Triple multicolored shockwaves: Cyan -> Crimson -> Gold
+      // Triple multicolored shockwaves: Electric Blue -> Deadpool Crimson -> Fiery Orangish
       shockwaves.push(
         { x: e.clientX, y: e.clientY, radius: 4,  maxRadius: 52, alpha: 0.95, color: '#38BDF8', lineWidth: 2.8 },
         { x: e.clientX, y: e.clientY, radius: 2,  maxRadius: 40, alpha: 0.85, color: '#EF4444', lineWidth: 2.0 },
-        { x: e.clientX, y: e.clientY, radius: 1,  maxRadius: 28, alpha: 0.75, color: '#FACC15', lineWidth: 1.6 }
+        { x: e.clientX, y: e.clientY, radius: 1,  maxRadius: 28, alpha: 0.75, color: '#F97316', lineWidth: 1.6 }
       )
       addParticles(e.clientX, e.clientY, 20, 3.8)
     }
@@ -166,15 +166,15 @@ export default function CustomCursor() {
           ctx.moveTo(p1.x, p1.y)
           ctx.lineTo(p2.x, p2.y)
           
-          // Color cycles between Electric Blue, Neon Cyan, Deadpool Red, and Gold
+          // Color cycles between Electric Blue, Darkish Blue, Deadpool Red, and Fiery Orangish
           if (i % 4 === 0) {
             ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`
           } else if (i % 4 === 1) {
-            ctx.strokeStyle = `rgba(0, 136, 255, ${alpha})`
+            ctx.strokeStyle = `rgba(2, 132, 199, ${alpha})`
           } else if (i % 4 === 2) {
             ctx.strokeStyle = `rgba(239, 68, 68, ${alpha})`
           } else {
-            ctx.strokeStyle = `rgba(250, 204, 21, ${alpha * 0.9})`
+            ctx.strokeStyle = `rgba(249, 115, 22, ${alpha * 0.9})`
           }
           ctx.lineWidth = ratio * 2.8 + 0.6
           ctx.lineCap = 'round'
