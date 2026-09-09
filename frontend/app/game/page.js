@@ -12,7 +12,10 @@ const SPIDEY_GAME_QUOTES = [
   "🔬 'Check lens edge chromatic aberration. Real glass produces subtle color fringing; AI renders uniform blur.'",
   "🛡️ 'Stay calm when the timer turns red. Great teams win by staying composed under pressure.'",
   "☕ 'Ignore Wade over on the left trying to juggle weapons in the server room. Focus on the pixel boundaries.'",
-  "🕷️ 'Look closely at ear cartilage and hair roots. AI consistently fails anatomical transitions.'"
+  "🕷️ 'Look closely at ear cartilage and hair roots. AI consistently fails anatomical transitions.'",
+  "🔬 'Subsurface Scattering Check: Translucent human earlobes glow pink against backlights; AI renders flat chalk.'",
+  "♟️ 'Transposed deconvolution leaves checkerboard grid frequencies in out-of-focus background bokeh.'",
+  "📊 'Remember the Cosine equation: CLIP measures semantic directional vectors. Quality tokens beat spamming!'"
 ]
 
 const DEADPOOL_GAME_QUOTES = [
@@ -23,7 +26,31 @@ const DEADPOOL_GAME_QUOTES = [
   "🍕 'Focus up! A lead on the leaderboard is won on precision, not speed!'",
   "🚨 'Stop sweating on the mouse! You are going to short-circuit the trackpad!'",
   "🦄 'I put twenty bucks on your squad. Don't make me lose money to Peter Parker!'",
-  "🎬 'Relax your shoulders, take a breath, and lock in the answer before the red timer hits zero!'"
+  "🎬 'Relax your shoulders, take a breath, and lock in the answer before the red timer hits zero!'",
+  "🥞 'If the hands have seven knuckles and look like a bunch of melted sausages, smash the AI button!'",
+  "🧨 'Ask me for a joke in chat if you feel like having a nervous breakdown! Maximum Effort!'"
+]
+
+const ARENA_DEADPOOL_JOKES = [
+  "Why did the neural network get dumped? Every time it held hands, it sprouted seven fingers, two left thumbs, and an elbow growing out of its collarbone! 😂💀",
+  "A machine learning engineer, a cyber criminal, and me walk into a bar. The engineer orders a beer, the criminal steals the tap, and I shoot the jukebox because it was playing smooth jazz! Both unhandled null pointer and armed robbery! 💥🍸",
+  "What happens when you train a diffusion model in Wade Wilson's apartment? The GPU gets so hot I used the graphics card as a panini press for my chimichangas! Loss didn't converge, but the cheddar crust was phenomenal! 🔥🧀",
+  "What's faster than light? An engineering student slamming their laptop shut when their roommate walks into the proctored webcam frame wearing only a bath towel! 🏃💨",
+  "Git commit at 3:45 AM before launch: 'Fixed bug' ➔ 'Why is it doing this?' ➔ 'GOD HELP ME' ➔ 'Do not breathe on this branch'. Version-controlled trauma! 💀📉",
+  "Why do AI startups love Wade Wilson? Because I also have no ethical filters, consume ridiculous amounts of raw energy, and regenerate from complete catastrophic failure every sprint! ⚡🌮",
+  "What did the compiler say to the student trying to guess AI images randomly? 'I've seen segmentation faults with better decision-making capabilities than your click history!' 💥🖱️",
+  "Stack Overflow went down for 12 minutes in 2024. In that span, global software engineering output dropped to 1840s Victorian blacksmith levels! 📉🔨"
+]
+
+const ARENA_SPIDEY_JOKES = [
+  "Why are AI models terrified of quantum physics? The moment you observe them, their probability wave collapses into four extra fingers and a waxy forehead! ⚛️🔬",
+  "Wade asked why my code wasn't compiling. I said there was a bug on line 42. He drew dual katanas and sliced my monitor into three pieces shouting 'I neutralized the pest!' RIP Daily Bugle paycheck! 🕸️💸",
+  "Why did the machine learning model fail its road test? Overfitted on 10,000 cat pictures. It didn't stop at red lights, but screeched to a halt whenever it saw an empty cardboard box and tried to sit in it! 📦🚗",
+  "What is the hardest unsolved problem in computer science? P vs NP? The halting problem? Nope—vertically centering a div without breaking mobile Safari! 😭💻",
+  "Why are dentists terrified of generative AI? Every family portrait has 36 incisors, 3 rows of molars, and a canine growing out of the uvula! Like a Great White Shark having an existential crisis! 🦈🪥",
+  "Why did the optical physicist break up with the GAN generator? No matter how bright the sun was, the shadows fell in four contradictory directions! ☀️🧭",
+  "A student asked me: 'Peter, how do I know if an image is real?' I said: 'If the iris reflections match the ceiling lamps and their glasses don't morph into their earlobes, it might actually exist!' 👓🔍",
+  "Why don't deepfake creators play poker? Their facial landmark coordinates jitter every time they bluff! 🃏🎭"
 ]
 
 export default function GameArena() {
@@ -903,6 +930,18 @@ export default function GameArena() {
     if (query.includes('clue') || query.includes('hint') || query.includes('help')) {
       handleGetClue('deadpool')
       return
+    } else if (query.includes('joke') || query.includes('funny') || query.includes('laugh') || query.includes('humor') || query.includes('roast') || query.includes('chimichanga')) {
+      reply = ARENA_DEADPOOL_JOKES[Math.floor(Math.random() * ARENA_DEADPOOL_JOKES.length)]
+    } else if (query.includes('fft') || query.includes('frequency') || query.includes('spectrum')) {
+      reply = "🔬 [DEADPOOL TECH INTEL]: Fast Fourier Transform converts the image into a 2D frequency spectrum! Generative deconvolution creates unnatural periodic peak spikes in the high-frequency quadrants. Real camera ISO grain is isotropic and randomly distributed!"
+    } else if (query.includes('clip') || query.includes('cosine') || query.includes('vector') || query.includes('embedding')) {
+      reply = "🧠 [DEADPOOL TECH INTEL]: CLIP maps textual tokens and visual patches into shared 512-D hyperspace! If a generator hallucinates, you will see strong semantic concepts glued together with zero regard for spatial physics (like a horse riding an astronaut)!"
+    } else if (query.includes('voice') || query.includes('audio') || query.includes('deepfake') || query.includes('clone') || query.includes('sound')) {
+      reply = "🎙️ [DEADPOOL TECH INTEL]: Audio deepfakes struggle with high-frequency harmonics (>16kHz) generated by neural vocoders (like HiFi-GAN), creating metallic phasing. Also check for phoneme-viseme desynchronization on bilabial plosives (P, B, M)!"
+    } else if (query.includes('gan') || query.includes('diffusion') || query.includes('noise')) {
+      reply = "🎨 [DEADPOOL TECH INTEL]: GANs are dual networks locked in adversarial deathmatch (sharp textures, warped anatomy). Diffusion runs 50-100 iterative reverse Markov denoising steps (gorgeous lighting, melted accessory details)!"
+    } else if (query.includes('inpaint') || query.includes('outpaint') || query.includes('splice')) {
+      reply = "🩹 [DEADPOOL TECH INTEL]: Inpainting masks out bounding boxes to re-synthesize. Look for boundary seam mismatch: differing sensor noise variance, inconsistent compression blocks, and abrupt shadows along the edge!"
     } else if (query.includes('spidey') || query.includes('peter')) {
       reply = "Spidey's over on the right giving nerdy lectures on physics. Click his widget if you want textbook formulas!"
     } else if (query.includes('negative') || query.includes('-5') || query.includes('penalty')) {
@@ -939,6 +978,18 @@ export default function GameArena() {
     if (query.includes('clue') || query.includes('hint') || query.includes('help')) {
       handleGetClue('spidey')
       return
+    } else if (query.includes('joke') || query.includes('funny') || query.includes('laugh') || query.includes('humor') || query.includes('roast')) {
+      reply = ARENA_SPIDEY_JOKES[Math.floor(Math.random() * ARENA_SPIDEY_JOKES.length)]
+    } else if (query.includes('sss') || query.includes('subsurface') || query.includes('skin') || query.includes('wax')) {
+      reply = "🔬 [SPIDEY FORENSIC INTEL]: Subsurface Scattering (SSS) models optical penetration into translucent skin layers and blood capillaries before exiting. AI often approximates this as simple Lambertian or Phong surface reflections, resulting in that waxy, plastic mannequin skin!"
+    } else if (query.includes('ela') || query.includes('error level') || query.includes('compression') || query.includes('jpeg')) {
+      reply = "📐 [SPIDEY FORENSIC INTEL]: Error Level Analysis (ELA) resaves the image at a known 95% JPEG quantization rate and evaluates the difference map. Authentic photos exhibit uniform error distribution across 8x8 DCT blocks; AI patches show abnormal high/low error variances!"
+    } else if (query.includes('checkerboard') || query.includes('deconv') || query.includes('stride') || query.includes('grid')) {
+      reply = "🕸️ [SPIDEY FORENSIC INTEL]: Transposed convolutions with kernel sizes not evenly divisible by their stride create uneven pixel overlap during upsampling. This imprints faint checkerboard artifacts visible in flat gradient zones!"
+    } else if (query.includes('flux') || query.includes('midjourney') || query.includes('sdxl') || query.includes('model') || query.includes('generator')) {
+      reply = "🤖 [SPIDEY FORENSIC INTEL]: Generator Signatures: Midjourney v5/v6 exhibits strong micro-contrast and hyper-curated cinematic rim lights. Flux.1 (rectified flow) excels in legible typography and complex hand geometry. SDXL shows vivid color grading and characteristic hair fiber clumping!"
+    } else if (query.includes('text') || query.includes('word') || query.includes('letter') || query.includes('spelling')) {
+      reply = "🔤 [SPIDEY FORENSIC INTEL]: Diffusion models process text through CLIP embeddings without explicit 2D spatial coordinate awareness, yielding gibberish or anagrams. Newer rectified flow models (Flux, Ideogram) render text accurately via character-level token encoders!"
     } else if (query.includes('deadpool') || query.includes('wade')) {
       reply = "Wade's just hyped on tacos over on the left! Focus on the details and you'll do great!"
     } else if (query.includes('time') || query.includes('clock') || query.includes('timer')) {

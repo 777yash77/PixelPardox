@@ -80,24 +80,36 @@ const SPIDEY_DEADPOOL_TROLLS = [
   "🔬 Wade claims he has an advanced algorithm for Stage 2 deepfake detection. His method? If the subject in the photo looks more attractive than him, he declares it a synthetic forgery out of pure professional jealousy. If we used his criteria, ninety-nine percent of the global population would be classified as deepfakes! Stick to actual forensic anatomy, everyone! 🪞💀"
 ]
 
-// 6 Hilarious Stand-Alone Jokes: Deadpool
+// 12 Hilarious Stand-Alone Jokes: Deadpool
 const DEADPOOL_JOKES_POOL = [
   "🎨 Why did the neural network break up with the graphic designer? Because every single time they held hands, it tried to give them seven fingers, two left thumbs, and an elbow growing out of their collarbone! And then when asked to apologize, it hallucinated a four-page apology letter in ancient Latin signed by Napoleon Bonaparte! 😂💀",
   "🍹 A machine learning engineer, a cyber criminal, and me walk into a bar. The engineer orders a beer, the criminal tries to steal the tap, and I shoot the jukebox because it was playing smooth jazz. The bartender looks at us and screams, 'Is this an armed robbery or an unhandled null pointer exception?!' Both, baby! Maximum Effort! 💥🍸",
   "🦝 You want to know real comedy? Look at someone who studied for three weeks, opens Stage 0, and gets the first question wrong with a minus-five deduction. They sit there staring at the screen with the exact facial expression of a raccoon watching its cotton candy dissolve in a puddle of water. Don't be that raccoon, rookie! 💀🍕",
   "🍟 Why don't diffusion models ever get invited to family dinner? Because whenever you ask them to pass the salt, they generate a hyper-realistic 8K photorealistic render of an astronaut riding an explosive taco through the rings of Saturn! Just give me the table salt, Midjourney, my french fries are getting cold! 🚀🌮",
   "🦶 My financial advisor asked me why I haven't invested in generative AI startups. I told him: 'Look, why would I buy stock in an algorithm that can write an eight-hundred-word Shakespearean sonnet, but still thinks a human foot has three heels and fourteen toes?' If I want that kind of anatomical nightmare, I can just look in the mirror! 🪞💀",
-  "💻 What did the database say when the panicked contestant tried to spam submit answers in the final three seconds? 'Error 404: Dignity Not Found. Would you like to roll back this life decision to the previous stable commit?' You can't out-bluff a backend server with raw emotional desperation, kids! 🔥🎮"
+  "💻 What did the database say when the panicked contestant tried to spam submit answers in the final three seconds? 'Error 404: Dignity Not Found. Would you like to roll back this life decision to the previous stable commit?' You can't out-bluff a backend server with raw emotional desperation, kids! 🔥🎮",
+  "🌮 What happens when you train a multi-billion parameter diffusion model inside Wade Wilson's apartment? The GPU gets so hot that I used the graphics card as a panini press for my chimichangas! Sure, the loss function didn't converge, but the melted cheddar had an incredible hyper-realistic crust! 10 out of 10 benchmark performance! 🔥🧀",
+  "📹 What's the fastest physical phenomenon known to modern science? The speed of light? Quantum entanglement? Nope! It's the speed of an engineering student slamming their laptop screen shut when their roommate walks into the proctored webcam frame wearing nothing but a towel and a dream! You can't outrun the invigilator, kids! 🏃💨",
+  "🤖 I asked a conversational AI to plan the ultimate bank heist. It hallucinated a seventeen-step tactical infiltration plan involving helium balloons, three titanium poodles, and a certificate of authenticity signed by Abraham Lincoln. I was about to execute it until Peter pointed out step four required breaking the second law of thermodynamics. AI has zero respect for physics or felony law! 🎈🐩",
+  "💻 You want to know what true fear looks like? Reading a senior developer's Git commit history at 3:45 AM before tournament launch:\nCommit 1: 'Refactored scoring engine.'\nCommit 2: 'Fixed minor null pointer.'\nCommit 3: 'Why is it doing this?'\nCommit 4: 'GOD PLEASE HELP ME.'\nCommit 5: 'Final fix (I will cry if this breaks).'\nCommit 6: 'asdasdasd fuck.'\nCommit 7: 'Working now, do not touch or breathe on this branch.' That's not code, that's trauma documented in version control! 💀📉",
+  "📄 A guy showed me his resume and under 'Core Technical Competencies' it literally said: 'Senior Prompt Sorcerer & Prompt Alchemist'. Bro, you type adjectives into a Discord bot textbox while drinking iced oat milk lattes! You're not Merlin casting fireballs, you're a guy texting a GPU! If that qualifies as engineering, then ordering from the McDonald's drive-thru makes me an executive culinary architect! 🍟🧙‍♂️",
+  "🚨 What happens when Stack Overflow goes down for forty minutes? Global software engineering grinds to a dead halt. Satellites fall from low Earth orbit, smart refrigerators start speaking Aramaic, and three hundred thousand developers sit in absolute darkness realizing they don't actually know how to reverse a linked list without copying line seven from an Indian teenager's blog! 📉😱"
 ]
 
-// 6 Hilarious Stand-Alone Jokes: Spider-Man
+// 12 Hilarious Stand-Alone Jokes: Spider-Man
 const SPIDEY_JOKES_POOL = [
   "🐱 Why do AI models struggle so much with quantum physics? Because the moment you observe them, their probability wave collapses into four extra fingers and a waxy plastic forehead! Schrödinger's cat isn't dead or alive—in Midjourney, it's just a feline with three tails and ears rendered inside its mouth! ⚛️🔬",
   "🖥️ Wade asked me earlier why my code wasn't compiling. I told him there was a bug in line forty-two. He immediately drew dual katanas and sliced my monitor into three pieces shouting 'I neutralized the pest, Parker!' That monitor cost me three weeks of Daily Bugle freelance photo checks. Rest in peace, LCD display! 🕸️💸",
   "📐 There are 10 types of contestants in Pixel Paradox: Those who understand binary classification and specular photon reflections, and those who ask Wade Wilson for advice and end up with a negative integer score that defies Euclidean mathematics! 😂📊",
   "☕ Why was the AI prompt engineer kicked out of the coffee shop? Because they walked up to the barista and shouted: 'A high-contrast cinematic espresso, highly detailed, photorealistic, 8K resolution, unreal engine 5 render, volumetric steam, octane, trending on Artstation!' The barista just handed them tap water and told them to touch grass. 🌿🥤",
   "🕷️ How does Peter Parker debug recursive neural networks? Step 1: Set a breakpoint. Step 2: Formulate an empirical hypothesis. Step 3: Wade kicks the server rack because the cooling fans 'were humming off-key'. Step 4: Cry softly into my spider-mask while calculating how many days late my apartment rent is. 💸🥲",
-  "🧪 An artificial neural network walks into a chemistry lab. The professor asks, 'Can you synthesize this organic hydrocarbon chain?' The AI smiles confidently, outputs an impossible molecule with fifteen covalent bonds per carbon, and says 'Source: Trust me, I have 175 billion parameters.' Check your sources before submitting, folks! 🔬🧬"
+  "🧪 An artificial neural network walks into a chemistry lab. The professor asks, 'Can you synthesize this organic hydrocarbon chain?' The AI smiles confidently, outputs an impossible molecule with fifteen covalent bonds per carbon, and says 'Source: Trust me, I have 175 billion parameters.' Check your sources before submitting, folks! 🔬🧬",
+  "📸 J. Jonah Jameson called me into his office screaming: 'Parker! I need exclusive 8K front-page photos of Spider-Man fighting Electro in the middle of a thunderstorm, perfectly lit, ISO 100, zero motion blur, and I will pay you four dollars and fifty cents cash!' I told him: 'Mr. Jameson, at that shutter speed and price point, even quantum mechanics refuses to generate photons!' He threw a stapler at my head. Freelance journalism is wonderful! 📰💸",
+  "📉 How do neural networks navigate high-dimensional loss landscapes? Exactly like Peter Parker trying to pay his rent: blindly stumbling downhill in the dark, hoping they don't get trapped in a devastating local minimum, and praying that the learning rate doesn't explode and leave them homeless on 23rd Street! 🕸️🏚️",
+  "🖥️ Wade walked up to me with a smoking dual-slot graphics card and asked: 'Hey Pete, if I pour liquid nitrogen directly into the fan bearings, will my prompts render in twelve dimensions?' I looked at the motherboard—he had secured the heat sink with masking tape and two bubblegum wrappers. I didn't even call a technician; I just called the New York fire department in advance. 🔥🚒",
+  "🦷 Why are dentists terrified of generative AI? Because every time a diffusion model renders a smiling family portrait, it hallucinates thirty-six front incisors, three rows of molars, and a canine growing directly out of the uvula! It looks less like a toothpaste commercial and more like an anatomical diagram of a Great White Shark having an existential crisis! 🦈🪥",
+  "🎨 A computer science professor asked the class: 'What is the hardest unsolved problem in computer science? P versus NP? Byzantine fault tolerance? The halting problem?' A student in the back raised a trembling hand and whispered: 'Vertically centering a div inside a flexbox container without breaking mobile Safari.' The professor burst into tears and dismissed class thirty minutes early. 😭💻",
+  "🧠 Why did the machine learning model fail its real-world road test? Because during training, the engineer overfitted it on ten thousand pictures of cats. When deployed to an autonomous vehicle, it refused to stop at red lights, but screeched to a halt every time it saw a cardboard box in the middle of the street and tried to sit inside it! 📦🚗"
 ]
 
 // Deadpool Technical Questions (Scoring, Rules, AI Detection, Prompts)
@@ -121,6 +133,26 @@ const DEADPOOL_TECH_FAQ = [
   {
     q: "What is the best 30-minute time management strategy for Stage 0?",
     a: "30 questions in 30 minutes means you have 60 seconds per question! Don't sprint like you're running for the last train! Spend 40 seconds analyzing, 10 seconds answering, and leave doubt questions for a second pass!"
+  },
+  {
+    q: "How do GANs compare to Diffusion Models in forensics?",
+    a: "Comic book analogy time! GANs are like me and Spider-Man fighting in an alley: the Generator is a master art forger trying to paint a fake Rembrandt, and the Discriminator is Spidey inspecting it with his magnifying glass saying 'Fake!' They train by trying to fool each other until mode collapse happens and the generator only draws pictures of frogs. Diffusion models are smarter—they take a picture, destroy it with pure static noise like a broken TV, and train a neural network to walk backward step-by-step and reconstruct the image from scratch! Diffusion wins on detail, GANs win on speed! 🎨💥"
+  },
+  {
+    q: "How do you detect AI cloned voice and deepfake audio?",
+    a: "Listen with your ears, not your feelings! AI voice models clone acoustic pitch, but they choke on biological respiratory mechanics! Real humans breathe between sentences, have subtle glottal stops, and their vocal cadence changes with emotional emphasis. AI voice clones speak in an unvarying acoustic plane with zero room reverberation changes and unnatural robotic micro-pauses. Also check viseme-phoneme synchronization—if their mouth makes an 'O' shape while saying 'B', it's a deepfake! 🎙️👂"
+  },
+  {
+    q: "What is Inpainting vs Outpainting in Stage 2 (The Glitch Hunt)?",
+    a: "Inpainting is cosmetic surgery for pixels: you draw a mask inside an existing image (like erasing an ex-partner's face) and the neural model fills in the blank space. Glitches happen at the mask boundary edges—lighting mismatches and blurred textures! Outpainting is expanding the universe: taking a portrait and generating new background pixels beyond the original canvas borders. If the vanishing point of the road doesn't match the horizon in the outpainted background, you found the glitch! 🔍🖼️"
+  },
+  {
+    q: "What is Frequency Domain (FFT) analysis in deepfake detection?",
+    a: "Math weapon! When neural networks upscale images using transposed convolutions, they leave invisible periodic grid fingerprints—like checkerboard tire tracks in snow! A Fast Fourier Transform (FFT) converts pixel spatial coordinates into frequency spectrum wavelengths. In real DSLR photos, frequencies decay smoothly in concentric circles. In AI fakes, the FFT spectrum reveals weird bright white dots and cross-shaped artifacts! It's like infrared goggles for pixel fraud! 🔬📊"
+  },
+  {
+    q: "How do CLIP vectors score our prompts in Stage 3 Prompt Wars?",
+    a: "CLIP (Contrastive Language-Image Pretraining) is bilingual—it speaks both pixels and English tokens! It converts an image into a 512-dimensional numerical coordinate vector, and does the exact same thing to your typed prompt words. Then it calculates the cosine angle between the two vectors: Cosine Similarity = (A · B) / (||A|| ||B||). If your prompt points in the exact same multi-dimensional direction as the target visual, the cosine score approaches 1.0 (100%)! Miss the style keyword, and your angle shoots off into outer space! 🚀🎯"
   },
   {
     q: "Ask Spidey-bug, he may know! 🕸️",
@@ -193,6 +225,26 @@ const SPIDEY_TECH_FAQ = [
   {
     q: "How does progressive resolution reveal work in Stage 3?",
     a: "In Round 3, each pixel image reveals in progressive resolution steps every few seconds. Early reveal challenges your macro-composition instincts (style, medium, artist), while full resolution lets you catch fine details (textures, lighting tokens)!"
+  },
+  {
+    q: "What is Subsurface Scattering (SSS) and how do synthetic models fail it?",
+    a: "Biological optical physics! When light hits human skin, it doesn't bounce off like metal. Photons penetrate the epidermis, bounce through translucent subcutaneous tissue, blood vessels, and cartilage, and exit at adjacent points. This produces the characteristic warm pinkish glow on backlit earlobes, nostrils, and fingertips! AI diffusion models lack 3D volumetric light transport equations—they treat skin as a flat 2D surface, resulting in either unlifelike waxy plastic or uniform chalky pigmentation. Check the ears and fingertips against backlighting! 🔬🩸"
+  },
+  {
+    q: "How does Error Level Analysis (ELA) uncover digital inpainting in Stage 2?",
+    a: "Compression entropy! When a digital camera saves an image in JPEG format, every 8x8 pixel block compresses uniformly across the image sensor. However, when an adversary inpaints an AI modification into that image, the modified region has a completely different compression generation and error potential! Error Level Analysis (ELA) intentionally resaves the image at a known quality level and computes the pixel difference map. Untouched zones show uniform dark gray noise, while modified AI inpaintings light up with hyper-bright multi-colored error clusters! 📸✨"
+  },
+  {
+    q: "What are Transposed Deconvolution and Checkerboard Artifacts?",
+    a: "Neural generator architecture tells! When Generative Adversarial Networks (GANs) or diffusion latent decoders upscale feature maps from low resolution (e.g. 64x64) to high resolution (e.g. 1024x1024), they utilize transposed 2D convolutions (deconvolutions). When the kernel size is not evenly divisible by the stride, overlapping convolution kernels create uneven pixel summation—resulting in a high-frequency checkerboard pattern of alternating bright and dark pixels! Look closely at flat monochromatic regions like skies, walls, and out-of-focus bokeh! ♟️🔬"
+  },
+  {
+    q: "What are the exact forensic fingerprints of Midjourney vs SDXL vs Flux vs Imagen?",
+    a: "Here is my peer-reviewed field guide:\n• Midjourney v6: Intense volumetric rim lighting, cinematic 2.39:1 aspect bias, painterly subsurface skin bloom, and stylized chromatic depth.\n• Stable Diffusion XL (SDXL): Micro-blur on background foliage, tendency toward plastic facial skin, and frequent anatomical knuckle distortions in high-contrast hand poses.\n• Flux.1 (Black Forest Labs): Superior high-frequency microtexture (individual pores and linen stitches), crisp alphanumeric typographic rendering, but subtle planar perspective distortion on receding tiled floors.\n• Google Imagen 3: Highly natural photorealistic dynamic range, accurate shadows, but occasionally over-smooths delicate specular iris reflections."
+  },
+  {
+    q: "Why does AI struggle with text spelling and symmetrical geometric reflections?",
+    a: "Spatial tokenization constraints! Diffusion models operate in latent space, where CLIP text encoders break words into sub-word tokens (e.g., 'paradox' becomes 'para' + 'dox') rather than individual characters. The neural network learns statistical associations between word vectors and pixel patches, but lacks an internal orthographic character-level buffer! Similarly, diffusion denoisers evaluate local pixel gradients rather than global raytraced mirrors, causing mirror reflections to depict different postures or missing reflections entirely!"
   },
   {
     q: "Ask the guy in red spandex on the left! 🌮",
