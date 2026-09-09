@@ -1051,7 +1051,7 @@ export default function Home() {
             Step inside the high-stakes Multiverse of Generative AI. Decode neural hallucinations, separate authentic photos from synthetic deepfakes, and prove your team is the sharpest in the multiverse!
           </p>
 
-          {/* Quick Arena & Leaderboard Links */}
+          {/* Quick Arena Link */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
             <Link href="/game" style={{
               textDecoration: 'none',
@@ -1068,22 +1068,6 @@ export default function Home() {
               gap: '6px'
             }}>
               <span>🎮</span> Game Arena
-            </Link>
-            <Link href="/leaderboard" style={{
-              textDecoration: 'none',
-              color: '#F0F9FF',
-              fontSize: '0.84rem',
-              fontWeight: '700',
-              padding: '8px 18px',
-              borderRadius: '8px',
-              background: 'rgba(224, 27, 34, 0.12)',
-              border: '1px solid rgba(224, 27, 34, 0.4)',
-              transition: 'all 0.2s ease',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}>
-              <span>🏆</span> Live Leaderboard
             </Link>
           </div>
         </header>
@@ -1990,10 +1974,6 @@ export default function Home() {
             <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '0.8rem' }}>•</span>
             <Link href="/game" style={{ color: '#FF7B7B', textDecoration: 'none', fontSize: '0.82rem', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: '6px' }}>
               🎮 Battle Arena
-            </Link>
-            <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '0.8rem' }}>•</span>
-            <Link href="/leaderboard" style={{ color: '#7DD3FC', textDecoration: 'none', fontSize: '0.82rem', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: '6px' }}>
-              🏆 Live Standings
             </Link>
             <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '0.8rem' }}>•</span>
             <Link href="/register" style={{ color: '#86EFAC', textDecoration: 'none', fontSize: '0.82rem', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: '6px' }}>
