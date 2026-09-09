@@ -91,12 +91,12 @@ export default function GameArena() {
   // WebSocket Ref
   const wsRef = useRef(null)
 
-  // Superhero Clues & Arena Companion State
+  // Superhero Clues & Arena Companion State (Default Hidden to keep questions clean)
   const [activeClue, setActiveClue] = useState(null)
   const [isDeadpoolChatOpen, setIsDeadpoolChatOpen] = useState(false)
   const [isSpideyChatOpen, setIsSpideyChatOpen] = useState(false)
-  const [isDeadpoolCollapsed, setIsDeadpoolCollapsed] = useState(false)
-  const [isSpideyCollapsed, setIsSpideyCollapsed] = useState(false)
+  const [isDeadpoolCollapsed, setIsDeadpoolCollapsed] = useState(true)
+  const [isSpideyCollapsed, setIsSpideyCollapsed] = useState(true)
   const [spideyQuoteIdx, setSpideyQuoteIdx] = useState(0)
   const [deadpoolQuoteIdx, setDeadpoolQuoteIdx] = useState(0)
   const [isDeadpoolTyping, setIsDeadpoolTyping] = useState(false)
@@ -788,7 +788,7 @@ export default function GameArena() {
     if (gameState.activeRound === 1) { // Stage 0 Quiz
       if (hero === 'spidey') {
         title = "Spider-Man's Scientific Quiz Intel (Stage 0)"
-        text = "🕸️ Peter Parker's Strategy:\n• Focus on AI fundamentals: Transformers use self-attention mechanisms; Diffusion models denoise step-by-step from Gaussian noise; GANs rely on an adversarial min-max objective.\n• Negative Marking Defense: Correct is +10, but Wrong is -5! Rule out two impossible answers first. If you still have no clue, leaving it blank (0 pts) protects your team average!"
+        text = "🕸️ Peter Parker's Strategy:\n• Focus on AI fundamentals: Transformers use self-attention mechanisms; Diffusion models denoise step-by-step from Gaussian noise; GANs rely on an adversarial min-max objective.\n• Negative Marking Defense: Correct is +10, but Wrong is -5! Rule out two impossible answers first. If you still have no clue, leaving it blank (0 pts) protects your team score!"
       } else {
         title = "Deadpool's Chaos Clue (Stage 0 Quiz)"
         text = "🌮 Wade's Survival Protocol:\n• Pro tip: If an option has super specific technical jargon and is longer than the others, that's usually the right one! Professors get lazy writing fake distractors!\n• Don't guess wildly! One wrong click deletes half a correct answer. Maximum Effort, trust your preparation!"
@@ -1209,38 +1209,102 @@ export default function GameArena() {
                         </div>
                       </div>
 
-                      {/* Superhero Clue Bar for Stage 0 */}
-                      <div className="superhero-clue-bar">
-                        <button type="button" onClick={() => handleGetClue('spidey')} className="clue-btn-spidey">
-                          🕸️ Ask Spidey for a Clue
-                        </button>
-                        <button type="button" onClick={() => handleGetClue('deadpool')} className="clue-btn-deadpool">
-                          🌮 Ask Deadpool for a Clue
-                        </button>
-                      </div>
-
-                      {activeClue && (
-                        <div className={`active-clue-card ${activeClue.hero}`}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              <span style={{ fontSize: '1.4rem' }}>{activeClue.hero === 'spidey' ? '🕷️' : '🌮'}</span>
-                              <strong style={{ color: activeClue.hero === 'spidey' ? '#38BDF8' : '#FF4D4D', fontSize: '0.95rem' }}>
-                                {activeClue.title}
-                              </strong>
+                      {/* Top Superhero Clue Command Bar for Stage 0 Quiz */}
+                      <div style={{
+                        background: 'linear-gradient(135deg, rgba(14, 22, 38, 0.92) 0%, rgba(26, 12, 18, 0.92) 100%)',
+                        border: '1.5px solid rgba(56, 189, 248, 0.35)',
+                        borderRadius: '12px',
+                        padding: '14px 20px',
+                        marginBottom: '20px',
+                        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '12px'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <span style={{ fontSize: '1.25rem' }}>🦸</span>
+                            <div>
+                              <span style={{ fontSize: '0.82rem', color: '#FFF', fontWeight: '800', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                                SUPERHERO INTEL STATION (TOP BAR)
+                              </span>
+                              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                                Clues pop cleanly at the top without hiding your question or options
+                              </div>
                             </div>
-                            <button 
+                          </div>
+                          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                            <button
                               type="button"
-                              onClick={() => setActiveClue(null)}
-                              style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '1.2rem', cursor: 'pointer', padding: '2px 6px' }}
+                              onClick={() => handleGetClue('spidey')}
+                              className="clue-btn-spidey"
+                              style={{ padding: '7px 16px', fontSize: '0.82rem' }}
                             >
-                              ✕
+                              🕸️ Ask Spidey for a Clue
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleGetClue('deadpool')}
+                              className="clue-btn-deadpool"
+                              style={{ padding: '7px 16px', fontSize: '0.82rem' }}
+                            >
+                              🌮 Ask Deadpool for a Clue
                             </button>
                           </div>
-                          <div style={{ color: '#F3F4F6', fontSize: '0.86rem', lineHeight: '1.55', whiteSpace: 'pre-line' }}>
-                            {activeClue.text}
-                          </div>
                         </div>
-                      )}
+
+                        {/* Superhero Clue Pops Cleanly at the TOP above question */}
+                        {activeClue && (
+                          <div className={`active-clue-card ${activeClue.hero}`} style={{ margin: '4px 0 0 0', animationDuration: '0.2s' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <span style={{ fontSize: '1.5rem' }}>{activeClue.hero === 'spidey' ? '🕷️' : '🌮'}</span>
+                                <div>
+                                  <strong style={{ color: activeClue.hero === 'spidey' ? '#38BDF8' : '#FF4D4D', fontSize: '0.98rem' }}>
+                                    {activeClue.title}
+                                  </strong>
+                                  <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                                    {activeClue.hero === 'spidey' ? 'Spider-Man Optical Analysis' : "Wade Wilson's Combat Heuristics"}
+                                  </div>
+                                </div>
+                              </div>
+                              <button 
+                                type="button"
+                                onClick={() => setActiveClue(null)}
+                                style={{
+                                  background: 'rgba(255, 255, 255, 0.1)',
+                                  border: '1px solid rgba(255, 255, 255, 0.25)',
+                                  color: '#FFF',
+                                  fontSize: '0.82rem',
+                                  cursor: 'pointer',
+                                  padding: '5px 12px',
+                                  borderRadius: '6px',
+                                  fontWeight: 'bold',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                  transition: 'all 0.2s ease'
+                                }}
+                                title="Dismiss Clue"
+                              >
+                                ✕ Hide Clue
+                              </button>
+                            </div>
+                            <div style={{
+                              color: '#F3F4F6',
+                              fontSize: '0.88rem',
+                              lineHeight: '1.65',
+                              whiteSpace: 'pre-line',
+                              borderLeft: `3px solid ${activeClue.hero === 'spidey' ? '#38BDF8' : '#E01B22'}`,
+                              padding: '10px 14px',
+                              background: 'rgba(0, 0, 0, 0.3)',
+                              borderRadius: '0 8px 8px 0'
+                            }}>
+                              {activeClue.text}
+                            </div>
+                          </div>
+                        )}
+                      </div>
 
                       {/* Single-Question Navigator Layout */}
                       <div className="quiz-stage-layout">
@@ -1299,21 +1363,28 @@ export default function GameArena() {
                                   </div>
 
                                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                                    {/* Quick Bot Toggle Button */}
+                                    {/* Quick Clue Shortcut Button */}
                                     <button
                                       type="button"
-                                      onClick={() => {
-                                        const shouldHide = !isDeadpoolCollapsed || !isSpideyCollapsed
-                                        setIsDeadpoolCollapsed(shouldHide)
-                                        setIsSpideyCollapsed(shouldHide)
+                                      onClick={() => handleGetClue(activeClue?.hero === 'deadpool' ? 'spidey' : 'deadpool')}
+                                      style={{
+                                        background: 'rgba(56, 189, 248, 0.1)',
+                                        border: '1.5px solid #38BDF8',
+                                        color: '#38BDF8',
+                                        padding: '6px 14px',
+                                        borderRadius: '6px',
+                                        fontSize: '0.8rem',
+                                        fontWeight: 'bold',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '6px',
+                                        transition: 'all 0.2s ease'
                                       }}
-                                      className={`quiz-bot-toggle-btn ${(!isDeadpoolCollapsed || !isSpideyCollapsed) ? '' : 'bots-hidden'}`}
-                                      title="Toggle AI Coach Bots on/off (Hotkey: ^ or H)"
+                                      title="Reveal top superhero clue"
                                     >
-                                      <span style={{ fontSize: '0.95rem', fontWeight: '900', lineHeight: 1 }}>
-                                        {(!isDeadpoolCollapsed || !isSpideyCollapsed) ? '⌵' : '^'}
-                                      </span>
-                                      <span>{(!isDeadpoolCollapsed || !isSpideyCollapsed) ? 'Hide Bots' : 'Pop Up Bots (^)'}</span>
+                                      <span>💡</span>
+                                      <span>{activeClue ? 'Switch Hero Clue' : 'Reveal Top Clue'}</span>
                                     </button>
 
                                     {/* Flag / Unflag Button */}
@@ -2428,26 +2499,154 @@ export default function GameArena() {
       </main>
 
       {/* ========================================================= */}
-      {/* LEFT SIDE: DEADPOOL MERC-BOT COMPANION IN GAME ARENA */}
+      {/* SUPERHERO BOT COMPANIONS IN ARENA (SUPPRESSED DURING QUIZ) */}
       {/* ========================================================= */}
-      {isDeadpoolCollapsed ? (
-        <button
-          type="button"
-          className="bot-dock-tab deadpool-dock"
-          onClick={() => setIsDeadpoolCollapsed(false)}
-          title="Click ^ to pop up Deadpool Coach"
-        >
-          <span className="dock-chevron">^</span>
-          <span>🌮 Deadpool Coach</span>
-        </button>
-      ) : (
-        <div className="sticky-deadpool-bar">
-          {isDeadpoolChatOpen ? (
-            <div className="deadpool-chat-window">
-              <div style={{ background: 'linear-gradient(135deg, #E23636 0%, #850B12 100%)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#FFF', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <svg viewBox="0 0 64 64" style={{ width: '90%', height: '90%' }}>
+      {/* When in Stage 0 Quiz, bottom floating bots are suppressed so questions & options are 100% clean */}
+      {!(gameState.activeRound === 1 && prelimStatus === 'IN_PROGRESS') && (
+        <>
+          {/* DEADPOOL BOT DOCKED AT TOP */}
+          {isDeadpoolCollapsed ? (
+            <button
+              type="button"
+              className="bot-dock-tab deadpool-dock"
+              onClick={() => setIsDeadpoolCollapsed(false)}
+              title="Click to pop up Deadpool Coach"
+            >
+              <span className="dock-chevron">^</span>
+              <span>🌮 Deadpool Coach</span>
+            </button>
+          ) : (
+            <div className="sticky-deadpool-bar">
+              {isDeadpoolChatOpen ? (
+                <div className="deadpool-chat-window">
+                  <div style={{ background: 'linear-gradient(135deg, #E23636 0%, #850B12 100%)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#FFF', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <svg viewBox="0 0 64 64" style={{ width: '90%', height: '90%' }}>
+                          <circle cx="32" cy="32" r="28" fill="#C51B24" />
+                          <ellipse cx="20" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(8 20 32)" />
+                          <ellipse cx="44" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(-8 44 32)" />
+                          <path d="M15,31 Q20,29 25,32 Q20,35 15,31 Z" fill="#FFFFFF" />
+                          <path d="M49,31 Q44,29 39,32 Q44,35 49,31 Z" fill="#FFFFFF" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Deadpool's Arena Coach</div>
+                        <div style={{ fontSize: '0.7rem', color: '#F97316' }}>● Clue Provider &amp; Hype Man</div>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <button
+                        type="button"
+                        onClick={() => setIsDeadpoolCollapsed(true)}
+                        className="bot-collapse-btn deadpool-btn"
+                        title="Hide Wade"
+                      >
+                        ^ Hide
+                      </button>
+                      <button 
+                        onClick={() => setIsDeadpoolChatOpen(false)}
+                        style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '1.2rem', cursor: 'pointer', padding: '4px' }}
+                        title="Close Chat"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+
+                  <div style={{ padding: '14px', maxHeight: '250px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+                    {deadpoolMessages.map((msg, idx) => (
+                      <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-bot'}>
+                        <div style={{ fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '2px', color: msg.sender === 'user' ? '#FFF' : '#FF4D4D' }}>
+                          {msg.sender === 'user' ? 'You' : 'Deadpool'}
+                        </div>
+                        <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
+                      </div>
+                    ))}
+                    {isDeadpoolTyping && (
+                      <div className="chat-bubble-bot" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '0.75rem', color: '#FF4D4D', fontWeight: 'bold' }}>Deadpool is crafting a clue</span>
+                        <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
+                      </div>
+                    )}
+                    <div ref={deadpoolChatBottomRef} />
+                  </div>
+
+                  <div style={{ padding: '8px 12px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <button 
+                      type="button"
+                      onClick={() => handleGetClue('deadpool')}
+                      className="clue-btn-deadpool"
+                      style={{ width: '100%', justifyContent: 'center', padding: '8px 12px', fontSize: '0.8rem' }}
+                    >
+                      🌮 Reveal Active Clue for this Round!
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleSendDeadpoolArena} style={{ display: 'flex', padding: '10px 12px', borderTop: '1px solid rgba(255,255,255,0.08)', background: '#0A0406' }}>
+                    <input 
+                      type="text"
+                      placeholder="Ask Wade anything..."
+                      value={deadpoolInput}
+                      onChange={(e) => setDeadpoolInput(e.target.value)}
+                      style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', borderRadius: '6px', padding: '8px 12px', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                    <button 
+                      type="submit"
+                      style={{ background: '#E23636', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
+                    >
+                      Send
+                    </button>
+                  </form>
+                </div>
+              ) : (
+                <div 
+                  className="deadpool-speech card-hover-lift" 
+                  onClick={() => setIsDeadpoolChatOpen(true)}
+                  style={{ cursor: 'pointer' }}
+                  title="Click to talk to Deadpool!"
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <span style={{ fontSize: '0.68rem', color: '#FF4D4D', fontWeight: 'bold', letterSpacing: '0.5px' }}>🌮 DEADPOOL COACH</span>
+                    <button
+                      type="button"
+                      className="bot-collapse-btn deadpool-btn"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setIsDeadpoolCollapsed(true)
+                      }}
+                      title="Hide Wade"
+                    >
+                      ^ Hide
+                    </button>
+                  </div>
+                  {DEADPOOL_GAME_QUOTES[deadpoolQuoteIdx]}
+                  <div style={{ fontSize: '0.7rem', color: '#F97316', marginTop: '4px', textAlign: 'left' }}>
+                    [Click Deadpool for Coach Clues 💬]
+                  </div>
+                </div>
+              )}
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div 
+                  className="deadpool-floating"
+                  style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  onClick={() => setIsDeadpoolChatOpen(prev => !prev)}
+                  title="Click to chat with Deadpool"
+                >
+                  <div style={{
+                    width: '44px',
+                    height: '44px',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #7F1D1D 100%)',
+                    border: '2px solid #E23636',
+                    boxShadow: '0 4px 16px rgba(226, 54, 54, 0.7), 0 0 10px rgba(249, 115, 22, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden'
+                  }}>
+                    <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
                       <circle cx="32" cy="32" r="28" fill="#C51B24" />
                       <ellipse cx="20" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(8 20 32)" />
                       <ellipse cx="44" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(-8 44 32)" />
@@ -2455,312 +2654,199 @@ export default function GameArena() {
                       <path d="M49,31 Q44,29 39,32 Q44,35 49,31 Z" fill="#FFFFFF" />
                     </svg>
                   </div>
-                  <div>
-                    <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Deadpool's Arena Coach</div>
-                    <div style={{ fontSize: '0.7rem', color: '#F97316' }}>● Clue Provider &amp; Hype Man</div>
-                  </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                {!isDeadpoolChatOpen && (
                   <button
                     type="button"
-                    onClick={() => setIsDeadpoolCollapsed(true)}
                     className="bot-collapse-btn deadpool-btn"
-                    title="Hide Wade (^ to pop back up)"
+                    onClick={() => setIsDeadpoolCollapsed(true)}
+                    title="Hide Wade"
+                    style={{ height: 'fit-content' }}
                   >
                     ^ Hide
                   </button>
-                  <button 
-                    onClick={() => setIsDeadpoolChatOpen(false)}
-                    style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '1.2rem', cursor: 'pointer', padding: '4px' }}
-                    title="Close Chat"
-                  >
-                    ✕
-                  </button>
-                </div>
-              </div>
-
-              <div style={{ padding: '14px', maxHeight: '250px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-                {deadpoolMessages.map((msg, idx) => (
-                  <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-bot'}>
-                    <div style={{ fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '2px', color: msg.sender === 'user' ? '#FFF' : '#FF4D4D' }}>
-                      {msg.sender === 'user' ? 'You' : 'Deadpool'}
-                    </div>
-                    <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
-                  </div>
-                ))}
-                {isDeadpoolTyping && (
-                  <div className="chat-bubble-bot" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '0.75rem', color: '#FF4D4D', fontWeight: 'bold' }}>Deadpool is crafting a clue</span>
-                    <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
-                  </div>
                 )}
-                <div ref={deadpoolChatBottomRef} />
-              </div>
-
-              <div style={{ padding: '8px 12px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <button 
-                  type="button"
-                  onClick={() => handleGetClue('deadpool')}
-                  className="clue-btn-deadpool"
-                  style={{ width: '100%', justifyContent: 'center', padding: '8px 12px', fontSize: '0.8rem' }}
-                >
-                  🌮 Reveal Active Clue for this Round!
-                </button>
-              </div>
-
-              <form onSubmit={handleSendDeadpoolArena} style={{ display: 'flex', padding: '10px 12px', borderTop: '1px solid rgba(255,255,255,0.08)', background: '#0A0406' }}>
-                <input 
-                  type="text"
-                  placeholder="Ask Wade anything..."
-                  value={deadpoolInput}
-                  onChange={(e) => setDeadpoolInput(e.target.value)}
-                  style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', borderRadius: '6px', padding: '8px 12px', fontSize: '0.82rem', outline: 'none' }}
-                />
-                <button 
-                  type="submit"
-                  style={{ background: '#E23636', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
-                >
-                  Send
-                </button>
-              </form>
-            </div>
-          ) : (
-            <div 
-              className="deadpool-speech card-hover-lift" 
-              onClick={() => setIsDeadpoolChatOpen(true)}
-              style={{ cursor: 'pointer' }}
-              title="Click to talk to Deadpool!"
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                <span style={{ fontSize: '0.68rem', color: '#FF4D4D', fontWeight: 'bold', letterSpacing: '0.5px' }}>🌮 DEADPOOL COACH</span>
-                <button
-                  type="button"
-                  className="bot-collapse-btn deadpool-btn"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setIsDeadpoolCollapsed(true)
-                  }}
-                  title="Hide Wade (^ to pop back up)"
-                >
-                  ^ Hide
-                </button>
-              </div>
-              {DEADPOOL_GAME_QUOTES[deadpoolQuoteIdx]}
-              <div style={{ fontSize: '0.7rem', color: '#F97316', marginTop: '4px', textAlign: 'left' }}>
-                [Click Deadpool for Coach Clues 💬]
               </div>
             </div>
           )}
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div 
-              className="deadpool-floating"
-              style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              onClick={() => setIsDeadpoolChatOpen(prev => !prev)}
-              title="Click to chat with Deadpool"
-            >
-              <div style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '50%',
-                background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #7F1D1D 100%)',
-                border: '2px solid #E23636',
-                boxShadow: '0 4px 16px rgba(226, 54, 54, 0.7), 0 0 10px rgba(249, 115, 22, 0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                overflow: 'hidden'
-              }}>
-                <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
-                  <circle cx="32" cy="32" r="28" fill="#C51B24" />
-                  <ellipse cx="20" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(8 20 32)" />
-                  <ellipse cx="44" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(-8 44 32)" />
-                  <path d="M15,31 Q20,29 25,32 Q20,35 15,31 Z" fill="#FFFFFF" />
-                  <path d="M49,31 Q44,29 39,32 Q44,35 49,31 Z" fill="#FFFFFF" />
-                </svg>
-              </div>
-            </div>
-            {!isDeadpoolChatOpen && (
-              <button
-                type="button"
-                className="bot-collapse-btn deadpool-btn"
-                onClick={() => setIsDeadpoolCollapsed(true)}
-                title="Hide Wade (^ to pop back up)"
-                style={{ height: 'fit-content' }}
-              >
-                ^ Hide
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================= */}
-      {/* RIGHT SIDE: SPIDER-MAN WEB-BOT COMPANION IN GAME ARENA */}
-      {/* ========================================================= */}
-      {/* Spider-Man Floating Coach Bot */}
-      <div className={`spidey-floating-bot-container ${isSpideyCollapsed ? 'bot-collapsed' : ''}`}>
-        {isSpideyChatOpen ? (
-          <div className="comic-card spidey-chat-window">
-            <div style={{ background: 'linear-gradient(135deg, #0284C7 0%, #034D75 100%)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#FFF', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <svg viewBox="0 0 64 64" style={{ width: '90%', height: '90%' }}>
-                    <circle cx="32" cy="32" r="30" fill="#D81E27" stroke="#180407" strokeWidth="2" />
-                    <path d="M32 2 L32 62 M2 32 L62 32 M10 10 L54 54 M10 54 L54 10" stroke="#850B12" strokeWidth="1.2" />
-                    <polygon points="14,30 29,36 28,24 16,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
-                    <polygon points="50,30 35,36 36,24 48,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
-                  </svg>
-                </div>
-                <div>
-                  <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Spider-Man's Intel</div>
-                  <div style={{ fontSize: '0.7rem', color: '#7DD3FC' }}>● Forensic Optical Science</div>
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <button
-                  type="button"
-                  onClick={() => setIsSpideyCollapsed(true)}
-                  className="bot-collapse-btn spidey-btn"
-                  title="Hide Spidey (^ to pop back up)"
-                >
-                  ^ Hide
-                </button>
-                <button 
-                  onClick={() => setIsSpideyChatOpen(false)}
-                  style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '1.2rem', cursor: 'pointer', padding: '4px' }}
-                  title="Close Chat"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-
-            <div style={{ padding: '14px', maxHeight: '250px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-              {spideyMessages.map((msg, idx) => (
-                <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-spidey'}>
-                  <div style={{ fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '2px', color: msg.sender === 'user' ? '#FFF' : '#38BDF8' }}>
-                    {msg.sender === 'user' ? 'You' : 'Spider-Man'}
-                  </div>
-                  <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
-                </div>
-              ))}
-              {isSpideyTyping && (
-                <div className="chat-bubble-spidey" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ fontSize: '0.75rem', color: '#38BDF8', fontWeight: 'bold' }}>Peter is examining pixels</span>
-                  <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
-                </div>
-              )}
-              <div ref={spideyChatBottomRef} />
-            </div>
-
-            <div style={{ padding: '8px 12px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <button 
-                type="button"
-                onClick={() => handleGetClue('spidey')}
-                className="clue-btn-spidey"
-                style={{ width: '100%', justifyContent: 'center', padding: '8px 12px', fontSize: '0.8rem' }}
-              >
-                🕸️ Reveal Optical Analysis Clue!
-              </button>
-            </div>
-
-            <form onSubmit={handleSendSpideyArena} style={{ display: 'flex', padding: '10px 12px', borderTop: '1px solid rgba(255,255,255,0.08)', background: '#040810' }}>
-              <input 
-                type="text"
-                placeholder="Ask Peter about forensic optics..."
-                value={spideyInput}
-                onChange={(e) => setSpideyInput(e.target.value)}
-                style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', borderRadius: '6px', padding: '8px 12px', fontSize: '0.82rem', outline: 'none' }}
-              />
-              <button 
-                type="submit"
-                style={{ background: '#0284C7', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
-              >
-                Send
-              </button>
-            </form>
-          </div>
-        ) : (
-          <div 
-            className="spidey-speech card-hover-lift" 
-            onClick={() => setIsSpideyChatOpen(true)}
-            style={{ cursor: 'pointer' }}
-            title="Click to talk to Spider-Man!"
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-              <button
-                type="button"
-                className="bot-collapse-btn spidey-btn"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setIsSpideyCollapsed(true)
-                }}
-                title="Hide Spidey (^ to pop back up)"
-              >
-                ^ Hide
-              </button>
-              <span style={{ fontSize: '0.68rem', color: '#38BDF8', fontWeight: 'bold', letterSpacing: '0.5px' }}>🕸️ SPIDEY INTEL</span>
-            </div>
-            {SPIDEY_GAME_QUOTES[spideyQuoteIdx]}
-            <div style={{ fontSize: '0.7rem', color: '#F97316', marginTop: '4px', textAlign: 'right' }}>
-              [Click Spidey for Science Clues 💬]
-            </div>
-          </div>
-        )}
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {!isSpideyChatOpen && (
+          {/* SPIDER-MAN BOT DOCKED AT TOP */}
+          {isSpideyCollapsed ? (
             <button
               type="button"
-              className="bot-collapse-btn spidey-btn"
-              onClick={() => setIsSpideyCollapsed(true)}
-              title="Hide Spidey (^ to pop back up)"
-              style={{ height: 'fit-content' }}
+              className="bot-dock-tab spidey-dock"
+              onClick={() => setIsSpideyCollapsed(false)}
+              title="Click to pop up Spider-Man Intel"
             >
-              ^ Hide
+              <span className="dock-chevron">^</span>
+              <span>🕸️ Spidey Intel</span>
             </button>
-          )}
-          <div 
-            style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            onClick={() => setIsSpideyChatOpen(prev => !prev)}
-            title="Click to chat with Spider-Man"
-          >
-            <div className="spider-sense-active" style={{
-              position: 'absolute',
-              top: '-13px',
-              width: '42px',
-              height: '21px',
-              pointerEvents: 'none'
-            }}>
-              <svg viewBox="0 0 60 30" fill="none">
-                <path d="M12,25 Q30,2 48,25" stroke="#F97316" strokeWidth="3" strokeLinecap="round" />
-                <path d="M5,20 Q30,-8 55,20" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 2" />
-              </svg>
-            </div>
+          ) : (
+            <div className="spidey-floating-bot-container">
+              {isSpideyChatOpen ? (
+                <div className="comic-card spidey-chat-window">
+                  <div style={{ background: 'linear-gradient(135deg, #0284C7 0%, #034D75 100%)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#FFF', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <svg viewBox="0 0 64 64" style={{ width: '90%', height: '90%' }}>
+                          <circle cx="32" cy="32" r="30" fill="#D81E27" stroke="#180407" strokeWidth="2" />
+                          <path d="M32 2 L32 62 M2 32 L62 32 M10 10 L54 54 M10 54 L54 10" stroke="#850B12" strokeWidth="1.2" />
+                          <polygon points="14,30 29,36 28,24 16,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
+                          <polygon points="50,30 35,36 36,24 48,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Spider-Man's Intel</div>
+                        <div style={{ fontSize: '0.7rem', color: '#7DD3FC' }}>● Forensic Optical Science</div>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <button
+                        type="button"
+                        onClick={() => setIsSpideyCollapsed(true)}
+                        className="bot-collapse-btn spidey-btn"
+                        title="Hide Spidey"
+                      >
+                        ^ Hide
+                      </button>
+                      <button 
+                        onClick={() => setIsSpideyChatOpen(false)}
+                        style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '1.2rem', cursor: 'pointer', padding: '4px' }}
+                        title="Close Chat"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
 
-            <div className="spidey-floating" style={{
-              width: '44px',
-              height: '44px',
-              borderRadius: '50%',
-              background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #7F1D1D 100%)',
-              border: '2px solid #E01B22',
-              boxShadow: '0 4px 16px rgba(224, 27, 34, 0.6), 0 0 10px rgba(249, 115, 22, 0.3)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              overflow: 'hidden'
-            }}>
-              <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
-                <circle cx="32" cy="32" r="30" fill="#D81E27" stroke="#180407" strokeWidth="2" />
-                <path d="M32 2 L32 62 M2 32 L62 32 M10 10 L54 54 M10 54 L54 10" stroke="#850B12" strokeWidth="1.2" />
-                <polygon points="14,30 29,36 28,24 16,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
-                <polygon points="50,30 35,36 36,24 48,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
-              </svg>
+                  <div style={{ padding: '14px', maxHeight: '250px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+                    {spideyMessages.map((msg, idx) => (
+                      <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-spidey'}>
+                        <div style={{ fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '2px', color: msg.sender === 'user' ? '#FFF' : '#38BDF8' }}>
+                          {msg.sender === 'user' ? 'You' : 'Spider-Man'}
+                        </div>
+                        <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
+                      </div>
+                    ))}
+                    {isSpideyTyping && (
+                      <div className="chat-bubble-spidey" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '0.75rem', color: '#38BDF8', fontWeight: 'bold' }}>Peter is examining pixels</span>
+                        <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
+                      </div>
+                    )}
+                    <div ref={spideyChatBottomRef} />
+                  </div>
+
+                  <div style={{ padding: '8px 12px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <button 
+                      type="button"
+                      onClick={() => handleGetClue('spidey')}
+                      className="clue-btn-spidey"
+                      style={{ width: '100%', justifyContent: 'center', padding: '8px 12px', fontSize: '0.8rem' }}
+                    >
+                      🕸️ Reveal Optical Analysis Clue!
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleSendSpideyArena} style={{ display: 'flex', padding: '10px 12px', borderTop: '1px solid rgba(255,255,255,0.08)', background: '#040810' }}>
+                    <input 
+                      type="text"
+                      placeholder="Ask Peter about forensic optics..."
+                      value={spideyInput}
+                      onChange={(e) => setSpideyInput(e.target.value)}
+                      style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', borderRadius: '6px', padding: '8px 12px', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                    <button 
+                      type="submit"
+                      style={{ background: '#0284C7', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
+                    >
+                      Send
+                    </button>
+                  </form>
+                </div>
+              ) : (
+                <div 
+                  className="spidey-speech card-hover-lift" 
+                  onClick={() => setIsSpideyChatOpen(true)}
+                  style={{ cursor: 'pointer' }}
+                  title="Click to talk to Spider-Man!"
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <button
+                      type="button"
+                      className="bot-collapse-btn spidey-btn"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setIsSpideyCollapsed(true)
+                      }}
+                      title="Hide Spidey"
+                    >
+                      ^ Hide
+                    </button>
+                    <span style={{ fontSize: '0.68rem', color: '#38BDF8', fontWeight: 'bold', letterSpacing: '0.5px' }}>🕸️ SPIDEY INTEL</span>
+                  </div>
+                  {SPIDEY_GAME_QUOTES[spideyQuoteIdx]}
+                  <div style={{ fontSize: '0.7rem', color: '#F97316', marginTop: '4px', textAlign: 'right' }}>
+                    [Click Spidey for Science Clues 💬]
+                  </div>
+                </div>
+              )}
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {!isSpideyChatOpen && (
+                  <button
+                    type="button"
+                    className="bot-collapse-btn spidey-btn"
+                    onClick={() => setIsSpideyCollapsed(true)}
+                    title="Hide Spidey"
+                    style={{ height: 'fit-content' }}
+                  >
+                    ^ Hide
+                  </button>
+                )}
+                <div 
+                  style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  onClick={() => setIsSpideyChatOpen(prev => !prev)}
+                  title="Click to chat with Spider-Man"
+                >
+                  <div className="spider-sense-active" style={{
+                    position: 'absolute',
+                    top: '-13px',
+                    width: '42px',
+                    height: '21px',
+                    pointerEvents: 'none'
+                  }}>
+                    <svg viewBox="0 0 60 30" fill="none">
+                      <path d="M12,25 Q30,2 48,25" stroke="#F97316" strokeWidth="3" strokeLinecap="round" />
+                      <path d="M5,20 Q30,-8 55,20" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 2" />
+                    </svg>
+                  </div>
+
+                  <div className="spidey-floating" style={{
+                    width: '44px',
+                    height: '44px',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #7F1D1D 100%)',
+                    border: '2px solid #E01B22',
+                    boxShadow: '0 4px 16px rgba(224, 27, 34, 0.6), 0 0 10px rgba(249, 115, 22, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden'
+                  }}>
+                    <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
+                      <circle cx="32" cy="32" r="30" fill="#D81E27" stroke="#180407" strokeWidth="2" />
+                      <path d="M32 2 L32 62 M2 32 L62 32 M10 10 L54 54 M10 54 L54 10" stroke="#850B12" strokeWidth="1.2" />
+                      <polygon points="14,30 29,36 28,24 16,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
+                      <polygon points="50,30 35,36 36,24 48,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
+          )}
+        </>
+      )}
 
       {/* ========================================================= */}
       {/* TOURNAMENT PROTOCOL ACKNOWLEDGEMENT POPUP MODAL          */}

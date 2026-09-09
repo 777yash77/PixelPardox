@@ -2199,7 +2199,8 @@ h1, h2, h3, h4, h5, h6 {
 /* Bot Collapsible Controls & Dock Tabs */
 .bot-dock-tab {
   position: fixed;
-  bottom: 14px;
+  top: 75px;
+  bottom: auto;
   z-index: 1000;
   display: inline-flex;
   align-items: center;
@@ -2223,6 +2224,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .bot-dock-tab.deadpool-dock {
   left: 20px;
+  top: 75px;
+  bottom: auto;
   background: rgba(26, 8, 12, 0.94);
   border: 1.5px solid #E23636;
   color: #FFF;
@@ -2236,6 +2239,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .bot-dock-tab.spidey-dock {
   right: 20px;
+  top: 75px;
+  bottom: auto;
   background: rgba(6, 16, 26, 0.94);
   border: 1.5px solid #0284C7;
   color: #FFF;
@@ -2245,6 +2250,23 @@ h1, h2, h3, h4, h5, h6 {
 .bot-dock-tab.spidey-dock:hover {
   border-color: #38BDF8;
   box-shadow: 0 12px 30px rgba(2, 132, 199, 0.65), 0 0 18px rgba(56, 189, 248, 0.4);
+}
+
+/* Spider-Man Floating Bot Container in Game Arena — Positioned at Top */
+.spidey-floating-bot-container {
+  position: fixed;
+  top: 75px;
+  right: 20px;
+  bottom: auto;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  pointer-events: auto;
+}
+
+.spidey-floating-bot-container.bot-collapsed {
+  display: none !important;
 }
 
 .bot-dock-tab .dock-chevron {
