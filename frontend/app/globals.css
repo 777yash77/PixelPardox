@@ -1,24 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Color Palette - LOGIN 2026 Theme */
-  --bg-deep-black: #0A0607;
-  --bg-dark-sapphire: #0e0506;
-  --bg-gradient: radial-gradient(circle at top, #1c080a 0%, var(--bg-deep-black) 70%);
+  /* Color Palette - Blue & Red Spider-Man x Deadpool Theme */
+  --bg-deep-black: #060810;
+  --bg-dark-sapphire: #0A0E1A;
+  --bg-gradient: radial-gradient(circle at top, #0E172A 0%, #080C16 55%, var(--bg-deep-black) 100%);
   
-  --color-primary-blue: #E01B22; /* Retained name for compatibility, but it's RED */
-  --color-neon-blue: #ff3b3b;   /* Retained name, now bright red */
-  --color-cyan: #ff1414;        /* Retained name, now pure red */
-  --color-sapphire-glow: rgba(224, 27, 34, 0.4);
+  /* Dual Core Hero Tokens: Spider-Man Electric Blue & Deadpool Crimson Red */
+  --color-spidey-blue: #0284C7;
+  --color-spidey-cyan: #38BDF8;
+  --color-spidey-glow: rgba(56, 189, 248, 0.45);
   
-  --card-bg: rgba(10, 6, 7, 0.75);
-  --card-border: rgba(224, 27, 34, 0.2);
-  --card-border-glow: rgba(224, 27, 34, 0.5);
+  --color-deadpool-red: #E01B22;
+  --color-deadpool-crimson: #EF4444;
+  --color-deadpool-glow: rgba(224, 27, 34, 0.45);
+  
+  --color-primary-blue: #0284C7;
+  --color-neon-blue: #38BDF8;
+  --color-cyan: #00D2FF;
+  --color-primary-red: #E01B22;
+  --color-neon-red: #EF4444;
+  --color-sapphire-glow: rgba(56, 189, 248, 0.4);
+  
+  --card-bg: rgba(9, 13, 24, 0.78);
+  --card-border: rgba(56, 189, 248, 0.22);
+  --card-border-red: rgba(224, 27, 34, 0.25);
+  --card-border-glow: rgba(56, 189, 248, 0.5);
   
   --text-white: #ffffff;
-  --text-primary: #F7F2F2;
-  --text-secondary: #a89f9f;
-  --text-dim: #6b5d5d;
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-dim: #64748B;
   
   --font-display: 'Space Grotesk', sans-serif;
   --font-body: 'Outfit', sans-serif;
@@ -31,11 +43,11 @@
 }
 
 body {
-  background-color: #070406;
+  background-color: #060810;
   background-image: 
-    radial-gradient(ellipse 90% 50% at 50% -10%, rgba(224, 27, 34, 0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 100% 25%, rgba(224, 27, 34, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 0% 75%, rgba(180, 20, 25, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 50% at 50% -10%, rgba(56, 189, 248, 0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 45% at 100% 20%, rgba(224, 27, 34, 0.13) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 45% at 0% 75%, rgba(2, 132, 199, 0.12) 0%, transparent 55%),
     radial-gradient(circle, rgba(255, 255, 255, 0.032) 1px, transparent 1px);
   background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px;
   background-attachment: fixed;
@@ -44,12 +56,12 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   line-height: 1.5;
-  selection-background: #E01B22;
+  selection-background: #0284C7;
   selection-color: white;
 }
 
 ::selection {
-  background: #E01B22;
+  background: #0284C7;
   color: white;
 }
 
@@ -61,7 +73,7 @@ body {
   background: var(--bg-deep-black);
 }
 ::-webkit-scrollbar-thumb {
-  background: #33080b;
+  background: #152238;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -95,7 +107,7 @@ h1, h2, h3, h4, h5, h6 {
   position: absolute;
   top: 0; left: -100%;
   width: 50%; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--color-primary-blue), transparent);
+  background: linear-gradient(90deg, transparent, var(--color-neon-blue), transparent);
   transition: all 0.6s ease;
 }
 
@@ -105,13 +117,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .glass-panel:hover {
   border-color: var(--card-border-glow);
-  box-shadow: 0 20px 50px 0 rgba(0, 0, 0, 0.8), 0 0 24px rgba(224, 27, 34, 0.25);
+  box-shadow: 0 20px 50px 0 rgba(0, 0, 0, 0.8), 0 0 24px rgba(56, 189, 248, 0.25);
 }
 
 /* Accent Glow Text */
 .glow-text {
   color: var(--text-white);
-  text-shadow: 0 0 10px rgba(224, 27, 34, 0.6), 0 0 20px rgba(255, 59, 59, 0.4);
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.6), 0 0 20px rgba(224, 27, 34, 0.4);
 }
 
 .cyan-gradient-text {
@@ -122,16 +134,17 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Buttons */
 .btn-primary {
-  background: linear-gradient(135deg, #a31016 0%, #E01B22 100%);
+  background: linear-gradient(135deg, #0284C7 0%, #0066FF 45%, #E01B22 100%);
+  background-size: 200% 200%;
   color: var(--text-white);
-  border: 1px solid rgba(255, 59, 59, 0.4);
+  border: 1px solid rgba(56, 189, 248, 0.5);
   padding: 12px 24px;
   font-size: 1rem;
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   border-radius: 6px;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(224, 27, 34, 0.4);
+  box-shadow: 0 4px 18px rgba(0, 136, 255, 0.45);
   transition: all 0.25s ease;
   outline: none;
   display: inline-flex;
@@ -144,8 +157,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(255, 59, 59, 0.6);
-  border-color: #ff8080;
+  box-shadow: 0 6px 26px rgba(56, 189, 248, 0.65);
+  border-color: #7DD3FC;
+  background-position: 100% 0;
 }
 
 .btn-primary:active:not(:disabled) {
@@ -156,6 +170,60 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0.5;
   cursor: not-allowed;
   filter: grayscale(1);
+}
+
+.btn-primary-blue {
+  background: linear-gradient(135deg, #0369A1 0%, #0284C7 50%, #38BDF8 100%);
+  color: var(--text-white);
+  border: 1px solid rgba(56, 189, 248, 0.6);
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(2, 132, 199, 0.45);
+  transition: all 0.25s ease;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-primary-blue:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 26px rgba(56, 189, 248, 0.65);
+  border-color: #BAE6FD;
+}
+
+.btn-primary-red {
+  background: linear-gradient(135deg, #991B1B 0%, #E01B22 50%, #EF4444 100%);
+  color: var(--text-white);
+  border: 1px solid rgba(239, 68, 68, 0.6);
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(224, 27, 34, 0.45);
+  transition: all 0.25s ease;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-primary-red:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 26px rgba(239, 68, 68, 0.65);
+  border-color: #FCA5A5;
 }
 
 .btn-secondary {
@@ -179,8 +247,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: rgba(224, 27, 34, 0.1);
-  border-color: rgba(224, 27, 34, 0.3);
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.35);
   color: var(--text-white);
 }
 
@@ -905,26 +973,27 @@ h1, h2, h3, h4, h5, h6 {
 .spidey-ceiling-anchor {
   position: absolute;
   top: -6px;
-  width: 40px;
-  height: 20px;
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.95) 0%, rgba(224, 27, 34, 0.6) 45%, transparent 75%);
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 16px rgba(224, 27, 34, 0.6));
+  width: 64px;
+  height: 28px;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.95) 0%, rgba(56, 189, 248, 0.7) 45%, transparent 75%);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 20px rgba(56, 189, 248, 0.7));
   border-radius: 50%;
   pointer-events: none;
 }
 
-/* Spider-Man Atmospheric Backlight Aura */
+/* Spider-Man Atmospheric Backlight Aura (Vibrant Electric Blue) */
 .spidey-multiverse-aura {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 130px;
-  height: 160px;
+  width: 240px;
+  height: 280px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(224, 27, 34, 0.22) 0%, rgba(224, 27, 34, 0.05) 55%, transparent 75%);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.28) 0%, rgba(2, 132, 199, 0.08) 55%, transparent 75%);
   pointer-events: none;
   z-index: -1;
+  filter: blur(14px);
 }
 
 /* Tactical Deadpool Suspended Cyber Perch Rig */
@@ -945,8 +1014,8 @@ h1, h2, h3, h4, h5, h6 {
 .deadpool-cables-container {
   position: absolute;
   top: 0;
-  width: 80px;
-  height: 165px;
+  width: clamp(140px, 13vw, 185px);
+  height: clamp(245px, 21vw, 320px);
   pointer-events: none;
   z-index: 1;
 }
@@ -955,20 +1024,20 @@ h1, h2, h3, h4, h5, h6 {
 .deadpool-cable-right {
   position: absolute;
   top: 0;
-  width: 2px;
+  width: 2.5px;
   height: 100%;
-  background: linear-gradient(to bottom, #71717A 0%, rgba(203, 213, 225, 0.9) 35%, #EF4444 100%);
-  box-shadow: 0 0 6px rgba(239, 68, 68, 0.8), 0 0 12px rgba(0, 0, 0, 0.9);
+  background: linear-gradient(to bottom, #94A3B8 0%, rgba(203, 213, 225, 0.9) 35%, #EF4444 100%);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.85), 0 0 14px rgba(0, 0, 0, 0.9);
 }
 
 .deadpool-cable-left {
-  left: 5px;
+  left: 8px;
   transform: rotate(-1.5deg);
   transform-origin: top left;
 }
 
 .deadpool-cable-right {
-  right: 5px;
+  right: 8px;
   transform: rotate(1.5deg);
   transform-origin: top right;
 }
@@ -978,16 +1047,16 @@ h1, h2, h3, h4, h5, h6 {
 .cable-ceiling-clamp-right {
   position: absolute;
   top: 0;
-  width: 12px;
-  height: 6px;
-  background: #E23636;
-  border: 1px solid #FFF;
-  border-radius: 2px;
-  box-shadow: 0 0 8px #EF4444;
+  width: 18px;
+  height: 8px;
+  background: #E01B22;
+  border: 1.5px solid #FFF;
+  border-radius: 3px;
+  box-shadow: 0 0 10px #EF4444;
 }
 
-.cable-ceiling-clamp-left { left: 1px; }
-.cable-ceiling-clamp-right { right: 1px; }
+.cable-ceiling-clamp-left { left: 4px; }
+.cable-ceiling-clamp-right { right: 4px; }
 
 /* Deadpool Atmospheric Red Aura */
 .deadpool-multiverse-aura {
@@ -995,29 +1064,29 @@ h1, h2, h3, h4, h5, h6 {
   top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 130px;
-  height: 160px;
+  width: 240px;
+  height: 280px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(224, 27, 34, 0.24) 0%, rgba(224, 27, 34, 0.06) 55%, transparent 75%);
+  background: radial-gradient(circle, rgba(224, 27, 34, 0.3) 0%, rgba(224, 27, 34, 0.08) 55%, transparent 75%);
   pointer-events: none;
   z-index: -1;
-  filter: blur(10px);
+  filter: blur(14px);
 }
 
 /* Tactical Combat Platform under Deadpool's Feet */
 .deadpool-combat-platform {
   position: relative;
-  width: 90px;
-  height: 13px;
-  margin-top: -6px;
+  width: clamp(145px, 13vw, 190px);
+  height: 18px;
+  margin-top: -8px;
   background: linear-gradient(180deg, #1C080A 0%, #0D0305 100%);
   border: 1.5px solid #E01B22;
   border-radius: 4px;
-  box-shadow: 0 0 14px rgba(224, 27, 34, 0.75), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 18px rgba(224, 27, 34, 0.75), inset 0 1px 2px rgba(255, 255, 255, 0.4);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 4px;
+  padding: 0 8px;
   z-index: 2;
   box-sizing: border-box;
 }
@@ -1036,50 +1105,54 @@ h1, h2, h3, h4, h5, h6 {
 .platform-thruster-left,
 .platform-thruster-right {
   position: absolute;
-  bottom: -4px;
-  width: 14px;
-  height: 5px;
+  bottom: -5px;
+  width: 22px;
+  height: 7px;
   background: radial-gradient(ellipse at center, #FACC15 0%, #EF4444 60%, transparent 100%);
   border-radius: 50%;
-  filter: drop-shadow(0 0 6px #EF4444);
+  filter: drop-shadow(0 0 8px #EF4444);
   animation: thrusterFlicker 0.4s ease-in-out infinite alternate;
 }
 
-.platform-thruster-left { left: 7px; }
-.platform-thruster-right { right: 7px; }
+.platform-thruster-left { left: 14px; }
+.platform-thruster-right { right: 14px; }
 
 @keyframes thrusterFlicker {
   0% { transform: scale(0.9); opacity: 0.7; }
   100% { transform: scale(1.15); opacity: 1; }
 }
 
-/* Hero Mascot Tags */
+/* Hero Mascot Tags & Substantial Cinematic Wrapper */
 .mascot-image-wrapper {
   position: relative;
-  width: 72px;
-  height: 118px;
+  width: clamp(135px, 12.5vw, 180px);
+  height: clamp(220px, 20vw, 295px);
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
   z-index: 2;
 }
 
-.deadpool-perch-rig:hover .mascot-image-wrapper,
+.deadpool-perch-rig:hover .mascot-image-wrapper {
+  transform: scale(1.06) translateY(-3px);
+  filter: drop-shadow(0 16px 36px rgba(224, 27, 34, 0.95)) !important;
+}
+
 .spidey-swinging-pro:hover .mascot-image-wrapper {
-  transform: scale(1.08) translateY(-2px);
-  filter: drop-shadow(0 14px 30px rgba(224, 27, 34, 0.95)) !important;
+  transform: scale(1.06) translateY(-3px);
+  filter: drop-shadow(0 16px 36px rgba(56, 189, 248, 0.95)) !important;
 }
 
 .deadpool-perch-rig:hover .deadpool-combat-platform {
-  box-shadow: 0 0 20px rgba(224, 27, 34, 0.95), inset 0 0 8px #FACC15;
+  box-shadow: 0 0 24px rgba(224, 27, 34, 0.95), inset 0 0 10px #FACC15;
   border-color: #FACC15;
 }
 
 .mascot-tag-pill {
-  margin-top: 4px;
-  border-radius: 6px;
-  padding: 3px 8px;
-  font-size: 0.60rem;
+  margin-top: 6px;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 0.70rem;
   font-weight: 800;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.5px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1094,28 +1167,28 @@ h1, h2, h3, h4, h5, h6 {
 
 .deadpool-tag {
   background: rgba(226, 54, 54, 0.16);
-  border: 1px solid rgba(226, 54, 54, 0.65);
+  border: 1.5px solid rgba(226, 54, 54, 0.75);
   color: #F87171;
-  box-shadow: 0 4px 16px rgba(226, 54, 54, 0.35);
+  box-shadow: 0 4px 18px rgba(226, 54, 54, 0.4);
 }
 
 .spidey-tag {
-  background: rgba(56, 189, 248, 0.14);
-  border: 1px solid rgba(56, 189, 248, 0.65);
+  background: rgba(56, 189, 248, 0.16);
+  border: 1.5px solid rgba(56, 189, 248, 0.75);
   color: #38BDF8;
-  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.35);
+  box-shadow: 0 4px 18px rgba(56, 189, 248, 0.4);
 }
 
 .mascot-tag-sub {
-  font-size: 0.58rem;
+  font-size: 0.65rem;
   color: #FFFFFF;
-  opacity: 0.85;
-  font-weight: 600;
+  opacity: 0.9;
+  font-weight: 700;
 }
 
-.deadpool-swinging-pro:hover .mascot-tag-pill,
+.deadpool-perch-rig:hover .mascot-tag-pill,
 .spidey-swinging-pro:hover .mascot-tag-pill {
-  transform: scale(1.06);
+  transform: scale(1.05);
   filter: brightness(1.2);
 }
 
@@ -2005,113 +2078,69 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(0.8);
 }
 
-/* Smooth Trailing Follower Reticle */
+/* Smooth Trailing Follower Circular Reticle */
 .cyber-cursor-ring {
   position: fixed;
   top: 0;
   left: 0;
   pointer-events: none;
   z-index: 999995;
-  width: 28px;
-  height: 28px;
-  margin-top: -14px;
-  margin-left: -14px;
+  width: 32px;
+  height: 32px;
+  margin-top: -16px;
+  margin-left: -16px;
+  border-radius: 50%;
   will-change: transform;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
 }
 
-/* 1. Four Crimson Red Corner Brackets [ ] */
-.cursor-bracket {
-  position: absolute;
-  width: 9px;
-  height: 9px;
-  border-color: #FF4D4D;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.bracket-tl {
-  top: 0;
-  left: 0;
-  border-top: 2.5px solid #FF4D4D;
-  border-left: 2.5px solid #FF4D4D;
-  filter: drop-shadow(0 0 3px rgba(255, 77, 77, 0.9));
-}
-
-.bracket-tr {
-  top: 0;
-  right: 0;
-  border-top: 2.5px solid #FF4D4D;
-  border-right: 2.5px solid #FF4D4D;
-  filter: drop-shadow(0 0 3px rgba(255, 77, 77, 0.9));
-}
-
-.bracket-bl {
-  bottom: 0;
-  left: 0;
-  border-bottom: 2.5px solid #FF4D4D;
-  border-left: 2.5px solid #FF4D4D;
-  filter: drop-shadow(0 0 3px rgba(255, 77, 77, 0.9));
-}
-
-.bracket-br {
-  bottom: 0;
-  right: 0;
-  border-bottom: 2.5px solid #FF4D4D;
-  border-right: 2.5px solid #FF4D4D;
-  filter: drop-shadow(0 0 3px rgba(255, 77, 77, 0.9));
-}
-
-/* Concentric Crimson Dashed Radar Circle */
+/* Outer Luminous Round Ring (Spider-Man Electric Blue / Cyan) */
 .cursor-dashed-ring {
   position: absolute;
-  width: 22px;
-  height: 22px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  border: 1.5px dashed rgba(255, 77, 77, 0.8);
-  box-shadow: 0 0 5px rgba(224, 27, 34, 0.5);
-  animation: reticleSpin 14s linear infinite;
+  border: 1.5px solid rgba(56, 189, 248, 0.8);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.55), inset 0 0 6px rgba(0, 136, 255, 0.3);
   pointer-events: none;
+  transition: all 0.2s ease;
 }
 
-/* Solid Crimson Red Inner Aperture Ring */
+/* Inner Dual-Glow Round Ring (Deadpool Crimson Red / Cyan core) */
 .cursor-red-ring {
   position: absolute;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  border: 1.5px solid #E01B22;
-  background: radial-gradient(circle, rgba(224,27,34,0.2) 0%, rgba(14,7,10,0.85) 100%);
-  box-shadow: 0 0 8px rgba(224,27,34,0.7), inset 0 0 5px rgba(0,0,0,0.9);
+  border: 1.5px solid rgba(224, 27, 34, 0.75);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(224, 27, 34, 0.2) 60%, transparent 100%);
+  box-shadow: 0 0 8px rgba(224, 27, 34, 0.5);
   pointer-events: none;
+  transition: all 0.2s ease;
 }
 
-/* On Hover: Crisp Cyber Lock */
+/* On Hover: Elegant Circular Expansion with Dual Multiverse Glow */
 .cyber-cursor-ring.cursor-hover {
-  transform: scale(1.12);
-}
-
-.cyber-cursor-ring.cursor-hover .cursor-bracket {
-  border-color: #FF2B32;
-  filter: drop-shadow(0 0 6px #FF2B32);
+  transform: scale(1.35);
 }
 
 .cyber-cursor-ring.cursor-hover .cursor-dashed-ring {
-  border-color: #FF4D4D;
-  animation-duration: 5s;
-  box-shadow: 0 0 14px rgba(224, 27, 34, 0.8);
+  border-color: #38BDF8;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.85), inset 0 0 8px rgba(56, 189, 248, 0.45);
 }
 
 .cyber-cursor-ring.cursor-hover .cursor-red-ring {
-  border-color: #FF2B32;
-  box-shadow: 0 0 18px rgba(255, 43, 50, 0.9), inset 0 0 10px rgba(224, 27, 34, 0.5);
+  border-color: #FF4D4D;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.35) 0%, rgba(224, 27, 34, 0.35) 60%, transparent 100%);
+  box-shadow: 0 0 14px rgba(255, 77, 77, 0.85);
 }
 
 /* Click Compression Shock */
 .cyber-cursor-ring.cursor-clicking {
-  transform: scale(0.85);
+  transform: scale(0.8);
 }
 
 @keyframes reticleSpin {
@@ -3311,7 +3340,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 900;
   text-transform: uppercase;
-  background: linear-gradient(135deg, #FFFFFF 0%, #FFF1F2 15%, #FFA5A5 35%, #E01B22 55%, #FF6B6B 80%, #FFFFFF 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, #E0F2FE 15%, #38BDF8 35%, #EF4444 65%, #FF6B6B 85%, #FFFFFF 100%);
   background-size: 250% 250%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -3320,14 +3349,14 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.05;
 }
 
-/* Cinematic Auth Header Title */
+/* Cinematic Auth Header Title (Spider Blue into Crimson Red) */
 .auth-title-cinematic {
   position: relative;
   display: inline-block;
   font-family: var(--font-display);
   font-weight: 800;
   text-transform: uppercase;
-  background: linear-gradient(135deg, #FFFFFF 0%, #FFA8A8 40%, #E01B22 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, #BAE6FD 30%, #38BDF8 55%, #EF4444 85%, #FF6B6B 100%);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -3355,7 +3384,7 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(1.1);
 }
 
-/* Atmospheric Ambient Backdrops for Auth Pages */
+/* Atmospheric Ambient Backdrops for Auth Pages (Dual Blue & Red) */
 .auth-ambient-glow {
   position: absolute;
   width: 580px;
@@ -3363,8 +3392,8 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 50%;
   pointer-events: none;
   z-index: 1;
-  filter: blur(85px);
-  opacity: 0.5;
+  filter: blur(90px);
+  opacity: 0.55;
   transition: opacity 0.5s ease;
 }
 
@@ -3372,8 +3401,9 @@ h1, h2, h3, h4, h5, h6 {
   background: radial-gradient(circle, rgba(224, 27, 34, 0.38) 0%, rgba(133, 11, 18, 0.14) 50%, transparent 70%);
 }
 
-.auth-ambient-glow.cyan {
-  background: radial-gradient(circle, rgba(224, 27, 34, 0.32) 0%, rgba(133, 11, 18, 0.14) 50%, transparent 70%);
+.auth-ambient-glow.cyan,
+.auth-ambient-glow.blue {
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.35) 0%, rgba(2, 132, 199, 0.12) 50%, transparent 70%);
 }
 
 /* HUD Cyber Corner Accents for Cards */
@@ -3391,49 +3421,76 @@ h1, h2, h3, h4, h5, h6 {
 
 .cyber-corner-tl {
   top: 8px; left: 8px;
-  border-top: 2px solid #E01B22;
-  border-left: 2px solid #E01B22;
+  border-top: 2px solid #EF4444;
+  border-left: 2px solid #EF4444;
 }
 
 .cyber-corner-tr {
   top: 8px; right: 8px;
-  border-top: 2px solid #E01B22;
-  border-right: 2px solid #E01B22;
+  border-top: 2px solid #EF4444;
+  border-right: 2px solid #EF4444;
 }
 
 .cyber-corner-bl {
   bottom: 8px; left: 8px;
-  border-bottom: 2px solid #E01B22;
-  border-left: 2px solid #E01B22;
+  border-bottom: 2px solid #EF4444;
+  border-left: 2px solid #EF4444;
 }
 
 .cyber-corner-br {
   bottom: 8px; right: 8px;
-  border-bottom: 2px solid #E01B22;
-  border-right: 2px solid #E01B22;
+  border-bottom: 2px solid #EF4444;
+  border-right: 2px solid #EF4444;
 }
 
+.blue-corners .cyber-corner-tl,
+.blue-corners .cyber-corner-tr,
+.blue-corners .cyber-corner-bl,
+.blue-corners .cyber-corner-br,
 .cyan-corners .cyber-corner-tl,
 .cyan-corners .cyber-corner-tr,
 .cyan-corners .cyber-corner-bl,
 .cyan-corners .cyber-corner-br {
-  border-color: #E01B22;
+  border-color: #38BDF8 !important;
+}
+
+/* Dedicated Cyber Card Blue & Red Variants */
+.cyber-card-blue {
+  background: linear-gradient(160deg, rgba(8, 20, 38, 0.85) 0%, rgba(6, 12, 22, 0.94) 100%) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.65), 0 0 24px rgba(2, 132, 199, 0.22) !important;
+}
+
+.cyber-card-blue:hover {
+  border-color: #38BDF8 !important;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.85), 0 0 35px rgba(56, 189, 248, 0.45) !important;
+}
+
+.cyber-card-red {
+  background: linear-gradient(160deg, rgba(30, 8, 12, 0.85) 0%, rgba(14, 5, 8, 0.94) 100%) !important;
+  border: 1.5px solid rgba(224, 27, 34, 0.35) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.65), 0 0 24px rgba(224, 27, 34, 0.22) !important;
+}
+
+.cyber-card-red:hover {
+  border-color: #EF4444 !important;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.85), 0 0 35px rgba(224, 27, 34, 0.45) !important;
 }
 
 /* Registration Success Alert Banner */
 .auth-success-banner {
-  background: linear-gradient(135deg, rgba(224, 27, 34, 0.16) 0%, rgba(133, 11, 18, 0.25) 100%);
-  border: 1.5px solid #E01B22;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.16) 0%, rgba(2, 132, 199, 0.25) 100%);
+  border: 1.5px solid #38BDF8;
   border-radius: 10px;
   padding: 14px 18px;
-  color: #FECACA;
+  color: #E0F2FE;
   font-size: 0.88rem;
   font-weight: 600;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 6px 20px rgba(224, 27, 34, 0.3);
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3);
   animation: cyberModalSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -3441,12 +3498,12 @@ h1, h2, h3, h4, h5, h6 {
 .squad-size-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 12px;
   margin-top: 6px;
 }
 
 .squad-size-chip {
-  padding: 13px 10px;
+  padding: 14px 10px;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.03);
   border: 1.5px solid rgba(255, 255, 255, 0.1);
@@ -3467,81 +3524,63 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .squad-size-chip:hover {
-  background: rgba(224, 27, 34, 0.12);
-  border-color: rgba(224, 27, 34, 0.5);
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.5);
   color: #FFF;
   transform: translateY(-2px);
 }
 
 .squad-size-chip.selected {
-  background: linear-gradient(145deg, rgba(224, 27, 34, 0.28) 0%, rgba(133, 11, 18, 0.45) 100%);
-  border-color: #E01B22;
+  background: linear-gradient(145deg, rgba(2, 132, 199, 0.28) 0%, rgba(56, 189, 248, 0.2) 100%);
+  border-color: #38BDF8;
   color: #FFF;
-  box-shadow: 0 6px 20px rgba(224, 27, 34, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
   transform: translateY(-2px);
 }
 
 .squad-size-chip.selected span.chip-badge {
-  color: #FF6B6B;
-}
-
-/* Auth Mascot Floating Animations */
-@keyframes authMascotFloat {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-7px); }
-}
-
-.auth-page-mascot-left {
-  position: absolute;
-  top: 40px;
-  left: clamp(14px, 3.5vw, 60px);
-  z-index: 20;
-  pointer-events: auto;
-  animation: authMascotFloat 3.8s ease-in-out infinite;
-}
-
-.auth-page-mascot-right {
-  position: absolute;
-  top: 40px;
-  right: clamp(14px, 3.5vw, 60px);
-  z-index: 20;
-  pointer-events: auto;
-  animation: authMascotFloat 3.8s ease-in-out infinite 1.2s;
-}
-
-@media (max-width: 1080px) {
-  .auth-page-mascot-left,
-  .auth-page-mascot-right {
-    display: none !important;
-  }
+  color: #38BDF8;
 }
 
 /* ==========================================================================
-   EXPANSIVE DUAL-COLUMN COMMAND CENTER LAYOUT (LOGIN & REGISTER)
+   EXPANSIVE DUAL-COLUMN COMMAND CENTER LAYOUT (LOGIN & REGISTER WIDESCREEN)
    ========================================================================== */
 .auth-command-wrapper {
   width: 100%;
-  max-width: min(1340px, 95vw);
+  max-width: min(1560px, 95vw);
   margin: 0 auto;
   position: relative;
   z-index: 30;
-  padding: 24px 0;
+  padding: 20px 0;
 }
 
 .auth-command-grid {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 36px;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 32px;
   align-items: stretch;
 }
 
+.auth-form-row-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 680px) {
+  .auth-form-row-2col {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
 .auth-briefing-panel {
-  background: linear-gradient(160deg, rgba(22, 9, 13, 0.96) 0%, rgba(10, 4, 7, 0.98) 100%);
-  border: 1.5px solid rgba(224, 27, 34, 0.38);
-  border-top: 2px solid rgba(255, 90, 90, 0.6);
+  background: linear-gradient(160deg, rgba(8, 18, 34, 0.96) 0%, rgba(6, 10, 18, 0.98) 100%);
+  border: 1.5px solid rgba(56, 189, 248, 0.35);
+  border-top: 2px solid rgba(125, 211, 252, 0.65);
   border-radius: 16px;
   padding: 36px 32px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(224, 27, 34, 0.15);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 32px rgba(2, 132, 199, 0.18);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -3551,25 +3590,45 @@ h1, h2, h3, h4, h5, h6 {
 
 .auth-briefing-item {
   background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(224, 27, 34, 0.2);
+  border: 1px solid rgba(56, 189, 248, 0.2);
   border-radius: 10px;
   padding: 16px;
   transition: all 0.25s ease;
 }
 
 .auth-briefing-item:hover {
-  background: rgba(224, 27, 34, 0.08);
-  border-color: rgba(224, 27, 34, 0.45);
+  background: rgba(56, 189, 248, 0.08);
+  border-color: rgba(56, 189, 248, 0.45);
   transform: translateX(4px);
 }
 
-@media (max-width: 980px) {
+/* Horizontal Squad Roster Slot Matrix */
+.squad-roster-matrix {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.squad-slot-pill {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 10px 8px;
+  text-align: center;
+  transition: all 0.25s ease;
+}
+
+.squad-slot-pill.active {
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.6);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+}
+
+@media (max-width: 1020px) {
   .auth-command-grid {
     grid-template-columns: 1fr;
     gap: 24px;
-  }
-  .auth-briefing-panel {
-    display: none;
   }
 }
 

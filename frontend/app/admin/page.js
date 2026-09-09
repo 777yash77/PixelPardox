@@ -1464,7 +1464,7 @@ export default function AdminDashboard() {
                         <td style={{ padding: '14px 8px', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                           Stage {team.roundNumber !== undefined ? (team.roundNumber - 1) : 0}
                         </td>
-                        <td style={{ padding: '14px 8px', textAlign: 'center', fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--color-primary-blue, #E01B22)' }}>
+                        <td style={{ padding: '14px 8px', textAlign: 'center', fontSize: '1.2rem', fontWeight: 'bold', color: '#38BDF8' }}>
                           {team.score}
                         </td>
                         <td style={{ padding: '14px 8px', textAlign: 'center' }}>

@@ -620,8 +620,8 @@ export default function Home() {
 
   return (
     <div style={{ minHeight: '100vh', position: 'relative', overflowX: 'hidden', paddingBottom: '100px' }}>
-      {/* Spider-Web Corner Accents */}
-      <svg className="web-accent" style={{ top: 0, left: 0, width: '220px', height: '220px' }} viewBox="0 0 100 100">
+      {/* Spider-Web Corner Accents (Left: Deadpool Red, Right: Spidey Blue) */}
+      <svg className="web-accent" style={{ top: 0, left: 0, width: '240px', height: '240px' }} viewBox="0 0 100 100">
         <path d="M0,0 L100,0 C70,10 40,40 30,100 L0,100 Z" fill="none" stroke="#E01B22" strokeWidth="0.8" opacity="0.6" />
         <path d="M0,25 C30,25 50,45 55,100" fill="none" stroke="#E01B22" strokeWidth="0.5" opacity="0.4" />
         <path d="M0,50 C40,50 65,65 75,100" fill="none" stroke="#E01B22" strokeWidth="0.5" opacity="0.4" />
@@ -630,12 +630,13 @@ export default function Home() {
         <line x1="0" y1="0" x2="75" y2="100" stroke="#E01B22" strokeWidth="0.5" opacity="0.5" />
       </svg>
 
-      <svg className="web-accent" style={{ top: 0, right: 0, width: '220px', height: '220px', transform: 'scaleX(-1)' }} viewBox="0 0 100 100">
-        <path d="M0,0 L100,0 C70,10 40,40 30,100 L0,100 Z" fill="none" stroke="#E01B22" strokeWidth="0.8" opacity="0.6" />
-        <path d="M0,25 C30,25 50,45 55,100" fill="none" stroke="#E01B22" strokeWidth="0.5" opacity="0.4" />
-        <path d="M0,50 C40,50 65,65 75,100" fill="none" stroke="#E01B22" strokeWidth="0.5" opacity="0.4" />
-        <line x1="0" y1="0" x2="30" y2="100" stroke="#E01B22" strokeWidth="0.5" opacity="0.5" />
-        <line x1="0" y1="0" x2="75" y2="100" stroke="#E01B22" strokeWidth="0.5" opacity="0.5" />
+      <svg className="web-accent" style={{ top: 0, right: 0, width: '240px', height: '240px', transform: 'scaleX(-1)' }} viewBox="0 0 100 100">
+        <path d="M0,0 L100,0 C70,10 40,40 30,100 L0,100 Z" fill="none" stroke="#38BDF8" strokeWidth="0.8" opacity="0.65" />
+        <path d="M0,25 C30,25 50,45 55,100" fill="none" stroke="#38BDF8" strokeWidth="0.5" opacity="0.45" />
+        <path d="M0,50 C40,50 65,65 75,100" fill="none" stroke="#38BDF8" strokeWidth="0.5" opacity="0.45" />
+        <path d="M0,75 C60,75 80,85 90,100" fill="none" stroke="#38BDF8" strokeWidth="0.5" opacity="0.45" />
+        <line x1="0" y1="0" x2="30" y2="100" stroke="#38BDF8" strokeWidth="0.5" opacity="0.5" />
+        <line x1="0" y1="0" x2="75" y2="100" stroke="#38BDF8" strokeWidth="0.5" opacity="0.5" />
       </svg>
 
       {/* TOP-RIGHT: REALISTIC SWINGING SPIDER-MAN FULL BODY MODEL WITH ELASTIC SILK */}
@@ -643,7 +644,7 @@ export default function Home() {
         style={{
           position: 'absolute',
           top: 0,
-          right: 'clamp(12px, 3.2vw, 42px)',
+          right: 'clamp(14px, 3.2vw, 46px)',
           zIndex: 35,
           pointerEvents: 'auto',
           cursor: 'pointer'
@@ -664,8 +665,8 @@ export default function Home() {
           {/* Elastic Silk Line */}
           <div className="web-elastic-line" style={{
             width: '2.5px',
-            background: 'linear-gradient(to bottom, #FFFFFF 0%, rgba(255,255,255,0.95) 50%, #E01B22 100%)',
-            boxShadow: '0 0 10px rgba(255,255,255,0.85), 0 0 18px rgba(224,27,34,0.65)'
+            background: 'linear-gradient(to bottom, #FFFFFF 0%, rgba(255,255,255,0.95) 45%, #38BDF8 75%, #0284C7 100%)',
+            boxShadow: '0 0 10px rgba(255,255,255,0.9), 0 0 20px rgba(56,189,248,0.7)'
           }} />
 
           {/* Atmospheric Cyan Multiverse Aura */}
@@ -673,7 +674,7 @@ export default function Home() {
 
           {/* Full Model Spider-Man Container */}
           <div className="mascot-image-wrapper" style={{
-            filter: 'drop-shadow(0 10px 24px rgba(224,27,34,0.75))'
+            filter: 'drop-shadow(0 14px 28px rgba(2,132,199,0.75))'
           }}>
             {/* THWIP Action Pop */}
             {showSpideyThwip && (
@@ -683,17 +684,17 @@ export default function Home() {
             {/* Spider-Sense Radiating Crown (Around Head) */}
             <div className="spider-sense-intense" style={{
               position: 'absolute',
-              bottom: '-10px',
+              bottom: '-12px',
               left: '50%',
               transform: 'translateX(-50%)',
-              width: '46px',
-              height: '23px',
+              width: '64px',
+              height: '32px',
               pointerEvents: 'none'
             }}>
               <svg viewBox="0 0 56 28" fill="none">
-                <path d="M10,24 Q28,-2 46,24" stroke="#FF4D4D" strokeWidth="3" strokeLinecap="round" />
-                <path d="M4,18 Q28,-10 52,18" stroke="#EF4444" strokeWidth="2.2" strokeLinecap="round" strokeDasharray="4 2" />
-                <path d="M18,25 Q28,8 38,25" stroke="#FF6B6B" strokeWidth="1.8" strokeLinecap="round" />
+                <path d="M10,24 Q28,-2 46,24" stroke="#38BDF8" strokeWidth="3" strokeLinecap="round" />
+                <path d="M4,18 Q28,-10 52,18" stroke="#0088FF" strokeWidth="2.4" strokeLinecap="round" strokeDasharray="4 2" />
+                <path d="M18,25 Q28,8 38,25" stroke="#FACC15" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </div>
 
@@ -724,7 +725,7 @@ export default function Home() {
         style={{
           position: 'absolute',
           top: 0,
-          left: 'clamp(12px, 3.2vw, 42px)',
+          left: 'clamp(14px, 3.2vw, 46px)',
           zIndex: 35,
           pointerEvents: 'auto',
           cursor: 'pointer'
@@ -752,7 +753,7 @@ export default function Home() {
 
           {/* Full Model Deadpool Container */}
           <div className="mascot-image-wrapper" style={{
-            filter: 'drop-shadow(0 10px 24px rgba(226,54,54,0.75))'
+            filter: 'drop-shadow(0 14px 28px rgba(224,27,34,0.75))'
           }}>
             {/* MAXIMUM EFFORT Action Pop */}
             {showDeadpoolPop && (
@@ -777,8 +778,8 @@ export default function Home() {
           <div className="deadpool-combat-platform">
             <div className="platform-thruster-left" />
             <div className="platform-thruster-right" />
-            <span style={{ fontSize: '0.52rem', color: '#EF4444', fontFamily: 'monospace', fontWeight: 900, letterSpacing: '0.8px' }}>⚡ PERCH-01</span>
-            <span style={{ fontSize: '0.52rem', color: '#FACC15', fontFamily: 'monospace', fontWeight: 900 }}>COMBAT READY</span>
+            <span style={{ fontSize: '0.62rem', color: '#EF4444', fontFamily: 'monospace', fontWeight: 900, letterSpacing: '0.8px' }}>⚡ PERCH-01</span>
+            <span style={{ fontSize: '0.62rem', color: '#FACC15', fontFamily: 'monospace', fontWeight: 900 }}>COMBAT READY</span>
           </div>
 
           {/* Deadpool Callout Tag */}
@@ -793,35 +794,36 @@ export default function Home() {
       <div className="container page-transition" style={{ maxWidth: 'min(1560px, 94vw)', margin: '0 auto', padding: '38px 24px' }}>
         
         {/* Multiverse Header Banner */}
-        <header style={{ textAlign: 'center', marginBottom: '58px', position: 'relative' }}>
-          {/* Live Multiverse Status Telemetry Banner */}
+        <header style={{ textAlign: 'center', marginBottom: '56px', position: 'relative', padding: '10px clamp(12px, 12vw, 170px) 0' }}>
+          {/* Live Multiverse Status Telemetry Banner (Blue & Red Duality) */}
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '10px',
-            background: 'linear-gradient(90deg, rgba(224, 27, 34, 0.18) 0%, rgba(10, 6, 7, 0.9) 50%, rgba(224, 27, 34, 0.18) 100%)',
-            border: '1px solid rgba(224, 27, 34, 0.45)',
+            background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.22) 0%, rgba(10, 14, 24, 0.9) 50%, rgba(224, 27, 34, 0.22) 100%)',
+            border: '1px solid rgba(56, 189, 248, 0.45)',
             borderRadius: '24px',
             padding: '7px 22px',
             marginBottom: '18px',
-            boxShadow: '0 0 20px rgba(224, 27, 34, 0.3), inset 0 0 12px rgba(224, 27, 34, 0.2)'
+            boxShadow: '0 0 20px rgba(2, 132, 199, 0.25), inset 0 0 12px rgba(224, 27, 34, 0.2)'
           }}>
-            <span className="live-pulse-dot" style={{ width: '9px', height: '9px', background: '#EF4444', boxShadow: '0 0 10px #EF4444' }} />
+            <span className="live-pulse-dot" style={{ width: '9px', height: '9px', background: '#38BDF8', boxShadow: '0 0 10px #38BDF8' }} />
             <span style={{ fontSize: '0.78rem', color: '#FFF', fontWeight: '800', letterSpacing: '1.4px', textTransform: 'uppercase', fontFamily: 'var(--font-display)' }}>
-              MULTIVERSE CLUSTER ONLINE • 4 FORENSIC STAGES ACTIVE • REAL-TIME LEADERBOARD
+              MULTIVERSE CLUSTER ONLINE • 4 FORENSIC STAGES ACTIVE • REAL-TIME SCORING ENGINE
             </span>
+            <span className="live-pulse-dot" style={{ width: '9px', height: '9px', background: '#EF4444', boxShadow: '0 0 10px #EF4444' }} />
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', flexWrap: 'wrap', justifyContent: 'center' }}>
             <span className="shimmer-badge" style={{ 
-              border: '1px solid #E01B22', 
-              color: '#FF4D4D', 
+              border: '1px solid #38BDF8', 
+              color: '#38BDF8', 
               padding: '5px 16px', 
               borderRadius: '6px', 
               fontSize: '0.82rem', 
               fontWeight: '800',
               letterSpacing: '1.5px',
-              boxShadow: '0 0 14px rgba(224, 27, 34, 0.4)'
+              boxShadow: '0 0 14px rgba(56, 189, 248, 0.4)'
             }}>
               LOGIN 2026 • MULTIVERSE PROTOCOL
             </span>
@@ -852,19 +854,19 @@ export default function Home() {
             gap: '8px',
             fontSize: 'clamp(0.95rem, 2.2vw, 1.35rem)', 
             fontWeight: '800', 
-            color: '#FF6B6B', 
+            color: '#7DD3FC', 
             letterSpacing: '3px',
             textTransform: 'uppercase',
-            background: 'rgba(224, 27, 34, 0.12)',
-            border: '1px solid rgba(224, 27, 34, 0.35)',
+            background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.16) 0%, rgba(224, 27, 34, 0.16) 100%)',
+            border: '1px solid rgba(56, 189, 248, 0.35)',
             padding: '6px 20px',
             borderRadius: '30px',
-            textShadow: '0 0 16px rgba(224,27,34,0.7)',
+            textShadow: '0 0 16px rgba(56,189,248,0.7)',
             marginBottom: '20px',
             backdropFilter: 'blur(10px)',
-            boxShadow: '0 4px 20px rgba(224, 27, 34, 0.2)'
+            boxShadow: '0 4px 20px rgba(0, 136, 255, 0.2)'
           }}>
-            <span style={{ color: '#FF4D4D' }}>⚡</span>
+            <span style={{ color: '#38BDF8' }}>⚡</span>
             <span>THE REALITY GLITCH — REAL OR AI?</span>
             <span style={{ color: '#FF4D4D' }}>⚡</span>
           </div>
@@ -873,18 +875,18 @@ export default function Home() {
             Step inside the high-stakes Multiverse of Generative AI. Decode neural hallucinations, separate authentic photos from synthetic deepfakes, and prove your team is the sharpest in the multiverse!
           </p>
 
-          {/* Horizontal Slim Specs Bar — Red Accents */}
+          {/* Horizontal Slim Specs Bar — Dual Blue & Red Accents */}
           <div className="hero-specs-strip" style={{ marginTop: '28px' }}>
             <div className="spec-chip">
-              <span style={{ color: '#E01B22' }}>●</span>
+              <span style={{ color: '#38BDF8' }}>●</span>
               <span>Stage 0: 30 MCQs / 30m</span>
             </div>
             <div className="spec-chip">
-              <span style={{ color: '#EF4444' }}>●</span>
+              <span style={{ color: '#00D2FF' }}>●</span>
               <span>Stage 1: Real vs 7 AI Models</span>
             </div>
             <div className="spec-chip">
-              <span style={{ color: '#FF4D4D' }}>●</span>
+              <span style={{ color: '#EF4444' }}>●</span>
               <span>Scoring: +10 Correct / -5 Penalty</span>
             </div>
             <div className="spec-chip">
@@ -894,108 +896,75 @@ export default function Home() {
           </div>
         </header>
 
-        {/* Quick Action Station Cards (3-Step Tournament Flow — Expansive Horizontal Grid) */}
+        {/* Quick Action Station Cards (Balanced 2-Column Multiverse Duel Layout) */}
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', 
-          gap: '28px', 
-          marginBottom: '64px' 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', 
+          gap: '32px', 
+          marginBottom: '56px' 
         }}>
-          {/* CARD 01: ONBOARDING */}
+          {/* CARD 01: ONBOARDING (Spider-Man Electric Blue Theme) */}
           <Link href="/register" style={{ textDecoration: 'none' }}>
-            <div className="comic-card card-hover-lift cyber-card-red" style={{ 
-              padding: '32px 28px', 
+            <div className="comic-card card-hover-lift cyber-card-blue" style={{ 
+              padding: '36px 30px', 
               height: '100%', 
               display: 'flex', 
               flexDirection: 'column', 
               justifyContent: 'space-between', 
-              boxShadow: '0 8px 30px rgba(0,0,0,0.6)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.65)',
               position: 'relative',
               overflow: 'hidden'
             }}>
-              <div style={{ position: 'absolute', top: 0, right: 0, width: '90px', height: '90px', background: 'radial-gradient(circle at top right, rgba(224,27,34,0.25) 0%, transparent 70%)', pointerEvents: 'none' }} />
+              <div style={{ position: 'absolute', top: 0, right: 0, width: '110px', height: '110px', background: 'radial-gradient(circle at top right, rgba(56,189,248,0.25) 0%, transparent 70%)', pointerEvents: 'none' }} />
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <span style={{ fontSize: '0.74rem', color: '#FF6B6B', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(224,27,34,0.18)', padding: '5px 12px', borderRadius: '4px', border: '1px solid rgba(224,27,34,0.5)' }}>
+                  <span style={{ fontSize: '0.74rem', color: '#7DD3FC', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(2,132,199,0.22)', padding: '5px 12px', borderRadius: '4px', border: '1px solid rgba(56,189,248,0.5)' }}>
                     STEP 01: ONBOARDING
                   </span>
-                  <span className="badge" style={{ background: 'rgba(224,27,34,0.2)', color: '#FF4D4D', borderColor: '#E01B22' }}>Teams of 2–4</span>
+                  <span className="badge" style={{ background: 'rgba(56,189,248,0.18)', color: '#38BDF8', borderColor: '#0284C7' }}>Teams of 2–4</span>
                 </div>
-                <h3 style={{ fontSize: '1.55rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
+                <h3 style={{ fontSize: '1.65rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px', color: '#FFF' }}>
                   Assemble Your Team
                 </h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.94rem', lineHeight: '1.65' }}>
-                  Register squad credentials with Team Leader ID and member profiles. Once registered, immediately access Stage 0 Prelims!
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.96rem', lineHeight: '1.65' }}>
+                  Register squad credentials with Team Leader ID and operative roster. Once registered, immediately access Stage 0 Prelims!
                 </p>
               </div>
-              <span className="btn-primary" style={{ marginTop: '28px', width: '100%', fontSize: '0.96rem', textAlign: 'center', display: 'block', padding: '14px' }}>
+              <span className="btn-primary-blue" style={{ marginTop: '28px', width: '100%', fontSize: '0.96rem', textAlign: 'center', display: 'block', padding: '14px', borderRadius: '8px' }}>
                 Register Squad ➔
               </span>
             </div>
           </Link>
 
-          {/* CARD 02: BATTLEGROUND */}
+          {/* CARD 02: BATTLEGROUND (Deadpool Crimson Red Theme) */}
           <Link href="/login" style={{ textDecoration: 'none' }}>
             <div className="comic-card card-hover-lift cyber-card-red" style={{ 
-              padding: '32px 28px', 
+              padding: '36px 30px', 
               height: '100%', 
               display: 'flex', 
               flexDirection: 'column', 
               justifyContent: 'space-between', 
-              boxShadow: '0 8px 30px rgba(0,0,0,0.6)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.65)',
               position: 'relative',
               overflow: 'hidden'
             }}>
-              <div style={{ position: 'absolute', top: 0, right: 0, width: '90px', height: '90px', background: 'radial-gradient(circle at top right, rgba(224,27,34,0.25) 0%, transparent 70%)', pointerEvents: 'none' }} />
+              <div style={{ position: 'absolute', top: 0, right: 0, width: '110px', height: '110px', background: 'radial-gradient(circle at top right, rgba(224,27,34,0.25) 0%, transparent 70%)', pointerEvents: 'none' }} />
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <span style={{ fontSize: '0.74rem', color: '#FF6B6B', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(224,27,34,0.18)', padding: '5px 12px', borderRadius: '4px', border: '1px solid rgba(224,27,34,0.5)' }}>
+                  <span style={{ fontSize: '0.74rem', color: '#FF7B7B', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(224,27,34,0.18)', padding: '5px 12px', borderRadius: '4px', border: '1px solid rgba(224,27,34,0.5)' }}>
                     STEP 02: BATTLEGROUND
                   </span>
                   <span className="badge" style={{ background: 'rgba(224,27,34,0.2)', color: '#FF4D4D', borderColor: '#E01B22' }}>Live Arena</span>
                 </div>
-                <h3 style={{ fontSize: '1.55rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
+                <h3 style={{ fontSize: '1.65rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px', color: '#FFF' }}>
                   Enter Battle Arena
                 </h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.94rem', lineHeight: '1.65' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.96rem', lineHeight: '1.65' }}>
                   Sign in with Team ID &amp; Password. Tackle the 30-MCQ Prelims, followed by real-time projected visual challenges.
                 </p>
               </div>
-              <span className="btn-primary" style={{ marginTop: '28px', width: '100%', fontSize: '0.96rem', textAlign: 'center', display: 'block', padding: '14px' }}>
+              <span className="btn-primary-red" style={{ marginTop: '28px', width: '100%', fontSize: '0.96rem', textAlign: 'center', display: 'block', padding: '14px', borderRadius: '8px' }}>
                 Access Arena Portal ➔
-              </span>
-            </div>
-          </Link>
-
-          {/* CARD 03: STANDINGS */}
-          <Link href="/leaderboard" style={{ textDecoration: 'none' }}>
-            <div className="comic-card card-hover-lift cyber-card-red" style={{ 
-              padding: '32px 28px', 
-              height: '100%', 
-              display: 'flex', 
-              flexDirection: 'column', 
-              justifyContent: 'space-between', 
-              boxShadow: '0 8px 30px rgba(0,0,0,0.6)',
-              position: 'relative',
-              overflow: 'hidden'
-            }}>
-              <div style={{ position: 'absolute', top: 0, right: 0, width: '90px', height: '90px', background: 'radial-gradient(circle at top right, rgba(224,27,34,0.25) 0%, transparent 70%)', pointerEvents: 'none' }} />
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <span style={{ fontSize: '0.74rem', color: '#FF6B6B', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(224,27,34,0.18)', padding: '5px 12px', borderRadius: '4px', border: '1px solid rgba(224,27,34,0.5)' }}>
-                    STEP 03: STANDINGS
-                  </span>
-                  <span className="badge" style={{ background: 'rgba(224,27,34,0.2)', color: '#FF4D4D', borderColor: '#E01B22' }}>Real-Time</span>
-                </div>
-                <h3 style={{ fontSize: '1.55rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
-                  Live Leaderboard
-                </h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.94rem', lineHeight: '1.65' }}>
-                  Instant zero-delay scoring matrix for Stage 0 Prelims &amp; Stage 1 Pixel Detective, with team rank progression.
-                </p>
-              </div>
-              <span className="btn-primary" style={{ marginTop: '28px', width: '100%', fontSize: '0.96rem', textAlign: 'center', display: 'block', padding: '14px' }}>
-                View Leaderboard ➔
               </span>
             </div>
           </Link>
@@ -1246,22 +1215,22 @@ export default function Home() {
               </div>
 
               {/* Spider-Man's Comeback */}
-              <div className="comic-balloon-spidey" style={{ background: 'rgba(224, 27, 34, 0.12)', border: '1.5px solid rgba(224, 27, 34, 0.45)', borderRadius: '12px', padding: '18px', boxShadow: '0 8px 24px rgba(224, 27, 34, 0.2)' }}>
+              <div className="comic-balloon-spidey" style={{ background: 'rgba(2, 132, 199, 0.16)', border: '1.5px solid #0284C7', borderRadius: '12px', padding: '18px', boxShadow: '0 8px 24px rgba(56, 189, 248, 0.22)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span style={{ fontSize: '1.2rem' }}>🕷️</span>
-                    <span style={{ fontWeight: '900', color: '#FF6B6B', fontSize: '0.85rem', letterSpacing: '1px' }}>
+                    <span style={{ fontWeight: '900', color: '#38BDF8', fontSize: '0.85rem', letterSpacing: '1px' }}>
                       SPIDER-MAN • SCIENTIFIC RETORT
                     </span>
                   </div>
-                  <span style={{ fontSize: '0.7rem', color: '#FF6B6B', background: 'rgba(0,0,0,0.6)', border: '1px solid #E01B22', padding: '2px 8px', borderRadius: '4px', fontWeight: 'bold' }}>
-                    🔴 Ruby Corner
+                  <span style={{ fontSize: '0.7rem', color: '#38BDF8', background: 'rgba(0,0,0,0.6)', border: '1px solid #0284C7', padding: '2px 8px', borderRadius: '4px', fontWeight: 'bold' }}>
+                    🔵 Cobalt Corner
                   </span>
                 </div>
-                <p style={{ fontSize: '0.88rem', color: '#FEE2E2', lineHeight: '1.6' }}>
+                <p style={{ fontSize: '0.88rem', color: '#F0F9FF', lineHeight: '1.6' }}>
                   {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].spidey}
                 </p>
-                <div style={{ marginTop: '12px', paddingTop: '8px', borderTop: '1px dashed rgba(224, 27, 34, 0.3)', fontSize: '0.82rem', color: '#FF8080', fontStyle: 'italic' }}>
+                <div style={{ marginTop: '12px', paddingTop: '8px', borderTop: '1px dashed rgba(56, 189, 248, 0.3)', fontSize: '0.82rem', color: '#BAE6FD', fontStyle: 'italic' }}>
                   {ROAST_BATTLES[heroDuelIdx % ROAST_BATTLES.length].deadpoolEnd}
                 </div>
               </div>
@@ -1270,28 +1239,28 @@ export default function Home() {
         </section>
 
         {/* Multiverse Protocol Lore Card */}
-        <section className="comic-card" style={{ padding: '32px', marginBottom: '48px', borderLeft: '4px solid #E01B22' }}>
+        <section className="comic-card" style={{ padding: '36px 32px', marginBottom: '56px', borderLeft: '4px solid #38BDF8', borderRight: '4px solid #EF4444' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '20px' }}>
             <span style={{ fontSize: '1.8rem' }}>🕷️</span>
             <div>
               <h3 style={{ fontSize: '1.35rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
                 Rules of Engagement • Multiverse Protocol
               </h3>
-              <span style={{ fontSize: '0.78rem', color: '#FF4D4D', fontWeight: 'bold', letterSpacing: '1px' }}>FAIR PLAY &amp; PROTOCOLS STRICTLY ENFORCED</span>
+              <span style={{ fontSize: '0.78rem', color: '#38BDF8', fontWeight: 'bold', letterSpacing: '1px' }}>FAIR PLAY &amp; PROTOCOLS STRICTLY ENFORCED</span>
             </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px', fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-            <div style={{ background: 'rgba(255,255,255,0.025)', padding: '18px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ background: 'rgba(255,255,255,0.025)', padding: '18px', borderRadius: '10px', border: '1px solid rgba(56,189,248,0.15)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <span style={{ background: '#E01B22', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>01</span>
+                <span style={{ background: '#0284C7', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>01</span>
                 <strong style={{ color: '#FFF' }}>Automated Scoring Matrix:</strong>
               </div>
               <p style={{ marginTop: '4px' }}>
-                Quiz (30 questions, strictly 30 min timer) and Round 1 (10 pixels, 40s each) calculate scores automatically with instant leaderboard broadcast.
+                Quiz (30 questions, strictly 30 min timer) and Round 1 (10 pixels, 40s each) calculate scores automatically with instant tournament engine sync.
               </p>
             </div>
-            <div style={{ background: 'rgba(255,255,255,0.025)', padding: '18px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ background: 'rgba(255,255,255,0.025)', padding: '18px', borderRadius: '10px', border: '1px solid rgba(224,27,34,0.15)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                 <span style={{ background: '#E01B22', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>02</span>
                 <strong style={{ color: '#FFF' }}>Silent Invigilation:</strong>
@@ -1300,9 +1269,9 @@ export default function Home() {
                 During Stage 0, participant webcams capture snapshots to ensure honest testing. The organizer console monitors all feeds in real time.
               </p>
             </div>
-            <div style={{ background: 'rgba(255,255,255,0.025)', padding: '18px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ background: 'rgba(255,255,255,0.025)', padding: '18px', borderRadius: '10px', border: '1px solid rgba(56,189,248,0.15)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <span style={{ background: '#E01B22', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>03</span>
+                <span style={{ background: 'linear-gradient(90deg, #0284C7, #E01B22)', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>03</span>
                 <strong style={{ color: '#FFF' }}>Stage Timers Are Absolute:</strong>
               </div>
               <p style={{ marginTop: '4px' }}>
@@ -1517,11 +1486,11 @@ export default function Home() {
         {isSpideyChatOpen ? (
           <div className="spidey-chat-window">
             {/* Header */}
-            <div style={{ background: 'linear-gradient(135deg, #B91C1C 0%, #680A10 100%)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#D81E27', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid #FFF' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#0284C7', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid #38BDF8' }}>
                   <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
-                    <circle cx="32" cy="32" r="30" fill="#D81E27" />
+                    <circle cx="32" cy="32" r="30" fill="#0284C7" />
                     <path d="M32 2 L32 62 M2 32 L62 32" stroke="#850B12" strokeWidth="1.5" />
                     <polygon points="14,30 29,36 28,24 16,18" fill="#FFFFFF" stroke="#000" strokeWidth="2" />
                     <polygon points="50,30 35,36 36,24 48,18" fill="#FFFFFF" stroke="#000" strokeWidth="2" />
@@ -1529,7 +1498,7 @@ export default function Home() {
                 </div>
                 <div>
                   <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Spidey's Web-Bot</div>
-                  <div style={{ fontSize: '0.7rem', color: '#FF8080' }}>● Peter Parker • Tactical Assistant</div>
+                  <div style={{ fontSize: '0.7rem', color: '#38BDF8' }}>● Peter Parker • Tactical Assistant</div>
                 </div>
               </div>
               <button 
@@ -1548,7 +1517,7 @@ export default function Home() {
                     fontSize: '0.7rem', 
                     fontWeight: 'bold', 
                     marginBottom: '2px', 
-                    color: msg.sender === 'user' ? '#FFF' : msg.sender === 'deadpool' ? '#FF4D4D' : '#FF6B6B' 
+                    color: msg.sender === 'user' ? '#FFF' : msg.sender === 'deadpool' ? '#FF4D4D' : '#38BDF8' 
                   }}>
                     {msg.sender === 'user' ? 'You' : msg.sender === 'deadpool' ? 'Deadpool' : 'Spider-Man'}
                   </div>
@@ -1557,7 +1526,7 @@ export default function Home() {
               ))}
               {isSpideyTyping && (
                 <div className="chat-bubble-spidey" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ fontSize: '0.75rem', color: '#FF6B6B', fontWeight: 'bold' }}>Spider-Man is calculating</span>
+                  <span style={{ fontSize: '0.75rem', color: '#38BDF8', fontWeight: 'bold' }}>Spider-Man is calculating</span>
                   <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
                 </div>
               )}

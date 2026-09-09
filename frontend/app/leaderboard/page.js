@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 const STAGE_NAMES = {
   0: 'Stage 0: Lobby',
@@ -13,10 +14,22 @@ const STAGE_NAMES = {
 }
 
 export default function LeaderboardPage() {
+  const router = useRouter()
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [authChecked, setAuthChecked] = useState(false)
   const [leaderboard, setLeaderboard] = useState([])
   const [loading, setLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState(null)
   const wsRef = useRef(null)
+
+  // Verify role
+  useEffect(() => {
+    const role = typeof window !== 'undefined' ? localStorage.getItem('role') : null
+    if (role === 'ROLE_ADMIN') {
+      setIsAdmin(true)
+    }
+    setAuthChecked(true)
+  }, [])
 
   const fetchLeaderboard = async () => {
     try {
@@ -34,10 +47,11 @@ export default function LeaderboardPage() {
   }
 
   useEffect(() => {
+    if (!isAdmin) return
+
     fetchLeaderboard()
     const pollInterval = setInterval(fetchLeaderboard, 5000)
 
-    // Setup live websocket
     try {
       const ws = new WebSocket('ws://localhost:8080/ws')
       wsRef.current = ws
@@ -65,33 +79,168 @@ export default function LeaderboardPage() {
       clearInterval(pollInterval)
       if (wsRef.current) wsRef.current.close()
     }
-  }, [])
+  }, [isAdmin])
+
+  // If not admin, show clearance guard screen
+  if (authChecked && !isAdmin) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        position: 'relative',
+        overflowX: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '30px 20px',
+        width: '100%',
+        background: '#07060A'
+      }}>
+        {/* Dual Web Accents */}
+        <svg className="web-accent" style={{ top: 0, left: 0, width: '220px', height: '220px' }} viewBox="0 0 100 100">
+          <path d="M0,0 L100,0 C70,10 40,40 30,100 L0,100 Z" fill="none" stroke="#38BDF8" strokeWidth="0.8" opacity="0.6" />
+          <path d="M0,25 C30,25 50,45 55,100" fill="none" stroke="#38BDF8" strokeWidth="0.5" opacity="0.4" />
+          <line x1="0" y1="0" x2="30" y2="100" stroke="#38BDF8" strokeWidth="0.5" opacity="0.45" />
+        </svg>
+
+        <svg className="web-accent" style={{ top: 0, right: 0, width: '220px', height: '220px', transform: 'scaleX(-1)' }} viewBox="0 0 100 100">
+          <path d="M0,0 L100,0 C70,10 40,40 30,100 L0,100 Z" fill="none" stroke="#E01B22" strokeWidth="0.8" opacity="0.6" />
+          <path d="M0,25 C30,25 50,45 55,100" fill="none" stroke="#E01B22" strokeWidth="0.5" opacity="0.4" />
+          <line x1="0" y1="0" x2="30" y2="100" stroke="#E01B22" strokeWidth="0.5" opacity="0.45" />
+        </svg>
+
+        <div className="auth-ambient-glow cyan" style={{ top: '25%', left: '30%', transform: 'translate(-50%, -25%)' }} />
+        <div className="auth-ambient-glow red" style={{ bottom: '20%', right: '25%', transform: 'translate(20%, 20%)' }} />
+
+        <div className="glass-panel" style={{
+          maxWidth: '680px',
+          width: '100%',
+          padding: '48px 36px',
+          textAlign: 'center',
+          border: '1.5px solid rgba(224, 27, 34, 0.45)',
+          borderTop: '2px solid #FF4D4D',
+          borderRadius: '16px',
+          position: 'relative',
+          background: 'linear-gradient(160deg, rgba(22, 10, 16, 0.95) 0%, rgba(8, 6, 12, 0.98) 100%)',
+          boxShadow: '0 24px 70px rgba(0,0,0,0.9), 0 0 45px rgba(224,27,34,0.25)'
+        }}>
+          <div className="cyber-corner-tl" />
+          <div className="cyber-corner-tr" />
+          <div className="cyber-corner-bl" />
+          <div className="cyber-corner-br" />
+
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: 'rgba(224, 27, 34, 0.15)',
+            border: '1px solid rgba(224, 27, 34, 0.4)',
+            padding: '6px 18px',
+            borderRadius: '24px',
+            marginBottom: '20px'
+          }}>
+            <span className="live-pulse-dot" style={{ width: '8px', height: '8px', background: '#EF4444' }} />
+            <span style={{ fontSize: '0.74rem', color: '#FF7B7B', fontWeight: 800, letterSpacing: '1.4px', textTransform: 'uppercase' }}>
+              RESTRICTED CLASSIFIED TELEMETRY
+            </span>
+          </div>
+
+          <div style={{ fontSize: '3.5rem', marginBottom: '16px' }}>🔒</div>
+
+          <h2 style={{
+            fontSize: 'clamp(1.8rem, 3vw, 2.3rem)',
+            fontWeight: 900,
+            marginBottom: '14px',
+            letterSpacing: '0.5px',
+            background: 'linear-gradient(135deg, #FFF 0%, #FFB4B4 50%, #E01B22 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>
+            ADMIN CLEARANCE REQUIRED
+          </h2>
+
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.96rem', lineHeight: '1.7', marginBottom: '28px' }}>
+            In accordance with tournament security protocols, real-time leaderboard standings are confidential and restricted exclusively to the <strong>Admin Command Center</strong>. This prevents strategic sniping and ensures fair competitive play across all stages.
+          </p>
+
+          <div style={{
+            background: 'rgba(56, 189, 248, 0.08)',
+            border: '1px solid rgba(56, 189, 248, 0.25)',
+            borderRadius: '10px',
+            padding: '16px',
+            marginBottom: '32px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            textAlign: 'left'
+          }}>
+            <span style={{ fontSize: '1.4rem' }}>ℹ️</span>
+            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+              Administrators may view live scores, evaluate submissions, and execute round cutoffs by signing into the Admin Command Console.
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '14px', flexWrap: 'wrap' }}>
+            <Link
+              href="/login"
+              className="btn-primary-blue"
+              style={{
+                padding: '12px 28px',
+                fontSize: '0.9rem',
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              <span>🔑</span> <span>Sign In as Admin</span>
+            </Link>
+
+            <Link
+              href="/"
+              className="btn-secondary"
+              style={{
+                padding: '12px 24px',
+                fontSize: '0.9rem',
+                textDecoration: 'none',
+                color: '#FFF',
+                border: '1px solid rgba(255,255,255,0.2)'
+              }}
+            >
+              &larr; Return to Home Command
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   const top3 = leaderboard.slice(0, 3)
 
   return (
     <div style={{ minHeight: '100vh', padding: '32px 20px', background: '#0A0607', color: '#E8E8E8' }}>
-      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         {/* Navigation & Header */}
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
           <div>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <span style={{ fontSize: '0.8rem', color: '#FF4D4D', fontWeight: 'bold', letterSpacing: '1px' }}>LOGIN 2026 • MULTIVERSE</span>
+              <span style={{ fontSize: '0.78rem', color: '#38BDF8', fontWeight: 'bold', letterSpacing: '1.2px' }}>
+                ADMIN COMMAND VIEW • MULTIVERSE
+              </span>
             </div>
             <h1 className="glitch-text" data-text="LIVE LEADERBOARD" style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', textTransform: 'uppercase', letterSpacing: '2px' }}>
               LIVE LEADERBOARD
             </h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: 0 }}>
-              Real-time standings across all stages • Automated scoring active for Stage 0 &amp; Stage 1
+              Real-time standings across all stages • Visible to authorized administrators
             </p>
           </div>
 
           <div style={{ display: 'flex', gap: '10px' }}>
+            <Link href="/admin" className="btn-primary-blue" style={{ padding: '8px 18px', fontSize: '0.85rem', textDecoration: 'none' }}>
+              ⚙️ Admin Control Panel
+            </Link>
             <Link href="/" className="btn-secondary" style={{ padding: '8px 16px', fontSize: '0.85rem', textDecoration: 'none', color: '#FFF' }}>
               ← Home
-            </Link>
-            <Link href="/login" className="btn-primary" style={{ padding: '8px 16px', fontSize: '0.85rem', textDecoration: 'none' }}>
-              Enter Portal
             </Link>
           </div>
         </header>
@@ -99,8 +248,8 @@ export default function LeaderboardPage() {
         {/* Live Status & Interactive Search Filter Bar */}
         <div className="glass-panel" style={{ padding: '14px 20px', marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span className="pulse-dot" style={{ width: '10px', height: '10px', background: '#4ADE80', borderRadius: '50%' }}></span>
-            <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#4ADE80' }}>TELEMETRY UPLINK ACTIVE</span>
+            <span className="live-pulse-dot" style={{ width: '9px', height: '9px', background: '#38BDF8' }} />
+            <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#7DD3FC' }}>TELEMETRY UPLINK ACTIVE</span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
@@ -112,10 +261,10 @@ export default function LeaderboardPage() {
             <button 
               onClick={fetchLeaderboard}
               style={{
-                background: 'rgba(56, 189, 248, 0.1)',
+                background: 'rgba(56, 189, 248, 0.12)',
                 border: '1px solid #38BDF8',
                 color: '#38BDF8',
-                padding: '5px 12px',
+                padding: '5px 14px',
                 borderRadius: '6px',
                 fontSize: '0.78rem',
                 cursor: 'pointer',
@@ -132,9 +281,9 @@ export default function LeaderboardPage() {
         {top3.length >= 3 && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px', marginBottom: '32px', alignItems: 'flex-end' }}>
             {/* 2nd Place */}
-            <div className="comic-card card-hover-lift" style={{ padding: '20px', textAlign: 'center', borderTop: '4px solid #C0C0C0', background: 'rgba(192, 192, 192, 0.05)', boxShadow: '0 8px 24px rgba(192, 192, 192, 0.15)', height: '210px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div className="comic-card card-hover-lift" style={{ padding: '20px', textAlign: 'center', borderTop: '4px solid #38BDF8', background: 'rgba(56, 189, 248, 0.05)', boxShadow: '0 8px 24px rgba(56, 189, 248, 0.15)', height: '210px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div style={{ fontSize: '2rem', marginBottom: '4px' }}>🥈</div>
-              <div style={{ fontSize: '0.75rem', color: '#C0C0C0', fontWeight: '800', letterSpacing: '1px' }}>2ND PLACE • SILVER</div>
+              <div style={{ fontSize: '0.75rem', color: '#7DD3FC', fontWeight: '800', letterSpacing: '1px' }}>2ND PLACE • SILVER</div>
               <h3 style={{ fontSize: '1.2rem', margin: '8px 0 4px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', color: '#FFF' }}>
                 {top3[1].teamName}
               </h3>
@@ -156,9 +305,9 @@ export default function LeaderboardPage() {
             </div>
 
             {/* 3rd Place */}
-            <div className="comic-card card-hover-lift" style={{ padding: '20px', textAlign: 'center', borderTop: '4px solid #CD7F32', background: 'rgba(205, 127, 50, 0.05)', boxShadow: '0 8px 24px rgba(205, 127, 50, 0.15)', height: '190px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div className="comic-card card-hover-lift" style={{ padding: '20px', textAlign: 'center', borderTop: '4px solid #EF4444', background: 'rgba(239, 68, 68, 0.05)', boxShadow: '0 8px 24px rgba(239, 68, 68, 0.15)', height: '190px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div style={{ fontSize: '1.8rem', marginBottom: '4px' }}>🥉</div>
-              <div style={{ fontSize: '0.75rem', color: '#CD7F32', fontWeight: '800', letterSpacing: '1px' }}>3RD PLACE • BRONZE</div>
+              <div style={{ fontSize: '0.75rem', color: '#FF7B7B', fontWeight: '800', letterSpacing: '1px' }}>3RD PLACE • BRONZE</div>
               <h3 style={{ fontSize: '1.15rem', margin: '8px 0 4px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', color: '#FFF' }}>
                 {top3[2].teamName}
               </h3>
@@ -177,19 +326,14 @@ export default function LeaderboardPage() {
             </div>
           ) : leaderboard.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-dim)' }}>
-              No teams registered yet. Be the first squad to register!
-              <div style={{ marginTop: '16px' }}>
-                <Link href="/register" className="btn-primary" style={{ padding: '8px 18px', textDecoration: 'none' }}>
-                  Register Team
-                </Link>
-              </div>
+              No teams registered yet. Teams will populate once registered.
             </div>
           ) : (
             <div className="table-responsive" style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
-                  <tr style={{ borderBottom: '2px solid rgba(224,27,34,0.3)', background: 'rgba(255,255,255,0.02)' }}>
-                    <th style={{ padding: '14px 12px', color: '#FF6B6B', width: '80px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Rank</th>
+                  <tr style={{ borderBottom: '2px solid rgba(56, 189, 248, 0.3)', background: 'rgba(255,255,255,0.02)' }}>
+                    <th style={{ padding: '14px 12px', color: '#38BDF8', width: '80px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Rank</th>
                     <th style={{ padding: '14px 12px', color: 'var(--text-secondary)', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Team Dossier</th>
                     <th style={{ padding: '14px 12px', color: 'var(--text-secondary)', textAlign: 'center', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Current Stage</th>
                     <th style={{ padding: '14px 12px', color: 'var(--text-secondary)', textAlign: 'center', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Live Score</th>
@@ -204,11 +348,11 @@ export default function LeaderboardPage() {
                         borderBottom: '1px solid rgba(255,255,255,0.04)',
                         background: team.isEliminated 
                           ? 'rgba(224,27,34,0.03)' 
-                          : (idx === 0 ? 'rgba(250,204,21,0.05)' : (idx === 1 ? 'rgba(192,192,192,0.03)' : (idx === 2 ? 'rgba(205,127,50,0.03)' : 'transparent'))),
+                          : (idx === 0 ? 'rgba(250,204,21,0.05)' : (idx === 1 ? 'rgba(56,189,248,0.04)' : (idx === 2 ? 'rgba(239,68,68,0.04)' : 'transparent'))),
                         transition: 'background 0.2s ease'
                       }}
                     >
-                      <td style={{ padding: '16px 12px', fontWeight: '900', fontSize: '1.05rem', color: idx === 0 ? '#FACC15' : (idx === 1 ? '#E2E8F0' : (idx === 2 ? '#F97316' : 'var(--text-secondary)')) }}>
+                      <td style={{ padding: '16px 12px', fontWeight: '900', fontSize: '1.05rem', color: idx === 0 ? '#FACC15' : (idx === 1 ? '#38BDF8' : (idx === 2 ? '#FF7B7B' : 'var(--text-secondary)')) }}>
                         {idx === 0 ? '👑 #1' : (idx === 1 ? '🥈 #2' : (idx === 2 ? '🥉 #3' : `#${idx + 1}`))}
                       </td>
                       <td style={{ padding: '16px 12px' }}>
@@ -220,8 +364,8 @@ export default function LeaderboardPage() {
                           {STAGE_NAMES[team.currentRound] || `Stage ${team.currentRound}`}
                         </span>
                       </td>
-                      <td style={{ padding: '16px 12px', textAlign: 'center', fontWeight: '900', fontSize: '1.35rem', color: '#FFF', fontFamily: 'var(--font-display)', textShadow: '0 0 12px rgba(224,27,34,0.6)' }}>
-                        {team.totalScore} <span style={{ fontSize: '0.75rem', color: '#FF6B6B' }}>PTS</span>
+                      <td style={{ padding: '16px 12px', textAlign: 'center', fontWeight: '900', fontSize: '1.35rem', color: '#FFF', fontFamily: 'var(--font-display)', textShadow: '0 0 12px rgba(56,189,248,0.5)' }}>
+                        {team.totalScore} <span style={{ fontSize: '0.75rem', color: '#38BDF8' }}>PTS</span>
                       </td>
                       <td style={{ padding: '16px 12px', textAlign: 'center' }}>
                         {team.isEliminated ? (
@@ -245,3 +389,4 @@ export default function LeaderboardPage() {
     </div>
   )
 }
+

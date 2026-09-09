@@ -84,32 +84,48 @@ export default function Login() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '40px 20px',
+      padding: '30px 20px',
       width: '100%'
     }}>
-      {/* Spider-Web Corner Accents (Red & Crimson) */}
+      {/* Spider-Web Corner Accents (Left: Spidey Blue, Right: Deadpool Red) */}
       <svg className="web-accent" style={{ top: 0, left: 0, width: '240px', height: '240px' }} viewBox="0 0 100 100">
-        <path d="M0,0 L100,0 C70,10 40,40 30,100 L0,100 Z" fill="none" stroke="#E01B22" strokeWidth="0.8" opacity="0.55" />
-        <path d="M0,25 C30,25 50,45 55,100" fill="none" stroke="#E01B22" strokeWidth="0.5" opacity="0.38" />
-        <path d="M0,50 C40,50 65,65 75,100" fill="none" stroke="#E01B22" strokeWidth="0.5" opacity="0.38" />
-        <line x1="0" y1="0" x2="30" y2="100" stroke="#E01B22" strokeWidth="0.5" opacity="0.45" />
+        <path d="M0,0 L100,0 C70,10 40,40 30,100 L0,100 Z" fill="none" stroke="#38BDF8" strokeWidth="0.8" opacity="0.6" />
+        <path d="M0,25 C30,25 50,45 55,100" fill="none" stroke="#38BDF8" strokeWidth="0.5" opacity="0.4" />
+        <path d="M0,50 C40,50 65,65 75,100" fill="none" stroke="#38BDF8" strokeWidth="0.5" opacity="0.4" />
+        <line x1="0" y1="0" x2="30" y2="100" stroke="#38BDF8" strokeWidth="0.5" opacity="0.45" />
       </svg>
 
       <svg className="web-accent" style={{ top: 0, right: 0, width: '240px', height: '240px', transform: 'scaleX(-1)' }} viewBox="0 0 100 100">
-        <path d="M0,0 L100,0 C70,10 40,40 30,100 L0,100 Z" fill="none" stroke="#E01B22" strokeWidth="0.8" opacity="0.55" />
-        <path d="M0,25 C30,25 50,45 55,100" fill="none" stroke="#E01B22" strokeWidth="0.5" opacity="0.38" />
-        <path d="M0,50 C40,50 65,65 75,100" fill="none" stroke="#E01B22" strokeWidth="0.5" opacity="0.38" />
+        <path d="M0,0 L100,0 C70,10 40,40 30,100 L0,100 Z" fill="none" stroke="#E01B22" strokeWidth="0.8" opacity="0.6" />
+        <path d="M0,25 C30,25 50,45 55,100" fill="none" stroke="#E01B22" strokeWidth="0.5" opacity="0.4" />
+        <path d="M0,50 C40,50 65,65 75,100" fill="none" stroke="#E01B22" strokeWidth="0.5" opacity="0.4" />
         <line x1="0" y1="0" x2="30" y2="100" stroke="#E01B22" strokeWidth="0.5" opacity="0.45" />
       </svg>
 
-      {/* Atmospheric Ambient Glow Orb behind Cards */}
-      <div className="auth-ambient-glow red" style={{ top: '25%', left: '50%', transform: 'translate(-50%, -25%)' }} />
+      {/* Atmospheric Ambient Glow Orbs behind Cards (Dual Blue & Red) */}
+      <div className="auth-ambient-glow cyan" style={{ top: '20%', left: '22%', transform: 'translate(-50%, -20%)' }} />
+      <div className="auth-ambient-glow red" style={{ bottom: '15%', right: '15%', transform: 'translate(20%, 15%)' }} />
 
-      {/* EXPANSIVE DUAL-COLUMN COMMAND WRAPPER */}
+      {/* EXPANSIVE DUAL-COLUMN COMMAND WRAPPER (Widescreen Horizontal Space Utilization) */}
       <div className="auth-command-wrapper">
+        {/* Top Breadcrumb Navigation */}
+        <div style={{ marginBottom: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.82rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>
+            <span>&larr;</span> <span>Home Command</span>
+          </Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '0.74rem', color: '#38BDF8', fontWeight: 800, background: 'rgba(56,189,248,0.12)', border: '1px solid rgba(56,189,248,0.3)', padding: '3px 10px', borderRadius: '12px' }}>
+              🕷️ SPIDEY MENTOR ACTIVE
+            </span>
+            <span style={{ fontSize: '0.74rem', color: '#FF7B7B', fontWeight: 800, background: 'rgba(224,27,34,0.12)', border: '1px solid rgba(224,27,34,0.3)', padding: '3px 10px', borderRadius: '12px' }}>
+              ⚔️ DEADPOOL LIVE
+            </span>
+          </div>
+        </div>
+
         <div className="auth-command-grid">
           
-          {/* LEFT COLUMN: MULTIVERSE BRIEFING & TELEMETRY */}
+          {/* LEFT COLUMN: MULTIVERSE BRIEFING & TELEMETRY (Spider-Man Blue Theme with Horizontal Dashboard Grid) */}
           <div className="auth-briefing-panel">
             <div>
               {/* Telemetry Pill */}
@@ -117,97 +133,97 @@ export default function Login() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                background: 'rgba(224, 27, 34, 0.12)',
-                border: '1px solid rgba(224, 27, 34, 0.35)',
+                background: 'rgba(56, 189, 248, 0.12)',
+                border: '1px solid rgba(56, 189, 248, 0.4)',
                 padding: '6px 16px',
                 borderRadius: '24px',
                 marginBottom: '20px'
               }}>
-                <span className="live-pulse-dot" style={{ width: '8px', height: '8px', background: '#EF4444' }} />
-                <span style={{ fontSize: '0.74rem', color: '#FF7B7B', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase' }}>
+                <span className="live-pulse-dot" style={{ width: '8px', height: '8px', background: '#38BDF8' }} />
+                <span style={{ fontSize: '0.74rem', color: '#7DD3FC', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase' }}>
                   MULTIVERSE PROTOCOL • MISSION INTELLIGENCE
                 </span>
               </div>
 
               <h3 style={{
-                fontSize: '2rem',
+                fontSize: '2.1rem',
                 fontWeight: 800,
                 marginBottom: '14px',
                 letterSpacing: '-0.01em',
-                background: 'linear-gradient(135deg, #FFF 0%, #FFAAAA 60%, #E01B22 100%)',
+                background: 'linear-gradient(135deg, #FFF 0%, #BAE6FD 50%, #38BDF8 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'
               }}>
                 BATTLE ARENA ACCESS CLEARANCE
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.94rem', lineHeight: '1.6', marginBottom: '26px' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.94rem', lineHeight: '1.65', marginBottom: '24px' }}>
                 Welcome to Pixel Paradox. Authenticate your squad credentials on the terminal to synchronize with the neural forensic mainframe and initialize Stage 0 Prelims.
               </p>
 
-              {/* Tactical Briefing Protocol Cards */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {/* Tactical Briefing Dashboard Cards (Horizontal Sub-Grid) */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '14px' }}>
                 <div className="auth-briefing-item">
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
                     <span style={{ fontSize: '1.15rem' }}>⏱️</span>
-                    <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#FF7B7B', letterSpacing: '0.5px' }}>STAGE 0 PRELIMS PROTOCOL</span>
-                    <span style={{ marginLeft: 'auto', background: 'rgba(224, 27, 34, 0.25)', border: '1px solid rgba(224, 27, 34, 0.4)', borderRadius: '4px', padding: '2px 8px', fontSize: '0.72rem', color: '#FFF', fontWeight: 700 }}>30 MCQs / 30m</span>
+                    <span style={{ fontSize: '0.86rem', fontWeight: 800, color: '#7DD3FC', letterSpacing: '0.5px' }}>STAGE 0 PRELIMS</span>
+                    <span style={{ marginLeft: 'auto', background: 'rgba(56, 189, 248, 0.2)', border: '1px solid rgba(56, 189, 248, 0.45)', borderRadius: '4px', padding: '2px 8px', fontSize: '0.7rem', color: '#FFF', fontWeight: 700 }}>30m</span>
                   </div>
-                  <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.45 }}>
-                    Each pilot tests individually. Scores are automatically aggregated into your squad's average forensic standing.
+                  <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.45 }}>
+                    30 MCQs strictly timed. Auto-locks upon completion and aggregates your team average.
                   </p>
                 </div>
 
                 <div className="auth-briefing-item">
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
                     <span style={{ fontSize: '1.15rem' }}>🎯</span>
-                    <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#FF7B7B', letterSpacing: '0.5px' }}>SCORING &amp; PENALTIES</span>
-                    <span style={{ marginLeft: 'auto', background: 'rgba(224, 27, 34, 0.25)', border: '1px solid rgba(224, 27, 34, 0.4)', borderRadius: '4px', padding: '2px 8px', fontSize: '0.72rem', color: '#FFF', fontWeight: 700 }}>+10 / -5</span>
+                    <span style={{ fontSize: '0.86rem', fontWeight: 800, color: '#7DD3FC', letterSpacing: '0.5px' }}>SCORING RULES</span>
+                    <span style={{ marginLeft: 'auto', background: 'rgba(56, 189, 248, 0.2)', border: '1px solid rgba(56, 189, 248, 0.45)', borderRadius: '4px', padding: '2px 8px', fontSize: '0.7rem', color: '#FFF', fontWeight: 700 }}>+10 / -5</span>
                   </div>
-                  <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.45 }}>
-                    Precision is paramount. Every verified detection grants <strong style={{ color: '#FF8888' }}>+10 pts</strong>, while neural hallucinations deduct <strong style={{ color: '#FF5555' }}>-5 pts</strong>.
+                  <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.45 }}>
+                    Correct answer awards <strong style={{ color: '#7DD3FC' }}>+10 pts</strong>. Incorrect deducts <strong style={{ color: '#FF7B7B' }}>-5 pts</strong>.
                   </p>
                 </div>
 
-                <div className="auth-briefing-item">
+                <div className="auth-briefing-item" style={{ gridColumn: '1 / -1' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
                     <span style={{ fontSize: '1.15rem' }}>👁️</span>
-                    <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#FF7B7B', letterSpacing: '0.5px' }}>AI INVIGILATION MATRIX</span>
-                    <span style={{ marginLeft: 'auto', background: 'rgba(224, 27, 34, 0.25)', border: '1px solid rgba(224, 27, 34, 0.4)', borderRadius: '4px', padding: '2px 8px', fontSize: '0.72rem', color: '#FFF', fontWeight: 700 }}>SILENT WEBCAM</span>
+                    <span style={{ fontSize: '0.86rem', fontWeight: 800, color: '#7DD3FC', letterSpacing: '0.5px' }}>AI INVIGILATION PROTOCOL</span>
+                    <span style={{ marginLeft: 'auto', background: 'rgba(56, 189, 248, 0.2)', border: '1px solid rgba(56, 189, 248, 0.45)', borderRadius: '4px', padding: '2px 8px', fontSize: '0.7rem', color: '#FFF', fontWeight: 700 }}>SILENT WEBCAM</span>
                   </div>
-                  <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.45 }}>
-                    Continuous neural telemetry ensures fair competition. Focus your attention on the forensics console.
+                  <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.45 }}>
+                    Continuous silent snapshot monitoring maintains tournament integrity. Keep focus on the active exam window.
                   </p>
                 </div>
               </div>
             </div>
 
             {/* Mascot Tactical Comms Stream */}
-            <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid rgba(224, 27, 34, 0.25)', display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ marginTop: '24px', paddingTop: '18px', borderTop: '1px solid rgba(56, 189, 248, 0.25)', display: 'flex', alignItems: 'center', gap: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(224, 27, 34, 0.35) 0%, transparent 70%)', border: '1.5px solid #E01B22', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <img src="/deadpool_model.png" alt="Deadpool" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                </div>
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(224, 27, 34, 0.35) 0%, transparent 70%)', border: '1.5px solid #E01B22', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <div style={{ width: '46px', height: '46px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(56, 189, 248, 0.35) 0%, transparent 70%)', border: '1.5px solid #38BDF8', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <img src="/spiderman_model.png" alt="Spider-Man" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                </div>
+                <div style={{ width: '46px', height: '46px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(224, 27, 34, 0.35) 0%, transparent 70%)', border: '1.5px solid #E01B22', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <img src="/deadpool_model.png" alt="Deadpool" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '0.74rem', color: '#FF7B7B', fontWeight: 800, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                <div style={{ fontSize: '0.74rem', color: '#7DD3FC', fontWeight: 800, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
                   TACTICAL COMMS STREAM
                 </div>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontStyle: 'italic', marginTop: '2px' }}>
-                  "Maximum effort, teams! Sign in, trust your instincts, and conquer the neural synthetic matrix."
+                <div style={{ fontSize: '0.84rem', color: 'var(--text-primary)', fontStyle: 'italic', marginTop: '2px' }}>
+                  "Sign in, trust your instincts, and conquer the neural synthetic matrix with Maximum Effort!"
                 </div>
               </div>
             </div>
           </div>
 
-          {/* RIGHT COLUMN: CENTRAL AUTHENTICATION TERMINAL CARD */}
+          {/* RIGHT COLUMN: CENTRAL AUTHENTICATION TERMINAL CARD (Deadpool Crimson Red Theme) */}
           <div className="glass-panel" style={{
-            padding: '38px 32px',
+            padding: '38px 34px',
             border: '1.5px solid rgba(224, 27, 34, 0.45)',
             borderTop: '2px solid rgba(255, 110, 110, 0.65)',
-            background: 'linear-gradient(160deg, rgba(24, 10, 14, 0.96) 0%, rgba(10, 5, 8, 0.98) 100%)',
+            background: 'linear-gradient(160deg, rgba(26, 10, 15, 0.96) 0%, rgba(10, 5, 8, 0.98) 100%)',
             boxShadow: '0 24px 70px rgba(0, 0, 0, 0.95), 0 0 45px rgba(224, 27, 34, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.12)',
             borderRadius: '16px',
             position: 'relative',
@@ -251,7 +267,7 @@ export default function Login() {
               <div style={{ textAlign: 'center', marginBottom: '24px' }}>
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(224, 27, 34, 0.12)', border: '1px solid rgba(224, 27, 34, 0.35)', padding: '5px 16px', borderRadius: '24px', marginBottom: '14px', backdropFilter: 'blur(10px)' }}>
                   <span className="live-pulse-dot" style={{ width: '7px', height: '7px', background: '#EF4444' }} />
-                  <span style={{ fontSize: '0.72rem', color: '#FF6B6B', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase' }}>
+                  <span style={{ fontSize: '0.72rem', color: '#FF7B7B', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase' }}>
                     LOGIN 2026 • NEURAL LINK TERMINAL
                   </span>
                 </div>
@@ -277,56 +293,58 @@ export default function Login() {
               {step === 1 ? (
                 <>
                   <form onSubmit={handleLogin}>
-                    <div style={{ marginBottom: '18px' }}>
-                      <label htmlFor="teamId" style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-primary)', fontWeight: '700', letterSpacing: '0.8px', marginBottom: '6px' }}>
-                        TEAM ID / USERNAME
-                      </label>
-                      <div className="auth-input-container">
-                        <span className="auth-input-icon">🛡️</span>
-                        <input
-                          type="text"
-                          id="teamId"
-                          name="teamId"
-                          className="auth-input-field"
-                          required
-                          value={formData.teamId}
-                          onChange={handleChange}
-                          placeholder="e.g., T-101 or team_cyber"
-                        />
+                    <div className="auth-form-row-2col">
+                      <div style={{ marginBottom: '18px' }}>
+                        <label htmlFor="teamId" style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-primary)', fontWeight: '700', letterSpacing: '0.8px', marginBottom: '6px' }}>
+                          TEAM ID / USERNAME <span style={{ color: '#FF6B6B' }}>*</span>
+                        </label>
+                        <div className="auth-input-container">
+                          <span className="auth-input-icon">🛡️</span>
+                          <input
+                            type="text"
+                            id="teamId"
+                            name="teamId"
+                            className="auth-input-field"
+                            required
+                            value={formData.teamId}
+                            onChange={handleChange}
+                            placeholder="e.g., T-101 or team_cyber"
+                          />
+                        </div>
                       </div>
-                    </div>
 
-                    <div style={{ marginBottom: '24px' }}>
-                      <label htmlFor="password" style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-primary)', fontWeight: '700', letterSpacing: '0.8px', marginBottom: '6px' }}>
-                        SECURITY ACCESS KEY / PASSWORD
-                      </label>
-                      <div className="auth-input-container">
-                        <span className="auth-input-icon">🔑</span>
-                        <input
-                          type={showPassword ? 'text' : 'password'}
-                          id="password"
-                          name="password"
-                          className="auth-input-field"
-                          required
-                          value={formData.password}
-                          onChange={handleChange}
-                          placeholder="••••••••••••"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(prev => !prev)}
-                          className="auth-input-action-btn"
-                          title={showPassword ? 'Hide Password' : 'Show Password'}
-                        >
-                          {showPassword ? '🙈' : '👁️'}
-                        </button>
+                      <div style={{ marginBottom: '18px' }}>
+                        <label htmlFor="password" style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-primary)', fontWeight: '700', letterSpacing: '0.8px', marginBottom: '6px' }}>
+                          ACCESS KEY / PASSWORD <span style={{ color: '#FF6B6B' }}>*</span>
+                        </label>
+                        <div className="auth-input-container">
+                          <span className="auth-input-icon">🔑</span>
+                          <input
+                            type={showPassword ? 'text' : 'password'}
+                            id="password"
+                            name="password"
+                            className="auth-input-field"
+                            required
+                            value={formData.password}
+                            onChange={handleChange}
+                            placeholder="••••••••••••"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(prev => !prev)}
+                            className="auth-input-action-btn"
+                            title={showPassword ? 'Hide Password' : 'Show Password'}
+                          >
+                            {showPassword ? '🙈' : '👁️'}
+                          </button>
+                        </div>
                       </div>
                     </div>
 
                     <button 
                       type="submit" 
-                      className="btn-primary" 
-                      style={{ width: '100%', padding: '14px', fontSize: '0.98rem', fontWeight: '800', letterSpacing: '1.2px', borderRadius: '8px', boxShadow: '0 0 24px rgba(224, 27, 34, 0.6)' }} 
+                      className="btn-primary-red" 
+                      style={{ width: '100%', padding: '14px', fontSize: '0.98rem', fontWeight: '800', letterSpacing: '1.2px', borderRadius: '8px', marginTop: '10px' }} 
                       disabled={loading}
                     >
                       {loading ? 'Authenticating Uplink...' : '⚡ LAUNCH INTO ARENA ➔'}
@@ -384,8 +402,8 @@ export default function Login() {
 
                     <button 
                       type="submit" 
-                      className="btn-primary" 
-                      style={{ width: '100%', padding: '14px', fontSize: '0.98rem', fontWeight: '800', letterSpacing: '1.2px', borderRadius: '8px', boxShadow: '0 0 24px rgba(224, 27, 34, 0.6)' }}
+                      className="btn-primary-red" 
+                      style={{ width: '100%', padding: '14px', fontSize: '0.98rem', fontWeight: '800', letterSpacing: '1.2px', borderRadius: '8px' }}
                     >
                       ⚡ ENTER ARENA &amp; BEGIN ➔
                     </button>
@@ -406,7 +424,7 @@ export default function Login() {
 
             {/* Footer Security Watermark */}
             <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid rgba(255, 255, 255, 0.06)', textAlign: 'center', fontSize: '0.72rem', color: 'var(--text-dim)', letterSpacing: '1px', textTransform: 'uppercase' }}>
-              🔒 256-BIT TELEMETRY ENCRYPTION • LIVE LEADERBOARD SYNC
+              🔒 256-BIT TELEMETRY ENCRYPTION • TOURNAMENT ENGINES SYNCHRONIZED
             </div>
           </div>
         </div>
