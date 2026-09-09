@@ -967,10 +967,10 @@ export default function Home() {
       )}
 
       {/* Main Content Container — Expansive Width, Clean Stacked Spacing */}
-      <div className="container page-transition" style={{ maxWidth: 'min(1560px, 94vw)', margin: '0 auto', padding: '16px 20px 48px' }}>
+      <div className="container page-transition" style={{ maxWidth: 'min(1560px, 94vw)', margin: '0 auto', padding: '52px 20px 64px' }}>
         
         {/* Multiverse Header Banner */}
-        <header style={{ textAlign: 'center', marginBottom: '32px', position: 'relative', padding: '8px clamp(12px, 6vw, 80px) 0' }}>
+        <header style={{ textAlign: 'center', marginBottom: '64px', position: 'relative', padding: '8px clamp(12px, 6vw, 80px) 0' }}>
           {/* Live Multiverse Status Telemetry Banner (Blue & Red Duality) */}
           <div style={{
             display: 'inline-flex',
@@ -1092,8 +1092,8 @@ export default function Home() {
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', 
-          gap: '20px', 
-          marginBottom: '32px' 
+          gap: '28px', 
+          marginBottom: '60px' 
         }}>
           {/* CARD 01: ONBOARDING (Spider-Man Electric Blue Theme) */}
           <Link href="/register" style={{ textDecoration: 'none' }}>
@@ -1165,7 +1165,7 @@ export default function Home() {
         {/* ========================================================= */}
         {/* MULTIVERSE STAGE PIPELINE CONDUIT (FLOW FROM 0 TO PODIUM) */}
         {/* ========================================================= */}
-        <section style={{ marginBottom: '28px' }}>
+        <section style={{ marginBottom: '60px' }}>
           <div style={{
             background: 'linear-gradient(135deg, rgba(14, 22, 38, 0.75) 0%, rgba(26, 12, 18, 0.75) 100%)',
             border: '1.5px solid rgba(56, 189, 248, 0.25)',
@@ -1262,7 +1262,7 @@ export default function Home() {
         {/* ========================================================= */}
         {/* INTERACTIVE FORENSIC BENCHMARK MINI-GAME (ENGAGING TOOL)  */}
         {/* ========================================================= */}
-        <section style={{ marginBottom: '28px' }}>
+        <section style={{ marginBottom: '60px' }}>
           {(() => {
             const currentBenchmark = FORENSIC_BENCHMARKS[benchmarkCaseIdx % FORENSIC_BENCHMARKS.length]
             const hasGuessed = benchmarkGuess !== null
@@ -1456,7 +1456,7 @@ export default function Home() {
         {/* ========================================================= */}
         {/* INTERACTIVE ROUND DEEP-DIVE STATION (ALL 4 ROUNDS DETAILED) */}
         {/* ========================================================= */}
-        <section className="comic-card" style={{ padding: '26px 24px', marginBottom: '28px' }}>
+        <section className="comic-card" style={{ padding: '40px 32px', marginBottom: '60px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px', flexWrap: 'wrap', gap: '14px' }}>
             <div>
               <span style={{ color: '#E01B22', fontSize: '0.82rem', fontWeight: 'bold', letterSpacing: '2px', textTransform: 'uppercase' }}>
@@ -1641,7 +1641,7 @@ export default function Home() {
         {/* ========================================================= */}
         {/* HERO BANTER ROAST DUEL CARD (SLIGHTLY BOTTOM SECTION)     */}
         {/* ========================================================= */}
-        <section style={{ maxWidth: '100%', margin: '0 auto 28px' }}>
+        <section style={{ maxWidth: '100%', margin: '0 auto 60px' }}>
           <div className="roast-duel-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -1722,7 +1722,7 @@ export default function Home() {
         </section>
 
         {/* Multiverse Protocol Lore Card */}
-        <section className="comic-card" style={{ padding: '24px 22px', marginBottom: '32px', borderLeft: '4px solid #38BDF8', borderRight: '4px solid #EF4444' }}>
+        <section className="comic-card" style={{ padding: '32px 28px', marginBottom: '60px', borderLeft: '4px solid #38BDF8', borderRight: '4px solid #EF4444' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '18px' }}>
             <span style={{ fontSize: '1.6rem' }}>🕷️</span>
             <div>
@@ -1767,7 +1767,7 @@ export default function Home() {
         {/* ========================================================= */}
         {/* SECTION 4: TOURNAMENT HELP & STUDENT COORDINATORS DESK    */}
         {/* ========================================================= */}
-        <section id="help-desk-section" style={{ maxWidth: '100%', margin: '0 auto 36px' }}>
+        <section id="help-desk-section" style={{ maxWidth: '100%', margin: '0 auto 64px' }}>
           <div className="comic-card" style={{
             padding: '28px 24px',
             borderRadius: '16px',
