@@ -1137,7 +1137,7 @@ export default function GameArena() {
                         <ul style={{ margin: 0, paddingLeft: '18px', color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: '1.6' }}>
                           <li><strong>30 Questions:</strong> Thoroughly test AI fundamentals, diffusion architectures, GANs, and deepfake forensics.</li>
                           <li><strong>Strict 30-Minute Timer:</strong> Quiz auto-submits precisely when the countdown reaches 00:00.</li>
-                          <li><strong>Team Average:</strong> Final team prelim score is the sum of all members divided by team size.</li>
+                          <li><strong>Squad Summation:</strong> Final team prelim score is the sum of all teammates' scores added directly together.</li>
                           <li><strong>Silent Monitoring:</strong> Automated webcam periodic invigilation runs smoothly in the background.</li>
                         </ul>
                       </div>
