@@ -42,7 +42,8 @@ public class SecurityConfig {
                 // Let everyone view endpoints needed for registration status/leaderboard if needed, 
                 // but let's restrict game control and submissions
                 .requestMatchers("/api/game/state").permitAll()
-                .requestMatchers("/api/game/leaderboard").permitAll()
+                .requestMatchers("/api/game/leaderboard").hasRole("ADMIN")
+                .requestMatchers("/api/game/my-team").hasAnyRole("ADMIN", "TEAM")
                 .requestMatchers("/api/game/upload").hasRole("ADMIN")
                 .requestMatchers("/api/game/images").hasAnyRole("ADMIN", "TEAM")
                 .requestMatchers("/api/game/images/**").hasRole("ADMIN")

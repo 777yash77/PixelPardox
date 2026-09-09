@@ -29,25 +29,42 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
-        // Relay camera frames to admin
-        if (message.getPayload().contains("\"type\":\"CAMERA_FRAME\"")) {
-            broadcast(message.getPayload());
+        String payload = message.getPayload();
+        if (payload.contains("\"type\":\"REGISTER_ADMIN\"")) {
+            session.getAttributes().put("isAdmin", true);
+            System.out.println("WebSocket session registered as ADMIN: " + session.getId());
+        } else if (payload.contains("\"type\":\"CAMERA_FRAME\"")) {
+            // Relay camera frames only to admin sessions
+            broadcast(payload);
         }
     }
 
     public void broadcast(String message) {
-        if (!message.contains("\"type\":\"CAMERA_FRAME\"")) {
+        boolean isCamera = message.contains("\"type\":\"CAMERA_FRAME\"");
+        if (!isCamera) {
             String logMsg = message.length() > 200 ? message.substring(0, 200) + "... [truncated]" : message;
             System.out.println("Broadcasting WebSocket message: " + logMsg);
         }
+        TextMessage textMessage = new TextMessage(message);
         for (WebSocketSession session : sessions) {
-            if (session.isOpen()) {
-                try {
-                    session.sendMessage(new TextMessage(message));
-                } catch (IOException e) {
-                    System.err.println("Failed to send WebSocket message to session " + session.getId() + ": " + e.getMessage());
+            if (!session.isOpen()) continue;
+            
+            // Camera frames are confidential for invigilators, never send to fellow contestants
+            if (isCamera && !Boolean.TRUE.equals(session.getAttributes().get("isAdmin"))) {
+                continue;
+            }
+
+            // Thread-safe delivery prevents Tomcat IllegalStateException: TEXT_FULL_WRITING
+            synchronized (session) {
+                if (session.isOpen()) {
+                    try {
+                        session.sendMessage(textMessage);
+                    } catch (IOException e) {
+                        System.err.println("Failed to send WebSocket message to session " + session.getId() + ": " + e.getMessage());
+                    }
                 }
             }
         }
     }
 }
+

@@ -122,6 +122,12 @@ public class GameService {
         ImageQuestion question = imageQuestionRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("Question not found"));
 
+        // Validate that submission matches current active game round
+        GameState state = getOrCreateGameState();
+        if (question.getRoundNumber() != state.getActiveRound()) {
+            throw new IllegalStateException("Submissions are not active for this round (Question Round: " + question.getRoundNumber() + ", Active Round: " + state.getActiveRound() + ").");
+        }
+
         // Check if user has already submitted for this question
         Optional<Submission> existing = submissionRepository.findByUserIdAndImageQuestionId(user.getId(), questionId);
         if (existing.isPresent()) {
@@ -136,7 +142,7 @@ public class GameService {
         submission.setBonusAnswer(bonusAnswer);
         submission.setTextSubmission(textSubmission);
 
-        // Auto-scoring for Round 1 (Pixel Detective - roundNumber 2 or 1)
+        // Auto-scoring for Stage 1 (Pixel Detective - roundNumber 2)
         if (question.getRoundNumber() == 2 || question.getRoundNumber() == 1) {
             int score = 0;
             boolean userSaidReal = "REAL".equalsIgnoreCase(chosenAnswer);
@@ -177,15 +183,17 @@ public class GameService {
             submission.setScore(0);
             submission.setGraded(false);
             
-            // For Tie-breaker, we can also support auto-matching if user submits a text guess
+            // For Tie-breaker, support robust auto-matching if user submits a text guess
             if (question.getRoundNumber() == 4) {
-                if (question.getAnswerDetails() != null && textSubmission != null &&
-                    question.getAnswerDetails().trim().equalsIgnoreCase(textSubmission.trim())) {
-                    // Auto correct for Tie breaker!
-                    submission.setScore(20);
-                    submission.setGraded(true);
-                    user.setScore(user.getScore() + 20);
-                    userRepository.save(user);
+                if (question.getAnswerDetails() != null && textSubmission != null) {
+                    String cleanExpected = question.getAnswerDetails().trim().toLowerCase().replaceAll("[^a-z0-9]", "");
+                    String cleanActual = textSubmission.trim().toLowerCase().replaceAll("[^a-z0-9]", "");
+                    if (!cleanExpected.isEmpty() && cleanExpected.equals(cleanActual)) {
+                        submission.setScore(20);
+                        submission.setGraded(true);
+                        user.setScore(user.getScore() + 20);
+                        userRepository.save(user);
+                    }
                 }
             }
         }
@@ -284,12 +292,13 @@ public class GameService {
             cutoffIndex = Math.min(limitValue, activeTeams.size());
         }
 
-        // We should adjust cutoff index to resolve ties at the boundary
+        // Adjust cutoff index to resolve ties at the boundary only if score > 0
         if (cutoffIndex > 0 && cutoffIndex < activeTeams.size()) {
             int cutoffScore = activeTeams.get(cutoffIndex - 1).getScore();
-            // Extend cutoff to include any team that has the exact same score as the cutoff team
-            while (cutoffIndex < activeTeams.size() && activeTeams.get(cutoffIndex).getScore() == cutoffScore) {
-                cutoffIndex++;
+            if (cutoffScore > 0) {
+                while (cutoffIndex < activeTeams.size() && activeTeams.get(cutoffIndex).getScore() == cutoffScore) {
+                    cutoffIndex++;
+                }
             }
         }
 
@@ -300,16 +309,32 @@ public class GameService {
             userRepository.save(team);
         }
 
-        // For advanced teams, increment their round number state
+        // Deterministic stage advancement progression
         GameState state = getOrCreateGameState();
-        int nextRound = state.getActiveRound() + 1;
+        int currentRound = state.getActiveRound();
+        int nextRound;
+        if (currentRound == 1) {
+            nextRound = 2; // Stage 0 Prelims -> Stage 1 Pixel Detective
+        } else if (currentRound == 2) {
+            nextRound = 3; // Stage 1 -> Stage 2 Glitch Hunt
+        } else if (currentRound == 3) {
+            nextRound = 4; // Stage 2 -> Stage 3 Prompt Wars
+        } else if (currentRound == 4) {
+            nextRound = 5; // Stage 3 -> Podium / Finished
+        } else if (currentRound == 6 || currentRound == 7) {
+            int maxTeamRound = activeTeams.stream().mapToInt(User::getRoundNumber).max().orElse(1);
+            nextRound = Math.min(5, maxTeamRound + 1);
+        } else {
+            nextRound = currentRound + 1;
+        }
+
         for (int i = 0; i < cutoffIndex; i++) {
             User team = activeTeams.get(i);
             team.setRoundNumber(nextRound);
             userRepository.save(team);
         }
 
-        // Update active round global state as well
+        // Update active round global state
         state.setActiveRound(nextRound);
         state.setActiveQuestionId(null);
         state.setTimerDuration(0);
@@ -370,7 +395,8 @@ public class GameService {
     public Optional<QuizAttempt> getQuizAttempt(String email, String participantName) {
         Optional<User> team = userRepository.findByTeamId(email);
         if (team.isEmpty()) return Optional.empty();
-        return quizAttemptRepository.findByTeamIdAndParticipantName(team.get().getId(), participantName);
+        String pName = participantName != null ? participantName.trim() : "Pilot";
+        return quizAttemptRepository.findByTeamIdAndParticipantName(team.get().getId(), pName);
     }
 
     public List<QuizQuestion> getQuizQuestions() {
@@ -379,12 +405,31 @@ public class GameService {
 
     @Transactional
     public QuizAttempt startQuizAttempt(String email, String participantName) {
-        User team = userRepository.findByTeamId(email).orElseThrow();
-        Optional<QuizAttempt> existing = quizAttemptRepository.findByTeamIdAndParticipantName(team.getId(), participantName);
+        User team = userRepository.findByTeamId(email)
+                .orElseThrow(() -> new IllegalArgumentException("Team user not found"));
+
+        if (team.isEliminated()) {
+            throw new IllegalStateException("Your team has been eliminated and cannot start quiz attempts.");
+        }
+
+        GameState state = getOrCreateGameState();
+        if (state.getActiveRound() != 1) {
+            throw new IllegalStateException("Stage 0 Prelims quiz is currently closed.");
+        }
+
+        String pName = participantName != null ? participantName.trim() : "Pilot";
+        Optional<QuizAttempt> existing = quizAttemptRepository.findByTeamIdAndParticipantName(team.getId(), pName);
         if (existing.isPresent()) {
             return existing.get();
         }
-        QuizAttempt attempt = new QuizAttempt(team, participantName);
+
+        // Enforce squad capacity to prevent average inflation
+        List<QuizAttempt> teamAttempts = quizAttemptRepository.findByTeamId(team.getId());
+        if (teamAttempts.size() >= team.getTeamSize()) {
+            throw new IllegalStateException("Squad capacity reached: Only " + team.getTeamSize() + " pilot(s) allowed for squad " + team.getTeamName());
+        }
+
+        QuizAttempt attempt = new QuizAttempt(team, pName);
         attempt.setStatus("IN_PROGRESS");
         attempt.setStartedAt(System.currentTimeMillis());
         return quizAttemptRepository.save(attempt);
@@ -392,8 +437,20 @@ public class GameService {
 
     @Transactional
     public QuizAttempt submitQuizAttempt(String email, String participantName, Map<Long, String> answers) {
-        User team = userRepository.findByTeamId(email).orElseThrow();
-        QuizAttempt attempt = quizAttemptRepository.findByTeamIdAndParticipantName(team.getId(), participantName)
+        User team = userRepository.findByTeamId(email)
+                .orElseThrow(() -> new IllegalArgumentException("Team user not found"));
+
+        if (team.isEliminated()) {
+            throw new IllegalStateException("Your team has been eliminated.");
+        }
+
+        GameState state = getOrCreateGameState();
+        if (state.getActiveRound() != 1) {
+            throw new IllegalStateException("Stage 0 Prelims quiz is closed.");
+        }
+
+        String pName = participantName != null ? participantName.trim() : "Pilot";
+        QuizAttempt attempt = quizAttemptRepository.findByTeamIdAndParticipantName(team.getId(), pName)
                 .orElseThrow(() -> new IllegalStateException("Quiz not started"));
 
         if ("COMPLETED".equals(attempt.getStatus())) {
@@ -429,21 +486,21 @@ public class GameService {
         String sa = submitted.trim();
         if (ca.equalsIgnoreCase(sa)) return true;
         if (ca.equalsIgnoreCase("A") || ca.equalsIgnoreCase("optionA")) {
-            return sa.equalsIgnoreCase(q.getOptionA()) || sa.equalsIgnoreCase("A");
+            return (q.getOptionA() != null && sa.equalsIgnoreCase(q.getOptionA().trim())) || sa.equalsIgnoreCase("A");
         }
         if (ca.equalsIgnoreCase("B") || ca.equalsIgnoreCase("optionB")) {
-            return sa.equalsIgnoreCase(q.getOptionB()) || sa.equalsIgnoreCase("B");
+            return (q.getOptionB() != null && sa.equalsIgnoreCase(q.getOptionB().trim())) || sa.equalsIgnoreCase("B");
         }
         if (ca.equalsIgnoreCase("C") || ca.equalsIgnoreCase("optionC")) {
-            return sa.equalsIgnoreCase(q.getOptionC()) || sa.equalsIgnoreCase("C");
+            return (q.getOptionC() != null && sa.equalsIgnoreCase(q.getOptionC().trim())) || sa.equalsIgnoreCase("C");
         }
         if (ca.equalsIgnoreCase("D") || ca.equalsIgnoreCase("optionD")) {
-            return sa.equalsIgnoreCase(q.getOptionD()) || sa.equalsIgnoreCase("D");
+            return (q.getOptionD() != null && sa.equalsIgnoreCase(q.getOptionD().trim())) || sa.equalsIgnoreCase("D");
         }
-        if (sa.equalsIgnoreCase("A") && ca.equalsIgnoreCase(q.getOptionA())) return true;
-        if (sa.equalsIgnoreCase("B") && ca.equalsIgnoreCase(q.getOptionB())) return true;
-        if (sa.equalsIgnoreCase("C") && ca.equalsIgnoreCase(q.getOptionC())) return true;
-        if (sa.equalsIgnoreCase("D") && ca.equalsIgnoreCase(q.getOptionD())) return true;
+        if (sa.equalsIgnoreCase("A") && q.getOptionA() != null && ca.equalsIgnoreCase(q.getOptionA().trim())) return true;
+        if (sa.equalsIgnoreCase("B") && q.getOptionB() != null && ca.equalsIgnoreCase(q.getOptionB().trim())) return true;
+        if (sa.equalsIgnoreCase("C") && q.getOptionC() != null && ca.equalsIgnoreCase(q.getOptionC().trim())) return true;
+        if (sa.equalsIgnoreCase("D") && q.getOptionD() != null && ca.equalsIgnoreCase(q.getOptionD().trim())) return true;
         return false;
     }
 

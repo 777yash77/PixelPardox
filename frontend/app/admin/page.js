@@ -218,6 +218,11 @@ export default function AdminDashboard() {
 
       ws.onopen = () => {
         console.log('Admin connected to Game WebSockets')
+        try {
+          ws.send(JSON.stringify({ type: 'REGISTER_ADMIN' }))
+        } catch (e) {
+          console.error('Failed to register admin session', e)
+        }
       }
 
       ws.onmessage = (event) => {

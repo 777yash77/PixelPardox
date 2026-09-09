@@ -173,11 +173,19 @@ public class GameController {
     public ResponseEntity<?> deleteImage(@PathVariable Long id) {
         return imageQuestionRepository.findById(id)
                 .map(question -> {
-                    // Step 1: Cascade delete any submissions referencing this question to prevent FK violation
+                    // Step 1: Cascade delete any submissions referencing this question and deduct user scores
                     List<Submission> submissions = submissionRepository.findByImageQuestionId(id);
                     if (!submissions.isEmpty()) {
+                        for (Submission s : submissions) {
+                            if (s.isGraded() && s.getScore() > 0 && s.getUser() != null) {
+                                User u = s.getUser();
+                                u.setScore(Math.max(0, u.getScore() - s.getScore()));
+                                userRepository.save(u);
+                            }
+                        }
                         submissionRepository.deleteAll(submissions);
                         submissionRepository.flush();
+                        gameService.broadcastLeaderboard();
                     }
 
                     // Step 2: If this question is active in GameState, reset activeQuestionId
@@ -245,6 +253,18 @@ public class GameController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
+    }
+
+    @GetMapping("/my-team")
+    public ResponseEntity<?> getMyTeamProfile() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Authentication required"));
+        }
+        String teamId = auth.getName();
+        return userRepository.findByTeamId(teamId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/leaderboard")

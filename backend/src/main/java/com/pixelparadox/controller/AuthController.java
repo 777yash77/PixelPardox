@@ -54,15 +54,18 @@ public class AuthController {
         if (request.password() == null || request.password().isBlank())
             return ResponseEntity.badRequest().body(Map.of("message", "Password is required."));
 
-        if (userRepository.findByTeamName(request.teamName()).isPresent())
+        String cleanTeamName = request.teamName().trim();
+        String cleanTeamId = request.teamId().trim();
+
+        if (userRepository.findByTeamName(cleanTeamName).isPresent())
             return ResponseEntity.badRequest().body(Map.of("message", "Team name already registered."));
-        if (userRepository.findByTeamId(request.teamId()).isPresent())
+        if (userRepository.findByTeamId(cleanTeamId).isPresent())
             return ResponseEntity.badRequest().body(Map.of("message", "Team ID already registered."));
 
         int size = (request.teamSize() != null && request.teamSize() >= 2 && request.teamSize() <= 4) ? request.teamSize() : 2;
         User user = new User(
-                request.teamName(),
-                request.teamId(),
+                cleanTeamName,
+                cleanTeamId,
                 passwordEncoder.encode(request.password()),
                 "ROLE_TEAM",
                 size
@@ -76,17 +79,18 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        System.out.println(">>> Login attempt for teamId: '" + request.teamId() + "' with password length: " + (request.password() != null ? request.password().length() : 0));
-        Optional<User> userOpt = userRepository.findByTeamId(request.teamId());
+        String cleanTeamId = request.teamId() != null ? request.teamId().trim() : "";
+        System.out.println(">>> Login attempt for teamId: '" + cleanTeamId + "' with password length: " + (request.password() != null ? request.password().length() : 0));
+        Optional<User> userOpt = userRepository.findByTeamId(cleanTeamId);
         if (userOpt.isEmpty()) {
-            System.out.println(">>> User NOT FOUND in database for teamId: '" + request.teamId() + "'");
+            System.out.println(">>> User NOT FOUND in database for teamId: '" + cleanTeamId + "'");
             return ResponseEntity.badRequest().body(Map.of("message", "Invalid Team ID or password. (User not found)"));
         }
         User user = userOpt.get();
         System.out.println(">>> User found in DB: " + user.getTeamId() + ", role: " + user.getRole());
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.teamId(), request.password())
+                    new UsernamePasswordAuthenticationToken(cleanTeamId, request.password())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = tokenProvider.generateToken(authentication);

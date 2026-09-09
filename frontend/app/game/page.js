@@ -80,9 +80,11 @@ export default function GameArena() {
   const [showAcknowledgeModal, setShowAcknowledgeModal] = useState(false)
   const [hasAcknowledged, setHasAcknowledged] = useState(false)
 
-  // Webcam Ref
+  // Webcam & Question Transition Refs
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
+  const webcamStreamRef = useRef(null)
+  const lastQuestionIdRef = useRef(null)
 
   // WebSocket Ref
   const wsRef = useRef(null)
@@ -223,16 +225,32 @@ export default function GameArena() {
 
     // Start Webcam
     startWebcam()
+
+    return () => {
+      stopWebcam()
+    }
   }, [])
 
   const startWebcam = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true })
+      webcamStreamRef.current = stream
       if (videoRef.current) {
         videoRef.current.srcObject = stream
       }
     } catch (err) {
       console.error("Webcam access denied:", err)
+    }
+  }
+
+  const stopWebcam = () => {
+    if (webcamStreamRef.current) {
+      webcamStreamRef.current.getTracks().forEach(track => track.stop())
+      webcamStreamRef.current = null
+    }
+    if (videoRef.current && videoRef.current.srcObject) {
+      videoRef.current.srcObject.getTracks().forEach(track => track.stop())
+      videoRef.current.srcObject = null
     }
   }
 
@@ -242,17 +260,20 @@ export default function GameArena() {
       const q = questions.find(item => item.id === gameState.activeQuestionId)
       if (q) {
         setCurrentQuestion(q)
-        setSubmitted(false) // reset submission flag for new question
-        setSubmitError('')
-        setRound1Answer({ chosen: '', bonus: '' })
-        setTextSubmission('')
-        setShowModelSelect(false)
+        if (lastQuestionIdRef.current !== gameState.activeQuestionId) {
+          lastQuestionIdRef.current = gameState.activeQuestionId
+          setSubmitted(false) // reset submission flag only when question actually changes
+          setSubmitError('')
+          setRound1Answer({ chosen: '', bonus: '' })
+          setTextSubmission('')
+          setShowModelSelect(false)
+        }
       } else if (token) {
-        // If the question isn't in our local state, it may have been uploaded after we mounted. Refetch!
-        setSubmitted(false)
+        // If the question isn't in our local state, fetch questions
         fetchQuestions(token)
       }
     } else {
+      lastQuestionIdRef.current = null
       setCurrentQuestion(null)
       setShowModelSelect(false)
     }
@@ -299,41 +320,46 @@ export default function GameArena() {
     return () => clearInterval(interval)
   }, [gameState.activeRound, prelimStatus, prelimTimeLeft])
 
-  // Camera broadcasting
+  // Camera broadcasting for live invigilation grid
   useEffect(() => {
+    if (prelimStatus === 'COMPLETED') return
+
     const interval = setInterval(() => {
-      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN && videoRef.current && canvasRef.current && team.id) {
-        const context = canvasRef.current.getContext('2d')
-        context.drawImage(videoRef.current, 0, 0, 160, 120) // low res
-        const frame = canvasRef.current.toDataURL('image/jpeg', 0.5)
-        wsRef.current.send(JSON.stringify({
-          type: 'CAMERA_FRAME',
-          payload: { teamId: team.id, participantName, frame }
-        }))
+      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN && videoRef.current && canvasRef.current && (team.teamId || team.id)) {
+        try {
+          const context = canvasRef.current.getContext('2d')
+          context.drawImage(videoRef.current, 0, 0, 160, 120) // low res
+          const frame = canvasRef.current.toDataURL('image/jpeg', 0.5)
+          wsRef.current.send(JSON.stringify({
+            type: 'CAMERA_FRAME',
+            payload: { teamId: team.teamId || team.id, participantName, frame }
+          }))
+        } catch (e) {
+          // Ignore frame capture issues
+        }
       }
     }, 5000) // every 5 seconds
     return () => clearInterval(interval)
-  }, [team.id, participantName])
+  }, [team.teamId, team.id, participantName, prelimStatus])
 
   // 4. HTTP API calls
   const fetchTeamProfile = async (tok) => {
+    const authToken = tok || token || (typeof window !== 'undefined' ? localStorage.getItem('token') : null)
     try {
-      // Find team details in leaderboard
-      const res = await fetch('http://localhost:8080/api/game/leaderboard')
+      const res = await fetch('http://localhost:8080/api/game/my-team', {
+        headers: authToken ? { 'Authorization': `Bearer ${authToken}` } : {}
+      })
       if (res.ok) {
-        const data = await res.json()
+        const profile = await res.json()
+        setTeam(profile)
+      } else {
         const teamId = localStorage.getItem('teamId')
-        const profile = data.find(u => u.teamId === teamId)
-        if (profile) {
-          setTeam(profile)
-        } else {
-          const storedTeamName = localStorage.getItem('teamName') || ''
-          setTeam(prev => ({
-            ...prev,
-            teamId: teamId || prev.teamId,
-            teamName: storedTeamName || prev.teamName
-          }))
-        }
+        const storedTeamName = localStorage.getItem('teamName') || ''
+        setTeam(prev => ({
+          ...prev,
+          teamId: teamId || prev.teamId,
+          teamName: storedTeamName || prev.teamName
+        }))
       }
     } catch (e) {
       console.error(e)
@@ -350,6 +376,7 @@ export default function GameArena() {
         const attempt = await res.json()
         if (attempt.status === 'COMPLETED') {
           setPrelimStatus('COMPLETED')
+          stopWebcam()
           localStorage.removeItem('prelimStartTime_' + pName)
           localStorage.removeItem('prelimAnswers_' + pName)
           localStorage.removeItem('prelimFlagged_' + pName)
@@ -363,6 +390,7 @@ export default function GameArena() {
           } else {
             setPrelimTimeLeft(0)
             setPrelimStatus('COMPLETED')
+            stopWebcam()
           }
         }
       }
@@ -546,6 +574,7 @@ export default function GameArena() {
         const attempt = await res.json()
         if (attempt.status === 'COMPLETED') {
           setPrelimStatus('COMPLETED')
+          stopWebcam()
           localStorage.removeItem('prelimStartTime_' + participantName)
           localStorage.removeItem('prelimAnswers_' + participantName)
           localStorage.removeItem('prelimFlagged_' + participantName)
@@ -561,6 +590,7 @@ export default function GameArena() {
         const data = await res.json()
         if (data.message === 'Quiz already submitted' || data.message?.includes('COMPLETED')) {
            setPrelimStatus('COMPLETED')
+           stopWebcam()
         }
       }
     } catch (err) {
@@ -663,6 +693,7 @@ export default function GameArena() {
 
   const handlePrelimSubmit = async () => {
     setShowConfirmSubmitModal(false)
+    stopWebcam()
     try {
       const res = await fetch('http://localhost:8080/api/game/prelims/submit', {
         method: 'POST',
@@ -671,6 +702,7 @@ export default function GameArena() {
       })
       if (res.ok) {
         setPrelimStatus('COMPLETED')
+        stopWebcam()
         localStorage.removeItem('prelimStartTime_' + participantName)
         localStorage.removeItem('prelimAnswers_' + participantName)
         localStorage.removeItem('prelimFlagged_' + participantName)
@@ -680,6 +712,7 @@ export default function GameArena() {
         const data = await res.json()
         if (data.message === 'Quiz already submitted' || data.message?.includes('COMPLETED')) {
           setPrelimStatus('COMPLETED')
+          stopWebcam()
           localStorage.removeItem('prelimStartTime_' + participantName)
           localStorage.removeItem('prelimAnswers_' + participantName)
           localStorage.removeItem('prelimFlagged_' + participantName)
