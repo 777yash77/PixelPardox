@@ -162,14 +162,11 @@ export default function Register() {
 
           <h2 style={{
             fontSize: '2.1rem',
-            marginBottom: '6px',
-            letterSpacing: '2px',
-            textTransform: 'uppercase',
-            background: 'linear-gradient(180deg, #FFFFFF 25%, #7DD3FC 100%)',
+            marginBottom: '8px',
+            background: 'linear-gradient(135deg, #FFFFFF 0%, #7DD3FC 45%, #0284C7 100%)',
             WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            filter: 'drop-shadow(0 0 20px rgba(56, 189, 248, 0.5))'
-          }} className="glitch-text" data-text="REGISTER SQUAD">
+            WebkitTextFillColor: 'transparent'
+          }} className="auth-title-cinematic">
             REGISTER SQUAD
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.86rem', letterSpacing: '0.5px', margin: 0, lineHeight: 1.5 }}>

@@ -839,16 +839,9 @@ export default function Home() {
             </span>
           </div>
 
-          <h1 className="glitch-text hero-floating-anim" data-text="PIXEL PARADOX" style={{ 
-            fontSize: 'clamp(2.8rem, 7vw, 5.2rem)', 
-            letterSpacing: '5px',
-            lineHeight: 1.05,
-            marginBottom: '12px',
-            textTransform: 'uppercase',
-            background: 'linear-gradient(180deg, #FFFFFF 20%, #FFA8A8 60%, #E01B22 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            filter: 'drop-shadow(0 0 35px rgba(224, 27, 34, 0.65)) drop-shadow(0 4px 14px rgba(0,0,0,0.9))'
+          <h1 className="hero-title-cinematic" style={{ 
+            fontSize: 'clamp(2.8rem, 7.5vw, 5.4rem)', 
+            marginBottom: '14px'
           }}>
             PIXEL PARADOX
           </h1>
@@ -880,37 +873,8 @@ export default function Home() {
             Step inside the high-stakes Multiverse of Generative AI. Decode neural hallucinations, separate authentic photos from synthetic deepfakes, and prove your team is the sharpest in the multiverse!
           </p>
 
-          {/* Quick Action CTA Hub */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '16px',
-            marginTop: '28px',
-            flexWrap: 'wrap'
-          }}>
-            <Link href="/login" style={{ textDecoration: 'none' }}>
-              <button className="hero-cta-red">
-                <span>⚔️ ENTER BATTLE ARENA</span>
-                <span>➔</span>
-              </button>
-            </Link>
-
-            <Link href="/register" style={{ textDecoration: 'none' }}>
-              <button className="hero-cta-cyan">
-                <span>🛡️ REGISTER SQUAD</span>
-              </button>
-            </Link>
-
-            <Link href="/leaderboard" style={{ textDecoration: 'none' }}>
-              <button className="hero-cta-gold">
-                <span>🏆 LIVE STANDINGS</span>
-              </button>
-            </Link>
-          </div>
-
           {/* Horizontal Slim Specs Bar */}
-          <div className="hero-specs-strip">
+          <div className="hero-specs-strip" style={{ marginTop: '28px' }}>
             <div className="spec-chip">
               <span style={{ color: '#E01B22' }}>●</span>
               <span>Stage 0: 30 MCQs / 30m</span>

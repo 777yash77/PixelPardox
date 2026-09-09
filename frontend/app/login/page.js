@@ -177,14 +177,8 @@ export default function Login() {
 
           <h2 style={{
             fontSize: '2.1rem',
-            marginBottom: '6px',
-            letterSpacing: '2px',
-            textTransform: 'uppercase',
-            background: 'linear-gradient(180deg, #FFFFFF 25%, #FFA5A5 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            filter: 'drop-shadow(0 0 20px rgba(224, 27, 34, 0.5))'
-          }} className="glitch-text" data-text={step === 1 ? 'PORTAL LOGIN' : 'IDENTIFY PILOT'}>
+            marginBottom: '8px'
+          }} className="auth-title-cinematic">
             {step === 1 ? 'PORTAL LOGIN' : 'IDENTIFY PILOT'}
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.86rem', letterSpacing: '0.5px', margin: 0, lineHeight: 1.5 }}>
