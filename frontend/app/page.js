@@ -261,6 +261,8 @@ export default function Home() {
 
   // Tournament Help & Coordinators Support Modal State
   const [showHelpModal, setShowHelpModal] = useState(false)
+  const [coordHoverDeadpool, setCoordHoverDeadpool] = useState(false)
+  const [coordHoverSpidey, setCoordHoverSpidey] = useState(false)
   const [copiedEmail, setCopiedEmail] = useState(null)
 
   const handleCopyEmail = (email) => {
@@ -729,6 +731,69 @@ export default function Home() {
             <span>🕷️ SPIDER-MAN • MENTOR</span>
             <span className="mascot-tag-sub">Click to Chat</span>
           </div>
+
+          {/* Highlighted Contact Coordinators Button */}
+          <div 
+            className="coord-contact-badge-btn coord-badge-spidey"
+            onClick={(e) => {
+              e.stopPropagation()
+              setShowHelpModal(true)
+            }}
+            onMouseEnter={(e) => {
+              e.stopPropagation()
+              setCoordHoverSpidey(true)
+            }}
+            onMouseLeave={(e) => {
+              e.stopPropagation()
+              setCoordHoverSpidey(false)
+            }}
+            onTouchStart={(e) => {
+              e.stopPropagation()
+              setCoordHoverSpidey(prev => !prev)
+            }}
+            title="Contact Coordinators: Yaswanth R T & Vignesh M"
+          >
+            <div className="coord-badge-content">
+              <span className="coord-badge-icon">📞</span>
+              <span className="coord-badge-label">CONTACT COORDINATORS</span>
+              <span className="coord-beacon-pulse spidey-pulse" />
+            </div>
+            <span className="coord-badge-touch-hint">Touch to view details</span>
+
+            {/* Floating Quick Details Holo-Card on touch / hover */}
+            {coordHoverSpidey && (
+              <div className="coord-holo-popover spidey-holo" onClick={(e) => e.stopPropagation()}>
+                <div className="coord-holo-header">
+                  <span>🕸️ STUDENT COORDINATORS</span>
+                  <span className="coord-holo-close" onClick={() => setCoordHoverSpidey(false)}>✕</span>
+                </div>
+                <div className="coord-holo-body">
+                  <div className="coord-person">
+                    <div className="coord-name">Yaswanth R T</div>
+                    <a href="mailto:25mx360@psgtech.ac.in" className="coord-email" onClick={(e) => e.stopPropagation()}>
+                      ✉️ 25mx360@psgtech.ac.in
+                    </a>
+                  </div>
+                  <div className="coord-person">
+                    <div className="coord-name">Vignesh M</div>
+                    <a href="mailto:25MX356@psgtech.ac.in" className="coord-email" onClick={(e) => e.stopPropagation()}>
+                      ✉️ 25MX356@psgtech.ac.in
+                    </a>
+                  </div>
+                </div>
+                <button 
+                  type="button" 
+                  className="coord-holo-modal-btn spidey-btn"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setShowHelpModal(true)
+                  }}
+                >
+                  Open Full Help Desk ➔
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -799,119 +864,77 @@ export default function Home() {
             <span>⚔️ DEADPOOL • MERC-BOT</span>
             <span className="mascot-tag-sub">Click to Chat</span>
           </div>
+
+          {/* Highlighted Contact Coordinators Button */}
+          <div 
+            className="coord-contact-badge-btn coord-badge-deadpool"
+            onClick={(e) => {
+              e.stopPropagation()
+              setShowHelpModal(true)
+            }}
+            onMouseEnter={(e) => {
+              e.stopPropagation()
+              setCoordHoverDeadpool(true)
+            }}
+            onMouseLeave={(e) => {
+              e.stopPropagation()
+              setCoordHoverDeadpool(false)
+            }}
+            onTouchStart={(e) => {
+              e.stopPropagation()
+              setCoordHoverDeadpool(prev => !prev)
+            }}
+            title="Contact Coordinators: Yaswanth R T & Vignesh M"
+          >
+            <div className="coord-badge-content">
+              <span className="coord-badge-icon">📞</span>
+              <span className="coord-badge-label">CONTACT COORDINATORS</span>
+              <span className="coord-beacon-pulse" />
+            </div>
+            <span className="coord-badge-touch-hint">Touch to view details</span>
+
+            {/* Floating Quick Details Holo-Card on touch / hover */}
+            {coordHoverDeadpool && (
+              <div className="coord-holo-popover" onClick={(e) => e.stopPropagation()}>
+                <div className="coord-holo-header">
+                  <span>⚔️ STUDENT COORDINATORS</span>
+                  <span className="coord-holo-close" onClick={() => setCoordHoverDeadpool(false)}>✕</span>
+                </div>
+                <div className="coord-holo-body">
+                  <div className="coord-person">
+                    <div className="coord-name">Yaswanth R T</div>
+                    <a href="mailto:25mx360@psgtech.ac.in" className="coord-email" onClick={(e) => e.stopPropagation()}>
+                      ✉️ 25mx360@psgtech.ac.in
+                    </a>
+                  </div>
+                  <div className="coord-person">
+                    <div className="coord-name">Vignesh M</div>
+                    <a href="mailto:25MX356@psgtech.ac.in" className="coord-email" onClick={(e) => e.stopPropagation()}>
+                      ✉️ 25MX356@psgtech.ac.in
+                    </a>
+                  </div>
+                </div>
+                <button 
+                  type="button" 
+                  className="coord-holo-modal-btn"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setShowHelpModal(true)
+                  }}
+                >
+                  Open Full Help Desk ➔
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Main Content Container — Expansive Width to Utilize Horizontal Space */}
-      <div className="container page-transition" style={{ maxWidth: 'min(1560px, 94vw)', margin: '0 auto', padding: '32px 24px 80px' }}>
+      {/* Main Content Container — Expansive Width, Clean Stacked Spacing */}
+      <div className="container page-transition" style={{ maxWidth: 'min(1560px, 94vw)', margin: '0 auto', padding: '16px 20px 48px' }}>
         
-        {/* Top Cyber Navigation & Quick Action Bar */}
-        <nav style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '16px',
-          padding: '16px 26px',
-          background: 'rgba(10, 14, 24, 0.78)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          border: '1px solid rgba(56, 189, 248, 0.28)',
-          borderRadius: '16px',
-          marginBottom: '58px',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.45), inset 0 0 16px rgba(56, 189, 248, 0.08)'
-        }}>
-          {/* Logo Brand */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{
-              width: '38px',
-              height: '38px',
-              borderRadius: '9px',
-              background: 'linear-gradient(135deg, #0284C7 0%, #E01B22 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: '900',
-              fontSize: '1.25rem',
-              color: '#FFF',
-              boxShadow: '0 0 16px rgba(56, 189, 248, 0.45)'
-            }}>
-              ⚡
-            </div>
-            <div>
-              <div style={{ fontFamily: 'var(--font-display)', fontWeight: '900', fontSize: '1.1rem', letterSpacing: '1.2px', color: '#FFF' }}>
-                PIXEL <span style={{ color: '#38BDF8' }}>PARADOX</span>
-              </div>
-              <div style={{ fontSize: '0.7rem', color: '#FF7B7B', letterSpacing: '1px', fontWeight: '700' }}>
-                LOGIN 2026 • PSG TECH MCA
-              </div>
-            </div>
-          </div>
-
-          {/* Nav Links & Prominent Help Option */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
-            <Link href="/game" style={{
-              textDecoration: 'none',
-              color: '#F0F9FF',
-              fontSize: '0.86rem',
-              fontWeight: '700',
-              padding: '9px 18px',
-              borderRadius: '8px',
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.14)',
-              transition: 'all 0.2s ease',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '7px'
-            }}>
-              <span>🎮</span> Game Arena
-            </Link>
-            <Link href="/leaderboard" style={{
-              textDecoration: 'none',
-              color: '#F0F9FF',
-              fontSize: '0.86rem',
-              fontWeight: '700',
-              padding: '9px 18px',
-              borderRadius: '8px',
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.14)',
-              transition: 'all 0.2s ease',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '7px'
-            }}>
-              <span>🏆</span> Leaderboard
-            </Link>
-
-            {/* Prominent Help & Support Trigger */}
-            <button
-              type="button"
-              onClick={() => setShowHelpModal(true)}
-              style={{
-                background: 'linear-gradient(135deg, rgba(224, 27, 34, 0.28) 0%, rgba(2, 132, 199, 0.35) 100%)',
-                border: '1.5px solid #38BDF8',
-                color: '#FFF',
-                padding: '9px 20px',
-                borderRadius: '8px',
-                fontSize: '0.86rem',
-                fontWeight: '800',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                boxShadow: '0 0 18px rgba(56, 189, 248, 0.4)',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <span style={{ fontSize: '1.05rem' }}>🆘</span>
-              <span>Help &amp; Support</span>
-              <span className="live-pulse-dot" style={{ width: '8px', height: '8px', background: '#38BDF8', borderRadius: '50%' }} />
-            </button>
-          </div>
-        </nav>
-
         {/* Multiverse Header Banner */}
-        <header style={{ textAlign: 'center', marginBottom: '84px', position: 'relative', padding: '16px clamp(12px, 10vw, 160px) 0' }}>
+        <header style={{ textAlign: 'center', marginBottom: '32px', position: 'relative', padding: '8px clamp(12px, 6vw, 80px) 0' }}>
           {/* Live Multiverse Status Telemetry Banner (Blue & Red Duality) */}
           <div style={{
             display: 'inline-flex',
@@ -920,27 +943,27 @@ export default function Home() {
             background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.22) 0%, rgba(10, 14, 24, 0.9) 50%, rgba(224, 27, 34, 0.22) 100%)',
             border: '1px solid rgba(56, 189, 248, 0.45)',
             borderRadius: '24px',
-            padding: '8px 24px',
-            marginBottom: '26px',
-            boxShadow: '0 0 24px rgba(2, 132, 199, 0.28), inset 0 0 12px rgba(224, 27, 34, 0.2)'
+            padding: '6px 20px',
+            marginBottom: '14px',
+            boxShadow: '0 0 20px rgba(2, 132, 199, 0.25), inset 0 0 10px rgba(224, 27, 34, 0.18)'
           }}>
-            <span className="live-pulse-dot" style={{ width: '9px', height: '9px', background: '#38BDF8', boxShadow: '0 0 10px #38BDF8' }} />
-            <span style={{ fontSize: '0.8rem', color: '#FFF', fontWeight: '800', letterSpacing: '1.5px', textTransform: 'uppercase', fontFamily: 'var(--font-display)' }}>
-              MULTIVERSE CLUSTER ONLINE • 4 FORENSIC STAGES ACTIVE • REAL-TIME SCORING ENGINE
+            <span className="live-pulse-dot" style={{ width: '8px', height: '8px', background: '#38BDF8', boxShadow: '0 0 8px #38BDF8' }} />
+            <span style={{ fontSize: '0.76rem', color: '#FFF', fontWeight: '800', letterSpacing: '1.4px', textTransform: 'uppercase', fontFamily: 'var(--font-display)' }}>
+              MULTIVERSE CLUSTER ONLINE • 4 FORENSIC STAGES ACTIVE • REAL-TIME ENGINE
             </span>
-            <span className="live-pulse-dot" style={{ width: '9px', height: '9px', background: '#EF4444', boxShadow: '0 0 10px #EF4444' }} />
+            <span className="live-pulse-dot" style={{ width: '8px', height: '8px', background: '#EF4444', boxShadow: '0 0 8px #EF4444' }} />
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', flexWrap: 'wrap', justifyContent: 'center' }}>
             <span className="shimmer-badge" style={{ 
               border: '1px solid #38BDF8', 
               color: '#38BDF8', 
-              padding: '6px 18px', 
+              padding: '5px 16px', 
               borderRadius: '6px', 
-              fontSize: '0.84rem', 
+              fontSize: '0.8rem', 
               fontWeight: '800',
-              letterSpacing: '1.6px',
-              boxShadow: '0 0 14px rgba(56, 189, 248, 0.4)'
+              letterSpacing: '1.4px',
+              boxShadow: '0 0 12px rgba(56, 189, 248, 0.35)'
             }}>
               LOGIN 2026 • MULTIVERSE PROTOCOL
             </span>
@@ -948,19 +971,19 @@ export default function Home() {
               background: 'rgba(224, 27, 34, 0.14)', 
               border: '1px solid rgba(224, 27, 34, 0.5)', 
               color: '#FF7B7B', 
-              padding: '6px 16px', 
+              padding: '5px 14px', 
               borderRadius: '6px', 
-              fontSize: '0.84rem', 
+              fontSize: '0.8rem', 
               fontWeight: '700',
-              letterSpacing: '1.1px'
+              letterSpacing: '1px'
             }}>
               ⚡ DEPT OF COMPUTER APPLICATIONS
             </span>
           </div>
 
           <h1 className="hero-title-cinematic" style={{ 
-            fontSize: 'clamp(3rem, 7.8vw, 5.6rem)', 
-            marginBottom: '22px'
+            fontSize: 'clamp(2.8rem, 7.2vw, 5.2rem)', 
+            marginBottom: '12px'
           }}>
             PIXEL PARADOX
           </h1>
@@ -968,42 +991,78 @@ export default function Home() {
           <div style={{ 
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '10px',
-            fontSize: 'clamp(1rem, 2.3vw, 1.4rem)', 
+            gap: '8px',
+            fontSize: 'clamp(0.9rem, 2vw, 1.25rem)', 
             fontWeight: '800', 
             color: '#7DD3FC', 
-            letterSpacing: '3px',
+            letterSpacing: '2.5px',
             textTransform: 'uppercase',
             background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.16) 0%, rgba(224, 27, 34, 0.16) 100%)',
             border: '1px solid rgba(56, 189, 248, 0.35)',
-            padding: '8px 24px',
-            borderRadius: '30px',
-            textShadow: '0 0 16px rgba(56,189,248,0.7)',
-            marginBottom: '28px',
+            padding: '6px 20px',
+            borderRadius: '26px',
+            textShadow: '0 0 14px rgba(56,189,248,0.7)',
+            marginBottom: '14px',
             backdropFilter: 'blur(10px)',
-            boxShadow: '0 4px 20px rgba(0, 136, 255, 0.2)'
+            boxShadow: '0 4px 18px rgba(0, 136, 255, 0.2)'
           }}>
             <span style={{ color: '#38BDF8' }}>⚡</span>
             <span>THE REALITY GLITCH — REAL OR AI?</span>
             <span style={{ color: '#FF4D4D' }}>⚡</span>
           </div>
 
-          <p style={{ maxWidth: '860px', margin: '0 auto', color: 'var(--text-secondary)', fontSize: '1.08rem', lineHeight: '1.8' }}>
+          <p style={{ maxWidth: '820px', margin: '0 auto 16px auto', color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: '1.65' }}>
             Step inside the high-stakes Multiverse of Generative AI. Decode neural hallucinations, separate authentic photos from synthetic deepfakes, and prove your team is the sharpest in the multiverse!
           </p>
+
+          {/* Quick Arena & Leaderboard Links */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <Link href="/game" style={{
+              textDecoration: 'none',
+              color: '#F0F9FF',
+              fontSize: '0.84rem',
+              fontWeight: '700',
+              padding: '8px 18px',
+              borderRadius: '8px',
+              background: 'rgba(56, 189, 248, 0.12)',
+              border: '1px solid rgba(56, 189, 248, 0.4)',
+              transition: 'all 0.2s ease',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}>
+              <span>🎮</span> Game Arena
+            </Link>
+            <Link href="/leaderboard" style={{
+              textDecoration: 'none',
+              color: '#F0F9FF',
+              fontSize: '0.84rem',
+              fontWeight: '700',
+              padding: '8px 18px',
+              borderRadius: '8px',
+              background: 'rgba(224, 27, 34, 0.12)',
+              border: '1px solid rgba(224, 27, 34, 0.4)',
+              transition: 'all 0.2s ease',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}>
+              <span>🏆</span> Live Leaderboard
+            </Link>
+          </div>
         </header>
 
         {/* Quick Action Station Cards (Balanced 2-Column Multiverse Duel Layout) */}
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', 
-          gap: '36px', 
-          marginBottom: '88px' 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', 
+          gap: '20px', 
+          marginBottom: '32px' 
         }}>
           {/* CARD 01: ONBOARDING (Spider-Man Electric Blue Theme) */}
           <Link href="/register" style={{ textDecoration: 'none' }}>
             <div className="comic-card card-hover-lift cyber-card-blue" style={{ 
-              padding: '36px 30px', 
+              padding: '24px 22px', 
               height: '100%', 
               display: 'flex', 
               flexDirection: 'column', 
@@ -1014,20 +1073,20 @@ export default function Home() {
             }}>
               <div style={{ position: 'absolute', top: 0, right: 0, width: '110px', height: '110px', background: 'radial-gradient(circle at top right, rgba(56,189,248,0.25) 0%, transparent 70%)', pointerEvents: 'none' }} />
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <span style={{ fontSize: '0.74rem', color: '#7DD3FC', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(2,132,199,0.22)', padding: '5px 12px', borderRadius: '4px', border: '1px solid rgba(56,189,248,0.5)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '0.74rem', color: '#7DD3FC', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(2,132,199,0.22)', padding: '4px 10px', borderRadius: '4px', border: '1px solid rgba(56,189,248,0.5)' }}>
                     STEP 01: ONBOARDING
                   </span>
                   <span className="badge" style={{ background: 'rgba(56,189,248,0.18)', color: '#38BDF8', borderColor: '#0284C7' }}>Teams of 2–4</span>
                 </div>
-                <h3 style={{ fontSize: '1.65rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px', color: '#FFF' }}>
+                <h3 style={{ fontSize: '1.45rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', color: '#FFF' }}>
                   Assemble Your Team
                 </h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.96rem', lineHeight: '1.65' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: '1.55' }}>
                   Register squad credentials with Team Leader ID and operative roster. Once registered, immediately access Stage 0 Prelims!
                 </p>
               </div>
-              <span className="btn-primary-blue" style={{ marginTop: '28px', width: '100%', fontSize: '0.96rem', textAlign: 'center', display: 'block', padding: '14px', borderRadius: '8px' }}>
+              <span className="btn-primary-blue" style={{ marginTop: '18px', width: '100%', fontSize: '0.92rem', textAlign: 'center', display: 'block', padding: '12px', borderRadius: '8px' }}>
                 Register Squad ➔
               </span>
             </div>
@@ -1036,7 +1095,7 @@ export default function Home() {
           {/* CARD 02: BATTLEGROUND (Deadpool Crimson Red Theme) */}
           <Link href="/login" style={{ textDecoration: 'none' }}>
             <div className="comic-card card-hover-lift cyber-card-red" style={{ 
-              padding: '36px 30px', 
+              padding: '24px 22px', 
               height: '100%', 
               display: 'flex', 
               flexDirection: 'column', 
@@ -1047,20 +1106,20 @@ export default function Home() {
             }}>
               <div style={{ position: 'absolute', top: 0, right: 0, width: '110px', height: '110px', background: 'radial-gradient(circle at top right, rgba(224,27,34,0.25) 0%, transparent 70%)', pointerEvents: 'none' }} />
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <span style={{ fontSize: '0.74rem', color: '#FF7B7B', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(224,27,34,0.18)', padding: '5px 12px', borderRadius: '4px', border: '1px solid rgba(224,27,34,0.5)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '0.74rem', color: '#FF7B7B', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(224,27,34,0.18)', padding: '4px 10px', borderRadius: '4px', border: '1px solid rgba(224,27,34,0.5)' }}>
                     STEP 02: BATTLEGROUND
                   </span>
                   <span className="badge" style={{ background: 'rgba(224,27,34,0.2)', color: '#FF4D4D', borderColor: '#E01B22' }}>Live Arena</span>
                 </div>
-                <h3 style={{ fontSize: '1.65rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px', color: '#FFF' }}>
+                <h3 style={{ fontSize: '1.45rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', color: '#FFF' }}>
                   Enter Battle Arena
                 </h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.96rem', lineHeight: '1.65' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: '1.55' }}>
                   Sign in with Team ID &amp; Password. Tackle the 30-MCQ Prelims, followed by real-time projected visual challenges.
                 </p>
               </div>
-              <span className="btn-primary-red" style={{ marginTop: '28px', width: '100%', fontSize: '0.96rem', textAlign: 'center', display: 'block', padding: '14px', borderRadius: '8px' }}>
+              <span className="btn-primary-red" style={{ marginTop: '18px', width: '100%', fontSize: '0.92rem', textAlign: 'center', display: 'block', padding: '12px', borderRadius: '8px' }}>
                 Access Arena Portal ➔
               </span>
             </div>
@@ -1070,7 +1129,7 @@ export default function Home() {
         {/* ========================================================= */}
         {/* INTERACTIVE ROUND DEEP-DIVE STATION (ALL 4 ROUNDS DETAILED) */}
         {/* ========================================================= */}
-        <section className="comic-card" style={{ padding: '36px 32px', marginBottom: '88px' }}>
+        <section className="comic-card" style={{ padding: '26px 24px', marginBottom: '32px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px', flexWrap: 'wrap', gap: '14px' }}>
             <div>
               <span style={{ color: '#E01B22', fontSize: '0.82rem', fontWeight: 'bold', letterSpacing: '2px', textTransform: 'uppercase' }}>
@@ -1336,42 +1395,42 @@ export default function Home() {
         </section>
 
         {/* Multiverse Protocol Lore Card */}
-        <section className="comic-card" style={{ padding: '40px 34px', marginBottom: '88px', borderLeft: '4px solid #38BDF8', borderRight: '4px solid #EF4444' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '24px' }}>
-            <span style={{ fontSize: '2rem' }}>🕷️</span>
+        <section className="comic-card" style={{ padding: '24px 22px', marginBottom: '32px', borderLeft: '4px solid #38BDF8', borderRight: '4px solid #EF4444' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '18px' }}>
+            <span style={{ fontSize: '1.6rem' }}>🕷️</span>
             <div>
-              <h3 style={{ fontSize: '1.45rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
+              <h3 style={{ fontSize: '1.35rem', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>
                 Rules of Engagement • Multiverse Protocol
               </h3>
-              <span style={{ fontSize: '0.8rem', color: '#38BDF8', fontWeight: 'bold', letterSpacing: '1px' }}>FAIR PLAY &amp; PROTOCOLS STRICTLY ENFORCED</span>
+              <span style={{ fontSize: '0.78rem', color: '#38BDF8', fontWeight: 'bold', letterSpacing: '1px' }}>FAIR PLAY &amp; PROTOCOLS STRICTLY ENFORCED</span>
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '22px', fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: '1.65' }}>
-            <div style={{ background: 'rgba(255,255,255,0.025)', padding: '20px', borderRadius: '10px', border: '1px solid rgba(56,189,248,0.18)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px', fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: '1.55' }}>
+            <div style={{ background: 'rgba(255,255,255,0.025)', padding: '16px', borderRadius: '10px', border: '1px solid rgba(56,189,248,0.18)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                 <span style={{ background: '#0284C7', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>01</span>
                 <strong style={{ color: '#FFF' }}>Automated Scoring Matrix:</strong>
               </div>
-              <p style={{ marginTop: '4px' }}>
+              <p style={{ margin: 0 }}>
                 Quiz (30 questions, strictly 30 min timer) and Round 1 (10 pixels, 40s each) calculate scores automatically with instant tournament engine sync.
               </p>
             </div>
-            <div style={{ background: 'rgba(255,255,255,0.025)', padding: '20px', borderRadius: '10px', border: '1px solid rgba(224,27,34,0.18)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+            <div style={{ background: 'rgba(255,255,255,0.025)', padding: '16px', borderRadius: '10px', border: '1px solid rgba(224,27,34,0.18)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                 <span style={{ background: '#E01B22', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>02</span>
                 <strong style={{ color: '#FFF' }}>Silent Invigilation:</strong>
               </div>
-              <p style={{ marginTop: '4px' }}>
+              <p style={{ margin: 0 }}>
                 During Stage 0, participant webcams capture snapshots to ensure honest testing. The organizer console monitors all feeds in real time.
               </p>
             </div>
-            <div style={{ background: 'rgba(255,255,255,0.025)', padding: '20px', borderRadius: '10px', border: '1px solid rgba(56,189,248,0.18)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+            <div style={{ background: 'rgba(255,255,255,0.025)', padding: '16px', borderRadius: '10px', border: '1px solid rgba(56,189,248,0.18)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                 <span style={{ background: 'linear-gradient(90deg, #0284C7, #E01B22)', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>03</span>
                 <strong style={{ color: '#FFF' }}>Stage Timers Are Absolute:</strong>
               </div>
-              <p style={{ marginTop: '4px' }}>
+              <p style={{ margin: 0 }}>
                 When the timer expires, answers lock and submit automatically. Stay focused and keep an eye on the cyber timer!
               </p>
             </div>
@@ -1381,31 +1440,31 @@ export default function Home() {
         {/* ========================================================= */}
         {/* SECTION 4: TOURNAMENT HELP & STUDENT COORDINATORS DESK    */}
         {/* ========================================================= */}
-        <section id="help-desk-section" style={{ maxWidth: '100%', margin: '0 auto 88px' }}>
+        <section id="help-desk-section" style={{ maxWidth: '100%', margin: '0 auto 36px' }}>
           <div className="comic-card" style={{
-            padding: '42px 36px',
+            padding: '28px 24px',
             borderRadius: '16px',
             borderTop: '4px solid #38BDF8',
             borderBottom: '4px solid #E01B22',
             background: 'linear-gradient(145deg, rgba(14, 22, 38, 0.85) 0%, rgba(26, 10, 16, 0.85) 100%)',
             boxShadow: '0 14px 44px rgba(0, 0, 0, 0.7)'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '28px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '18px' }}>
               <div>
-                <span style={{ color: '#38BDF8', fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1.6px', textTransform: 'uppercase' }}>
+                <span style={{ color: '#38BDF8', fontWeight: '800', fontSize: '0.78rem', letterSpacing: '1.4px', textTransform: 'uppercase' }}>
                   DIRECT TOURNAMENT ASSISTANCE &amp; COORDINATORS
                 </span>
-                <h2 style={{ fontSize: '1.95rem', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '6px' }}>
+                <h2 style={{ fontSize: '1.65rem', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '4px', marginBottom: 0 }}>
                   🆘 Multiverse Help Desk &amp; Event Support
                 </h2>
               </div>
-              <div style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1px solid #38BDF8', color: '#7DD3FC', padding: '7px 18px', borderRadius: '20px', fontSize: '0.82rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span className="live-pulse-dot" style={{ width: '8px', height: '8px', background: '#38BDF8', borderRadius: '50%' }} />
+              <div style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1px solid #38BDF8', color: '#7DD3FC', padding: '5px 14px', borderRadius: '20px', fontSize: '0.78rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span className="live-pulse-dot" style={{ width: '7px', height: '7px', background: '#38BDF8', borderRadius: '50%' }} />
                 Student Coordinators Available
               </div>
             </div>
 
-            <p style={{ color: 'var(--text-secondary)', lineHeight: '1.75', marginBottom: '32px', maxWidth: '860px', fontSize: '1.02rem' }}>
+            <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '22px', maxWidth: '860px', fontSize: '0.96rem' }}>
               Have questions regarding Stage 0 Prelim timing, webcam invigilation permissions, team score aggregation, or technical rules? Reach out directly to our student coordinators:
             </p>
 

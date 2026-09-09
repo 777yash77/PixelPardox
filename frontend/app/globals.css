@@ -1246,6 +1246,224 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* ==========================================================================
+   COORDINATOR CONTACT HIGHLIGHTED MASCOT BUTTON & POPUP
+   ========================================================================== */
+.coord-contact-badge-btn {
+  margin-top: 8px;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 50;
+  white-space: nowrap;
+}
+
+.coord-badge-deadpool {
+  background: linear-gradient(135deg, rgba(224, 27, 34, 0.32) 0%, rgba(133, 11, 18, 0.55) 100%);
+  border: 1.5px solid #EF4444;
+  color: #FFF;
+  box-shadow: 0 0 16px rgba(224, 27, 34, 0.6), inset 0 0 8px rgba(239, 68, 68, 0.3);
+  animation: deadpoolBadgeGlow 2.5s ease-in-out infinite;
+}
+
+.coord-badge-spidey {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.32) 0%, rgba(30, 58, 138, 0.55) 100%);
+  border: 1.5px solid #38BDF8;
+  color: #FFF;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.6), inset 0 0 8px rgba(56, 189, 248, 0.3);
+  animation: spideyBadgeGlow 2.5s ease-in-out infinite;
+}
+
+@keyframes deadpoolBadgeGlow {
+  0%, 100% { box-shadow: 0 0 14px rgba(224, 27, 34, 0.5), inset 0 0 8px rgba(239, 68, 68, 0.25); transform: translateY(0); }
+  50% { box-shadow: 0 0 24px rgba(239, 68, 68, 0.9), inset 0 0 14px rgba(249, 115, 22, 0.5); transform: translateY(-2px); }
+}
+
+@keyframes spideyBadgeGlow {
+  0%, 100% { box-shadow: 0 0 14px rgba(56, 189, 248, 0.5), inset 0 0 8px rgba(56, 189, 248, 0.25); transform: translateY(0); }
+  50% { box-shadow: 0 0 24px rgba(56, 189, 248, 0.9), inset 0 0 14px rgba(125, 211, 252, 0.5); transform: translateY(-2px); }
+}
+
+.coord-contact-badge-btn:hover {
+  transform: scale(1.08) translateY(-2px);
+  filter: brightness(1.25);
+}
+
+.coord-badge-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.coord-badge-icon {
+  font-size: 0.85rem;
+}
+
+.coord-badge-label {
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.coord-beacon-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #EF4444;
+  box-shadow: 0 0 8px #EF4444;
+  animation: beaconPulse 1.2s infinite ease-in-out;
+}
+
+.coord-beacon-pulse.spidey-pulse {
+  background: #38BDF8;
+  box-shadow: 0 0 8px #38BDF8;
+}
+
+@keyframes beaconPulse {
+  0%, 100% { transform: scale(0.85); opacity: 0.6; }
+  50% { transform: scale(1.25); opacity: 1; }
+}
+
+.coord-badge-touch-hint {
+  font-size: 0.6rem;
+  color: #E2E8F0;
+  opacity: 0.85;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* Floating Holo-Card Popover */
+.coord-holo-popover {
+  position: absolute;
+  top: calc(100% + 10px);
+  width: 290px;
+  background: rgba(10, 15, 28, 0.96);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1.5px solid #EF4444;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(224, 27, 34, 0.4);
+  z-index: 100;
+  text-align: left;
+  animation: popoverFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: default;
+}
+
+.coord-holo-popover.spidey-holo {
+  border-color: #38BDF8;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(56, 189, 248, 0.4);
+}
+
+/* Align popover depending on side */
+.coord-badge-deadpool .coord-holo-popover {
+  left: 0;
+}
+
+.coord-badge-spidey .coord-holo-popover {
+  right: 0;
+}
+
+@keyframes popoverFadeIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.coord-holo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #FFF;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.coord-holo-close {
+  cursor: pointer;
+  color: #94A3B8;
+  font-size: 0.9rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.coord-holo-close:hover {
+  color: #FFF;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.coord-holo-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.coord-person {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.coord-name {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #FFF;
+  margin-bottom: 4px;
+}
+
+.coord-email {
+  font-family: monospace;
+  font-size: 0.76rem;
+  color: #7DD3FC;
+  text-decoration: none;
+  display: block;
+  word-break: break-all;
+  transition: color 0.2s;
+}
+
+.coord-email:hover {
+  color: #38BDF8;
+  text-decoration: underline;
+}
+
+.coord-holo-modal-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #E01B22 0%, #B91C1C 100%);
+  border: none;
+  color: #FFF;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba(224, 27, 34, 0.4);
+}
+
+.coord-holo-modal-btn.spidey-btn {
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+  box-shadow: 0 2px 10px rgba(56, 189, 248, 0.4);
+}
+
+.coord-holo-modal-btn:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+}
+
 /* Interactive Tab Selector for Rounds */
 .round-tab-btn {
   padding: 10px 18px;
