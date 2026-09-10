@@ -350,6 +350,22 @@ export default function Home() {
     }
   }
 
+  const handleSpideyHideClick = (e) => {
+    if (e) {
+      if (typeof e.preventDefault === 'function') e.preventDefault()
+      if (typeof e.stopPropagation === 'function') e.stopPropagation()
+    }
+    handleToggleSpideyMascot(true)
+  }
+
+  const handleDeadpoolHideClick = (e) => {
+    if (e) {
+      if (typeof e.preventDefault === 'function') e.preventDefault()
+      if (typeof e.stopPropagation === 'function') e.stopPropagation()
+    }
+    handleToggleDeadpoolMascot(true)
+  }
+
   const handleToggleMascots = (hide) => {
     handleToggleDeadpoolMascot(hide)
     handleToggleSpideyMascot(hide)
@@ -800,7 +816,11 @@ export default function Home() {
           className="spidey-swinging-pro" 
           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', cursor: 'pointer' }}
           onClick={(e) => {
-            if (e.target.closest('.mascot-hanging-container') || e.target.closest('.mascot-hanging-blue-btn')) return
+            if (
+              e.target.closest('.mascot-hanging-container') || 
+              e.target.closest('.mascot-hanging-red-btn') || 
+              e.target.closest('.mascot-hanging-blue-btn')
+            ) return
             setShowSpideyThwip(true)
             setIsSpideyChatOpen(true)
             setTimeout(() => setShowSpideyThwip(false), 1400)
@@ -868,19 +888,23 @@ export default function Home() {
             <span className="mascot-tag-sub">Click to Chat</span>
           </div>
 
-          {/* Small Blue Hanging Hide Button — Swings along with Spider-Man! */}
-          <div className="mascot-hanging-container">
-            <div className="mascot-hanging-wire" />
+          {/* Small Red Hanging Hide Button — Swings along with Spider-Man! */}
+          <div 
+            className="mascot-hanging-container"
+            onClick={handleSpideyHideClick}
+            onPointerDown={handleSpideyHideClick}
+            onMouseDown={handleSpideyHideClick}
+            onTouchStart={handleSpideyHideClick}
+            style={{ cursor: 'pointer' }}
+          >
+            <div className="mascot-hanging-wire red" />
             <button
               type="button"
-              className="mascot-hanging-blue-btn"
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                handleToggleSpideyMascot(true)
-              }}
-              onMouseDown={(e) => e.stopPropagation()}
-              onPointerDown={(e) => e.stopPropagation()}
+              className="mascot-hanging-red-btn"
+              onClick={handleSpideyHideClick}
+              onPointerDown={handleSpideyHideClick}
+              onMouseDown={handleSpideyHideClick}
+              onTouchStart={handleSpideyHideClick}
               title="Hide Spider-Man"
               aria-label="Hide Spider-Man"
             >
@@ -895,6 +919,7 @@ export default function Home() {
           type="button"
           className="mascot-docked-restore-btn spidey-restore"
           onClick={() => handleToggleSpideyMascot(false)}
+          onPointerDown={() => handleToggleSpideyMascot(false)}
           title="Show Spider-Man Animation"
         >
           <span>▼ 🕸️ Spidey</span>
@@ -916,7 +941,11 @@ export default function Home() {
           className="deadpool-perch-rig"
           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', cursor: 'pointer' }}
           onClick={(e) => {
-            if (e.target.closest('.mascot-hanging-container') || e.target.closest('.mascot-hanging-blue-btn')) return
+            if (
+              e.target.closest('.mascot-hanging-container') || 
+              e.target.closest('.mascot-hanging-blue-btn') ||
+              e.target.closest('.mascot-hanging-red-btn')
+            ) return
             setShowDeadpoolPop(true)
             setIsDeadpoolChatOpen(true)
             setTimeout(() => setShowDeadpoolPop(false), 1400)
@@ -974,18 +1003,22 @@ export default function Home() {
           </div>
 
           {/* Small Blue Hanging Hide Button — Floats along with Deadpool! */}
-          <div className="mascot-hanging-container">
+          <div 
+            className="mascot-hanging-container"
+            onClick={handleDeadpoolHideClick}
+            onPointerDown={handleDeadpoolHideClick}
+            onMouseDown={handleDeadpoolHideClick}
+            onTouchStart={handleDeadpoolHideClick}
+            style={{ cursor: 'pointer' }}
+          >
             <div className="mascot-hanging-wire" />
             <button
               type="button"
               className="mascot-hanging-blue-btn"
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                handleToggleDeadpoolMascot(true)
-              }}
-              onMouseDown={(e) => e.stopPropagation()}
-              onPointerDown={(e) => e.stopPropagation()}
+              onClick={handleDeadpoolHideClick}
+              onPointerDown={handleDeadpoolHideClick}
+              onMouseDown={handleDeadpoolHideClick}
+              onTouchStart={handleDeadpoolHideClick}
               title="Hide Deadpool"
               aria-label="Hide Deadpool"
             >
@@ -1000,6 +1033,7 @@ export default function Home() {
           type="button"
           className="mascot-docked-restore-btn deadpool-restore"
           onClick={() => handleToggleDeadpoolMascot(false)}
+          onPointerDown={() => handleToggleDeadpoolMascot(false)}
           title="Show Deadpool Animation"
         >
           <span>▼ 🌮 Deadpool</span>
@@ -1007,41 +1041,69 @@ export default function Home() {
       )}
 
       {/* Main Content Container — Expansive Width, Clean Stacked Spacing */}
-      <div className="container page-transition" style={{ maxWidth: 'min(1560px, 94vw)', margin: '0 auto', padding: '18px clamp(16px, 3.5vw, 48px) 60px', position: 'relative', zIndex: 40 }}>
+      <div className="container page-transition" style={{ maxWidth: 'min(1560px, 94vw)', margin: '0 auto', padding: 'clamp(20px, 3vw, 36px) clamp(16px, 3.5vw, 48px) 60px', position: 'relative', zIndex: 40 }}>
         
-        {/* Multiverse Header Banner — Prominently Elevated with High zIndex so Headings are Never Obscured */}
-        <header style={{ textAlign: 'center', marginBottom: '32px', position: 'relative', zIndex: 40, padding: '0 clamp(12px, 6vw, 80px)' }}>
+        {/* Multiverse Header Banner — Perfectly Centered, Balanced Gaps & Clean Cinematic Alignment */}
+        <header style={{ 
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          width: '100%',
+          maxWidth: '1080px',
+          margin: '0 auto 52px auto',
+          paddingTop: 'clamp(20px, 3.2vw, 40px)',
+          paddingLeft: '16px',
+          paddingRight: '16px',
+          position: 'relative', 
+          zIndex: 40 
+        }}>
           {/* Live Multiverse Status Telemetry Banner (Blue & Red Duality) */}
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '10px',
-            background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.22) 0%, rgba(10, 14, 24, 0.9) 50%, rgba(224, 27, 34, 0.22) 100%)',
+            justifyContent: 'center',
+            gap: '12px',
+            background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.24) 0%, rgba(10, 14, 24, 0.92) 50%, rgba(224, 27, 34, 0.24) 100%)',
             border: '1px solid rgba(56, 189, 248, 0.45)',
             borderRadius: '24px',
-            padding: '6px 20px',
-            marginBottom: '16px',
+            padding: '7px 22px',
+            margin: '0 auto 20px auto',
             position: 'relative',
             zIndex: 40,
-            boxShadow: '0 0 20px rgba(2, 132, 199, 0.25), inset 0 0 10px rgba(224, 27, 34, 0.18)'
+            boxShadow: '0 0 22px rgba(2, 132, 199, 0.25), inset 0 0 10px rgba(224, 27, 34, 0.18)'
           }}>
-            <span className="live-pulse-dot" style={{ width: '8px', height: '8px', background: '#38BDF8', boxShadow: '0 0 8px #38BDF8' }} />
-            <span style={{ fontSize: '0.76rem', color: '#FFF', fontWeight: '800', letterSpacing: '1.4px', textTransform: 'uppercase', fontFamily: 'var(--font-display)' }}>
+            <span className="live-pulse-dot" style={{ width: '8px', height: '8px', background: '#38BDF8', boxShadow: '0 0 8px #38BDF8', flexShrink: 0 }} />
+            <span style={{ fontSize: '0.78rem', color: '#FFF', fontWeight: '800', letterSpacing: '1.4px', textTransform: 'uppercase', fontFamily: 'var(--font-display)', textAlign: 'center' }}>
               MULTIVERSE CLUSTER ONLINE • 4 FORENSIC STAGES ACTIVE • REAL-TIME ENGINE
             </span>
-            <span className="live-pulse-dot" style={{ width: '8px', height: '8px', background: '#EF4444', boxShadow: '0 0 8px #EF4444' }} />
+            <span className="live-pulse-dot" style={{ width: '8px', height: '8px', background: '#EF4444', boxShadow: '0 0 8px #EF4444', flexShrink: 0 }} />
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', flexWrap: 'wrap', justifyContent: 'center', position: 'relative', zIndex: 40 }}>
+          {/* Protocol & Department Badges */}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            gap: '12px', 
+            margin: '0 auto 24px auto', 
+            flexWrap: 'wrap', 
+            position: 'relative', 
+            zIndex: 40 
+          }}>
             <span className="shimmer-badge" style={{ 
               border: '1px solid #38BDF8', 
               color: '#38BDF8', 
-              padding: '5px 16px', 
+              padding: '6px 18px', 
               borderRadius: '6px', 
-              fontSize: '0.8rem', 
+              fontSize: '0.82rem', 
               fontWeight: '800',
               letterSpacing: '1.4px',
-              boxShadow: '0 0 12px rgba(56, 189, 248, 0.35)'
+              boxShadow: '0 0 14px rgba(56, 189, 248, 0.35)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}>
               LOGIN 2026 • MULTIVERSE PROTOCOL
             </span>
@@ -1049,53 +1111,69 @@ export default function Home() {
               background: 'rgba(224, 27, 34, 0.14)', 
               border: '1px solid rgba(224, 27, 34, 0.5)', 
               color: '#FF7B7B', 
-              padding: '5px 14px', 
+              padding: '6px 18px', 
               borderRadius: '6px', 
-              fontSize: '0.8rem', 
+              fontSize: '0.82rem', 
               fontWeight: '700',
-              letterSpacing: '1px'
+              letterSpacing: '1px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}>
               ⚡ DEPT OF COMPUTER APPLICATIONS
             </span>
           </div>
 
-          {/* Main Title Heading — Explicit relative positioning & elevated z-index */}
+          {/* Main Title Heading — Centered Horizontally & Vertically Balanced */}
           <h1 className="hero-title-cinematic" style={{ 
             fontSize: 'clamp(2.8rem, 6.8vw, 5.2rem)', 
-            marginBottom: '16px',
+            margin: '0 auto 24px auto',
             position: 'relative',
-            zIndex: 40
+            zIndex: 40,
+            textAlign: 'center',
+            display: 'inline-block'
           }}>
             PIXEL PARADOX
           </h1>
 
-          {/* Subtitle Heading — Explicit relative positioning & elevated z-index */}
+          {/* Subtitle Heading Tagline — Centered with Balanced Gap */}
           <div style={{ 
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '8px',
-            fontSize: 'clamp(0.9rem, 2vw, 1.25rem)', 
+            justifyContent: 'center',
+            gap: '10px',
+            fontSize: 'clamp(0.92rem, 1.8vw, 1.22rem)', 
             fontWeight: '800', 
             color: '#7DD3FC', 
             letterSpacing: '2.5px',
             textTransform: 'uppercase',
-            background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.2) 0%, rgba(224, 27, 34, 0.2) 100%)',
+            background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.22) 0%, rgba(224, 27, 34, 0.22) 100%)',
             border: '1px solid rgba(56, 189, 248, 0.45)',
-            padding: '8px 24px',
-            borderRadius: '26px',
+            padding: '9px 26px',
+            borderRadius: '28px',
             textShadow: '0 0 14px rgba(56,189,248,0.7)',
-            marginBottom: '20px',
+            margin: '0 auto 24px auto',
             position: 'relative',
             zIndex: 40,
             backdropFilter: 'blur(12px)',
             boxShadow: '0 6px 24px rgba(0, 136, 255, 0.25)'
           }}>
-            <span style={{ color: '#38BDF8' }}>⚡</span>
+            <span style={{ color: '#38BDF8', flexShrink: 0 }}>⚡</span>
             <span>THE REALITY GLITCH — REAL OR AI?</span>
-            <span style={{ color: '#FF4D4D' }}>⚡</span>
+            <span style={{ color: '#FF4D4D', flexShrink: 0 }}>⚡</span>
           </div>
 
-          <p style={{ maxWidth: '840px', margin: '0 auto', color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.7', position: 'relative', zIndex: 40 }}>
+          {/* Cinematic Lead Description — Centered with Comfortable Reading Width */}
+          <p style={{ 
+            maxWidth: '820px', 
+            margin: '0 auto', 
+            color: 'var(--text-secondary)', 
+            fontSize: '1.08rem', 
+            lineHeight: '1.75', 
+            position: 'relative', 
+            zIndex: 40,
+            textAlign: 'center'
+          }}>
             Step inside the high-stakes Multiverse of Generative AI. Decode neural hallucinations, separate authentic photos from synthetic deepfakes, and prove your team is the sharpest in the multiverse!
           </p>
         </header>
