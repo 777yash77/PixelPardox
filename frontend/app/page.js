@@ -383,6 +383,8 @@ export default function Home() {
   ])
   const [deadpoolInput, setDeadpoolInput] = useState('')
   const deadpoolChatBottomRef = useRef(null)
+  const deadpoolContainerRef = useRef(null)
+  const deadpoolChatBodyRef = useRef(null)
 
   // Spider-Man Chatbot State
   const [isSpideyChatOpen, setIsSpideyChatOpen] = useState(false)
@@ -394,17 +396,49 @@ export default function Home() {
   ])
   const [spideyInput, setSpideyInput] = useState('')
   const spideyChatBottomRef = useRef(null)
+  const spideyContainerRef = useRef(null)
+  const spideyChatBodyRef = useRef(null)
 
-  // Auto-scroll chat windows
+  // Keyboard Escape listener & Click Outside listener to close open chats
   useEffect(() => {
-    if (isDeadpoolChatOpen) {
-      deadpoolChatBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsDeadpoolChatOpen(false)
+        setIsSpideyChatOpen(false)
+      }
+    }
+    const handleClickOutside = (e) => {
+      if (isDeadpoolChatOpen && deadpoolContainerRef.current && !deadpoolContainerRef.current.contains(e.target)) {
+        setIsDeadpoolChatOpen(false)
+      }
+      if (isSpideyChatOpen && spideyContainerRef.current && !spideyContainerRef.current.contains(e.target)) {
+        setIsSpideyChatOpen(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    document.addEventListener('pointerdown', handleClickOutside)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      document.removeEventListener('pointerdown', handleClickOutside)
+    }
+  }, [isDeadpoolChatOpen, isSpideyChatOpen])
+
+  // Internal smooth auto-scroll for chat body on new messages
+  useEffect(() => {
+    if (isDeadpoolChatOpen && deadpoolChatBodyRef.current) {
+      deadpoolChatBodyRef.current.scrollTo({
+        top: deadpoolChatBodyRef.current.scrollHeight,
+        behavior: 'smooth'
+      })
     }
   }, [deadpoolMessages, isDeadpoolChatOpen, isDeadpoolTyping])
 
   useEffect(() => {
-    if (isSpideyChatOpen) {
-      spideyChatBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (isSpideyChatOpen && spideyChatBodyRef.current) {
+      spideyChatBodyRef.current.scrollTo({
+        top: spideyChatBodyRef.current.scrollHeight,
+        behavior: 'smooth'
+      })
     }
   }, [spideyMessages, isSpideyChatOpen, isSpideyTyping])
 
@@ -1931,12 +1965,12 @@ export default function Home() {
       {/* ========================================================= */}
       {/* LEFT SIDE: DEADPOOL MERC-WITH-A-CHAT & AUTOMATED CHATBOT */}
       {/* ========================================================= */}
-      <div className="sticky-deadpool-bar">
+      <div className="sticky-deadpool-bar" ref={deadpoolContainerRef}>
         {/* Chatbot Window (Toggleable) */}
         {isDeadpoolChatOpen ? (
           <div className="deadpool-chat-window">
             {/* Header */}
-            <div style={{ background: 'linear-gradient(135deg, #E23636 0%, #850B12 100%)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="chat-window-header" style={{ background: 'linear-gradient(135deg, #E23636 0%, #850B12 100%)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#FFF', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <svg viewBox="0 0 64 64" style={{ width: '90%', height: '90%' }}>
@@ -1953,15 +1987,18 @@ export default function Home() {
                 </div>
               </div>
               <button 
+                type="button"
                 onClick={() => setIsDeadpoolChatOpen(false)}
-                style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '1.2rem', cursor: 'pointer', padding: '4px' }}
+                className="chat-close-btn"
+                title="Close Chat (Esc)"
+                aria-label="Close Chat"
               >
                 ✕
               </button>
             </div>
 
             {/* Chat Body */}
-            <div style={{ padding: '14px', maxHeight: '280px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+            <div ref={deadpoolChatBodyRef} className="chat-window-body">
               {deadpoolMessages.map((msg, idx) => (
                 <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-bot'}>
                   <div style={{ 
@@ -1985,7 +2022,7 @@ export default function Home() {
             </div>
 
             {/* Dynamic Popping Suggestion & Suggested Question Chips */}
-            <div style={{ padding: '10px 14px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '180px', overflowY: 'auto' }}>
+            <div className="chat-suggestions-box">
               {/* Category Filter Tabs */}
               <div style={{ display: 'flex', gap: '6px', margin: '2px 0' }}>
                 <button
@@ -2053,7 +2090,7 @@ export default function Home() {
             </div>
 
             {/* Custom Input */}
-            <form onSubmit={handleSendDeadpoolCustom} style={{ display: 'flex', padding: '10px 12px', borderTop: '1px solid rgba(255,255,255,0.08)', background: '#0A0406' }}>
+            <form onSubmit={handleSendDeadpoolCustom} className="chat-input-bar">
               <input 
                 type="text"
                 placeholder="Ask Deadpool anything..."
@@ -2116,12 +2153,12 @@ export default function Home() {
       {/* ========================================================= */}
       {/* RIGHT SIDE: SPIDER-MAN STICKY WIDGET & SPIDEY'S CHATBOT */}
       {/* ========================================================= */}
-      <div className="sticky-spidey-bar">
+      <div className="sticky-spidey-bar" ref={spideyContainerRef}>
         {/* Spidey Chatbot Window (Toggleable) */}
         {isSpideyChatOpen ? (
           <div className="spidey-chat-window">
             {/* Header */}
-            <div style={{ background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="chat-window-header" style={{ background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#0284C7', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid #38BDF8' }}>
                   <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
@@ -2137,15 +2174,18 @@ export default function Home() {
                 </div>
               </div>
               <button 
+                type="button"
                 onClick={() => setIsSpideyChatOpen(false)}
-                style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '1.2rem', cursor: 'pointer', padding: '4px' }}
+                className="chat-close-btn"
+                title="Close Chat (Esc)"
+                aria-label="Close Chat"
               >
                 ✕
               </button>
             </div>
 
             {/* Chat Body */}
-            <div style={{ padding: '14px', maxHeight: '280px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+            <div ref={spideyChatBodyRef} className="chat-window-body">
               {spideyMessages.map((msg, idx) => (
                 <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-spidey'}>
                   <div style={{ 
@@ -2169,7 +2209,7 @@ export default function Home() {
             </div>
 
             {/* Dynamic Popping Suggestion & Suggested Question Chips */}
-            <div style={{ padding: '10px 14px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '180px', overflowY: 'auto' }}>
+            <div className="chat-suggestions-box">
               {/* Category Filter Tabs */}
               <div style={{ display: 'flex', gap: '6px', margin: '2px 0' }}>
                 <button
@@ -2237,7 +2277,7 @@ export default function Home() {
             </div>
 
             {/* Custom Input */}
-            <form onSubmit={handleSendSpideyCustom} style={{ display: 'flex', padding: '10px 12px', borderTop: '1px solid rgba(255,255,255,0.08)', background: '#0A0406' }}>
+            <form onSubmit={handleSendSpideyCustom} className="chat-input-bar">
               <input 
                 type="text"
                 placeholder="Ask Spider-Man anything..."

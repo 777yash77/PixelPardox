@@ -686,12 +686,15 @@ h1, h2, h3, h4, h5, h6 {
 /* Floating Sticky Spidey Sticking Around on Side */
 .sticky-spidey-bar {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 16px;
+  right: 16px;
   z-index: 1000;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  justify-content: flex-end;
+  max-height: calc(100vh - 20px);
+  max-height: calc(100dvh - 20px);
   pointer-events: auto;
 }
 
@@ -744,12 +747,15 @@ h1, h2, h3, h4, h5, h6 {
 /* Deadpool Floating Sticking Around on Left Side */
 .sticky-deadpool-bar {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
+  bottom: 16px;
+  left: 16px;
   z-index: 1000;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: flex-end;
+  max-height: calc(100vh - 20px);
+  max-height: calc(100dvh - 20px);
   pointer-events: auto;
 }
 
@@ -794,17 +800,147 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Interactive Chatbot Modal Panel */
-.deadpool-chat-window {
-  width: min(380px, 92vw);
-  background: #0E0507;
-  border: 2px solid #E23636;
+.deadpool-chat-window,
+.spidey-chat-window {
+  width: min(390px, 92vw);
+  height: min(520px, calc(100vh - 84px));
+  height: min(520px, calc(100dvh - 84px));
+  max-height: min(520px, calc(100vh - 84px));
+  max-height: min(520px, calc(100dvh - 84px));
   border-radius: 14px;
-  box-shadow: 0 14px 45px rgba(0, 0, 0, 0.8), 0 0 20px rgba(226, 54, 54, 0.35);
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   overflow: hidden;
   animation: scalePop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.deadpool-chat-window {
+  background: #0E0507;
+  border: 2px solid #E23636;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.85), 0 0 24px rgba(226, 54, 54, 0.4);
+}
+
+.spidey-chat-window {
+  background: #070C14;
+  border: 2px solid #38BDF8;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.85), 0 0 24px rgba(56, 189, 248, 0.4);
+}
+
+/* Chatbot Header & Controls */
+.chat-window-header {
+  flex-shrink: 0;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 5;
+  user-select: none;
+}
+
+.chat-close-btn {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  color: #FFF;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.chat-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: #FFF;
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+}
+
+.chat-close-btn:active {
+  transform: scale(0.92);
+}
+
+/* Chat Messages Scroll Container */
+.chat-window-body {
+  flex: 1 1 auto;
+  min-height: 120px;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  scroll-behavior: smooth;
+}
+
+.deadpool-chat-window .chat-window-body::-webkit-scrollbar,
+.spidey-chat-window .chat-window-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.deadpool-chat-window .chat-window-body::-webkit-scrollbar-track,
+.spidey-chat-window .chat-window-body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 4px;
+}
+
+.deadpool-chat-window .chat-window-body::-webkit-scrollbar-thumb {
+  background: rgba(226, 54, 54, 0.65);
+  border-radius: 4px;
+}
+
+.deadpool-chat-window .chat-window-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(226, 54, 54, 0.95);
+}
+
+.spidey-chat-window .chat-window-body::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.65);
+  border-radius: 4px;
+}
+
+.spidey-chat-window .chat-window-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.95);
+}
+
+/* Suggestions Box */
+.chat-suggestions-box {
+  flex-shrink: 0;
+  max-height: 120px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chat-suggestions-box::-webkit-scrollbar {
+  width: 5px;
+}
+
+.chat-suggestions-box::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+/* Chat Input Bar */
+.chat-input-bar {
+  flex-shrink: 0;
+  display: flex;
+  padding: 8px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #080305;
+  gap: 8px;
 }
 
 .chat-bubble-user {
@@ -849,20 +985,6 @@ h1, h2, h3, h4, h5, h6 {
   border-color: #ff3b3b;
   color: #FFF;
   transform: translateX(3px);
-}
-
-/* Spider-Man Chat Window */
-.spidey-chat-window {
-  width: min(380px, 92vw);
-  background: #070C14;
-  border: 2px solid #38BDF8;
-  border-radius: 14px;
-  box-shadow: 0 14px 45px rgba(0, 0, 0, 0.85), 0 0 24px rgba(56, 189, 248, 0.35);
-  margin-bottom: 14px;
-  overflow: hidden;
-  animation: scalePop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  display: flex;
-  flex-direction: column;
 }
 
 .chat-bubble-spidey {
@@ -2907,8 +3029,9 @@ h1, h2, h3, h4, h5, h6 {
   .deadpool-chat-window,
   .spidey-chat-window {
     width: calc(100vw - 24px) !important;
-    max-width: 340px !important;
-    max-height: 58vh !important;
+    max-width: 350px !important;
+    height: min(480px, calc(100vh - 80px)) !important;
+    max-height: min(480px, calc(100vh - 80px)) !important;
     font-size: 0.82rem !important;
   }
 
@@ -3007,12 +3130,13 @@ h1, h2, h3, h4, h5, h6 {
     gap: 8px !important;
   }
 
-  /* Chat windows: full screen on tiny phones */
+  /* Chat windows: compact and clamped on mobile */
   .deadpool-chat-window,
   .spidey-chat-window {
     width: calc(100vw - 16px) !important;
-    max-height: 70vh !important;
-    bottom: 70px !important;
+    height: min(440px, calc(100vh - 75px)) !important;
+    max-height: min(440px, calc(100vh - 75px)) !important;
+    bottom: auto !important;
   }
 
   /* Prelim timer: compact */
@@ -3062,8 +3186,9 @@ h1, h2, h3, h4, h5, h6 {
 
   .deadpool-chat-window,
   .spidey-chat-window {
-    max-height: 80vh !important;
-    bottom: 60px !important;
+    height: min(340px, calc(100vh - 50px)) !important;
+    max-height: min(340px, calc(100vh - 50px)) !important;
+    bottom: auto !important;
   }
 
   .arena-hud-nav {
