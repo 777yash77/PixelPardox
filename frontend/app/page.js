@@ -350,24 +350,47 @@ export default function Home() {
   const [isDeadpoolTyping, setIsDeadpoolTyping] = useState(false)
   const [isSpideyTyping, setIsSpideyTyping] = useState(false)
 
-  // Mascot Animations State (Hide/Show Spiderman & Deadpool at top of screen)
-  const [hideMascotAnimations, setHideMascotAnimations] = useState(false)
+  // Mascot Animations State (Independent Hide/Show for Deadpool & Spider-Man)
+  const [hideDeadpoolMascot, setHideDeadpoolMascot] = useState(false)
+  const [hideSpideyMascot, setHideSpideyMascot] = useState(false)
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('hideMascotAnimations')
-      if (saved === 'true') {
-        setHideMascotAnimations(true)
+      const savedDeadpool = localStorage.getItem('hideDeadpoolMascot')
+      const savedSpidey = localStorage.getItem('hideSpideyMascot')
+      const savedAll = localStorage.getItem('hideMascotAnimations')
+      if (savedDeadpool === 'true' || savedAll === 'true') {
+        setHideDeadpoolMascot(true)
+      }
+      if (savedSpidey === 'true' || savedAll === 'true') {
+        setHideSpideyMascot(true)
       }
     }
   }, [])
 
+  const handleToggleDeadpoolMascot = (hide) => {
+    setHideDeadpoolMascot(hide)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('hideDeadpoolMascot', hide ? 'true' : 'false')
+    }
+  }
+
+  const handleToggleSpideyMascot = (hide) => {
+    setHideSpideyMascot(hide)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('hideSpideyMascot', hide ? 'true' : 'false')
+    }
+  }
+
   const handleToggleMascots = (hide) => {
-    setHideMascotAnimations(hide)
+    handleToggleDeadpoolMascot(hide)
+    handleToggleSpideyMascot(hide)
     if (typeof window !== 'undefined') {
       localStorage.setItem('hideMascotAnimations', hide ? 'true' : 'false')
     }
   }
+
+  const hideMascotAnimations = hideDeadpoolMascot && hideSpideyMascot
 
   // Chat Category States
   const [deadpoolCategory, setDeadpoolCategory] = useState('technical')
@@ -784,7 +807,7 @@ export default function Home() {
       </svg>
 
       {/* TOP-RIGHT: REALISTIC SWINGING SPIDER-MAN FULL BODY MODEL WITH ELASTIC SILK */}
-      {!hideMascotAnimations && (
+      {!hideSpideyMascot ? (
       <div 
         style={{
           position: 'absolute',
@@ -862,12 +885,39 @@ export default function Home() {
             <span>🕷️ SPIDER-MAN • MENTOR</span>
             <span className="mascot-tag-sub">Click to Chat</span>
           </div>
+
+          {/* Small Blue Hanging Hide Button */}
+          <div className="mascot-hanging-container">
+            <div className="mascot-hanging-wire" />
+            <button
+              type="button"
+              className="mascot-hanging-blue-btn"
+              onClick={(e) => {
+                e.stopPropagation()
+                handleToggleSpideyMascot(true)
+              }}
+              title="Hide Spider-Man"
+            >
+              <span>✕</span>
+              <span>Hide</span>
+            </button>
+          </div>
         </div>
       </div>
+      ) : (
+        /* Hanging restore tab docked to top edge */
+        <button
+          type="button"
+          className="mascot-docked-restore-btn spidey-restore"
+          onClick={() => handleToggleSpideyMascot(false)}
+          title="Show Spider-Man"
+        >
+          <span>▼ 🕸️ Spidey</span>
+        </button>
       )}
 
       {/* TOP-LEFT: TACTICAL PERCH DEADPOOL FULL BODY MODEL ON CYBER PLATFORM */}
-      {!hideMascotAnimations && (
+      {!hideDeadpoolMascot ? (
       <div 
         style={{
           position: 'absolute',
@@ -934,8 +984,35 @@ export default function Home() {
             <span>⚔️ DEADPOOL • MERC-BOT</span>
             <span className="mascot-tag-sub">Click to Chat</span>
           </div>
+
+          {/* Small Blue Hanging Hide Button */}
+          <div className="mascot-hanging-container">
+            <div className="mascot-hanging-wire" />
+            <button
+              type="button"
+              className="mascot-hanging-blue-btn"
+              onClick={(e) => {
+                e.stopPropagation()
+                handleToggleDeadpoolMascot(true)
+              }}
+              title="Hide Deadpool"
+            >
+              <span>✕</span>
+              <span>Hide</span>
+            </button>
+          </div>
         </div>
       </div>
+      ) : (
+        /* Hanging restore tab docked to top edge */
+        <button
+          type="button"
+          className="mascot-docked-restore-btn deadpool-restore"
+          onClick={() => handleToggleDeadpoolMascot(false)}
+          title="Show Deadpool"
+        >
+          <span>▼ 🌮 Deadpool</span>
+        </button>
       )}
 
       {/* Main Content Container — Expansive Width, Clean Stacked Spacing */}
