@@ -350,12 +350,6 @@ export default function Home() {
   const [isDeadpoolTyping, setIsDeadpoolTyping] = useState(false)
   const [isSpideyTyping, setIsSpideyTyping] = useState(false)
 
-  // Tournament Help & Coordinators Support Modal State
-  const [showHelpModal, setShowHelpModal] = useState(false)
-  const [coordHoverDeadpool, setCoordHoverDeadpool] = useState(false)
-  const [coordHoverSpidey, setCoordHoverSpidey] = useState(false)
-  const [copiedEmail, setCopiedEmail] = useState(null)
-
   // Mascot Animations State (Hide/Show Spiderman & Deadpool at top of screen)
   const [hideMascotAnimations, setHideMascotAnimations] = useState(false)
 
@@ -372,14 +366,6 @@ export default function Home() {
     setHideMascotAnimations(hide)
     if (typeof window !== 'undefined') {
       localStorage.setItem('hideMascotAnimations', hide ? 'true' : 'false')
-    }
-  }
-
-  const handleCopyEmail = (email) => {
-    if (typeof navigator !== 'undefined' && navigator.clipboard) {
-      navigator.clipboard.writeText(email)
-      setCopiedEmail(email)
-      setTimeout(() => setCopiedEmail(null), 2400)
     }
   }
 
@@ -1037,7 +1023,7 @@ export default function Home() {
                   <span style={{ fontSize: '0.74rem', color: '#7DD3FC', fontWeight: '900', letterSpacing: '1.5px', background: 'rgba(2,132,199,0.22)', padding: '4px 10px', borderRadius: '4px', border: '1px solid rgba(56,189,248,0.5)' }}>
                     STEP 01: ONBOARDING
                   </span>
-                  <span className="badge" style={{ background: 'rgba(56,189,248,0.18)', color: '#38BDF8', borderColor: '#0284C7' }}>Teams of 2–4</span>
+                  <span className="badge" style={{ background: 'rgba(56,189,248,0.18)', color: '#38BDF8', borderColor: '#0284C7' }}>Teams of 2–3</span>
                 </div>
                 <h3 style={{ fontSize: '1.45rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', color: '#FFF' }}>
                   Assemble Your Team
@@ -1688,64 +1674,12 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ========================================================= */}
-        {/* SECTION 4: TOURNAMENT HELP & STUDENT COORDINATORS DESK    */}
-        {/* ========================================================= */}
-        <section id="help-desk-section" style={{ maxWidth: '100%', margin: '0 auto 64px' }}>
-          <div className="comic-card" style={{
-            padding: '28px 24px',
-            borderRadius: '16px',
-            borderTop: '4px solid #38BDF8',
-            borderBottom: '4px solid #E01B22',
-            background: 'linear-gradient(145deg, rgba(14, 22, 38, 0.85) 0%, rgba(26, 10, 16, 0.85) 100%)',
-            boxShadow: '0 14px 44px rgba(0, 0, 0, 0.7)'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '18px' }}>
-              <div>
-                <span style={{ color: '#38BDF8', fontWeight: '800', fontSize: '0.78rem', letterSpacing: '1.4px', textTransform: 'uppercase' }}>
-                  DIRECT TOURNAMENT ASSISTANCE &amp; COORDINATORS
-                </span>
-                <h2 style={{ fontSize: '1.65rem', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '4px', marginBottom: 0 }}>
-                  🆘 Multiverse Help Desk &amp; Event Support
-                </h2>
-              </div>
-              <div style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1px solid #38BDF8', color: '#7DD3FC', padding: '5px 14px', borderRadius: '20px', fontSize: '0.78rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span className="live-pulse-dot" style={{ width: '7px', height: '7px', background: '#38BDF8', borderRadius: '50%' }} />
-                Student Coordinators Available
-              </div>
-            </div>
-
-            <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '22px', maxWidth: '860px', fontSize: '0.96rem' }}>
-              Have questions regarding Stage 0 Prelim timing, webcam invigilation permissions, team score aggregation, or technical rules? Contact details are in the footer below.
-            </p>
-
-            {/* Quick Emergency Rules Box */}
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.03)',
-              borderLeft: '4px solid #38BDF8',
-              borderRadius: '8px',
-              padding: '18px 22px',
-              fontSize: '0.88rem',
-              color: 'var(--text-secondary)',
-              lineHeight: '1.65'
-            }}>
-              <strong style={{ color: '#FFF' }}>💡 Multiverse Help &amp; Exam Checklist:</strong>
-              <ul style={{ margin: '8px 0 0 18px', padding: 0 }}>
-                <li><strong>Webcam Invigilation:</strong> Allow camera permissions when prompted. The invigilation runs silently in 1-minute intervals.</li>
-                <li><strong>Stage 0 Prelims:</strong> 30 Multiple Choice Questions in strictly 30 minutes. Correct answers award +10 points; wrong answers deduct -5 points.</li>
-                <li><strong>Squad Summation:</strong> Member scores under the same registered Team ID add directly together into the team total.</li>
-                <li><strong>Disconnections:</strong> If your network drops, simply log back in with your Team ID and member name to resume your active test.</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════ */}
-        {/* PREMIUM FOOTER WITH COORDINATOR CONTACTS   */}
-        {/* ═══════════════════════════════════════════ */}
+        {/* ═══════════════════════════════════════════════════════ */}
+        {/* PREMIUM FOOTER WITH HELP DESK & STUDENT COORDINATOR CARDS */}
+        {/* ═══════════════════════════════════════════════════════ */}
         <footer style={{
           borderTop: '1px solid rgba(255,255,255,0.07)',
-          marginTop: '16px',
+          marginTop: '36px',
           paddingTop: '48px',
           paddingBottom: '48px'
         }}>
@@ -1758,7 +1692,7 @@ export default function Home() {
           }} />
 
           {/* Event Identity Row */}
-          <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -1771,161 +1705,187 @@ export default function Home() {
             }}>
               <span style={{ fontSize: '0.7rem', color: '#38BDF8', fontWeight: '800', letterSpacing: '2px', textTransform: 'uppercase' }}>🕷️ PIXEL PARADOX 2026</span>
               <span style={{ width: '1px', height: '14px', background: 'rgba(255,255,255,0.2)' }} />
-              <span style={{ fontSize: '0.7rem', color: '#FF6B6B', fontWeight: '800', letterSpacing: '2px', textTransform: 'uppercase' }}>DEEPFAKE DETECTION CHAMPIONSHIP ⚔️</span>
+              <span style={{ fontSize: '0.7rem', color: '#FF6B6B', fontWeight: '800', letterSpacing: '2px', textTransform: 'uppercase' }}>HELP DESK &amp; STUDENT COORDINATORS ⚔️</span>
             </div>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: '0 0 6px 0' }}>
               Organized by the <strong style={{ color: '#FFF' }}>Department of Computer Applications (MCA)</strong> — PSG College of Technology, Coimbatore
+            </p>
+            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.82rem', margin: 0 }}>
+              Need assistance during Stage 0 Prelims, webcam setup, or live challenges? Reach out to the student coordinators below.
             </p>
           </div>
 
-          {/* Coordinator Contact Cards */}
-          <div style={{ marginBottom: '36px' }}>
-            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-              <span style={{
-                fontSize: '0.72rem',
-                color: 'var(--text-secondary)',
-                fontWeight: '700',
-                letterSpacing: '2px',
-                textTransform: 'uppercase',
-                borderBottom: '1px solid rgba(255,255,255,0.1)',
-                paddingBottom: '6px'
-              }}>📞 Student Coordinators</span>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', maxWidth: '800px', margin: '0 auto' }}>
+          {/* Coordinator Contact Cards (Matching Uploaded Design) */}
+          <div style={{ marginBottom: '32px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', maxWidth: '820px', margin: '0 auto' }}>
 
-              {/* Yaswanth R T */}
+              {/* Vignesh M Card */}
               <div style={{
-                background: 'linear-gradient(145deg, rgba(2,132,199,0.1) 0%, rgba(10,14,24,0.9) 100%)',
-                border: '1px solid rgba(56,189,248,0.35)',
-                borderRadius: '16px',
-                padding: '24px 26px',
+                background: 'linear-gradient(145deg, rgba(24, 12, 18, 0.95) 0%, rgba(13, 9, 14, 0.95) 100%)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderLeft: '4px solid #E01B22',
+                borderRadius: '12px',
+                padding: '22px 24px',
                 display: 'flex',
-                alignItems: 'center',
-                gap: '18px',
-                boxShadow: '0 4px 24px rgba(2,132,199,0.15), inset 0 1px 0 rgba(56,189,248,0.15)',
-                position: 'relative',
-                overflow: 'hidden'
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                boxShadow: '0 8px 30px rgba(0, 0, 0, 0.55)'
               }}>
-                {/* Cyan glow accent bar */}
-                <div style={{
-                  position: 'absolute',
-                  left: 0, top: 0, bottom: 0,
-                  width: '3px',
-                  background: 'linear-gradient(180deg, #38BDF8, #0284C7)',
-                  borderRadius: '16px 0 0 16px'
-                }} />
-                {/* Avatar */}
-                <div style={{
-                  width: '52px', height: '52px', borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #0284C7 0%, #075985 100%)',
-                  border: '2px solid rgba(56,189,248,0.6)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '1.5rem', flexShrink: 0,
-                  boxShadow: '0 0 14px rgba(56,189,248,0.4)'
-                }}>👨‍💻</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
-                    <span style={{ fontSize: '1.05rem', fontWeight: '800', color: '#FFF' }}>Yaswanth R T</span>
-                    <span style={{ fontSize: '0.62rem', background: 'rgba(56,189,248,0.2)', color: '#7DD3FC', border: '1px solid rgba(56,189,248,0.4)', padding: '1px 7px', borderRadius: '10px', fontWeight: '700' }}>COORD</span>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <div style={{ fontSize: '1.25rem', fontWeight: '800', color: '#FFF', letterSpacing: '0.5px' }}>
+                      Vignesh M
+                    </div>
+                    <span style={{ fontSize: '0.62rem', background: 'rgba(239, 68, 68, 0.18)', color: '#FCA5A5', border: '1px solid rgba(239, 68, 68, 0.4)', padding: '2px 8px', borderRadius: '4px', fontWeight: '800', letterSpacing: '0.6px' }}>
+                      COORDINATOR
+                    </span>
                   </div>
-                  <div style={{ fontSize: '0.76rem', color: '#7DD3FC', marginBottom: '12px' }}>MCA • Dept. of Computer Applications</div>
+
+                  {/* Green Phone Row Matching Screenshot */}
                   <a
-                    href="mailto:25mx360@psgtech.ac.in?subject=Pixel%20Paradox%20Support"
+                    href="tel:+919042223938"
                     style={{
-                      display: 'inline-flex', alignItems: 'center', gap: '6px',
-                      background: 'linear-gradient(135deg, #0284C7 0%, #075985 100%)',
-                      border: '1px solid rgba(56,189,248,0.6)',
-                      color: '#FFF', padding: '8px 16px', borderRadius: '8px',
-                      fontSize: '0.82rem', fontWeight: '700', textDecoration: 'none',
-                      boxShadow: '0 4px 14px rgba(2,132,199,0.35)',
-                      transition: 'all 0.2s ease'
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      textDecoration: 'none',
+                      margin: '4px 0 10px 0',
+                      transition: 'opacity 0.2s ease'
                     }}
+                    title="Call Vignesh M"
                   >
-                    ✉️ Email Yaswanth
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#10B981" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                    <span style={{ color: '#10B981', fontFamily: 'monospace, sans-serif', fontSize: '1.12rem', fontWeight: '800', letterSpacing: '0.5px' }}>
+                      +91 9042223938
+                    </span>
                   </a>
+
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '14px' }}>
+                    MCA • Dept. of Computer Applications
+                  </div>
                 </div>
+
+                <a
+                  href="mailto:25MX356@psgtech.ac.in?subject=Pixel%20Paradox%20Support"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    background: 'rgba(239, 68, 68, 0.12)',
+                    border: '1px solid rgba(239, 68, 68, 0.4)',
+                    color: '#FCA5A5',
+                    padding: '8px 14px',
+                    borderRadius: '8px',
+                    fontSize: '0.8rem',
+                    fontWeight: '700',
+                    textDecoration: 'none',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  ✉️ 25MX356@psgtech.ac.in
+                </a>
               </div>
 
-              {/* Vignesh M */}
+              {/* Yashwanth R T Card */}
               <div style={{
-                background: 'linear-gradient(145deg, rgba(224,27,34,0.1) 0%, rgba(10,14,24,0.9) 100%)',
-                border: '1px solid rgba(239,68,68,0.35)',
-                borderRadius: '16px',
-                padding: '24px 26px',
+                background: 'linear-gradient(145deg, rgba(12, 20, 32, 0.95) 0%, rgba(9, 13, 22, 0.95) 100%)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderLeft: '4px solid #38BDF8',
+                borderRadius: '12px',
+                padding: '22px 24px',
                 display: 'flex',
-                alignItems: 'center',
-                gap: '18px',
-                boxShadow: '0 4px 24px rgba(224,27,34,0.15), inset 0 1px 0 rgba(239,68,68,0.15)',
-                position: 'relative',
-                overflow: 'hidden'
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                boxShadow: '0 8px 30px rgba(0, 0, 0, 0.55)'
               }}>
-                {/* Red glow accent bar */}
-                <div style={{
-                  position: 'absolute',
-                  left: 0, top: 0, bottom: 0,
-                  width: '3px',
-                  background: 'linear-gradient(180deg, #EF4444, #B91C1C)',
-                  borderRadius: '16px 0 0 16px'
-                }} />
-                {/* Avatar */}
-                <div style={{
-                  width: '52px', height: '52px', borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #E01B22 0%, #7F1D1D 100%)',
-                  border: '2px solid rgba(239,68,68,0.6)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '1.5rem', flexShrink: 0,
-                  boxShadow: '0 0 14px rgba(239,68,68,0.4)'
-                }}>👨‍💻</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
-                    <span style={{ fontSize: '1.05rem', fontWeight: '800', color: '#FFF', letterSpacing: '0.3px' }}>Vignesh M</span>
-                    <span style={{ fontSize: '0.62rem', background: 'rgba(239,68,68,0.2)', color: '#FCA5A5', border: '1px solid rgba(239,68,68,0.4)', padding: '1px 7px', borderRadius: '10px', fontWeight: '700', letterSpacing: '0.5px' }}>COORD</span>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <div style={{ fontSize: '1.25rem', fontWeight: '800', color: '#FFF', letterSpacing: '0.5px' }}>
+                      Yashwanth R T
+                    </div>
+                    <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.18)', color: '#7DD3FC', border: '1px solid rgba(56, 189, 248, 0.4)', padding: '2px 8px', borderRadius: '4px', fontWeight: '800', letterSpacing: '0.6px' }}>
+                      COORDINATOR
+                    </span>
                   </div>
-                  <div style={{ fontSize: '0.76rem', color: '#FCA5A5', marginBottom: '12px' }}>MCA • Dept. of Computer Applications</div>
+
+                  {/* Green Phone Row Matching Screenshot */}
                   <a
-                    href="mailto:25MX356@psgtech.ac.in?subject=Pixel%20Paradox%20Support"
+                    href="tel:+917094674171"
                     style={{
-                      display: 'inline-flex', alignItems: 'center', gap: '6px',
-                      background: 'linear-gradient(135deg, #E01B22 0%, #7F1D1D 100%)',
-                      border: '1px solid rgba(239,68,68,0.6)',
-                      color: '#FFF', padding: '8px 16px', borderRadius: '8px',
-                      fontSize: '0.82rem', fontWeight: '700', textDecoration: 'none',
-                      boxShadow: '0 4px 14px rgba(224,27,34,0.35)',
-                      transition: 'all 0.2s ease'
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      textDecoration: 'none',
+                      margin: '4px 0 10px 0',
+                      transition: 'opacity 0.2s ease'
                     }}
+                    title="Call Yashwanth R T"
                   >
-                    ✉️ Email Vignesh
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#10B981" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                    <span style={{ color: '#10B981', fontFamily: 'monospace, sans-serif', fontSize: '1.12rem', fontWeight: '800', letterSpacing: '0.5px' }}>
+                      +91 7094674171
+                    </span>
                   </a>
+
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '14px' }}>
+                    MCA • Dept. of Computer Applications
+                  </div>
                 </div>
+
+                <a
+                  href="mailto:25mx360@psgtech.ac.in?subject=Pixel%20Paradox%20Support"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    background: 'rgba(56, 189, 248, 0.12)',
+                    border: '1px solid rgba(56, 189, 248, 0.4)',
+                    color: '#7DD3FC',
+                    padding: '8px 14px',
+                    borderRadius: '8px',
+                    fontSize: '0.8rem',
+                    fontWeight: '700',
+                    textDecoration: 'none',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  ✉️ 25mx360@psgtech.ac.in
+                </a>
               </div>
 
             </div>
           </div>
 
-          {/* Bottom nav links */}
+          {/* Quick Help & Protocols Checklist */}
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.025)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderLeft: '4px solid #38BDF8',
+            borderRadius: '10px',
+            padding: '16px 20px',
+            maxWidth: '820px',
+            margin: '0 auto 32px',
+            fontSize: '0.86rem',
+            color: 'var(--text-secondary)',
+            lineHeight: '1.65'
+          }}>
+            <strong style={{ color: '#FFF' }}>💡 Multiverse Help &amp; Exam Checklist:</strong>
+            <ul style={{ margin: '8px 0 0 18px', padding: 0 }}>
+              <li><strong>Webcam Invigilation:</strong> Allow camera permissions when prompted. The invigilation runs silently in 1-minute intervals.</li>
+              <li><strong>Stage 0 Prelims:</strong> 30 Multiple Choice Questions in strictly 30 minutes. Correct answers award +10 points; wrong answers deduct -5 points.</li>
+              <li><strong>Squad Summation:</strong> Member scores under the same registered Team ID add directly together into the team total.</li>
+              <li><strong>Disconnections:</strong> If your network drops, simply log back in with your Team ID and member name to resume your active test.</li>
+            </ul>
+          </div>
+
+          {/* Bottom nav links - 1 single, non-duplicate animation toggle and portal links */}
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
-            <button
-              type="button"
-              onClick={() => setShowHelpModal(true)}
-              style={{
-                background: 'rgba(56, 189, 248, 0.08)',
-                border: '1px solid rgba(56, 189, 248, 0.3)',
-                color: '#38BDF8',
-                cursor: 'pointer',
-                fontSize: '0.82rem',
-                fontWeight: '600',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '6px 14px',
-                borderRadius: '8px',
-                transition: 'all 0.2s ease'
-              }}
-              title="Contact Student Coordinators (Help Desk)"
-            >
-              📞 Help &amp; Coordinators
-            </button>
-            <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '0.8rem' }}>•</span>
             <button
               type="button"
               onClick={() => handleToggleMascots(!hideMascotAnimations)}
@@ -2352,297 +2312,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Interactive Multiverse Help Modal */}
-      {showHelpModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          background: 'rgba(6, 9, 18, 0.88)',
-          backdropFilter: 'blur(14px)',
-          WebkitBackdropFilter: 'blur(14px)',
-          zIndex: 99999,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px',
-          animation: 'fadeIn 0.25s ease-out'
-        }}>
-          <div style={{
-            width: '100%',
-            maxWidth: '680px',
-            maxHeight: '90vh',
-            overflowY: 'auto',
-            background: 'linear-gradient(145deg, #0C1220 0%, #16080E 100%)',
-            border: '2px solid #38BDF8',
-            borderRadius: '16px',
-            padding: '32px 30px',
-            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(56, 189, 248, 0.35)',
-            position: 'relative'
-          }}>
-            {/* Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
-              <div>
-                <span style={{ fontSize: '0.75rem', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid #38BDF8', color: '#38BDF8', padding: '3px 12px', borderRadius: '4px', fontWeight: '800', letterSpacing: '1px' }}>
-                  HELP &amp; EVENT SUPPORT DESK
-                </span>
-                <h2 style={{ fontSize: '1.7rem', color: '#FFF', marginTop: '10px', marginBottom: '4px' }}>
-                  Student Coordinators Contact
-                </h2>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', margin: 0 }}>
-                  Reach out to the event coordinators for instant tournament support.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowHelpModal(false)}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#FFF',
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  fontSize: '1.2rem',
-                  fontWeight: 'bold',
-                  transition: 'all 0.2s ease'
-                }}
-                title="Close"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Mascot Animations Quick Control Banner */}
-            <div style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              borderRadius: '10px',
-              padding: '12px 18px',
-              marginBottom: '20px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: '12px'
-            }}>
-              <div>
-                <div style={{ fontWeight: 'bold', color: '#FFF', fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span>🎬 Top Screen Hero Animations</span>
-                  <span style={{
-                    fontSize: '0.68rem',
-                    padding: '2px 8px',
-                    borderRadius: '4px',
-                    background: hideMascotAnimations ? 'rgba(239, 68, 68, 0.2)' : 'rgba(34, 197, 94, 0.2)',
-                    color: hideMascotAnimations ? '#FCA5A5' : '#86EFAC',
-                    fontWeight: 'bold'
-                  }}>
-                    {hideMascotAnimations ? 'ANIMATIONS HIDDEN' : 'ANIMATIONS ACTIVE'}
-                  </span>
-                </div>
-                <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                  Stop or allow Spider-Man and Deadpool from appearing at the top of the screen.
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => handleToggleMascots(!hideMascotAnimations)}
-                style={{
-                  background: hideMascotAnimations ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' : 'rgba(239, 68, 68, 0.15)',
-                  border: hideMascotAnimations ? '1px solid #38BDF8' : '1px solid #EF4444',
-                  color: hideMascotAnimations ? '#FFF' : '#FCA5A5',
-                  padding: '7px 16px',
-                  borderRadius: '6px',
-                  fontWeight: 'bold',
-                  fontSize: '0.8rem',
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                {hideMascotAnimations ? '✨ Show Top Animations' : '🚫 Hide Animations'}
-              </button>
-            </div>
-
-            {/* Coordinator Cards */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '24px' }}>
-              {/* Coordinator 1: Yaswanth R T */}
-              <div style={{
-                background: 'rgba(2, 132, 199, 0.1)',
-                border: '1.5px solid rgba(56, 189, 248, 0.5)',
-                borderRadius: '12px',
-                padding: '18px 20px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between'
-              }}>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '0.72rem', background: '#0284C7', color: '#FFF', fontWeight: 'bold', padding: '2px 8px', borderRadius: '4px' }}>
-                      COORDINATOR
-                    </span>
-                    <span style={{ fontSize: '1.2rem' }}>🧑‍💻</span>
-                  </div>
-                  <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#FFF' }}>Yaswanth R T</div>
-                  <div style={{ fontSize: '0.78rem', color: '#7DD3FC', marginBottom: '12px' }}>Dept. of Computer Applications</div>
-                  <div style={{
-                    background: 'rgba(0,0,0,0.4)',
-                    padding: '8px 12px',
-                    borderRadius: '6px',
-                    fontFamily: 'monospace',
-                    fontSize: '0.86rem',
-                    color: '#BAE6FD',
-                    marginBottom: '14px',
-                    wordBreak: 'break-all'
-                  }}>
-                    25mx360@psgtech.ac.in
-                  </div>
-                </div>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <a
-                    href="mailto:25mx360@psgtech.ac.in?subject=Pixel%20Paradox%20Support"
-                    style={{
-                      flex: 1,
-                      textAlign: 'center',
-                      background: '#0284C7',
-                      color: '#FFF',
-                      padding: '8px 12px',
-                      borderRadius: '6px',
-                      fontSize: '0.8rem',
-                      fontWeight: 'bold',
-                      textDecoration: 'none'
-                    }}
-                  >
-                    ✉️ Email
-                  </a>
-                  <button
-                    type="button"
-                    onClick={() => handleCopyEmail('25mx360@psgtech.ac.in')}
-                    style={{
-                      background: copiedEmail === '25mx360@psgtech.ac.in' ? 'rgba(52, 211, 153, 0.25)' : 'rgba(255,255,255,0.1)',
-                      border: `1px solid ${copiedEmail === '25mx360@psgtech.ac.in' ? '#34D399' : 'rgba(255,255,255,0.2)'}`,
-                      color: copiedEmail === '25mx360@psgtech.ac.in' ? '#34D399' : '#FFF',
-                      padding: '8px 12px',
-                      borderRadius: '6px',
-                      fontSize: '0.8rem',
-                      fontWeight: 'bold',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    {copiedEmail === '25mx360@psgtech.ac.in' ? '✓ Copied' : '📋 Copy'}
-                  </button>
-                </div>
-              </div>
-
-              {/* Coordinator 2: Vignesh M */}
-              <div style={{
-                background: 'rgba(224, 27, 34, 0.1)',
-                border: '1.5px solid rgba(239, 68, 68, 0.5)',
-                borderRadius: '12px',
-                padding: '18px 20px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between'
-              }}>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '0.72rem', background: '#E01B22', color: '#FFF', fontWeight: 'bold', padding: '2px 8px', borderRadius: '4px' }}>
-                      COORDINATOR
-                    </span>
-                    <span style={{ fontSize: '1.2rem' }}>🧑‍💻</span>
-                  </div>
-                  <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#FFF' }}>Vignesh M</div>
-                  <div style={{ fontSize: '0.78rem', color: '#FF9B9B', marginBottom: '12px' }}>Dept. of Computer Applications</div>
-                  <div style={{
-                    background: 'rgba(0,0,0,0.4)',
-                    padding: '8px 12px',
-                    borderRadius: '6px',
-                    fontFamily: 'monospace',
-                    fontSize: '0.86rem',
-                    color: '#FECACA',
-                    marginBottom: '14px',
-                    wordBreak: 'break-all'
-                  }}>
-                    25MX356@psgtech.ac.in
-                  </div>
-                </div>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <a
-                    href="mailto:25MX356@psgtech.ac.in?subject=Pixel%20Paradox%20Support"
-                    style={{
-                      flex: 1,
-                      textAlign: 'center',
-                      background: '#E01B22',
-                      color: '#FFF',
-                      padding: '8px 12px',
-                      borderRadius: '6px',
-                      fontSize: '0.8rem',
-                      fontWeight: 'bold',
-                      textDecoration: 'none'
-                    }}
-                  >
-                    ✉️ Email
-                  </a>
-                  <button
-                    type="button"
-                    onClick={() => handleCopyEmail('25MX356@psgtech.ac.in')}
-                    style={{
-                      background: copiedEmail === '25MX356@psgtech.ac.in' ? 'rgba(52, 211, 153, 0.25)' : 'rgba(255,255,255,0.1)',
-                      border: `1px solid ${copiedEmail === '25MX356@psgtech.ac.in' ? '#34D399' : 'rgba(255,255,255,0.2)'}`,
-                      color: copiedEmail === '25MX356@psgtech.ac.in' ? '#34D399' : '#FFF',
-                      padding: '8px 12px',
-                      borderRadius: '6px',
-                      fontSize: '0.8rem',
-                      fontWeight: 'bold',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    {copiedEmail === '25MX356@psgtech.ac.in' ? '✓ Copied' : '📋 Copy'}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Rules & Guidelines Summary */}
-            <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', padding: '16px 18px', marginBottom: '20px', fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-              <div style={{ fontWeight: 'bold', color: '#FFF', marginBottom: '6px' }}>⚡ Frequently Asked Questions:</div>
-              <ul style={{ margin: '0 0 0 16px', padding: 0 }}>
-                <li><strong>Webcam:</strong> Snapshots are taken every 60 seconds automatically. Keep your face in frame.</li>
-                <li><strong>Timing:</strong> 30 minutes strict timer for Stage 0 Prelims MCQ. It auto-submits on timeout.</li>
-                <li><strong>Team Total:</strong> Scores of all members under the same Team ID are summed together.</li>
-                <li><strong>Issues:</strong> In case of technical disconnection, notify Yaswanth or Vignesh immediately.</li>
-              </ul>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <button
-                type="button"
-                onClick={() => setShowHelpModal(false)}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#FFF',
-                  padding: '10px 24px',
-                  borderRadius: '8px',
-                  fontWeight: 'bold',
-                  fontSize: '0.88rem',
-                  cursor: 'pointer'
-                }}
-              >
-                Close Support
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
