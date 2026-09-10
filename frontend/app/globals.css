@@ -1326,8 +1326,8 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 1px;
-  z-index: 10;
+  margin-top: 2px;
+  z-index: 20;
   pointer-events: auto;
 }
 
@@ -1336,19 +1336,20 @@ h1, h2, h3, h4, h5, h6 {
   height: 6px;
   background: linear-gradient(to bottom, rgba(56, 189, 248, 0.9), #0284C7);
   box-shadow: 0 0 6px rgba(56, 189, 248, 0.8);
+  pointer-events: none;
 }
 
 .mascot-hanging-blue-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 4px;
   background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
   border: 1px solid #38BDF8;
   color: #FFFFFF;
-  padding: 2px 8px;
+  padding: 3px 9px;
   border-radius: 10px;
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   font-weight: 800;
   letter-spacing: 0.4px;
   cursor: pointer;
@@ -1357,6 +1358,8 @@ h1, h2, h3, h4, h5, h6 {
   backdrop-filter: blur(8px);
   user-select: none;
   line-height: 1.2;
+  pointer-events: auto;
+  touch-action: manipulation;
 }
 
 .mascot-hanging-blue-btn:hover {
@@ -1371,28 +1374,40 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(0.94);
 }
 
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Docked Restore Tab Hanging from Top Edge when Hidden */
 .mascot-docked-restore-btn {
   position: absolute;
   top: 0;
-  z-index: 50;
+  z-index: 100;
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: rgba(7, 12, 20, 0.92);
+  background: rgba(7, 12, 20, 0.95);
   border: 1px solid #38BDF8;
   border-top: none;
   color: #38BDF8;
-  padding: 4px 12px 6px;
+  padding: 5px 13px 7px;
   border-radius: 0 0 10px 10px;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.5px;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35), 0 0 10px rgba(56, 189, 248, 0.25);
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4), 0 0 10px rgba(56, 189, 248, 0.3);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   backdrop-filter: blur(12px);
   animation: slideDown 0.3s ease-out;
+  pointer-events: auto;
 }
 
 .mascot-docked-restore-btn:hover {

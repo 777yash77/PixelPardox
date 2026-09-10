@@ -350,7 +350,7 @@ export default function Home() {
   const [isDeadpoolTyping, setIsDeadpoolTyping] = useState(false)
   const [isSpideyTyping, setIsSpideyTyping] = useState(false)
 
-  // Mascot Animations State (Independent Hide/Show for Deadpool & Spider-Man)
+  // Mascot Animations State (Strictly Independent Hide/Show for Deadpool & Spider-Man)
   const [hideDeadpoolMascot, setHideDeadpoolMascot] = useState(false)
   const [hideSpideyMascot, setHideSpideyMascot] = useState(false)
 
@@ -358,13 +358,18 @@ export default function Home() {
     if (typeof window !== 'undefined') {
       const savedDeadpool = localStorage.getItem('hideDeadpoolMascot')
       const savedSpidey = localStorage.getItem('hideSpideyMascot')
-      const savedAll = localStorage.getItem('hideMascotAnimations')
-      if (savedDeadpool === 'true' || savedAll === 'true') {
+      if (savedDeadpool === 'true') {
         setHideDeadpoolMascot(true)
+      } else if (savedDeadpool === 'false') {
+        setHideDeadpoolMascot(false)
       }
-      if (savedSpidey === 'true' || savedAll === 'true') {
+      if (savedSpidey === 'true') {
         setHideSpideyMascot(true)
+      } else if (savedSpidey === 'false') {
+        setHideSpideyMascot(false)
       }
+      // Clean up legacy key so it never overrides individual mascot states
+      localStorage.removeItem('hideMascotAnimations')
     }
   }, [])
 
@@ -385,9 +390,6 @@ export default function Home() {
   const handleToggleMascots = (hide) => {
     handleToggleDeadpoolMascot(hide)
     handleToggleSpideyMascot(hide)
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('hideMascotAnimations', hide ? 'true' : 'false')
-    }
   }
 
   const hideMascotAnimations = hideDeadpoolMascot && hideSpideyMascot
@@ -813,20 +815,25 @@ export default function Home() {
           position: 'absolute',
           top: 0,
           right: 'clamp(8px, 1.6vw, 32px)',
-          zIndex: 25,
+          zIndex: 90,
           pointerEvents: 'auto',
-          cursor: 'pointer'
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
         }}
-        onClick={() => {
-          setShowSpideyThwip(true)
-          setIsSpideyChatOpen(true)
-          setTimeout(() => setShowSpideyThwip(false), 1400)
-        }}
-        onMouseEnter={() => setShowSpideyThwip(true)}
-        onMouseLeave={() => setShowSpideyThwip(false)}
-        title="Click Spider-Man to Chat!"
       >
-        <div className="spidey-swinging-pro" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
+        <div 
+          className="spidey-swinging-pro" 
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', cursor: 'pointer' }}
+          onClick={() => {
+            setShowSpideyThwip(true)
+            setIsSpideyChatOpen(true)
+            setTimeout(() => setShowSpideyThwip(false), 1400)
+          }}
+          onMouseEnter={() => setShowSpideyThwip(true)}
+          onMouseLeave={() => setShowSpideyThwip(false)}
+          title="Click Spider-Man to Chat!"
+        >
           {/* Ceiling Web Anchor Splat */}
           <div className="spidey-ceiling-anchor" />
 
@@ -885,23 +892,26 @@ export default function Home() {
             <span>🕷️ SPIDER-MAN • MENTOR</span>
             <span className="mascot-tag-sub">Click to Chat</span>
           </div>
+        </div>
 
-          {/* Small Blue Hanging Hide Button */}
-          <div className="mascot-hanging-container">
-            <div className="mascot-hanging-wire" />
-            <button
-              type="button"
-              className="mascot-hanging-blue-btn"
-              onClick={(e) => {
-                e.stopPropagation()
-                handleToggleSpideyMascot(true)
-              }}
-              title="Hide Spider-Man"
-            >
-              <span>✕</span>
-              <span>Hide</span>
-            </button>
-          </div>
+        {/* Small Blue Hanging Hide Button (Isolated from chat trigger) */}
+        <div className="mascot-hanging-container">
+          <div className="mascot-hanging-wire" />
+          <button
+            type="button"
+            className="mascot-hanging-blue-btn"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              handleToggleSpideyMascot(true)
+            }}
+            onMouseDown={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
+            title="Hide Spider-Man Animation"
+          >
+            <span>✕</span>
+            <span>Hide</span>
+          </button>
         </div>
       </div>
       ) : (
@@ -910,7 +920,7 @@ export default function Home() {
           type="button"
           className="mascot-docked-restore-btn spidey-restore"
           onClick={() => handleToggleSpideyMascot(false)}
-          title="Show Spider-Man"
+          title="Show Spider-Man Animation"
         >
           <span>▼ 🕸️ Spidey</span>
         </button>
@@ -923,20 +933,25 @@ export default function Home() {
           position: 'absolute',
           top: 0,
           left: 'clamp(8px, 1.6vw, 32px)',
-          zIndex: 25,
+          zIndex: 90,
           pointerEvents: 'auto',
-          cursor: 'pointer'
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
         }}
-        onClick={() => {
-          setShowDeadpoolPop(true)
-          setIsDeadpoolChatOpen(true)
-          setTimeout(() => setShowDeadpoolPop(false), 1400)
-        }}
-        onMouseEnter={() => setShowDeadpoolPop(true)}
-        onMouseLeave={() => setShowDeadpoolPop(false)}
-        title="Click Deadpool to Chat!"
       >
-        <div className="deadpool-perch-rig">
+        <div 
+          className="deadpool-perch-rig"
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', cursor: 'pointer' }}
+          onClick={() => {
+            setShowDeadpoolPop(true)
+            setIsDeadpoolChatOpen(true)
+            setTimeout(() => setShowDeadpoolPop(false), 1400)
+          }}
+          onMouseEnter={() => setShowDeadpoolPop(true)}
+          onMouseLeave={() => setShowDeadpoolPop(false)}
+          title="Click Deadpool to Chat!"
+        >
           {/* Dual Tactical Suspension Cables anchoring platform */}
           <div className="deadpool-cables-container">
             <div className="cable-ceiling-clamp-left" />
@@ -984,23 +999,26 @@ export default function Home() {
             <span>⚔️ DEADPOOL • MERC-BOT</span>
             <span className="mascot-tag-sub">Click to Chat</span>
           </div>
+        </div>
 
-          {/* Small Blue Hanging Hide Button */}
-          <div className="mascot-hanging-container">
-            <div className="mascot-hanging-wire" />
-            <button
-              type="button"
-              className="mascot-hanging-blue-btn"
-              onClick={(e) => {
-                e.stopPropagation()
-                handleToggleDeadpoolMascot(true)
-              }}
-              title="Hide Deadpool"
-            >
-              <span>✕</span>
-              <span>Hide</span>
-            </button>
-          </div>
+        {/* Small Blue Hanging Hide Button (Isolated from chat trigger) */}
+        <div className="mascot-hanging-container">
+          <div className="mascot-hanging-wire" />
+          <button
+            type="button"
+            className="mascot-hanging-blue-btn"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              handleToggleDeadpoolMascot(true)
+            }}
+            onMouseDown={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
+            title="Hide Deadpool Animation"
+          >
+            <span>✕</span>
+            <span>Hide</span>
+          </button>
         </div>
       </div>
       ) : (
@@ -1009,7 +1027,7 @@ export default function Home() {
           type="button"
           className="mascot-docked-restore-btn deadpool-restore"
           onClick={() => handleToggleDeadpoolMascot(false)}
-          title="Show Deadpool"
+          title="Show Deadpool Animation"
         >
           <span>▼ 🌮 Deadpool</span>
         </button>
