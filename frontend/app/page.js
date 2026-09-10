@@ -816,16 +816,14 @@ export default function Home() {
           top: 0,
           right: 'clamp(8px, 1.6vw, 32px)',
           zIndex: 90,
-          pointerEvents: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
+          pointerEvents: 'auto'
         }}
       >
         <div 
           className="spidey-swinging-pro" 
           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', cursor: 'pointer' }}
-          onClick={() => {
+          onClick={(e) => {
+            if (e.target.closest('.mascot-hanging-container') || e.target.closest('.mascot-hanging-blue-btn')) return
             setShowSpideyThwip(true)
             setIsSpideyChatOpen(true)
             setTimeout(() => setShowSpideyThwip(false), 1400)
@@ -892,26 +890,26 @@ export default function Home() {
             <span>🕷️ SPIDER-MAN • MENTOR</span>
             <span className="mascot-tag-sub">Click to Chat</span>
           </div>
-        </div>
 
-        {/* Small Blue Hanging Hide Button (Isolated from chat trigger) */}
-        <div className="mascot-hanging-container">
-          <div className="mascot-hanging-wire" />
-          <button
-            type="button"
-            className="mascot-hanging-blue-btn"
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              handleToggleSpideyMascot(true)
-            }}
-            onMouseDown={(e) => e.stopPropagation()}
-            onPointerDown={(e) => e.stopPropagation()}
-            title="Hide Spider-Man Animation"
-          >
-            <span>✕</span>
-            <span>Hide</span>
-          </button>
+          {/* Small Blue Hanging Hide Button — Swings along with Spider-Man! */}
+          <div className="mascot-hanging-container">
+            <div className="mascot-hanging-wire" />
+            <button
+              type="button"
+              className="mascot-hanging-blue-btn"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                handleToggleSpideyMascot(true)
+              }}
+              onMouseDown={(e) => e.stopPropagation()}
+              onPointerDown={(e) => e.stopPropagation()}
+              title="Hide Spider-Man"
+              aria-label="Hide Spider-Man"
+            >
+              ✕
+            </button>
+          </div>
         </div>
       </div>
       ) : (
@@ -934,16 +932,14 @@ export default function Home() {
           top: 0,
           left: 'clamp(8px, 1.6vw, 32px)',
           zIndex: 90,
-          pointerEvents: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
+          pointerEvents: 'auto'
         }}
       >
         <div 
           className="deadpool-perch-rig"
           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', cursor: 'pointer' }}
-          onClick={() => {
+          onClick={(e) => {
+            if (e.target.closest('.mascot-hanging-container') || e.target.closest('.mascot-hanging-blue-btn')) return
             setShowDeadpoolPop(true)
             setIsDeadpoolChatOpen(true)
             setTimeout(() => setShowDeadpoolPop(false), 1400)
@@ -999,26 +995,26 @@ export default function Home() {
             <span>⚔️ DEADPOOL • MERC-BOT</span>
             <span className="mascot-tag-sub">Click to Chat</span>
           </div>
-        </div>
 
-        {/* Small Blue Hanging Hide Button (Isolated from chat trigger) */}
-        <div className="mascot-hanging-container">
-          <div className="mascot-hanging-wire" />
-          <button
-            type="button"
-            className="mascot-hanging-blue-btn"
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              handleToggleDeadpoolMascot(true)
-            }}
-            onMouseDown={(e) => e.stopPropagation()}
-            onPointerDown={(e) => e.stopPropagation()}
-            title="Hide Deadpool Animation"
-          >
-            <span>✕</span>
-            <span>Hide</span>
-          </button>
+          {/* Small Blue Hanging Hide Button — Floats along with Deadpool! */}
+          <div className="mascot-hanging-container">
+            <div className="mascot-hanging-wire" />
+            <button
+              type="button"
+              className="mascot-hanging-blue-btn"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                handleToggleDeadpoolMascot(true)
+              }}
+              onMouseDown={(e) => e.stopPropagation()}
+              onPointerDown={(e) => e.stopPropagation()}
+              title="Hide Deadpool"
+              aria-label="Hide Deadpool"
+            >
+              ✕
+            </button>
+          </div>
         </div>
       </div>
       ) : (
