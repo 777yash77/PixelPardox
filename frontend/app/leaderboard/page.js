@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { API_BASE_URL, WS_BASE_URL } from '@/lib/api'
 
 const STAGE_NAMES = {
   0: 'Stage 0: Lobby',
@@ -48,7 +49,7 @@ export default function LeaderboardPage() {
       const role = typeof window !== 'undefined' ? localStorage.getItem('role') : null
       if (role !== 'ROLE_ADMIN') return
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
-      const res = await fetch('http://localhost:8080/api/game/leaderboard', {
+      const res = await fetch(`${API_BASE_URL}/api/game/leaderboard`, {
         headers: token ? { 'Authorization': `Bearer ${token}` } : {}
       })
       if (res.ok) {
@@ -69,7 +70,7 @@ export default function LeaderboardPage() {
     const pollInterval = setInterval(fetchLeaderboard, 4000)
 
     try {
-      const ws = new WebSocket('ws://localhost:8080/ws')
+      const ws = new WebSocket(WS_BASE_URL)
       wsRef.current = ws
 
       ws.onopen = () => {

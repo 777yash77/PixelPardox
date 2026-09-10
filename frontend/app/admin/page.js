@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { API_BASE_URL, WS_BASE_URL } from '@/lib/api'
 
 const STAGE_NAMES = {
   0: 'Stage 0: Registration / Lobby',
@@ -131,7 +132,7 @@ export default function AdminDashboard() {
   // 2. HTTP Fetch Operations
   const fetchGameState = async () => {
     try {
-      const res = await fetch('http://localhost:8080/api/game/state')
+      const res = await fetch(`${API_BASE_URL}/api/game/state`)
       if (res.ok) {
         const data = await res.json()
         setGameState(data)
@@ -144,7 +145,7 @@ export default function AdminDashboard() {
   const fetchImages = async (tok) => {
     try {
       const currentToken = tok || token || (typeof window !== 'undefined' ? localStorage.getItem('token') : '')
-      const res = await fetch('http://localhost:8080/api/game/images', {
+      const res = await fetch(`${API_BASE_URL}/api/game/images`, {
         headers: { 'Authorization': `Bearer ${currentToken}` }
       })
       if (res.ok) {
@@ -159,7 +160,7 @@ export default function AdminDashboard() {
   const fetchLeaderboard = async () => {
     try {
       const currentToken = token || (typeof window !== 'undefined' ? localStorage.getItem('token') : '')
-      const res = await fetch('http://localhost:8080/api/game/leaderboard', {
+      const res = await fetch(`${API_BASE_URL}/api/game/leaderboard`, {
         headers: currentToken ? { 'Authorization': `Bearer ${currentToken}` } : {}
       })
       if (res.ok) {
@@ -174,7 +175,7 @@ export default function AdminDashboard() {
   const fetchQuizQuestions = async (tok) => {
     try {
       const currentToken = tok || token || (typeof window !== 'undefined' ? localStorage.getItem('token') : '')
-      const res = await fetch('http://localhost:8080/api/admin/quiz', {
+      const res = await fetch(`${API_BASE_URL}/api/admin/quiz`, {
         headers: { 'Authorization': `Bearer ${currentToken}` }
       })
       if (res.ok) {
@@ -194,7 +195,7 @@ export default function AdminDashboard() {
     try {
       const currentToken = token || (typeof window !== 'undefined' ? localStorage.getItem('token') : '')
       const r = roundParam !== undefined ? roundParam : gradingFilterRound
-      const res = await fetch(`http://localhost:8080/api/game/submissions?round=${r}`, {
+      const res = await fetch(`${API_BASE_URL}/api/game/submissions?round=${r}`, {
         headers: { 'Authorization': `Bearer ${currentToken}` }
       })
       if (res.ok) {
@@ -216,7 +217,7 @@ export default function AdminDashboard() {
     let reconnectTimeout = null
 
     const setupWebSocket = () => {
-      const ws = new WebSocket('ws://localhost:8080/ws')
+      const ws = new WebSocket(WS_BASE_URL)
       wsRef.current = ws
 
       ws.onopen = () => {
@@ -286,7 +287,7 @@ export default function AdminDashboard() {
   // Control Room Actions
   const handleUpdateGameState = async (round, qId, timerSec, zoom) => {
     try {
-      const res = await fetch('http://localhost:8080/api/game/state/update', {
+      const res = await fetch(`${API_BASE_URL}/api/game/state/update`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -305,7 +306,7 @@ export default function AdminDashboard() {
 
   const handleToggleTimer = async (running) => {
     try {
-      const res = await fetch(`http://localhost:8080/api/game/state/timer?running=${running}`, {
+      const res = await fetch(`${API_BASE_URL}/api/game/state/timer?running=${running}`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       })
@@ -322,7 +323,7 @@ export default function AdminDashboard() {
     if (!confirm('DANGER: Are you absolutely sure you want to RESET the game engine? This will delete ALL submissions and reset all team scores back to 0. Uploaded images and quiz questions will be preserved.')) return
 
     try {
-      const res = await fetch('http://localhost:8080/api/game/reset', {
+      const res = await fetch(`${API_BASE_URL}/api/game/reset`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       })
@@ -378,8 +379,8 @@ export default function AdminDashboard() {
 
     try {
       const url = editingQuizId
-        ? `http://localhost:8080/api/admin/quiz/${editingQuizId}`
-        : 'http://localhost:8080/api/admin/quiz'
+        ? `${API_BASE_URL}/api/admin/quiz/${editingQuizId}`
+        : `${API_BASE_URL}/api/admin/quiz`
       const method = editingQuizId ? 'PUT' : 'POST'
 
       const res = await fetch(url, {
@@ -458,7 +459,7 @@ export default function AdminDashboard() {
   const handleDeleteQuestion = async (id) => {
     if (!confirm('Are you sure you want to delete this quiz question?')) return
     try {
-      const res = await fetch(`http://localhost:8080/api/admin/quiz/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/quiz/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       })
@@ -475,7 +476,7 @@ export default function AdminDashboard() {
   const handleSeedDefaults = async () => {
     if (!confirm('Seed 20 curated Stage 0 Prelims questions for "LOGIN 2026: The Last Human"?')) return
     try {
-      const res = await fetch('http://localhost:8080/api/admin/quiz/seed', {
+      const res = await fetch(`${API_BASE_URL}/api/admin/quiz/seed`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       })
@@ -490,7 +491,7 @@ export default function AdminDashboard() {
   const handleClearAllQuestions = async () => {
     if (!confirm('DANGER: Delete ALL Prelims quiz questions?')) return
     try {
-      const res = await fetch('http://localhost:8080/api/admin/quiz/all', {
+      const res = await fetch(`${API_BASE_URL}/api/admin/quiz/all`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       })
@@ -543,7 +544,7 @@ export default function AdminDashboard() {
     formData.append('isLightning', uploadData.isLightning)
 
     try {
-      const res = await fetch('http://localhost:8080/api/game/upload', {
+      const res = await fetch(`${API_BASE_URL}/api/game/upload`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${currentToken}` },
         body: formData
@@ -580,7 +581,7 @@ export default function AdminDashboard() {
   const handleDeleteImage = async (id) => {
     if (!confirm('Are you sure you want to delete this image question?')) return
     try {
-      const res = await fetch(`http://localhost:8080/api/game/images/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/game/images/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       })
@@ -604,7 +605,7 @@ export default function AdminDashboard() {
     }
 
     try {
-      const res = await fetch('http://localhost:8080/api/game/grade', {
+      const res = await fetch(`${API_BASE_URL}/api/game/grade`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -631,7 +632,7 @@ export default function AdminDashboard() {
     setAdvancementStatus('Processing team qualifications...')
 
     try {
-      const res = await fetch('http://localhost:8080/api/game/advance-teams', {
+      const res = await fetch(`${API_BASE_URL}/api/game/advance-teams`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -896,7 +897,7 @@ export default function AdminDashboard() {
                             }}
                           >
                             <img 
-                              src={`http://localhost:8080${img.imageUrl}`} 
+                              src={`${API_BASE_URL}${img.imageUrl}`} 
                               alt="preview" 
                               style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.1)' }}
                             />
@@ -1337,7 +1338,7 @@ export default function AdminDashboard() {
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
                           {roundImgs.map(img => (
                             <div key={img.id} style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
-                              <img src={`http://localhost:8080${img.imageUrl}`} alt="item" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              <img src={`${API_BASE_URL}${img.imageUrl}`} alt="item" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                               <button 
                                 onClick={() => handleDeleteImage(img.id)}
                                 style={{ position: 'absolute', top: '2px', right: '2px', background: 'rgba(224,27,34,0.9)', color: '#fff', border: 'none', borderRadius: '50%', width: '18px', height: '18px', fontSize: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -1422,7 +1423,7 @@ export default function AdminDashboard() {
                     <div style={{ textAlign: 'center' }}>
                       {sub.imageQuestion && sub.imageQuestion.imageUrl ? (
                         <img 
-                          src={`http://localhost:8080${sub.imageQuestion.imageUrl}`} 
+                          src={`${API_BASE_URL}${sub.imageQuestion.imageUrl}`} 
                           alt="question" 
                           style={{ width: '100%', height: '100px', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}
                         />

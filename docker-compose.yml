@@ -1,0 +1,51 @@
+services:
+  database:
+    image: postgres:15-alpine
+    container_name: pixel_paradox_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: pixel_paradox
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pixel_paradox_backend
+    restart: unless-stopped
+    depends_on:
+      - database
+    environment:
+      PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/pixel_paradox
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      JWT_SECRET: d39352e85a6a68456a0845a7092bb45e3f898394ef3493df54f15d74c0c1b7e5
+    ports:
+      - "8080:8080"
+    volumes:
+      - backend_uploads:/app/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: pixel_paradox_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+      PORT: 3000
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
+  backend_uploads:

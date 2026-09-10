@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { API_BASE_URL, WS_BASE_URL } from '@/lib/api'
 
 const SPIDEY_GAME_QUOTES = [
   "🕸️ 'Take a steady breath! Optical physics and photon diffraction are on your side.'",
@@ -221,7 +222,7 @@ export default function GameArena() {
           formData.append('file', blob, 'webcam.webm');
           formData.append('participantName', participantName || 'Unknown');
           try {
-            await fetch('http://localhost:8080/api/game/prelims/video', {
+            await fetch(`${API_BASE_URL}/api/game/prelims/video`, {
               method: 'POST',
               headers: { 'Authorization': `Bearer ${token}` },
               body: formData
@@ -431,7 +432,7 @@ export default function GameArena() {
     const authToken = tok || token || (typeof window !== 'undefined' ? localStorage.getItem('token') : null)
     const pName = participantName || (typeof window !== 'undefined' ? localStorage.getItem('participantName') : '')
     try {
-      const res = await fetch('http://localhost:8080/api/game/my-team', {
+      const res = await fetch(`${API_BASE_URL}/api/game/my-team`, {
         headers: authToken ? { 'Authorization': `Bearer ${authToken}` } : {}
       })
       if (res.ok) {
@@ -464,7 +465,7 @@ export default function GameArena() {
   const checkPrelimAttempt = async (tok, pName) => {
     if (!tok || !pName || pName === 'Unknown') return
     try {
-      const res = await fetch(`http://localhost:8080/api/game/prelims/attempt?participantName=${encodeURIComponent(pName)}`, {
+      const res = await fetch(`${API_BASE_URL}/api/game/prelims/attempt?participantName=${encodeURIComponent(pName)}`, {
         headers: { 'Authorization': `Bearer ${tok}` }
       })
       if (res.ok) {
@@ -499,7 +500,7 @@ export default function GameArena() {
 
   const fetchGameState = async () => {
     try {
-      const res = await fetch('http://localhost:8080/api/game/state')
+      const res = await fetch(`${API_BASE_URL}/api/game/state`)
       if (res.ok) {
         const data = await res.json()
         setGameState(data)
@@ -512,7 +513,7 @@ export default function GameArena() {
   const fetchQuestions = async (tok) => {
     try {
       // Admins are restricted, but teams can pull loaded image metadata to display questions locally
-      const res = await fetch('http://localhost:8080/api/game/images', {
+      const res = await fetch(`${API_BASE_URL}/api/game/images`, {
         headers: { 'Authorization': `Bearer ${tok || token}` }
       })
       if (res.ok) {
@@ -526,7 +527,7 @@ export default function GameArena() {
 
   const fetchPrelimQuestions = async (tok) => {
     try {
-      const res = await fetch('http://localhost:8080/api/game/prelims/questions', {
+      const res = await fetch(`${API_BASE_URL}/api/game/prelims/questions`, {
         headers: { 'Authorization': `Bearer ${tok || token}` }
       })
       if (res.ok) {
@@ -544,7 +545,7 @@ export default function GameArena() {
     let reconnectTimeout = null;
 
     const setupWebSocket = () => {
-      const ws = new WebSocket('ws://localhost:8080/ws')
+      const ws = new WebSocket(WS_BASE_URL)
       wsRef.current = ws
 
       ws.onopen = () => {
@@ -599,7 +600,7 @@ export default function GameArena() {
     }
 
     try {
-      const res = await fetch('http://localhost:8080/api/game/submit', {
+      const res = await fetch(`${API_BASE_URL}/api/game/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -639,7 +640,7 @@ export default function GameArena() {
 
   const handlePrelimStart = async () => {
     try {
-      const res = await fetch('http://localhost:8080/api/game/prelims/start', {
+      const res = await fetch(`${API_BASE_URL}/api/game/prelims/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ participantName })
@@ -793,7 +794,7 @@ export default function GameArena() {
     setShowConfirmSubmitModal(false)
     stopWebcam()
     try {
-      const res = await fetch('http://localhost:8080/api/game/prelims/submit', {
+      const res = await fetch(`${API_BASE_URL}/api/game/prelims/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ participantName, answers: prelimAnswers })
@@ -2352,7 +2353,7 @@ export default function GameArena() {
                             gameState.activeRound === 4 ? (
                               <div style={{ width: '100%', height: '432px', overflow: 'hidden', position: 'relative' }}>
                                 <img 
-                                  src={`http://localhost:8080${currentQuestion.imageUrl}`} 
+                                  src={`${API_BASE_URL}${currentQuestion.imageUrl}`} 
                                   alt="zoomed" 
                                   style={{ 
                                     width: '100%', 
@@ -2367,7 +2368,7 @@ export default function GameArena() {
                             ) : (
                               <div style={{ width: '100%', background: '#070405', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '360px', overflow: 'hidden', position: 'relative' }}>
                                 <img 
-                                  src={`http://localhost:8080${currentQuestion.imageUrl}`} 
+                                  src={`${API_BASE_URL}${currentQuestion.imageUrl}`} 
                                   alt="quiz visual" 
                                   style={{ 
                                     width: '100%', 

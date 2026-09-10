@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { API_BASE_URL } from '@/lib/api'
 
 export default function AdminRecordings() {
   const router = useRouter()
@@ -23,7 +24,7 @@ export default function AdminRecordings() {
 
   const fetchRecordings = async (authToken) => {
     try {
-      const res = await fetch('http://localhost:8080/api/admin/recordings', {
+      const res = await fetch(`${API_BASE_URL}/api/admin/recordings`, {
         headers: { 'Authorization': `Bearer ${authToken}` }
       })
       if (res.ok) {
@@ -40,7 +41,7 @@ export default function AdminRecordings() {
   const handleDelete = async (id) => {
     if (!confirm('Delete this recording permanently?')) return
     try {
-      const res = await fetch(`http://localhost:8080/api/admin/recordings/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/recordings/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       })
@@ -93,7 +94,7 @@ export default function AdminRecordings() {
                 </div>
                 
                 <video 
-                  src={`http://localhost:8080${rec.videoUrl}`} 
+                  src={`${API_BASE_URL}${rec.videoUrl}`} 
                   controls 
                   style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '8px', background: '#000', marginBottom: '16px', border: '1px solid rgba(56,189,248,0.2)' }}
                 />

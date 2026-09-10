@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { API_BASE_URL } from '@/lib/api'
 
 export default function AdminTeams() {
   const router = useRouter()
@@ -25,7 +26,7 @@ export default function AdminTeams() {
         return
       }
 
-      const res = await fetch('http://localhost:8080/api/admin/teams', {
+      const res = await fetch(`${API_BASE_URL}/api/admin/teams`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -52,7 +53,7 @@ export default function AdminTeams() {
     if (!deleteId) return
     try {
       const token = localStorage.getItem('token')
-      const res = await fetch(`http://localhost:8080/api/admin/teams/${deleteId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/teams/${deleteId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -76,7 +77,7 @@ export default function AdminTeams() {
     setUpdateLoading(true)
     try {
       const token = localStorage.getItem('token')
-      const res = await fetch(`http://localhost:8080/api/admin/teams/${editTeam.id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/teams/${editTeam.id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
