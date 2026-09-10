@@ -643,13 +643,20 @@ export default function GameArena() {
         setPrelimStatus('IN_PROGRESS')
       } else {
         const data = await res.json()
-        if (data.message === 'Quiz already submitted' || data.message?.includes('COMPLETED')) {
-           setPrelimStatus('COMPLETED')
-           stopWebcam()
+        const msg = data.message || ''
+        const lowerMsg = msg.toLowerCase()
+        if (lowerMsg.includes('already attended') || lowerMsg.includes('already submitted') || lowerMsg.includes('completed')) {
+          setPrelimStatus('COMPLETED')
+          stopWebcam()
+          fetchTeamProfile(token)
+          alert(msg || 'You have already attended and completed the quiz.')
+        } else {
+          alert(msg || 'Unable to start quiz attempt.')
         }
       }
     } catch (err) {
       console.error(err)
+      alert('Failed to connect to tournament server: ' + err.message)
     }
   }
 
@@ -795,7 +802,9 @@ export default function GameArena() {
         fetchTeamProfile(token)
       } else {
         const data = await res.json()
-        if (data.message === 'Quiz already submitted' || data.message?.includes('COMPLETED')) {
+        const msg = data.message || ''
+        const lowerMsg = msg.toLowerCase()
+        if (lowerMsg.includes('already submitted') || lowerMsg.includes('completed') || lowerMsg.includes('already attended')) {
           setPrelimStatus('COMPLETED')
           stopWebcam()
           if (participantName) {
@@ -812,10 +821,13 @@ export default function GameArena() {
           }
           localStorage.removeItem('prelimAnswers_latest')
           fetchTeamProfile(token)
+        } else {
+          alert(msg || 'Failed to submit quiz attempt.')
         }
       }
     } catch (err) {
       console.error(err)
+      alert('Failed to connect to tournament server: ' + err.message)
     }
   }
 
