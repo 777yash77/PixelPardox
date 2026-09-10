@@ -1129,15 +1129,10 @@ export default function GameArena() {
               Your team has been eliminated in the qualification round. You can continue spectating the remaining rounds on the projector display.
             </p>
             <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '24px' }}>
-              <h3 style={{ fontSize: '1.2rem', marginBottom: '16px', textTransform: 'uppercase' }}>Current Standings</h3>
-              <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                {leaderboard.slice(0, 5).map((u, i) => (
-                  <div key={u.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                    <span>{i + 1}. {u.teamName}</span>
-                    <span style={{ fontWeight: 'bold', color: 'var(--color-neon-blue)' }}>{u.score} pts</span>
-                  </div>
-                ))}
-              </div>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: '12px', textTransform: 'uppercase' }}>Auditorium Telemetry</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6, maxWidth: '480px', margin: '0 auto' }}>
+                Official tournament progression and live standings are broadcasted live on the main auditorium stage screen.
+              </p>
             </div>
           </div>
         ) : (
@@ -1956,13 +1951,13 @@ export default function GameArena() {
                             boxShadow: '0 8px 24px rgba(0,0,0,0.35)'
                           }}>
                             <div style={{ fontSize: '0.74rem', color: '#FF7B7B', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '4px' }}>
-                              MULTIVERSE RANKING
+                              MULTIVERSE STATUS
                             </div>
                             <div style={{ fontSize: '1.05rem', fontWeight: 'bold', color: '#FFF' }}>
-                              Leaderboard Standing
+                              Squad Qualification
                             </div>
-                            <div style={{ fontSize: '2.3rem', fontWeight: '900', color: '#FFF', fontFamily: 'var(--font-display)', margin: '10px 0 6px 0' }}>
-                              #{team.rank || 1} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>of {team.totalTeams || 1} Squads</span>
+                            <div style={{ fontSize: '1.9rem', fontWeight: '900', color: team.isEliminated ? '#EF4444' : '#38BDF8', fontFamily: 'var(--font-display)', margin: '10px 0 6px 0' }}>
+                              {team.isEliminated ? 'ELIMINATED' : 'ACTIVE'}
                             </div>
                             <div style={{ fontSize: '0.76rem', color: team.isEliminated ? '#EF4444' : '#34D399', display: 'flex', alignItems: 'center', gap: '4px' }}>
                               {team.isEliminated ? '⚠️ Elimination Zone' : '🛡️ Qualified Standing'}
@@ -2698,27 +2693,17 @@ export default function GameArena() {
                   The Pixel Paradox: AI or Reality challenge has ended. Thank you for participating!
                 </p>
                 
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', textTransform: 'uppercase' }}>Final Scoreboard Standing</h3>
-                <div className="glass-panel" style={{ padding: '16px', maxWidth: '500px', margin: '0 auto' }}>
-                  {leaderboard.map((u, i) => (
-                    <div 
-                      key={u.id} 
-                      className="stagger-fade-in"
-                      style={{ 
-                        display: 'flex', 
-                        justifyContent: 'space-between', 
-                        padding: '12px 8px', 
-                        borderBottom: i < leaderboard.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
-                        background: u.teamId === team.teamId ? 'rgba(224,27,34,0.08)' : 'transparent',
-                        fontWeight: u.teamId === team.teamId ? 'bold' : 'normal',
-                        borderRadius: '4px',
-                        animationDelay: `${i * 0.08}s`
-                      }}
-                    >
-                      <span>{i === 0 ? '🏆' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`} {u.teamName} {u.teamId === team.teamId && ' (You)'}</span>
-                      <span style={{ color: 'var(--color-neon-blue)', fontWeight: 'bold' }}>{u.score} pts</span>
-                    </div>
-                  ))}
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', textTransform: 'uppercase' }}>Squad Final Score</h3>
+                <div className="glass-panel" style={{ padding: '24px', maxWidth: '440px', margin: '0 auto', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#FFF', marginBottom: '6px' }}>
+                    {team.teamName || 'Your Squad'}
+                  </div>
+                  <div style={{ fontSize: '2.5rem', color: 'var(--color-neon-blue)', fontWeight: 'bold', fontFamily: 'var(--font-display)' }}>
+                    {team.score || 0} <span style={{ fontSize: '1.1rem', color: 'var(--text-secondary)' }}>pts</span>
+                  </div>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.86rem', marginTop: '14px', lineHeight: 1.5 }}>
+                    Final podium standings and award announcements are presented exclusively on the organizer auditorium projector!
+                  </p>
                 </div>
               </div>
             )}

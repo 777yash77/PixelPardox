@@ -78,7 +78,11 @@ public class AuthController {
         if (userRepository.findByTeamName(cleanTeamName).isPresent())
             return ResponseEntity.badRequest().body(Map.of("message", "Team name already registered."));
 
-        int size = (request.teamSize() != null && request.teamSize() >= 2 && request.teamSize() <= 4) ? request.teamSize() : 2;
+        if (request.teamSize() != null && (request.teamSize() < 2 || request.teamSize() > 3)) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Team size must be strictly 2 or 3 members."));
+        }
+
+        int size = (request.teamSize() != null && request.teamSize() >= 2 && request.teamSize() <= 3) ? request.teamSize() : 2;
         User user = new User(
                 cleanTeamName,
                 cleanTeamId,
@@ -91,6 +95,7 @@ public class AuthController {
             String membersJoined = request.memberNames().stream()
                     .map(String::trim)
                     .filter(s -> !s.isEmpty())
+                    .limit(size)
                     .collect(Collectors.joining(", "));
             user.setMemberNames(membersJoined);
         }

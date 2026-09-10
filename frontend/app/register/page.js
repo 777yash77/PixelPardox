@@ -9,7 +9,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [memberNames, setMemberNames] = useState(['', '', '', ''])
+  const [memberNames, setMemberNames] = useState(['', '', ''])
   const [teamExistsNotice, setTeamExistsNotice] = useState(null)
 
   const [formData, setFormData] = useState({
@@ -43,13 +43,19 @@ export default function Register() {
     }
     setLoading(true)
     try {
-      const activeMembers = memberNames.slice(0, parseInt(formData.teamSize)).map(s => s.trim()).filter(Boolean)
+      const sizeNum = parseInt(formData.teamSize, 10)
+      if (sizeNum < 2 || sizeNum > 3) {
+        setError('Team size must be strictly 2 or 3 members.')
+        setLoading(false)
+        return
+      }
+      const activeMembers = memberNames.slice(0, sizeNum).map(s => s.trim()).filter(Boolean)
       const res = await fetch('http://localhost:8080/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          teamSize: parseInt(formData.teamSize),
+          teamSize: sizeNum,
           memberNames: activeMembers
         }),
       })
@@ -163,10 +169,10 @@ export default function Register() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
                     <span style={{ fontSize: '1.15rem' }}>👥</span>
                     <span style={{ fontSize: '0.86rem', fontWeight: 800, color: '#7DD3FC', letterSpacing: '0.5px' }}>SQUAD FORMATION FORMAT</span>
-                    <span style={{ marginLeft: 'auto', background: 'rgba(56, 189, 248, 0.2)', border: '1px solid rgba(56, 189, 248, 0.45)', borderRadius: '4px', padding: '2px 8px', fontSize: '0.7rem', color: '#FFF', fontWeight: 700 }}>2 - 4 MEMBERS</span>
+                    <span style={{ marginLeft: 'auto', background: 'rgba(56, 189, 248, 0.2)', border: '1px solid rgba(56, 189, 248, 0.45)', borderRadius: '4px', padding: '2px 8px', fontSize: '0.7rem', color: '#FFF', fontWeight: 700 }}>2 - 3 MEMBERS</span>
                   </div>
                   <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.45 }}>
-                    Form a Duo, Trio, or Quad unit. Each team member logs into the portal using team credentials and selects their member name.
+                    Form a Duo or Trio unit. Each team member logs into the portal using team credentials and selects their member name.
                   </p>
                 </div>
 
@@ -209,7 +215,7 @@ export default function Register() {
                   TACTICAL COMMS STREAM
                 </div>
                 <div style={{ fontSize: '0.84rem', color: 'var(--text-primary)', fontStyle: 'italic', marginTop: '2px' }}>
-                  "Pick teammates who know their AI artifacts! Duo, Trio, or Quad — maximum effort!"
+                  "Pick teammates who know their AI artifacts! Duo or Trio — maximum effort!"
                 </div>
               </div>
             </div>
@@ -390,7 +396,6 @@ export default function Register() {
                     {[
                       { size: '2', title: '2 Members', sub: 'Duo Strike', icon: '👥' },
                       { size: '3', title: '3 Members', sub: 'Trio Assault', icon: '⚡' },
-                      { size: '4', title: '4 Members', sub: 'Quad Force', icon: '🛡️' },
                     ].map((item) => {
                       const isSelected = formData.teamSize === item.size
                       return (
@@ -426,8 +431,8 @@ export default function Register() {
                       {formData.teamSize} Team Members
                     </span>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: `repeat(${parseInt(formData.teamSize)}, 1fr)`, gap: '10px' }}>
-                    {[...Array(parseInt(formData.teamSize))].map((_, idx) => {
+                  <div style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(parseInt(formData.teamSize) || 2, 3)}, 1fr)`, gap: '10px' }}>
+                    {[...Array(Math.min(parseInt(formData.teamSize) || 2, 3))].map((_, idx) => {
                       const slot = idx + 1
                       return (
                         <div key={slot} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '8px', padding: '10px' }}>

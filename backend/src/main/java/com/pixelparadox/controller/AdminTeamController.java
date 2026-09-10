@@ -146,7 +146,7 @@ public class AdminTeamController {
             }
         }
 
-        if (request.teamSize() != null && request.teamSize() >= 2 && request.teamSize() <= 4) {
+        if (request.teamSize() != null && request.teamSize() >= 2 && request.teamSize() <= 3) {
             user.setTeamSize(request.teamSize());
         }
 

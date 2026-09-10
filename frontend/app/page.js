@@ -1955,10 +1955,6 @@ export default function Home() {
             <Link href="/register" style={{ color: '#86EFAC', textDecoration: 'none', fontSize: '0.82rem', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '6px 12px', borderRadius: '8px' }}>
               📋 Team Register
             </Link>
-            <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '0.8rem' }}>•</span>
-            <Link href="/leaderboard" style={{ color: '#FBBF24', textDecoration: 'none', fontSize: '0.82rem', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '6px 12px', borderRadius: '8px' }}>
-              🏆 Leaderboard
-            </Link>
           </div>
 
           {/* Bottom meta line */}

@@ -253,8 +253,8 @@ export default function AdminTeams() {
                 <input type="text" value={editTeam.teamId} onChange={e => setEditTeam({...editTeam, teamId: e.target.value})} className="form-input" required />
               </div>
               <div style={{ marginBottom: '14px' }}>
-                <label className="form-label" style={{ fontSize: '0.85rem' }}>Team Size (2 - 4)</label>
-                <input type="number" min={2} max={4} value={editTeam.teamSize || 2} onChange={e => setEditTeam({...editTeam, teamSize: parseInt(e.target.value)})} className="form-input" required />
+                <label className="form-label" style={{ fontSize: '0.85rem' }}>Team Size (2 - 3)</label>
+                <input type="number" min={2} max={3} value={editTeam.teamSize || 2} onChange={e => setEditTeam({...editTeam, teamSize: parseInt(e.target.value)})} className="form-input" required />
               </div>
               <div style={{ marginBottom: '20px' }}>
                 <label className="form-label" style={{ fontSize: '0.85rem' }}>Team Members (comma-separated)</label>

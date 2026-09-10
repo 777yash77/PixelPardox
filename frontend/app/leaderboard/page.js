@@ -26,22 +26,27 @@ export default function LeaderboardPage() {
   const [isProjectorMode, setIsProjectorMode] = useState(false)
   const wsRef = useRef(null)
 
-  // Verify credentials & user squad
+  // Verify credentials: strictly restricted to organizers / admins
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const role = localStorage.getItem('role')
-      if (role === 'ROLE_ADMIN') {
-        setIsAdmin(true)
+      if (role !== 'ROLE_ADMIN') {
+        // Students strictly blocked from seeing the leaderboard
+        router.push(role === 'ROLE_TEAM' ? '/game' : '/login')
+        return
       }
+      setIsAdmin(true)
       const tid = localStorage.getItem('teamId')
       if (tid) setMyTeamId(tid)
       const pname = localStorage.getItem('participantName')
       if (pname) setMyParticipantName(pname)
     }
-  }, [])
+  }, [router])
 
   const fetchLeaderboard = async () => {
     try {
+      const role = typeof window !== 'undefined' ? localStorage.getItem('role') : null
+      if (role !== 'ROLE_ADMIN') return
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
       const res = await fetch('http://localhost:8080/api/game/leaderboard', {
         headers: token ? { 'Authorization': `Bearer ${token}` } : {}
@@ -139,6 +144,20 @@ export default function LeaderboardPage() {
   }, [leaderboard, myTeamId])
 
   const top3 = leaderboard.slice(0, 3)
+
+  if (!isAdmin) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#060812', color: '#E8E8E8' }}>
+        <div style={{ textAlign: 'center', padding: '30px' }}>
+          <span style={{ fontSize: '2.5rem' }}>🔒</span>
+          <h2 style={{ marginTop: '14px', fontSize: '1.4rem', color: '#EF4444' }}>Organizer Access Only</h2>
+          <p style={{ color: 'var(--text-secondary)', maxWidth: '420px', margin: '8px auto 0', fontSize: '0.88rem' }}>
+            The tournament leaderboard is strictly restricted and reserved for auditorium projection by organizers.
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div style={{
