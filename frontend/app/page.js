@@ -1754,7 +1754,7 @@ export default function Home() {
                 <li><strong>Webcam Invigilation:</strong> Allow camera permissions when prompted. The invigilation runs silently in 1-minute intervals.</li>
                 <li><strong>Stage 0 Prelims:</strong> 30 Multiple Choice Questions in strictly 30 minutes. Correct answers award +10 points; wrong answers deduct -5 points.</li>
                 <li><strong>Squad Summation:</strong> Member scores under the same registered Team ID add directly together into the team total.</li>
-                <li><strong>Disconnections:</strong> If your network drops, simply log back in with your Team ID and pilot name to resume your active test.</li>
+                <li><strong>Disconnections:</strong> If your network drops, simply log back in with your Team ID and member name to resume your active test.</li>
               </ul>
             </div>
           </div>

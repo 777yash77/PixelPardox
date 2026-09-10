@@ -163,10 +163,10 @@ export default function Register() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
                     <span style={{ fontSize: '1.15rem' }}>👥</span>
                     <span style={{ fontSize: '0.86rem', fontWeight: 800, color: '#7DD3FC', letterSpacing: '0.5px' }}>SQUAD FORMATION FORMAT</span>
-                    <span style={{ marginLeft: 'auto', background: 'rgba(56, 189, 248, 0.2)', border: '1px solid rgba(56, 189, 248, 0.45)', borderRadius: '4px', padding: '2px 8px', fontSize: '0.7rem', color: '#FFF', fontWeight: 700 }}>2 - 4 PILOTS</span>
+                    <span style={{ marginLeft: 'auto', background: 'rgba(56, 189, 248, 0.2)', border: '1px solid rgba(56, 189, 248, 0.45)', borderRadius: '4px', padding: '2px 8px', fontSize: '0.7rem', color: '#FFF', fontWeight: 700 }}>2 - 4 MEMBERS</span>
                   </div>
                   <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.45 }}>
-                    Form a Duo, Trio, or Quad unit. Each pilot logs into the arena portal using your squad credentials and enters their personal operative handle.
+                    Form a Duo, Trio, or Quad unit. Each team member logs into the portal using team credentials and selects their member name.
                   </p>
                 </div>
 
@@ -382,7 +382,7 @@ export default function Register() {
                   }}>
                     <span>SQUAD SIZE FORMAT <span style={{ color: '#FF6B6B' }}>*</span></span>
                     <span style={{ fontSize: '0.72rem', color: '#FF7B7B', fontWeight: '700', letterSpacing: '0.5px' }}>
-                      ⚡ {formData.teamSize} PILOTS CONFIGURED
+                      ⚡ {formData.teamSize} MEMBERS CONFIGURED
                     </span>
                   </label>
 
@@ -416,14 +416,14 @@ export default function Register() {
                   </div>
                 </div>
 
-                {/* Dynamic Squad Roster Matrix with Pilot Names */}
+                {/* Dynamic Team Roster Matrix with Member Names */}
                 <div style={{ marginBottom: '22px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                     <span style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                      Pilot Member Names (Registered Teammates):
+                      Team Member Names (Registered Teammates):
                     </span>
                     <span style={{ fontSize: '0.68rem', color: '#38BDF8' }}>
-                      {formData.teamSize} Pilots in Squad
+                      {formData.teamSize} Team Members
                     </span>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: `repeat(${parseInt(formData.teamSize)}, 1fr)`, gap: '10px' }}>
@@ -432,7 +432,7 @@ export default function Register() {
                       return (
                         <div key={slot} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '8px', padding: '10px' }}>
                           <div style={{ fontSize: '0.68rem', color: '#38BDF8', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>
-                            {slot === 1 ? '👑 Lead Pilot' : `Pilot 0${slot}`}
+                            {slot === 1 ? '👑 Team Lead' : `Member 0${slot}`}
                           </div>
                           <input
                             type="text"
@@ -455,7 +455,7 @@ export default function Register() {
                     })}
                   </div>
                   <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)', margin: '8px 0 0 0' }}>
-                    Teammates will log in with this shared Team ID and select or enter their pilot name to take the quiz.
+                    Teammates will log in with this shared Team ID and select their member name to take the quiz.
                   </p>
                 </div>
 

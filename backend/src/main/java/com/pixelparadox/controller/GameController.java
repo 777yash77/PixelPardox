@@ -375,8 +375,8 @@ public class GameController {
             }
 
             String cleanTeam = (teamId != null ? teamId : "team").replaceAll("[^a-zA-Z0-9_-]", "_");
-            String cleanPilot = (participantName != null ? participantName : "pilot").replaceAll("[^a-zA-Z0-9_-]", "_");
-            String fileName = System.currentTimeMillis() + "_" + cleanTeam + "_" + cleanPilot + ".webm";
+            String cleanMember = (participantName != null ? participantName : "member").replaceAll("[^a-zA-Z0-9_-]", "_");
+            String fileName = System.currentTimeMillis() + "_" + cleanTeam + "_" + cleanMember + ".webm";
             Path path = Paths.get(uploadDir, fileName);
             Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 

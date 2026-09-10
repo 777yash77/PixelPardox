@@ -298,7 +298,7 @@ export default function Login() {
                   fontSize: '2.1rem',
                   marginBottom: '8px'
                 }} className="auth-title-cinematic">
-                  {step === 1 ? 'PORTAL LOGIN' : 'IDENTIFY PILOT'}
+                  {step === 1 ? 'PORTAL LOGIN' : 'SELECT TEAM MEMBER'}
                 </h2>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.86rem', letterSpacing: '0.5px', margin: 0, lineHeight: 1.5 }}>
                   {step === 1 ? 'Enter squad credentials to initialize cyber arena session' : 'Specify which squad member is attempting this quiz session'}
@@ -398,14 +398,14 @@ export default function Login() {
                       STAGE 0 SQUAD TELEMETRY
                     </span>
                     <p style={{ fontSize: '0.86rem', color: '#FFF', margin: 0, lineHeight: '1.5' }}>
-                      All registered pilots in Squad <strong>{formData.teamId.toUpperCase()}</strong> attempt Stage 0 independently. Your individual score directly adds into your squad's total leaderboard score.
+                      All registered team members in Team <strong>{formData.teamId.toUpperCase()}</strong> attempt Stage 0 independently. Your individual score directly adds into your team's total leaderboard score.
                     </p>
                   </div>
 
                   {memberNamesList.length > 0 && (
                     <div style={{ marginBottom: '20px' }}>
                       <span style={{ fontSize: '0.74rem', color: '#7DD3FC', fontWeight: 'bold', letterSpacing: '0.8px', display: 'block', marginBottom: '8px', textTransform: 'uppercase' }}>
-                        Select Your Registered Pilot Profile:
+                        Select Your Registered Member Profile:
                       </span>
                       <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
                         {memberNamesList.map(name => {
@@ -436,7 +436,7 @@ export default function Login() {
                   <form onSubmit={handleSelectParticipant}>
                     <div style={{ textAlign: 'left', marginBottom: '22px' }}>
                       <label htmlFor="participantName" style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-primary)', fontWeight: '700', letterSpacing: '0.8px', marginBottom: '6px' }}>
-                        PILOT / PARTICIPANT NAME {memberNamesList.length > 0 && '(OR TYPE CUSTOM)'}
+                        TEAM MEMBER NAME {memberNamesList.length > 0 && '(OR TYPE CUSTOM)'}
                       </label>
                       <div className="auth-input-container">
                         <span className="auth-input-icon">👤</span>

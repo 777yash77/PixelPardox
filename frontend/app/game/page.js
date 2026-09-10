@@ -1038,7 +1038,7 @@ export default function GameArena() {
               <span>TEAM: {team.teamName}</span>
               {participantName && (
                 <span style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: '600', background: 'rgba(255,255,255,0.06)', padding: '2px 8px', borderRadius: '4px', textTransform: 'none' }}>
-                  Pilot: {participantName}
+                  Member: {participantName}
                 </span>
               )}
             </h2>
@@ -1855,7 +1855,7 @@ export default function GameArena() {
                                 <span style={{ color: '#38BDF8' }}>SQUAD DEBRIEF</span> &amp; <span style={{ color: '#E01B22' }}>SCORE CONVERGENCE</span>
                               </h2>
                               <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', margin: 0, maxWidth: '700px', lineHeight: '1.5' }}>
-                                Pilot submissions under Team ID <strong style={{ color: '#FFF' }}>{team.teamId || 'YOUR SQUAD'}</strong> are aggregated into your cumulative squad standing in real time.
+                                Member submissions under Team ID <strong style={{ color: '#FFF' }}>{team.teamId || 'YOUR TEAM'}</strong> are aggregated into your cumulative team standing in real time.
                               </p>
                             </div>
 
@@ -1891,7 +1891,7 @@ export default function GameArena() {
 
                         {/* 4 Metric Stats Cards Grid */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '18px', marginBottom: '28px' }}>
-                          {/* Card 1: Pilot Personal Score */}
+                          {/* Card 1: Member Personal Score */}
                           <div className="comic-card card-hover-lift" style={{ 
                             padding: '22px', 
                             borderRadius: '12px', 
@@ -1900,10 +1900,10 @@ export default function GameArena() {
                             boxShadow: '0 8px 24px rgba(0,0,0,0.35)'
                           }}>
                             <div style={{ fontSize: '0.74rem', color: '#7DD3FC', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '4px' }}>
-                              YOUR PILOT LOG
+                              YOUR MEMBER SCORE
                             </div>
                             <div style={{ fontSize: '1.05rem', fontWeight: 'bold', color: '#FFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                              {participantName || 'Pilot'} <span style={{ fontSize: '0.75rem', color: '#38BDF8' }}>(You)</span>
+                              {participantName || 'Member'} <span style={{ fontSize: '0.75rem', color: '#38BDF8' }}>(You)</span>
                             </div>
                             <div style={{ fontSize: '2.3rem', fontWeight: '900', color: '#38BDF8', fontFamily: 'var(--font-display)', margin: '10px 0 6px 0', textShadow: '0 0 16px rgba(56, 189, 248, 0.4)' }}>
                               {myScore >= 0 ? `+${myScore}` : myScore} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>pts</span>
@@ -1969,7 +1969,7 @@ export default function GameArena() {
                               SQUAD DEPLOYMENT
                             </div>
                             <div style={{ fontSize: '1.05rem', fontWeight: 'bold', color: '#FFF' }}>
-                              Pilots Finished
+                              Members Finished
                             </div>
                             <div style={{ fontSize: '2.3rem', fontWeight: '900', color: '#A5B4FC', fontFamily: 'var(--font-display)', margin: '10px 0 6px 0' }}>
                               {completedCount} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>/ {allTeammateNames.length} Concluded</span>
@@ -1992,7 +1992,7 @@ export default function GameArena() {
                               </p>
                             </div>
                             <span className="badge" style={{ background: 'rgba(56, 189, 248, 0.1)', borderColor: '#38BDF8', color: '#38BDF8', padding: '6px 14px', fontSize: '0.82rem' }}>
-                              Squad Size: {team.teamSize || allTeammateNames.length} Pilots
+                              Team Size: {team.teamSize || allTeammateNames.length} Members
                             </span>
                           </div>
 
@@ -2012,23 +2012,23 @@ export default function GameArena() {
                             <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>
                               SCORE FORMULA:
                             </span>
-                            {teammateCards.map((pilot, idx) => (
-                              <div key={pilot.name} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            {teammateCards.map((member, idx) => (
+                              <div key={member.name} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 {idx > 0 && <span style={{ color: '#F97316', fontWeight: 'bold', fontSize: '1.2rem' }}>+</span>}
                                 <div style={{ 
-                                  background: pilot.isMe ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.05)', 
-                                  border: `1px solid ${pilot.isMe ? '#38BDF8' : 'rgba(255,255,255,0.15)'}`,
+                                  background: member.isMe ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.05)', 
+                                  border: `1px solid ${member.isMe ? '#38BDF8' : 'rgba(255,255,255,0.15)'}`,
                                   padding: '6px 14px', 
                                   borderRadius: '8px', 
                                   display: 'flex', 
                                   alignItems: 'center', 
                                   gap: '8px'
                                 }}>
-                                  <span style={{ fontSize: '0.85rem', color: pilot.isMe ? '#38BDF8' : '#FFF', fontWeight: '600' }}>
-                                    🧑‍🚀 {pilot.name} {pilot.isMe ? '(You)' : ''}:
+                                  <span style={{ fontSize: '0.85rem', color: member.isMe ? '#38BDF8' : '#FFF', fontWeight: '600' }}>
+                                    👤 {member.name} {member.isMe ? '(You)' : ''}:
                                   </span>
-                                  <span style={{ fontWeight: '900', color: pilot.status === 'COMPLETED' ? '#34D399' : '#F59E0B', fontSize: '0.95rem' }}>
-                                    {pilot.status === 'COMPLETED' ? `${pilot.score >= 0 ? `+${pilot.score}` : pilot.score} pts` : 'Pending...'}
+                                  <span style={{ fontWeight: '900', color: member.status === 'COMPLETED' ? '#34D399' : '#F59E0B', fontSize: '0.95rem' }}>
+                                    {member.status === 'COMPLETED' ? `${member.score >= 0 ? `+${member.score}` : member.score} pts` : 'Pending...'}
                                   </span>
                                 </div>
                               </div>
@@ -2048,15 +2048,15 @@ export default function GameArena() {
 
                           {/* Teammate Individual Dossier Cards */}
                           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
-                            {teammateCards.map((pilot) => (
+                            {teammateCards.map((member) => (
                               <div 
-                                key={pilot.name} 
+                                key={member.name} 
                                 className="comic-card" 
                                 style={{ 
                                   padding: '18px 20px', 
                                   borderRadius: '12px',
-                                  border: pilot.isMe ? '1.5px solid #38BDF8' : '1px solid rgba(255,255,255,0.1)',
-                                  background: pilot.isMe ? 'rgba(56, 189, 248, 0.05)' : 'rgba(255,255,255,0.02)',
+                                  border: member.isMe ? '1.5px solid #38BDF8' : '1px solid rgba(255,255,255,0.1)',
+                                  background: member.isMe ? 'rgba(56, 189, 248, 0.05)' : 'rgba(255,255,255,0.02)',
                                   position: 'relative'
                                 }}
                               >
@@ -2066,30 +2066,30 @@ export default function GameArena() {
                                       width: '40px', 
                                       height: '40px', 
                                       borderRadius: '50%', 
-                                      background: pilot.isMe ? 'rgba(56, 189, 248, 0.2)' : 'rgba(224, 27, 34, 0.15)',
-                                      border: `2px solid ${pilot.isMe ? '#38BDF8' : '#E01B22'}`,
+                                      background: member.isMe ? 'rgba(56, 189, 248, 0.2)' : 'rgba(224, 27, 34, 0.15)',
+                                      border: `2px solid ${member.isMe ? '#38BDF8' : '#E01B22'}`,
                                       display: 'flex',
                                       alignItems: 'center',
                                       justifyContent: 'center',
                                       fontSize: '1.1rem'
                                     }}>
-                                      {pilot.isMe ? '🕷️' : '⚔️'}
+                                      {member.isMe ? '🕷️' : '⚔️'}
                                     </div>
                                     <div>
                                       <div style={{ fontWeight: 'bold', fontSize: '1rem', color: '#FFF' }}>
-                                        {pilot.name} {pilot.isMe && <span style={{ fontSize: '0.72rem', color: '#38BDF8' }}>(You)</span>}
+                                        {member.name} {member.isMe && <span style={{ fontSize: '0.72rem', color: '#38BDF8' }}>(You)</span>}
                                       </div>
                                       <div style={{ fontSize: '0.74rem', color: 'var(--text-dim)' }}>
-                                        {pilot.isMe ? 'Active Local Terminal' : 'Teammate Terminal'}
+                                        {member.isMe ? 'Active Local Terminal' : 'Teammate Terminal'}
                                       </div>
                                     </div>
                                   </div>
 
-                                  {pilot.status === 'COMPLETED' ? (
+                                  {member.status === 'COMPLETED' ? (
                                     <span className="badge" style={{ background: 'rgba(16, 185, 129, 0.15)', borderColor: '#10B981', color: '#34D399', fontSize: '0.72rem' }}>
                                       ✓ Finished
                                     </span>
-                                  ) : pilot.status === 'IN_PROGRESS' ? (
+                                  ) : member.status === 'IN_PROGRESS' ? (
                                     <span className="badge" style={{ background: 'rgba(245, 158, 11, 0.15)', borderColor: '#F59E0B', color: '#FBBF24', fontSize: '0.72rem' }}>
                                       ⏳ In Progress
                                     </span>
@@ -2102,8 +2102,8 @@ export default function GameArena() {
 
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'rgba(0,0,0,0.25)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
                                   <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Score Contribution:</span>
-                                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: pilot.status === 'COMPLETED' ? '#38BDF8' : 'var(--text-dim)' }}>
-                                    {pilot.status === 'COMPLETED' ? `${pilot.score >= 0 ? `+${pilot.score}` : pilot.score} pts` : 'Awaiting Submit'}
+                                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: member.status === 'COMPLETED' ? '#38BDF8' : 'var(--text-dim)' }}>
+                                    {member.status === 'COMPLETED' ? `${member.score >= 0 ? `+${member.score}` : member.score} pts` : 'Awaiting Submit'}
                                   </span>
                                 </div>
                               </div>

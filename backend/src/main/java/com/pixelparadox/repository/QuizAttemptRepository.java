@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface QuizAttemptRepository extends JpaRepository<QuizAttempt, Long> {
     Optional<QuizAttempt> findByTeamIdAndParticipantName(Long teamId, String participantName);
+    Optional<QuizAttempt> findByTeamIdAndParticipantNameIgnoreCase(Long teamId, String participantName);
     List<QuizAttempt> findByTeamId(Long teamId);
 }

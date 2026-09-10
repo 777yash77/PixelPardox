@@ -416,7 +416,7 @@ export default function LeaderboardPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by Squad Name, Team ID, or Pilots..."
+              placeholder="Search by Team Name, Team ID, or Members..."
               style={{
                 width: '100%',
                 background: 'rgba(255, 255, 255, 0.05)',
@@ -570,7 +570,7 @@ export default function LeaderboardPage() {
                           <div style={{ fontSize: '0.76rem', color: 'var(--text-dim)', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                             <span style={{ color: '#38BDF8', fontWeight: '600' }}>TID: {team.teamId}</span>
                             <span>•</span>
-                            <span>{team.teamSize || 2} Pilots</span>
+                            <span>{team.teamSize || 2} Members</span>
                             {team.memberNames && (
                               <>
                                 <span>•</span>

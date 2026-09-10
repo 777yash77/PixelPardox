@@ -140,7 +140,7 @@ export default function AdminTeams() {
                 <tr style={{ background: 'rgba(0,0,0,0.3)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: '600' }}>Team Name</th>
                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: '600' }}>Team ID</th>
-                  <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: '600' }}>Members / Pilots</th>
+                  <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: '600' }}>Team Members</th>
                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: '600', textAlign: 'center' }}>Size</th>
                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: '600', textAlign: 'center' }}>Score</th>
                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: '600', textAlign: 'right' }}>Actions</th>
@@ -257,7 +257,7 @@ export default function AdminTeams() {
                 <input type="number" min={2} max={4} value={editTeam.teamSize || 2} onChange={e => setEditTeam({...editTeam, teamSize: parseInt(e.target.value)})} className="form-input" required />
               </div>
               <div style={{ marginBottom: '20px' }}>
-                <label className="form-label" style={{ fontSize: '0.85rem' }}>Team Members / Pilots (comma-separated)</label>
+                <label className="form-label" style={{ fontSize: '0.85rem' }}>Team Members (comma-separated)</label>
                 <input 
                   type="text" 
                   value={editTeam.memberNames || ''} 

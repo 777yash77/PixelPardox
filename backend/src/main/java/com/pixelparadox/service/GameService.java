@@ -402,8 +402,8 @@ public class GameService {
     public Optional<QuizAttempt> getQuizAttempt(String email, String participantName) {
         Optional<User> team = userRepository.findByTeamId(email);
         if (team.isEmpty()) return Optional.empty();
-        String pName = participantName != null ? participantName.trim() : "Pilot";
-        return quizAttemptRepository.findByTeamIdAndParticipantName(team.get().getId(), pName);
+        String pName = participantName != null ? participantName.trim() : "Member";
+        return quizAttemptRepository.findByTeamIdAndParticipantNameIgnoreCase(team.get().getId(), pName);
     }
 
     public List<QuizAttempt> getTeamQuizAttempts(String teamId) {
@@ -435,10 +435,27 @@ public class GameService {
             throw new IllegalStateException("Your team has been eliminated and cannot start quiz attempts.");
         }
 
-        String pName = participantName != null ? participantName.trim() : "Pilot";
-        Optional<QuizAttempt> existing = quizAttemptRepository.findByTeamIdAndParticipantName(team.getId(), pName);
+        String pName = participantName != null ? participantName.trim() : "Member";
+
+        // Validate member belongs to registered roster if configured
+        if (team.getMemberNames() != null && !team.getMemberNames().trim().isEmpty()) {
+            List<String> validMembers = java.util.Arrays.stream(team.getMemberNames().split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .toList();
+            boolean isValid = validMembers.stream().anyMatch(m -> m.equalsIgnoreCase(pName));
+            if (!isValid && !validMembers.isEmpty()) {
+                throw new IllegalArgumentException("'" + pName + "' is not a registered team member of " + team.getTeamName());
+            }
+        }
+
+        Optional<QuizAttempt> existing = quizAttemptRepository.findByTeamIdAndParticipantNameIgnoreCase(team.getId(), pName);
         if (existing.isPresent()) {
-            return existing.get();
+            QuizAttempt attempt = existing.get();
+            if ("COMPLETED".equals(attempt.getStatus())) {
+                throw new IllegalStateException("Team member '" + pName + "' has already attended and completed the quiz.");
+            }
+            return attempt;
         }
 
         GameState state = getOrCreateGameState();
@@ -446,10 +463,10 @@ public class GameService {
             throw new IllegalStateException("Stage 0 Prelims quiz is currently closed.");
         }
 
-        // Enforce squad capacity to prevent average inflation
+        // Enforce team member capacity
         List<QuizAttempt> teamAttempts = quizAttemptRepository.findByTeamId(team.getId());
         if (teamAttempts.size() >= team.getTeamSize()) {
-            throw new IllegalStateException("Squad capacity reached: Only " + team.getTeamSize() + " pilot(s) allowed for squad " + team.getTeamName());
+            throw new IllegalStateException("Team capacity reached: Only " + team.getTeamSize() + " member(s) allowed for team " + team.getTeamName());
         }
 
         QuizAttempt attempt = new QuizAttempt(team, pName);
@@ -467,12 +484,12 @@ public class GameService {
             throw new IllegalStateException("Your team has been eliminated.");
         }
 
-        String pName = participantName != null ? participantName.trim() : "Pilot";
-        QuizAttempt attempt = quizAttemptRepository.findByTeamIdAndParticipantName(team.getId(), pName)
-                .orElseThrow(() -> new IllegalStateException("Quiz attempt not started."));
+        String pName = participantName != null ? participantName.trim() : "Member";
+        QuizAttempt attempt = quizAttemptRepository.findByTeamIdAndParticipantNameIgnoreCase(team.getId(), pName)
+                .orElseThrow(() -> new IllegalStateException("Quiz attempt not started for member '" + pName + "'."));
 
         if ("COMPLETED".equals(attempt.getStatus())) {
-            throw new IllegalStateException("Quiz already submitted.");
+            throw new IllegalStateException("Quiz already submitted by member '" + pName + "'.");
         }
 
         GameState state = getOrCreateGameState();
