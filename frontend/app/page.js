@@ -918,26 +918,6 @@ export default function Home() {
       </div>
       )}
 
-      {/* Unified Top Control Action Bar (Single Non-Duplicate Action Hub) */}
-      <div className="top-clean-action-bar" style={{ position: 'relative', zIndex: 45, marginTop: '14px' }}>
-        <button
-          type="button"
-          onClick={() => setShowHelpModal(true)}
-          className="top-clean-help-btn"
-          title="Contact Student Coordinators (Help Desk)"
-        >
-          📞 Help &amp; Coordinators
-        </button>
-        <button
-          type="button"
-          onClick={() => handleToggleMascots(!hideMascotAnimations)}
-          className="top-clean-show-btn"
-          title={hideMascotAnimations ? "Show Spider-Man and Deadpool mascot animations" : "Hide Spider-Man and Deadpool mascot animations"}
-        >
-          {hideMascotAnimations ? "✨ Show Animations" : "🚫 Hide Animations"}
-        </button>
-      </div>
-
       {/* Main Content Container — Expansive Width, Clean Stacked Spacing */}
       <div className="container page-transition" style={{ maxWidth: 'min(1560px, 94vw)', margin: '0 auto', padding: '110px clamp(16px, 3.5vw, 48px) 100px', position: 'relative', zIndex: 40 }}>
         
@@ -1923,21 +1903,61 @@ export default function Home() {
           </div>
 
           {/* Bottom nav links */}
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px', flexWrap: 'wrap', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
             <button
               type="button"
               onClick={() => setShowHelpModal(true)}
-              style={{ background: 'none', border: 'none', color: '#38BDF8', cursor: 'pointer', fontSize: '0.82rem', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: '6px', transition: 'all 0.2s ease' }}
+              style={{
+                background: 'rgba(56, 189, 248, 0.08)',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
+                color: '#38BDF8',
+                cursor: 'pointer',
+                fontSize: '0.82rem',
+                fontWeight: '600',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease'
+              }}
+              title="Contact Student Coordinators (Help Desk)"
             >
-              🆘 Help Desk
+              📞 Help &amp; Coordinators
             </button>
             <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '0.8rem' }}>•</span>
-            <Link href="/login" style={{ color: '#FF7B7B', textDecoration: 'none', fontSize: '0.82rem', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: '6px' }}>
-              🔑 Squad Login
+            <button
+              type="button"
+              onClick={() => handleToggleMascots(!hideMascotAnimations)}
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                color: hideMascotAnimations ? '#86EFAC' : '#FF7B7B',
+                cursor: 'pointer',
+                fontSize: '0.82rem',
+                fontWeight: '600',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease'
+              }}
+              title={hideMascotAnimations ? "Show Spider-Man and Deadpool mascot animations" : "Hide Spider-Man and Deadpool mascot animations"}
+            >
+              {hideMascotAnimations ? "✨ Show Animations" : "🚫 Hide Animations"}
+            </button>
+            <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '0.8rem' }}>•</span>
+            <Link href="/login" style={{ color: '#FF7B7B', textDecoration: 'none', fontSize: '0.82rem', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '6px 12px', borderRadius: '8px' }}>
+              🔑 Team Login
             </Link>
             <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '0.8rem' }}>•</span>
-            <Link href="/register" style={{ color: '#86EFAC', textDecoration: 'none', fontSize: '0.82rem', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: '6px' }}>
-              📋 Squad Register
+            <Link href="/register" style={{ color: '#86EFAC', textDecoration: 'none', fontSize: '0.82rem', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '6px 12px', borderRadius: '8px' }}>
+              📋 Team Register
+            </Link>
+            <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '0.8rem' }}>•</span>
+            <Link href="/leaderboard" style={{ color: '#FBBF24', textDecoration: 'none', fontSize: '0.82rem', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '6px 12px', borderRadius: '8px' }}>
+              🏆 Leaderboard
             </Link>
           </div>
 
