@@ -1,16 +1,15 @@
 services:
   database:
-    image: postgres:15-alpine
+    image: mysql:8.0
     container_name: pixel_paradox_db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: pixel_paradox
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: pixel_paradox
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
 
   backend:
     build:
@@ -22,10 +21,9 @@ services:
       - database
     environment:
       PORT: 8080
-      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/pixel_paradox
-      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/pixel_paradox?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: password
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       JWT_SECRET: d39352e85a6a68456a0845a7092bb45e3f898394ef3493df54f15d74c0c1b7e5
     ports:
       - "8080:8080"
@@ -47,5 +45,5 @@ services:
       - "3000:3000"
 
 volumes:
-  postgres_data:
+  mysql_data:
   backend_uploads:
