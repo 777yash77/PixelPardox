@@ -2337,61 +2337,42 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 999990;
 }
 
-/* Center Precision Pure White Crosshair Dot */
+/* Center Precision Luminous Core Dot */
 .cyber-cursor-dot {
   position: fixed;
   top: 0;
   left: 0;
   pointer-events: none;
   z-index: 999999;
-  width: 4px;
-  height: 4px;
-  margin-top: -2px;
-  margin-left: -2px;
-  border-radius: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  margin-left: -3px;
+  border-radius: 50% !important;
   background: #FFFFFF;
-  box-shadow: 0 0 4px #FFFFFF, 0 0 8px rgba(255,255,255,0.9);
+  box-shadow: 0 0 6px #FFFFFF, 0 0 12px rgba(56, 189, 248, 0.9), 0 0 18px rgba(224, 27, 34, 0.6);
   will-change: transform;
   transition: transform 0.12s ease-out;
+  border: none !important;
+  outline: none !important;
 }
 
-/* Vertical Crosshair Spike passing through center white dot */
-.cyber-cursor-dot::before {
-  content: '';
-  position: absolute;
-  top: -4px;
-  bottom: -4px;
-  left: 50%;
-  width: 1.5px;
-  transform: translateX(-50%);
-  background: #FFFFFF;
-  box-shadow: 0 0 4px #FFFFFF;
-  pointer-events: none;
-}
-
-/* Horizontal Crosshair Spike passing through center white dot */
+/* NO SQUARE BOX SPIKES OR RECTANGULAR CROSSHAIRS */
+.cyber-cursor-dot::before,
 .cyber-cursor-dot::after {
-  content: '';
-  position: absolute;
-  left: -4px;
-  right: -4px;
-  top: 50%;
-  height: 1.5px;
-  transform: translateY(-50%);
-  background: #FFFFFF;
-  box-shadow: 0 0 4px #FFFFFF;
-  pointer-events: none;
+  display: none !important;
+  content: none !important;
 }
 
-/* When Hovered: Remains pure white! Never turns into a yellow blob! */
+/* When Hovered: Smooth glowing circular scale expansion */
 .cyber-cursor-dot.dot-hover {
   background: #FFFFFF;
-  box-shadow: 0 0 8px #FFFFFF, 0 0 16px rgba(255, 255, 255, 1);
-  transform: scale(1.15);
+  box-shadow: 0 0 10px #FFFFFF, 0 0 20px #38BDF8, 0 0 30px #EF4444;
+  transform: scale(1.4);
 }
 
 .cyber-cursor-dot.dot-clicking {
-  transform: scale(0.8);
+  transform: scale(0.7);
 }
 
 /* Smooth Trailing Follower Circular Reticle */
@@ -2401,62 +2382,65 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   pointer-events: none;
   z-index: 999995;
-  width: 32px;
-  height: 32px;
-  margin-top: -16px;
-  margin-left: -16px;
-  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  margin-top: -18px;
+  margin-left: -18px;
+  border-radius: 50% !important;
   will-change: transform;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  border: none !important;
+  outline: none !important;
 }
 
 /* Outer Luminous Round Ring (Spider-Man Electric Blue / Cyan) */
 .cursor-dashed-ring {
   position: absolute;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(56, 189, 248, 0.8);
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.55), inset 0 0 6px rgba(0, 136, 255, 0.3);
+  width: 34px;
+  height: 34px;
+  border-radius: 50% !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.85);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.6), inset 0 0 8px rgba(2, 132, 199, 0.4);
   pointer-events: none;
-  transition: all 0.2s ease;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Inner Dual-Glow Round Ring (Deadpool Crimson Red / Cyan core) */
 .cursor-red-ring {
   position: absolute;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(224, 27, 34, 0.75);
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(224, 27, 34, 0.2) 60%, transparent 100%);
-  box-shadow: 0 0 8px rgba(224, 27, 34, 0.5);
+  width: 20px;
+  height: 20px;
+  border-radius: 50% !important;
+  border: 1.5px solid rgba(239, 68, 68, 0.85);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, rgba(224, 27, 34, 0.25) 60%, transparent 100%);
+  box-shadow: 0 0 10px rgba(224, 27, 34, 0.6);
   pointer-events: none;
-  transition: all 0.2s ease;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* On Hover: Elegant Circular Expansion with Dual Multiverse Glow */
 .cyber-cursor-ring.cursor-hover {
-  transform: scale(1.35);
+  transform: scale(1.45);
 }
 
 .cyber-cursor-ring.cursor-hover .cursor-dashed-ring {
   border-color: #38BDF8;
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.85), inset 0 0 8px rgba(56, 189, 248, 0.45);
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.9), inset 0 0 12px rgba(56, 189, 248, 0.5);
+  animation: reticleSpin 6s linear infinite;
 }
 
 .cyber-cursor-ring.cursor-hover .cursor-red-ring {
   border-color: #FF4D4D;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.35) 0%, rgba(224, 27, 34, 0.35) 60%, transparent 100%);
-  box-shadow: 0 0 14px rgba(255, 77, 77, 0.85);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.4) 0%, rgba(224, 27, 34, 0.4) 60%, transparent 100%);
+  box-shadow: 0 0 18px rgba(255, 77, 77, 0.9);
 }
 
 /* Click Compression Shock */
 .cyber-cursor-ring.cursor-clicking {
-  transform: scale(0.8);
+  transform: scale(0.75);
 }
 
 @keyframes reticleSpin {

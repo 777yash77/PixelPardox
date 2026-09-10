@@ -52,37 +52,36 @@ export default function CustomCursor() {
     window.addEventListener('resize', handleResize)
 
     const trail = []
-    const MAX_TRAIL = 26
+    const MAX_TRAIL = 24
     const particles = []
     const shockwaves = []
 
     // Multiverse Chromatic Spectrum: Spidey Blue & Cyan, Dark Sapphire Blue, Deadpool Crimson, Scarlet Red, Fiery Orangish
     const colors = [
-      { r: 2,   g: 132, b: 199 }, // Spidey Electric Blue
       { r: 56,  g: 189, b: 248 }, // Neon Blue / Cyan
-      { r: 29,  g: 78,  b: 216 }, // Deep Sapphire Blue
+      { r: 2,   g: 132, b: 199 }, // Spidey Electric Blue
       { r: 224, g: 27,  b: 34  }, // Deadpool Crimson Red
       { r: 239, g: 68,  b: 68  }, // Bright Scarlet Red
       { r: 249, g: 115, b: 22  }, // Fiery Orangish Accent
       { r: 255, g: 255, b: 255 }, // Pure White Starlight
     ]
 
-    const addParticles = (x, y, count = 2, speed = 1.3) => {
+    const addParticles = (x, y, count = 2, speed = 1.4) => {
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2
-        const s = Math.random() * speed + 0.3
+        const s = Math.random() * speed + 0.4
         const c = colors[Math.floor(Math.random() * colors.length)]
         particles.push({
           x, y,
           vx: Math.cos(angle) * s,
           vy: Math.sin(angle) * s,
-          size: Math.random() * 2.8 + 1,
+          size: Math.random() * 2.6 + 1.2,
           color: c,
           alpha: 1,
-          decay: Math.random() * 0.032 + 0.018
+          decay: Math.random() * 0.03 + 0.018
         })
       }
-      if (particles.length > 100) particles.splice(0, particles.length - 100)
+      if (particles.length > 110) particles.splice(0, particles.length - 110)
     }
 
     const onMouseMove = (e) => {
@@ -95,7 +94,7 @@ export default function CustomCursor() {
 
       trail.push({ x: mouseX, y: mouseY, age: 0 })
       if (trail.length > MAX_TRAIL) trail.shift()
-      if (Math.random() > 0.28) addParticles(mouseX, mouseY, 1, 0.9)
+      if (Math.random() > 0.25) addParticles(mouseX, mouseY, 1, 1.0)
 
       const target = e.target
       if (target) {
@@ -110,13 +109,13 @@ export default function CustomCursor() {
 
     const onMouseDown = (e) => {
       setIsClicking(true)
-      // Triple multicolored shockwaves: Electric Blue -> Deadpool Crimson -> Fiery Orangish
+      // Triple multicolored smooth circular shockwaves
       shockwaves.push(
-        { x: e.clientX, y: e.clientY, radius: 4,  maxRadius: 52, alpha: 0.95, color: '#38BDF8', lineWidth: 2.8 },
-        { x: e.clientX, y: e.clientY, radius: 2,  maxRadius: 40, alpha: 0.85, color: '#EF4444', lineWidth: 2.0 },
-        { x: e.clientX, y: e.clientY, radius: 1,  maxRadius: 28, alpha: 0.75, color: '#F97316', lineWidth: 1.6 }
+        { x: e.clientX, y: e.clientY, radius: 5,  maxRadius: 56, alpha: 0.95, color: '#38BDF8', lineWidth: 2.5 },
+        { x: e.clientX, y: e.clientY, radius: 3,  maxRadius: 42, alpha: 0.85, color: '#EF4444', lineWidth: 2.0 },
+        { x: e.clientX, y: e.clientY, radius: 1,  maxRadius: 28, alpha: 0.75, color: '#F97316', lineWidth: 1.5 }
       )
-      addParticles(e.clientX, e.clientY, 20, 3.8)
+      addParticles(e.clientX, e.clientY, 22, 4.0)
     }
 
     const onMouseUp = () => setIsClicking(false)
@@ -139,24 +138,24 @@ export default function CustomCursor() {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       // Smooth lerp follower ring
-      ringX += (mouseX - ringX) * 0.18
-      ringY += (mouseY - ringY) * 0.18
+      ringX += (mouseX - ringX) * 0.2
+      ringY += (mouseY - ringY) * 0.2
       if (cursorRingRef.current) {
         cursorRingRef.current.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`
       }
 
-      // Multiverse Dual Spotlight (Spidey Electric Blue core + Deadpool Crimson halo)
-      const spot = ctx.createRadialGradient(ringX, ringY, 0, ringX, ringY, 190)
-      spot.addColorStop(0,   'rgba(56, 189, 248, 0.08)')
-      spot.addColorStop(0.35, 'rgba(0, 136, 255, 0.04)')
-      spot.addColorStop(0.65, 'rgba(224, 27, 34, 0.035)')
+      // Multiverse Dual Circular Spotlight (Spidey Cyan core + Deadpool Crimson halo)
+      const spot = ctx.createRadialGradient(ringX, ringY, 0, ringX, ringY, 180)
+      spot.addColorStop(0,   'rgba(56, 189, 248, 0.09)')
+      spot.addColorStop(0.4, 'rgba(2, 132, 199, 0.04)')
+      spot.addColorStop(0.7, 'rgba(224, 27, 34, 0.035)')
       spot.addColorStop(1,   'rgba(0, 0, 0, 0)')
       ctx.fillStyle = spot
       ctx.beginPath()
-      ctx.arc(ringX, ringY, 190, 0, Math.PI * 2)
+      ctx.arc(ringX, ringY, 180, 0, Math.PI * 2)
       ctx.fill()
 
-      // Chromatic Multicolor Ribbon Trail
+      // Chromatic Smooth Silk Ribbon Trail
       if (trail.length > 2) {
         for (let i = 0; i < trail.length - 1; i++) {
           const p1 = trail[i], p2 = trail[i + 1]
@@ -166,7 +165,6 @@ export default function CustomCursor() {
           ctx.moveTo(p1.x, p1.y)
           ctx.lineTo(p2.x, p2.y)
           
-          // Color cycles between Electric Blue, Darkish Blue, Deadpool Red, and Fiery Orangish
           if (i % 4 === 0) {
             ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`
           } else if (i % 4 === 1) {
@@ -179,19 +177,6 @@ export default function CustomCursor() {
           ctx.lineWidth = ratio * 2.8 + 0.6
           ctx.lineCap = 'round'
           ctx.stroke()
-
-          // Subtle silk web connector sparks
-          if (i > 2 && Math.random() > 0.65) {
-            const pOld = trail[i - 2]
-            if (Math.hypot(p2.x - pOld.x, p2.y - pOld.y) < 90) {
-              ctx.beginPath()
-              ctx.moveTo(pOld.x, pOld.y)
-              ctx.lineTo(p2.x, p2.y)
-              ctx.strokeStyle = i % 2 === 0 ? `rgba(56, 189, 248, ${alpha * 0.35})` : `rgba(255, 120, 120, ${alpha * 0.35})`
-              ctx.lineWidth = 0.65
-              ctx.stroke()
-            }
-          }
         }
       }
       for (let i = trail.length - 1; i >= 0; i--) {
@@ -203,22 +188,22 @@ export default function CustomCursor() {
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i]
         p.x += p.vx; p.y += p.vy
-        p.vx *= 0.94; p.vy *= 0.94
+        p.vx *= 0.93; p.vy *= 0.93
         p.alpha -= p.decay
         if (p.alpha <= 0) { particles.splice(i, 1); continue }
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
         ctx.fillStyle   = `rgba(${p.color.r},${p.color.g},${p.color.b},${p.alpha})`
         ctx.shadowColor = `rgba(${p.color.r},${p.color.g},${p.color.b},0.85)`
-        ctx.shadowBlur  = 9
+        ctx.shadowBlur  = 8
         ctx.fill()
         ctx.shadowBlur  = 0
       }
 
-      // Multicolored Expanding Shockwaves
+      // Multicolored Expanding Circular Shockwaves
       for (let i = shockwaves.length - 1; i >= 0; i--) {
         const sw = shockwaves[i]
-        sw.radius += 2.6; sw.alpha -= 0.04
+        sw.radius += 2.8; sw.alpha -= 0.038
         if (sw.alpha <= 0 || sw.radius >= sw.maxRadius) { shockwaves.splice(i, 1); continue }
         ctx.beginPath()
         ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2)
@@ -226,7 +211,7 @@ export default function CustomCursor() {
         ctx.globalAlpha = sw.alpha
         ctx.lineWidth   = sw.lineWidth || 2
         ctx.shadowColor = sw.color
-        ctx.shadowBlur  = 14
+        ctx.shadowBlur  = 12
         ctx.stroke()
         ctx.globalAlpha = 1
         ctx.shadowBlur  = 0
@@ -271,7 +256,7 @@ export default function CustomCursor() {
         <div className="cursor-red-ring" />
       </div>
 
-      {/* Zero-latency center crosshair dot */}
+      {/* Zero-latency center precision dot */}
       <div
         ref={cursorDotRef}
         className={`cyber-cursor-dot ${isHovered ? 'dot-hover' : ''} ${isClicking ? 'dot-clicking' : ''}`}

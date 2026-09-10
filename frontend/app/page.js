@@ -769,8 +769,8 @@ export default function Home() {
         style={{
           position: 'absolute',
           top: 0,
-          right: 'clamp(14px, 3.2vw, 46px)',
-          zIndex: 35,
+          right: 'clamp(8px, 1.6vw, 32px)',
+          zIndex: 25,
           pointerEvents: 'auto',
           cursor: 'pointer'
         }}
@@ -842,19 +842,6 @@ export default function Home() {
             <span>🕷️ SPIDER-MAN • MENTOR</span>
             <span className="mascot-tag-sub">Click to Chat</span>
           </div>
-
-          {/* Hide Animations Button */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation()
-              handleToggleMascots(true)
-            }}
-            className="hide-animations-badge-btn"
-            title="Stop Spider-Man and Deadpool from appearing at the top of the screen"
-          >
-            🚫 Hide Animations
-          </button>
         </div>
       </div>
       )}
@@ -865,8 +852,8 @@ export default function Home() {
         style={{
           position: 'absolute',
           top: 0,
-          left: 'clamp(14px, 3.2vw, 46px)',
-          zIndex: 35,
+          left: 'clamp(8px, 1.6vw, 32px)',
+          zIndex: 25,
           pointerEvents: 'auto',
           cursor: 'pointer'
         }}
@@ -927,50 +914,35 @@ export default function Home() {
             <span>⚔️ DEADPOOL • MERC-BOT</span>
             <span className="mascot-tag-sub">Click to Chat</span>
           </div>
-
-          {/* Hide Animations Button */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation()
-              handleToggleMascots(true)
-            }}
-            className="hide-animations-badge-btn"
-            title="Stop Spider-Man and Deadpool from appearing at the top of the screen"
-          >
-            🚫 Hide Animations
-          </button>
         </div>
       </div>
       )}
 
-      {/* Clean Persistent Help & Show Animations Bar when Mascots are Hidden */}
-      {hideMascotAnimations && (
-        <div className="top-clean-action-bar">
-          <button
-            type="button"
-            onClick={() => setShowHelpModal(true)}
-            className="top-clean-help-btn"
-            title="Contact Student Coordinators (Help Desk)"
-          >
-            📞 Help &amp; Coordinators
-          </button>
-          <button
-            type="button"
-            onClick={() => handleToggleMascots(false)}
-            className="top-clean-show-btn"
-            title="Show Spider-Man and Deadpool animations again at top of screen"
-          >
-            ✨ Show Animations
-          </button>
-        </div>
-      )}
+      {/* Unified Top Control Action Bar (Single Non-Duplicate Action Hub) */}
+      <div className="top-clean-action-bar" style={{ position: 'relative', zIndex: 45, marginTop: '14px' }}>
+        <button
+          type="button"
+          onClick={() => setShowHelpModal(true)}
+          className="top-clean-help-btn"
+          title="Contact Student Coordinators (Help Desk)"
+        >
+          📞 Help &amp; Coordinators
+        </button>
+        <button
+          type="button"
+          onClick={() => handleToggleMascots(!hideMascotAnimations)}
+          className="top-clean-show-btn"
+          title={hideMascotAnimations ? "Show Spider-Man and Deadpool mascot animations" : "Hide Spider-Man and Deadpool mascot animations"}
+        >
+          {hideMascotAnimations ? "✨ Show Animations" : "🚫 Hide Animations"}
+        </button>
+      </div>
 
       {/* Main Content Container — Expansive Width, Clean Stacked Spacing */}
-      <div className="container page-transition" style={{ maxWidth: 'min(1560px, 94vw)', margin: '0 auto', padding: '52px 20px 64px' }}>
+      <div className="container page-transition" style={{ maxWidth: 'min(1560px, 94vw)', margin: '0 auto', padding: '110px clamp(16px, 3.5vw, 48px) 100px', position: 'relative', zIndex: 40 }}>
         
-        {/* Multiverse Header Banner */}
-        <header style={{ textAlign: 'center', marginBottom: '64px', position: 'relative', padding: '8px clamp(12px, 6vw, 80px) 0' }}>
+        {/* Multiverse Header Banner — Prominently Elevated with High zIndex so Headings are Never Obscured */}
+        <header style={{ textAlign: 'center', marginBottom: '80px', position: 'relative', zIndex: 40, padding: '0 clamp(12px, 6vw, 80px)' }}>
           {/* Live Multiverse Status Telemetry Banner (Blue & Red Duality) */}
           <div style={{
             display: 'inline-flex',
@@ -980,7 +952,9 @@ export default function Home() {
             border: '1px solid rgba(56, 189, 248, 0.45)',
             borderRadius: '24px',
             padding: '6px 20px',
-            marginBottom: '14px',
+            marginBottom: '16px',
+            position: 'relative',
+            zIndex: 40,
             boxShadow: '0 0 20px rgba(2, 132, 199, 0.25), inset 0 0 10px rgba(224, 27, 34, 0.18)'
           }}>
             <span className="live-pulse-dot" style={{ width: '8px', height: '8px', background: '#38BDF8', boxShadow: '0 0 8px #38BDF8' }} />
@@ -990,7 +964,7 @@ export default function Home() {
             <span className="live-pulse-dot" style={{ width: '8px', height: '8px', background: '#EF4444', boxShadow: '0 0 8px #EF4444' }} />
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', flexWrap: 'wrap', justifyContent: 'center', position: 'relative', zIndex: 40 }}>
             <span className="shimmer-badge" style={{ 
               border: '1px solid #38BDF8', 
               color: '#38BDF8', 
@@ -1017,13 +991,17 @@ export default function Home() {
             </span>
           </div>
 
+          {/* Main Title Heading — Explicit relative positioning & elevated z-index */}
           <h1 className="hero-title-cinematic" style={{ 
-            fontSize: 'clamp(2.8rem, 7.2vw, 5.2rem)', 
-            marginBottom: '12px'
+            fontSize: 'clamp(2.8rem, 6.8vw, 5.2rem)', 
+            marginBottom: '16px',
+            position: 'relative',
+            zIndex: 40
           }}>
             PIXEL PARADOX
           </h1>
 
+          {/* Subtitle Heading — Explicit relative positioning & elevated z-index */}
           <div style={{ 
             display: 'inline-flex',
             alignItems: 'center',
@@ -1033,51 +1011,33 @@ export default function Home() {
             color: '#7DD3FC', 
             letterSpacing: '2.5px',
             textTransform: 'uppercase',
-            background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.16) 0%, rgba(224, 27, 34, 0.16) 100%)',
-            border: '1px solid rgba(56, 189, 248, 0.35)',
-            padding: '6px 20px',
+            background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.2) 0%, rgba(224, 27, 34, 0.2) 100%)',
+            border: '1px solid rgba(56, 189, 248, 0.45)',
+            padding: '8px 24px',
             borderRadius: '26px',
             textShadow: '0 0 14px rgba(56,189,248,0.7)',
-            marginBottom: '14px',
-            backdropFilter: 'blur(10px)',
-            boxShadow: '0 4px 18px rgba(0, 136, 255, 0.2)'
+            marginBottom: '20px',
+            position: 'relative',
+            zIndex: 40,
+            backdropFilter: 'blur(12px)',
+            boxShadow: '0 6px 24px rgba(0, 136, 255, 0.25)'
           }}>
             <span style={{ color: '#38BDF8' }}>⚡</span>
             <span>THE REALITY GLITCH — REAL OR AI?</span>
             <span style={{ color: '#FF4D4D' }}>⚡</span>
           </div>
 
-          <p style={{ maxWidth: '820px', margin: '0 auto 16px auto', color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: '1.65' }}>
+          <p style={{ maxWidth: '840px', margin: '0 auto', color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.7', position: 'relative', zIndex: 40 }}>
             Step inside the high-stakes Multiverse of Generative AI. Decode neural hallucinations, separate authentic photos from synthetic deepfakes, and prove your team is the sharpest in the multiverse!
           </p>
-
-          {/* Quick Arena Link */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
-            <Link href="/game" style={{
-              textDecoration: 'none',
-              color: '#F0F9FF',
-              fontSize: '0.84rem',
-              fontWeight: '700',
-              padding: '8px 18px',
-              borderRadius: '8px',
-              background: 'rgba(56, 189, 248, 0.12)',
-              border: '1px solid rgba(56, 189, 248, 0.4)',
-              transition: 'all 0.2s ease',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}>
-              <span>🎮</span> Game Arena
-            </Link>
-          </div>
         </header>
 
         {/* Quick Action Station Cards (Balanced 2-Column Multiverse Duel Layout) */}
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', 
-          gap: '28px', 
-          marginBottom: '60px' 
+          gap: '32px', 
+          marginBottom: '80px' 
         }}>
           {/* CARD 01: ONBOARDING (Spider-Man Electric Blue Theme) */}
           <Link href="/register" style={{ textDecoration: 'none' }}>
@@ -1972,12 +1932,12 @@ export default function Home() {
               🆘 Help Desk
             </button>
             <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '0.8rem' }}>•</span>
-            <Link href="/game" style={{ color: '#FF7B7B', textDecoration: 'none', fontSize: '0.82rem', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: '6px' }}>
-              🎮 Battle Arena
+            <Link href="/login" style={{ color: '#FF7B7B', textDecoration: 'none', fontSize: '0.82rem', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: '6px' }}>
+              🔑 Squad Login
             </Link>
             <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '0.8rem' }}>•</span>
             <Link href="/register" style={{ color: '#86EFAC', textDecoration: 'none', fontSize: '0.82rem', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: '6px' }}>
-              📋 Register
+              📋 Squad Register
             </Link>
           </div>
 
