@@ -512,8 +512,24 @@ export default function LeaderboardPage() {
               Connecting to central tournament scoring telemetry...
             </div>
           ) : filteredLeaderboard.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-dim)' }}>
-              {searchQuery ? `No squads match the search query "${searchQuery}".` : 'No squads registered yet in this category.'}
+            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-dim)' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>🔍</div>
+              <p style={{ fontSize: '1rem', color: '#FFF', fontWeight: '700', marginBottom: '6px' }}>
+                {searchQuery ? `No teams match "${searchQuery}"` : 'No teams found in this category'}
+              </p>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '18px' }}>
+                Try adjusting your search keywords or switching category filters.
+              </p>
+              {(searchQuery || statusFilter !== 'ALL') && (
+                <button
+                  type="button"
+                  onClick={() => { setSearchQuery(''); setStatusFilter('ALL'); }}
+                  className="btn-secondary"
+                  style={{ padding: '8px 18px', fontSize: '0.82rem', borderColor: '#38BDF8', color: '#38BDF8' }}
+                >
+                  ↺ Reset Search &amp; Filters
+                </button>
+              )}
             </div>
           ) : (
             <div className="table-responsive" style={{ overflowX: 'auto' }}>
