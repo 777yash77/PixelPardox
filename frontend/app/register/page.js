@@ -198,6 +198,118 @@ export default function Register() {
                   </p>
                 </div>
               </div>
+
+              {/* Squad Registration Official Guidelines Section (Fills Vertical Space Elegantly) */}
+              <div className="auth-guidelines-container">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '1.05rem' }}>📋</span>
+                    <span style={{ fontSize: '0.84rem', fontWeight: '800', color: '#BAE6FD', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                      Official Squad Registration Guidelines
+                    </span>
+                  </div>
+                  <span style={{
+                    fontSize: '0.66rem',
+                    fontWeight: '800',
+                    color: '#38BDF8',
+                    background: 'rgba(56, 189, 248, 0.12)',
+                    border: '1px solid rgba(56, 189, 248, 0.35)',
+                    padding: '2px 8px',
+                    borderRadius: '12px',
+                    letterSpacing: '0.5px'
+                  }}>
+                    MANDATORY PROTOCOLS
+                  </span>
+                </div>
+
+                <div className="auth-guidelines-list">
+                  {/* Guideline 01 */}
+                  <div className="auth-guideline-card">
+                    <div className="auth-guideline-badge">01</div>
+                    <div className="auth-guideline-body">
+                      <div className="auth-guideline-title">
+                        <span>Single Squad Account Creation</span>
+                        <span className="auth-guideline-tag">ONE-TIME SETUP</span>
+                      </div>
+                      <p className="auth-guideline-desc">
+                        Only the <strong>Team Lead</strong> submits this registration form. A single Team ID & Password is generated for the entire squad. Teammates must <em>not</em> register duplicate accounts.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Guideline 02 */}
+                  <div className="auth-guideline-card">
+                    <div className="auth-guideline-badge">02</div>
+                    <div className="auth-guideline-body">
+                      <div className="auth-guideline-title">
+                        <span>Strict Squad Size (2 - 3 Members)</span>
+                        <span className="auth-guideline-tag">ROSTER LOCK</span>
+                      </div>
+                      <p className="auth-guideline-desc">
+                        Configure either a <strong>Duo Strike (2 members)</strong> or <strong>Trio Assault (3 members)</strong>. Verify all participant names carefully—squad rosters lock permanently upon registration and cannot be modified.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Guideline 03 */}
+                  <div className="auth-guideline-card">
+                    <div className="auth-guideline-badge">03</div>
+                    <div className="auth-guideline-body">
+                      <div className="auth-guideline-title">
+                        <span>Independent Member Login & Attempt</span>
+                        <span className="auth-guideline-tag">DISTRIBUTED TERMINAL</span>
+                      </div>
+                      <p className="auth-guideline-desc">
+                        Post-registration, each teammate logs into the <strong>Sign In</strong> terminal on their own device using the shared Team ID & Password, then selects their specific registered name to begin.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Guideline 04 */}
+                  <div className="auth-guideline-card">
+                    <div className="auth-guideline-badge">04</div>
+                    <div className="auth-guideline-body">
+                      <div className="auth-guideline-title">
+                        <span>AI Webcam Invigilation Prerequisite</span>
+                        <span className="auth-guideline-tag">LIVE PROCTORING</span>
+                      </div>
+                      <p className="auth-guideline-desc">
+                        Stage 0 Prelims enforces <strong>automated AI webcam monitoring</strong>. Each candidate must enable camera permissions and maintain fullscreen focus throughout the 30-minute timed quiz.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Guideline 05 */}
+                  <div className="auth-guideline-card">
+                    <div className="auth-guideline-badge">05</div>
+                    <div className="auth-guideline-body">
+                      <div className="auth-guideline-title">
+                        <span>Resilience & Average Score Ranking</span>
+                        <span className="auth-guideline-tag">STAGE 1 QUALIFIER</span>
+                      </div>
+                      <p className="auth-guideline-desc">
+                        If network drops during the attempt, immediately re-login with your Team ID to resume your session without losing answers. Final qualification equals the <strong>arithmetic average</strong> of all member scores.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Protocol Checklist Strip */}
+                <div className="auth-guidelines-checklist">
+                  <div className="auth-checklist-item">
+                    <span style={{ color: '#4ADE80' }}>✓</span> 1 Team ID per Squad
+                  </div>
+                  <div className="auth-checklist-item">
+                    <span style={{ color: '#4ADE80' }}>✓</span> 2 - 3 Members Strictly
+                  </div>
+                  <div className="auth-checklist-item">
+                    <span style={{ color: '#4ADE80' }}>✓</span> Webcams Active
+                  </div>
+                  <div className="auth-checklist-item">
+                    <span style={{ color: '#4ADE80' }}>✓</span> Team Avg Standing
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Mascot Tactical Comms Stream */}

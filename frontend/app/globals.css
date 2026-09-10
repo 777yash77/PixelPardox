@@ -4209,6 +4209,129 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ==========================================================================
+   OFFICIAL SQUAD REGISTRATION GUIDELINES & PROTOCOLS
+   ========================================================================== */
+.auth-guidelines-container {
+  background: rgba(14, 26, 47, 0.5);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-top: 18px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.auth-guidelines-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-guideline-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(56, 189, 248, 0.16);
+  border-radius: 8px;
+  padding: 10px 12px;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.auth-guideline-card:hover {
+  background: rgba(56, 189, 248, 0.07);
+  border-color: rgba(56, 189, 248, 0.42);
+  transform: translateX(3px);
+}
+
+.auth-guideline-badge {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: rgba(56, 189, 248, 0.16);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  color: #38BDF8;
+  font-size: 0.74rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', var(--font-sans), monospace;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+  margin-top: 2px;
+}
+
+.auth-guideline-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.auth-guideline-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 3px;
+  font-size: 0.83rem;
+  font-weight: 700;
+  color: #E0F2FE;
+}
+
+.auth-guideline-tag {
+  font-size: 0.63rem;
+  font-weight: 800;
+  color: #7DD3FC;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.32);
+  padding: 1px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.auth-guideline-desc {
+  font-size: 0.79rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.auth-guideline-desc strong {
+  color: #BAE6FD;
+  font-weight: 600;
+}
+
+.auth-guideline-desc em {
+  color: #FCA5A5;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.auth-guidelines-checklist {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(56, 189, 248, 0.2);
+}
+
+.auth-checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: #94A3B8;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
    UI / UX MICRO-INTERACTIONS & ENHANCED VISUAL SYSTEM
    ========================================================================== */
 
