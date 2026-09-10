@@ -950,12 +950,13 @@ export default function GameArena() {
   }
 
   // Deadpool Arena Chat Input
-  const handleSendDeadpoolArena = (e) => {
-    e.preventDefault()
-    if (!deadpoolInput.trim()) return
-    const userText = deadpoolInput.trim()
+  const handleSendDeadpoolArena = (e, customText) => {
+    if (e && e.preventDefault) e.preventDefault()
+    const raw = (typeof customText === 'string' && customText) ? customText : deadpoolInput
+    if (!raw.trim()) return
+    const userText = raw.trim()
     const query = userText.toLowerCase()
-    setDeadpoolInput('')
+    if (!customText) setDeadpoolInput('')
 
     let reply = "Stay focused on the round, rookie! Click 'Ask Deadpool for a Clue' if you want tactical hints for this exact question!"
     if (query.includes('clue') || query.includes('hint') || query.includes('help')) {
@@ -998,12 +999,13 @@ export default function GameArena() {
   }
 
   // Spidey Arena Chat Input
-  const handleSendSpideyArena = (e) => {
-    e.preventDefault()
-    if (!spideyInput.trim()) return
-    const userText = spideyInput.trim()
+  const handleSendSpideyArena = (e, customText) => {
+    if (e && e.preventDefault) e.preventDefault()
+    const raw = (typeof customText === 'string' && customText) ? customText : spideyInput
+    if (!raw.trim()) return
+    const userText = raw.trim()
     const query = userText.toLowerCase()
-    setSpideyInput('')
+    if (!customText) setSpideyInput('')
 
     let reply = "I'm monitoring the competition feeds! Click 'Ask Spidey for a Clue' for optical and forensic hints on this question!"
     if (query.includes('clue') || query.includes('hint') || query.includes('help')) {
@@ -2835,18 +2837,31 @@ export default function GameArena() {
                         <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
                       </div>
                     )}
-                    <div ref={deadpoolChatBottomRef} />
-                  </div>
+                    {/* Tactical Clue Action & Prompts Hub */}
+                    <div style={{ marginTop: '8px', padding: '10px 12px', background: 'rgba(0,0,0,0.4)', borderRadius: '10px', border: '1px solid rgba(226, 54, 54, 0.25)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      <button 
+                        type="button"
+                        onClick={() => handleGetClue('deadpool')}
+                        className="clue-btn-deadpool"
+                        style={{ width: '100%', justifyContent: 'center', padding: '9px 12px', fontSize: '0.82rem', fontWeight: 800 }}
+                      >
+                        🌮 Reveal Active Clue for this Round!
+                      </button>
+                      <div style={{ fontSize: '0.66rem', color: '#FF8080', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: '2px' }}>
+                        ⚡ Quick Tactical Inquiries:
+                      </div>
+                      <div className="chat-chip" onClick={() => handleSendDeadpoolArena(null, "How does Fast Fourier Transform FFT frequency analysis help detect AI?")}>
+                        🔬 How does FFT frequency spectrum detect AI?
+                      </div>
+                      <div className="chat-chip" onClick={() => handleSendDeadpoolArena(null, "How do audio deepfakes and HiFi-GAN vocal clues work?")}>
+                        🎙️ Audio deepfake harmonics and phasing clues
+                      </div>
+                      <div className="chat-chip" onClick={() => handleSendDeadpoolArena(null, "Tell me a joke to calm my nerves!")}>
+                        🌮 Tell me a joke to calm my nerves!
+                      </div>
+                    </div>
 
-                  <div style={{ padding: '8px 12px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '6px', flexShrink: 0 }}>
-                    <button 
-                      type="button"
-                      onClick={() => handleGetClue('deadpool')}
-                      className="clue-btn-deadpool"
-                      style={{ width: '100%', justifyContent: 'center', padding: '8px 12px', fontSize: '0.8rem' }}
-                    >
-                      🌮 Reveal Active Clue for this Round!
-                    </button>
+                    <div ref={deadpoolChatBottomRef} />
                   </div>
 
                   <form onSubmit={handleSendDeadpoolArena} className="chat-input-bar">
@@ -3002,18 +3017,31 @@ export default function GameArena() {
                         <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
                       </div>
                     )}
-                    <div ref={spideyChatBottomRef} />
-                  </div>
+                    {/* Optical Forensic Clue Action & Prompts Hub */}
+                    <div style={{ marginTop: '8px', padding: '10px 12px', background: 'rgba(0,0,0,0.4)', borderRadius: '10px', border: '1px solid rgba(56, 189, 248, 0.25)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      <button 
+                        type="button"
+                        onClick={() => handleGetClue('spidey')}
+                        className="clue-btn-spidey"
+                        style={{ width: '100%', justifyContent: 'center', padding: '9px 12px', fontSize: '0.82rem', fontWeight: 800 }}
+                      >
+                        🕸️ Reveal Optical Analysis Clue!
+                      </button>
+                      <div style={{ fontSize: '0.66rem', color: '#38BDF8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: '2px' }}>
+                        🔬 Forensic Science Prompts:
+                      </div>
+                      <div className="chat-chip-spidey" onClick={() => handleSendSpideyArena(null, "What optical lighting and cast shadow errors appear in diffusion models?")}>
+                        🕸️ Optical lighting &amp; cast shadow errors
+                      </div>
+                      <div className="chat-chip-spidey" onClick={() => handleSendSpideyArena(null, "How do I spot generative boundary seams in inpainting?")}>
+                        🔬 Boundary seams &amp; noise variance in inpainting
+                      </div>
+                      <div className="chat-chip-spidey" onClick={() => handleSendSpideyArena(null, "Any advice for the remaining tournament time?")}>
+                        ⏱️ Advice on managing timer &amp; negative marks
+                      </div>
+                    </div>
 
-                  <div style={{ padding: '8px 12px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '6px', flexShrink: 0 }}>
-                    <button 
-                      type="button"
-                      onClick={() => handleGetClue('spidey')}
-                      className="clue-btn-spidey"
-                      style={{ width: '100%', justifyContent: 'center', padding: '8px 12px', fontSize: '0.8rem' }}
-                    >
-                      🕸️ Reveal Optical Analysis Clue!
-                    </button>
+                    <div ref={spideyChatBottomRef} />
                   </div>
 
                   <form onSubmit={handleSendSpideyArena} className="chat-input-bar">

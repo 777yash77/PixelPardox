@@ -451,19 +451,33 @@ export default function Home() {
   // Internal smooth auto-scroll for chat body on new messages
   useEffect(() => {
     if (isDeadpoolChatOpen && deadpoolChatBodyRef.current) {
-      deadpoolChatBodyRef.current.scrollTo({
-        top: deadpoolChatBodyRef.current.scrollHeight,
-        behavior: 'smooth'
-      })
+      if (deadpoolMessages.length > 1) {
+        deadpoolChatBodyRef.current.scrollTo({
+          top: deadpoolChatBodyRef.current.scrollHeight,
+          behavior: 'smooth'
+        })
+      } else {
+        deadpoolChatBodyRef.current.scrollTo({
+          top: 0,
+          behavior: 'auto'
+        })
+      }
     }
   }, [deadpoolMessages, isDeadpoolChatOpen, isDeadpoolTyping])
 
   useEffect(() => {
     if (isSpideyChatOpen && spideyChatBodyRef.current) {
-      spideyChatBodyRef.current.scrollTo({
-        top: spideyChatBodyRef.current.scrollHeight,
-        behavior: 'smooth'
-      })
+      if (spideyMessages.length > 1) {
+        spideyChatBodyRef.current.scrollTo({
+          top: spideyChatBodyRef.current.scrollHeight,
+          behavior: 'smooth'
+        })
+      } else {
+        spideyChatBodyRef.current.scrollTo({
+          top: 0,
+          behavior: 'auto'
+        })
+      }
     }
   }, [spideyMessages, isSpideyChatOpen, isSpideyTyping])
 
@@ -2109,75 +2123,78 @@ export default function Home() {
                   <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
                 </div>
               )}
-              <div ref={deadpoolChatBottomRef} />
-            </div>
 
-            {/* Dynamic Popping Suggestion & Suggested Question Chips */}
-            <div className="chat-suggestions-box">
-              {/* Category Filter Tabs */}
-              <div style={{ display: 'flex', gap: '6px', margin: '2px 0' }}>
-                <button
-                  type="button"
-                  className={`cat-tab-btn ${deadpoolCategory === 'technical' ? 'active deadpool' : ''}`}
-                  onClick={() => setDeadpoolCategory('technical')}
-                  style={{ flex: 1 }}
-                >
-                  🔬 Technical Rules
-                </button>
-                <button
-                  type="button"
-                  className={`cat-tab-btn ${deadpoolCategory === 'non-technical' ? 'active deadpool' : ''}`}
-                  onClick={() => setDeadpoolCategory('non-technical')}
-                  style={{ flex: 1 }}
-                >
-                  🌮 Fun & Trolls
-                </button>
-              </div>
-
-              {/* Highlighted Popping Suggestion Pill */}
-              <div 
-                className="popping-suggestion-pill"
-                onClick={() => handleDeadpoolAsk("Ask Spidey-bug, he may know! 🕸️", "REFER_TO_SPIDEY")}
-                style={{
-                  background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(226, 54, 54, 0.28) 100%)',
-                  border: '1.5px solid #F97316',
-                  borderRadius: '8px',
-                  padding: '7px 10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  color: '#F97316',
-                  fontSize: '0.76rem',
-                  fontWeight: 'bold'
-                }}
-                title="Click to transfer to Spider-Man!"
-              >
-                <span>💥 'Ask Spidey-bug he may know!' 🕸️</span>
-                <span style={{ background: '#F97316', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.68rem', fontWeight: 800 }}>SWITCH ➔</span>
-              </div>
-
-              <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '2px' }}>
-                {deadpoolCategory === 'technical' ? 'Tournament Rules & AI Hints:' : 'Fourth-Wall Banter, Jokes & Trolls:'}
-              </span>
-              {(deadpoolCategory === 'technical' ? DEADPOOL_TECH_FAQ : DEADPOOL_NON_TECH_FAQ).map((faq, idx) => (
-                <div 
-                  key={idx} 
-                  className="chat-chip"
-                  onClick={() => handleDeadpoolAsk(faq.q, faq.a)}
-                >
-                  ⚡ {faq.q}
+              {/* Dynamic Interactive Suggestions & Prompts Hub — Seamlessly integrated inside Chat Body */}
+              <div className="chat-suggestions-box">
+                {/* Category Filter Tabs */}
+                <div style={{ display: 'flex', gap: '6px', margin: '2px 0' }}>
+                  <button
+                    type="button"
+                    className={`cat-tab-btn ${deadpoolCategory === 'technical' ? 'active deadpool' : ''}`}
+                    onClick={() => setDeadpoolCategory('technical')}
+                    style={{ flex: 1 }}
+                  >
+                    🔬 Technical Rules
+                  </button>
+                  <button
+                    type="button"
+                    className={`cat-tab-btn ${deadpoolCategory === 'non-technical' ? 'active deadpool' : ''}`}
+                    onClick={() => setDeadpoolCategory('non-technical')}
+                    style={{ flex: 1 }}
+                  >
+                    🌮 Fun & Trolls
+                  </button>
                 </div>
-              ))}
 
-              {/* Quick Cross-Handoff Button */}
-              <div 
-                className="cross-char-pill-spidey"
-                onClick={() => handleDeadpoolAsk("Ask Spidey-bug, he may know! 🕸️", "REFER_TO_SPIDEY")}
-                style={{ marginTop: '4px' }}
-              >
-                <span>🕸️ Need scientific optical physics?</span>
-                <span>Ask Spidey ➔</span>
+                {/* Highlighted Popping Suggestion Pill */}
+                <div 
+                  className="popping-suggestion-pill"
+                  onClick={() => handleDeadpoolAsk("Ask Spidey-bug, he may know! 🕸️", "REFER_TO_SPIDEY")}
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(226, 54, 54, 0.28) 100%)',
+                    border: '1.5px solid #F97316',
+                    borderRadius: '8px',
+                    padding: '8px 12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    color: '#F97316',
+                    fontSize: '0.78rem',
+                    fontWeight: 'bold',
+                    cursor: 'pointer'
+                  }}
+                  title="Click to transfer to Spider-Man!"
+                >
+                  <span>💥 'Ask Spidey-bug he may know!' 🕸️</span>
+                  <span style={{ background: '#F97316', color: '#FFF', padding: '3px 9px', borderRadius: '4px', fontSize: '0.68rem', fontWeight: 800 }}>SWITCH ➔</span>
+                </div>
+
+                <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '4px', fontWeight: 800 }}>
+                  {deadpoolCategory === 'technical' ? 'Tournament Rules & AI Hints:' : 'Fourth-Wall Banter, Jokes & Trolls:'}
+                </div>
+                {(deadpoolCategory === 'technical' ? DEADPOOL_TECH_FAQ : DEADPOOL_NON_TECH_FAQ).map((faq, idx) => (
+                  <div 
+                    key={idx} 
+                    className="chat-chip"
+                    onClick={() => handleDeadpoolAsk(faq.q, faq.a)}
+                  >
+                    <span>⚡</span>
+                    <span>{faq.q}</span>
+                  </div>
+                ))}
+
+                {/* Quick Cross-Handoff Button */}
+                <div 
+                  className="cross-char-pill-spidey"
+                  onClick={() => handleDeadpoolAsk("Ask Spidey-bug, he may know! 🕸️", "REFER_TO_SPIDEY")}
+                  style={{ marginTop: '4px' }}
+                >
+                  <span>🕸️ Need scientific optical physics?</span>
+                  <span>Ask Spidey ➔</span>
+                </div>
               </div>
+
+              <div ref={deadpoolChatBottomRef} />
             </div>
 
             {/* Custom Input */}
@@ -2296,75 +2313,78 @@ export default function Home() {
                   <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
                 </div>
               )}
-              <div ref={spideyChatBottomRef} />
-            </div>
 
-            {/* Dynamic Popping Suggestion & Suggested Question Chips */}
-            <div className="chat-suggestions-box">
-              {/* Category Filter Tabs */}
-              <div style={{ display: 'flex', gap: '6px', margin: '2px 0' }}>
-                <button
-                  type="button"
-                  className={`cat-tab-btn ${spideyCategory === 'technical' ? 'active spidey' : ''}`}
-                  onClick={() => setSpideyCategory('technical')}
-                  style={{ flex: 1 }}
-                >
-                  🔬 Forensics &amp; Science
-                </button>
-                <button
-                  type="button"
-                  className={`cat-tab-btn ${spideyCategory === 'non-technical' ? 'active spidey' : ''}`}
-                  onClick={() => setSpideyCategory('non-technical')}
-                  style={{ flex: 1 }}
-                >
-                  🕷️ Spidey Quips
-                </button>
-              </div>
-
-              {/* Highlighted Popping Suggestion Pill */}
-              <div 
-                className="popping-suggestion-pill"
-                onClick={() => handleSpideyAsk("Ask the guy in red spandex on the left! 🌮", "REFER_TO_DEADPOOL")}
-                style={{
-                  background: 'linear-gradient(135deg, rgba(224, 27, 34, 0.2) 0%, rgba(133, 11, 18, 0.35) 100%)',
-                  border: '1.5px solid #E01B22',
-                  borderRadius: '8px',
-                  padding: '7px 10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  color: '#FF8080',
-                  fontSize: '0.76rem',
-                  fontWeight: 'bold'
-                }}
-                title="Click to transfer to Deadpool!"
-              >
-                <span>🕷️ 'Ask the guy in red spandex on the left!' 🌮</span>
-                <span style={{ background: '#E01B22', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.68rem' }}>SWITCH ➔</span>
-              </div>
-
-              <span style={{ fontSize: '0.68rem', color: '#FF8080', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '2px' }}>
-                {spideyCategory === 'technical' ? 'Forensic Science & Strategies:' : 'Spidey Banter, Jokes & Advice:'}
-              </span>
-              {(spideyCategory === 'technical' ? SPIDEY_TECH_FAQ : SPIDEY_NON_TECH_FAQ).map((faq, idx) => (
-                <div 
-                  key={idx} 
-                  className="chat-chip-spidey"
-                  onClick={() => handleSpideyAsk(faq.q, faq.a)}
-                >
-                  🕸️ {faq.q}
+              {/* Dynamic Interactive Suggestions & Prompts Hub — Seamlessly integrated inside Chat Body */}
+              <div className="chat-suggestions-box">
+                {/* Category Filter Tabs */}
+                <div style={{ display: 'flex', gap: '6px', margin: '2px 0' }}>
+                  <button
+                    type="button"
+                    className={`cat-tab-btn ${spideyCategory === 'technical' ? 'active spidey' : ''}`}
+                    onClick={() => setSpideyCategory('technical')}
+                    style={{ flex: 1 }}
+                  >
+                    🔬 Forensics &amp; Science
+                  </button>
+                  <button
+                    type="button"
+                    className={`cat-tab-btn ${spideyCategory === 'non-technical' ? 'active spidey' : ''}`}
+                    onClick={() => setSpideyCategory('non-technical')}
+                    style={{ flex: 1 }}
+                  >
+                    🕷️ Spidey Quips
+                  </button>
                 </div>
-              ))}
 
-              {/* Quick Cross-Handoff Button */}
-              <div 
-                className="cross-char-pill-deadpool"
-                onClick={() => handleSpideyAsk("Ask the guy in red spandex on the left! 🌮", "REFER_TO_DEADPOOL")}
-                style={{ marginTop: '4px' }}
-              >
-                <span>🌮 Need chaotic chimichangas &amp; roasts?</span>
-                <span>Ask Wade ➔</span>
+                {/* Highlighted Popping Suggestion Pill */}
+                <div 
+                  className="popping-suggestion-pill"
+                  onClick={() => handleSpideyAsk("Ask the guy in red spandex on the left! 🌮", "REFER_TO_DEADPOOL")}
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(224, 27, 34, 0.2) 0%, rgba(133, 11, 18, 0.35) 100%)',
+                    border: '1.5px solid #E01B22',
+                    borderRadius: '8px',
+                    padding: '8px 12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    color: '#FF8080',
+                    fontSize: '0.78rem',
+                    fontWeight: 'bold',
+                    cursor: 'pointer'
+                  }}
+                  title="Click to transfer to Deadpool!"
+                >
+                  <span>🕷️ 'Ask the guy in red spandex on the left!' 🌮</span>
+                  <span style={{ background: '#E01B22', color: '#FFF', padding: '3px 9px', borderRadius: '4px', fontSize: '0.68rem', fontWeight: 800 }}>SWITCH ➔</span>
+                </div>
+
+                <div style={{ fontSize: '0.68rem', color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '4px', fontWeight: 800 }}>
+                  {spideyCategory === 'technical' ? 'Forensic Science & Strategies:' : 'Spidey Banter, Jokes & Advice:'}
+                </div>
+                {(spideyCategory === 'technical' ? SPIDEY_TECH_FAQ : SPIDEY_NON_TECH_FAQ).map((faq, idx) => (
+                  <div 
+                    key={idx} 
+                    className="chat-chip-spidey"
+                    onClick={() => handleSpideyAsk(faq.q, faq.a)}
+                  >
+                    <span>🕸️</span>
+                    <span>{faq.q}</span>
+                  </div>
+                ))}
+
+                {/* Quick Cross-Handoff Button */}
+                <div 
+                  className="cross-char-pill-deadpool"
+                  onClick={() => handleSpideyAsk("Ask the guy in red spandex on the left! 🌮", "REFER_TO_DEADPOOL")}
+                  style={{ marginTop: '4px' }}
+                >
+                  <span>🌮 Need chaotic chimichangas &amp; roasts?</span>
+                  <span>Ask Wade ➔</span>
+                </div>
               </div>
+
+              <div ref={spideyChatBottomRef} />
             </div>
 
             {/* Custom Input */}

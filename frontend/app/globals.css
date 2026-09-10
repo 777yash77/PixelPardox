@@ -910,27 +910,18 @@ h1, h2, h3, h4, h5, h6 {
   background: rgba(56, 189, 248, 0.95);
 }
 
-/* Suggestions Box */
+/* Suggestions Box - Seamlessly integrated into Chat Body to fully utilize space */
 .chat-suggestions-box {
-  flex-shrink: 0;
-  max-height: 120px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding: 8px 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(0, 0, 0, 0.35);
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 6px;
-}
-
-.chat-suggestions-box::-webkit-scrollbar {
-  width: 5px;
-}
-
-.chat-suggestions-box::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
+  gap: 7px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Chat Input Bar */
@@ -952,7 +943,7 @@ h1, h2, h3, h4, h5, h6 {
   align-self: flex-end;
   max-width: 85%;
   font-size: 0.82rem;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .chat-bubble-bot {
@@ -965,26 +956,31 @@ h1, h2, h3, h4, h5, h6 {
   max-width: 90%;
   font-size: 0.85rem;
   line-height: 1.45;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .chat-chip {
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(226, 54, 54, 0.3);
-  color: #E5E5E5;
-  padding: 6px 10px;
-  border-radius: 16px;
-  font-size: 0.75rem;
+  border: 1px solid rgba(226, 54, 54, 0.35);
+  color: #F1F5F9;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  line-height: 1.4;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .chat-chip:hover {
   background: rgba(226, 54, 54, 0.2);
-  border-color: #ff3b3b;
-  color: #FFF;
-  transform: translateX(3px);
+  border-color: #EF4444;
+  color: #FFFFFF;
+  transform: translateX(4px);
+  box-shadow: 0 4px 14px rgba(226, 54, 54, 0.35);
 }
 
 .chat-bubble-spidey {
@@ -997,26 +993,31 @@ h1, h2, h3, h4, h5, h6 {
   max-width: 90%;
   font-size: 0.85rem;
   line-height: 1.45;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .chat-chip-spidey {
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  color: #E0F2FE;
-  padding: 6px 10px;
-  border-radius: 16px;
-  font-size: 0.75rem;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #F0F9FF;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  line-height: 1.4;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .chat-chip-spidey:hover {
   background: rgba(56, 189, 248, 0.2);
   border-color: #38BDF8;
-  color: #FFF;
-  transform: translateX(-3px);
+  color: #FFFFFF;
+  transform: translateX(4px);
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
 }
 
 /* Enhanced Spider-Man Realistic Pendulum Swing with Web Stretch */
