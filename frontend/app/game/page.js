@@ -88,9 +88,6 @@ export default function GameArena() {
   // Timer countdown
   const [timeLeft, setTimeLeft] = useState(0)
 
-  // Leaderboard
-  const [leaderboard, setLeaderboard] = useState([])
-
   const [localEndTime, setLocalEndTime] = useState(0)
   const [showModelSelect, setShowModelSelect] = useState(false)
 
@@ -259,7 +256,6 @@ export default function GameArena() {
     fetchGameState()
     fetchQuestions(storedToken)
     fetchPrelimQuestions(storedToken)
-    fetchLeaderboard()
     checkPrelimAttempt(storedToken, storedParticipant)
 
     // Start Webcam
@@ -495,18 +491,6 @@ export default function GameArena() {
     }
   }
 
-  const fetchLeaderboard = async () => {
-    try {
-      const res = await fetch('http://localhost:8080/api/game/leaderboard')
-      if (res.ok) {
-        const data = await res.json()
-        setLeaderboard(data)
-      }
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
   // 5. Native WebSocket implementation
   useEffect(() => {
     let isMounted = true;
@@ -529,20 +513,8 @@ export default function GameArena() {
           // Refresh team profile state to update score / elimination state
           fetchTeamProfile(token)
         } else if (message.type === 'SCORES_UPDATED') {
-          // Leaderboard data arrives directly in the payload
-          if (Array.isArray(message.payload)) {
-            setLeaderboard(message.payload)
-            // Update team profile from leaderboard data
-            const teamId = localStorage.getItem('teamId')
-            const profile = message.payload.find(u => u.teamId === teamId)
-            if (profile) {
-              setTeam(profile)
-            }
-          } else {
-            // Fallback: fetch via HTTP if payload is not an array
-            fetchLeaderboard()
-            fetchTeamProfile(token)
-          }
+          // Refresh team's own secure profile when scores change
+          fetchTeamProfile(token)
         }
       }
 
