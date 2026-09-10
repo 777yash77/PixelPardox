@@ -809,11 +809,11 @@ export default function Home() {
             {/* Spider-Sense Radiating Crown (Around Head) */}
             <div className="spider-sense-intense" style={{
               position: 'absolute',
-              bottom: '-12px',
+              bottom: '-8px',
               left: '50%',
               transform: 'translateX(-50%)',
-              width: '64px',
-              height: '32px',
+              width: '44px',
+              height: '22px',
               pointerEvents: 'none'
             }}>
               <svg viewBox="0 0 56 28" fill="none">
@@ -905,8 +905,8 @@ export default function Home() {
           <div className="deadpool-combat-platform">
             <div className="platform-thruster-left" />
             <div className="platform-thruster-right" />
-            <span style={{ fontSize: '0.62rem', color: '#EF4444', fontFamily: 'monospace', fontWeight: 900, letterSpacing: '0.8px' }}>⚡ PERCH-01</span>
-            <span style={{ fontSize: '0.62rem', color: '#F97316', fontFamily: 'monospace', fontWeight: 900 }}>COMBAT READY</span>
+            <span style={{ fontSize: '0.48rem', color: '#EF4444', fontFamily: 'monospace', fontWeight: 900, letterSpacing: '0.5px' }}>⚡ PERCH</span>
+            <span style={{ fontSize: '0.48rem', color: '#F97316', fontFamily: 'monospace', fontWeight: 900 }}>READY</span>
           </div>
 
           {/* Deadpool Callout Tag */}
@@ -919,10 +919,10 @@ export default function Home() {
       )}
 
       {/* Main Content Container — Expansive Width, Clean Stacked Spacing */}
-      <div className="container page-transition" style={{ maxWidth: 'min(1560px, 94vw)', margin: '0 auto', padding: '110px clamp(16px, 3.5vw, 48px) 100px', position: 'relative', zIndex: 40 }}>
+      <div className="container page-transition" style={{ maxWidth: 'min(1560px, 94vw)', margin: '0 auto', padding: '18px clamp(16px, 3.5vw, 48px) 60px', position: 'relative', zIndex: 40 }}>
         
         {/* Multiverse Header Banner — Prominently Elevated with High zIndex so Headings are Never Obscured */}
-        <header style={{ textAlign: 'center', marginBottom: '80px', position: 'relative', zIndex: 40, padding: '0 clamp(12px, 6vw, 80px)' }}>
+        <header style={{ textAlign: 'center', marginBottom: '32px', position: 'relative', zIndex: 40, padding: '0 clamp(12px, 6vw, 80px)' }}>
           {/* Live Multiverse Status Telemetry Banner (Blue & Red Duality) */}
           <div style={{
             display: 'inline-flex',
