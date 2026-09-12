@@ -373,35 +373,21 @@ export default function Home() {
 
   const hideMascotAnimations = hideDeadpoolMascot && hideSpideyMascot
 
-  // Chat Category States
-  const [deadpoolCategory, setDeadpoolCategory] = useState('technical')
-  const [spideyCategory, setSpideyCategory] = useState('technical')
-  const [showDeadpoolPrompts, setShowDeadpoolPrompts] = useState(true)
-  const [showSpideyPrompts, setShowSpideyPrompts] = useState(true)
-
-  // Deadpool Chatbot State
+  // Deadpool Chatbot Accordion State
   const [isDeadpoolChatOpen, setIsDeadpoolChatOpen] = useState(false)
-  const [deadpoolMessages, setDeadpoolMessages] = useState([
-    {
-      sender: 'deadpool',
-      text: "Yo! I'm Deadpool, your friendly neighborhood Merc-With-A-Chat! Ask me anything about tournament rules, Stage 0 negative marking traps, prompt scoring hacks, or hit 'Ask Spidey-bug' if you want Peter's nerd science!"
-    }
-  ])
+  const [deadpoolCategory, setDeadpoolCategory] = useState('technical')
+  const [deadpoolExpandedIndex, setDeadpoolExpandedIndex] = useState(0)
+  const [deadpoolCustomList, setDeadpoolCustomList] = useState([])
   const [deadpoolInput, setDeadpoolInput] = useState('')
-  const deadpoolChatBottomRef = useRef(null)
   const deadpoolContainerRef = useRef(null)
   const deadpoolChatBodyRef = useRef(null)
 
-  // Spider-Man Chatbot State
+  // Spider-Man Chatbot Accordion State
   const [isSpideyChatOpen, setIsSpideyChatOpen] = useState(false)
-  const [spideyMessages, setSpideyMessages] = useState([
-    {
-      sender: 'spidey',
-      text: "Hey there! Spider-Man here! 🕸️ Need real tactical advice for Pixel Paradox? Ask me below about AI generator fingerprints (Midjourney vs Flux vs DALL-E) or deepfake forensics, and don't let Wade convince you to guess blindly!"
-    }
-  ])
+  const [spideyCategory, setSpideyCategory] = useState('technical')
+  const [spideyExpandedIndex, setSpideyExpandedIndex] = useState(0)
+  const [spideyCustomList, setSpideyCustomList] = useState([])
   const [spideyInput, setSpideyInput] = useState('')
-  const spideyChatBottomRef = useRef(null)
   const spideyContainerRef = useRef(null)
   const spideyChatBodyRef = useRef(null)
 
@@ -437,33 +423,6 @@ export default function Home() {
       document.removeEventListener('pointerdown', handleClickOutside)
     }
   }, [isDeadpoolChatOpen, isSpideyChatOpen])
-
-  // Smooth container-only auto-scroll for chat body on new messages
-  useEffect(() => {
-    if (isDeadpoolChatOpen && deadpoolChatBodyRef.current) {
-      setTimeout(() => {
-        if (deadpoolChatBodyRef.current) {
-          deadpoolChatBodyRef.current.scrollTo({
-            top: deadpoolChatBodyRef.current.scrollHeight,
-            behavior: 'smooth'
-          })
-        }
-      }, 50)
-    }
-  }, [deadpoolMessages, isDeadpoolChatOpen, isDeadpoolTyping, showDeadpoolPrompts])
-
-  useEffect(() => {
-    if (isSpideyChatOpen && spideyChatBodyRef.current) {
-      setTimeout(() => {
-        if (spideyChatBodyRef.current) {
-          spideyChatBodyRef.current.scrollTo({
-            top: spideyChatBodyRef.current.scrollHeight,
-            behavior: 'smooth'
-          })
-        }
-      }, 50)
-    }
-  }, [spideyMessages, isSpideyChatOpen, isSpideyTyping, showSpideyPrompts])
 
   // Periodic quote rotation
   useEffect(() => {
@@ -584,127 +543,56 @@ export default function Home() {
   }
 
   // Deadpool Question Click Handler
-  const handleDeadpoolAsk = (q, a) => {
-    setShowDeadpoolPrompts(false)
-    if (a === 'TELL_DEADPOOL_JOKE') {
+  // Deadpool Accordion Toggle Handler
+  const handleToggleDeadpoolItem = (idx, item) => {
+    if (deadpoolExpandedIndex === idx) {
+      setDeadpoolExpandedIndex(null)
+      return
+    }
+
+    if (item.a === 'TELL_DEADPOOL_JOKE') {
       const jokeText = DEADPOOL_JOKES_POOL[deadpoolJokeIdx % DEADPOOL_JOKES_POOL.length]
       setDeadpoolJokeIdx(prev => prev + 1)
-      setDeadpoolMessages(prev => [...prev, { sender: 'user', text: q }])
-      setIsDeadpoolTyping(true)
-      setTimeout(() => {
-        setIsDeadpoolTyping(false)
-        setDeadpoolMessages(prev => [...prev, { sender: 'deadpool', text: jokeText }])
-      }, 400)
-      return
-    }
-
-    if (a === 'TROLL_SPIDEY_GAG') {
+      item.resolvedAnswer = jokeText
+    } else if (item.a === 'TROLL_SPIDEY_GAG') {
       const trollText = DEADPOOL_SPIDEY_TROLLS[deadpoolTrollIdx % DEADPOOL_SPIDEY_TROLLS.length]
       setDeadpoolTrollIdx(prev => prev + 1)
-      setDeadpoolMessages(prev => [...prev, { sender: 'user', text: q }])
-      setIsDeadpoolTyping(true)
+      item.resolvedAnswer = trollText
+    } else if (item.a === 'REFER_TO_SPIDEY') {
+      item.resolvedAnswer = "Whoa whoa! Do I look like a scientific calculator with swords?! I barely passed 8th grade! Ask Spidey-bug he may know! 🕸️ Switching you over to Web-Head on the right..."
       setTimeout(() => {
-        setIsDeadpoolTyping(false)
-        setDeadpoolMessages(prev => [...prev, { sender: 'deadpool', text: trollText }])
-      }, 400)
-      return
+        setIsDeadpoolChatOpen(false)
+        setIsSpideyChatOpen(true)
+      }, 700)
     }
 
-    if (a === 'REFER_TO_SPIDEY') {
-      setDeadpoolMessages(prev => [...prev, { sender: 'user', text: q }])
-      setIsDeadpoolTyping(true)
-      setTimeout(() => {
-        setIsDeadpoolTyping(false)
-        setDeadpoolMessages(prev => [
-          ...prev,
-          {
-            sender: 'deadpool',
-            text: "Whoa whoa! Do I look like a scientific calculator with swords?! I barely passed 8th grade! Ask Spidey-bug he may know! 🕸️ Sending you to web-head on the right right now..."
-          }
-        ])
-        setTimeout(() => {
-          setIsDeadpoolChatOpen(false)
-          setIsSpideyChatOpen(true)
-          setSpideyMessages(prev => [
-            ...prev,
-            {
-              sender: 'spidey',
-              text: `🕸️ Spider-Man checking in! Wade just bailed on: "${q}"? Figures! Don't worry, Peter Parker has the actual scientific answer for you!`
-            }
-          ])
-        }, 600)
-      }, 400)
-      return
-    }
-
-    setDeadpoolMessages(prev => [...prev, { sender: 'user', text: q }])
-    setIsDeadpoolTyping(true)
-    setTimeout(() => {
-      setIsDeadpoolTyping(false)
-      setDeadpoolMessages(prev => [...prev, { sender: 'deadpool', text: a }])
-    }, 400)
+    setDeadpoolExpandedIndex(idx)
   }
 
-  // Spidey Question Click Handler
-  const handleSpideyAsk = (q, a) => {
-    setShowSpideyPrompts(false)
-    if (a === 'TELL_SPIDEY_JOKE') {
+  // Spidey Accordion Toggle Handler
+  const handleToggleSpideyItem = (idx, item) => {
+    if (spideyExpandedIndex === idx) {
+      setSpideyExpandedIndex(null)
+      return
+    }
+
+    if (item.a === 'TELL_SPIDEY_JOKE') {
       const jokeText = SPIDEY_JOKES_POOL[spideyJokeIdx % SPIDEY_JOKES_POOL.length]
       setSpideyJokeIdx(prev => prev + 1)
-      setSpideyMessages(prev => [...prev, { sender: 'user', text: q }])
-      setIsSpideyTyping(true)
-      setTimeout(() => {
-        setIsSpideyTyping(false)
-        setSpideyMessages(prev => [...prev, { sender: 'spidey', text: jokeText }])
-      }, 400)
-      return
-    }
-
-    if (a === 'ROAST_DEADPOOL_GAG') {
+      item.resolvedAnswer = jokeText
+    } else if (item.a === 'ROAST_DEADPOOL_GAG') {
       const trollText = SPIDEY_DEADPOOL_TROLLS[spideyTrollIdx % SPIDEY_DEADPOOL_TROLLS.length]
       setSpideyTrollIdx(prev => prev + 1)
-      setSpideyMessages(prev => [...prev, { sender: 'user', text: q }])
-      setIsSpideyTyping(true)
+      item.resolvedAnswer = trollText
+    } else if (item.a === 'REFER_TO_DEADPOOL') {
+      item.resolvedAnswer = "Transferring you over to Wade on the left! Hold onto your web-shooters, fourth-wall chaos incoming... 🌮"
       setTimeout(() => {
-        setIsSpideyTyping(false)
-        setSpideyMessages(prev => [...prev, { sender: 'spidey', text: trollText }])
-      }, 400)
-      return
+        setIsSpideyChatOpen(false)
+        setIsDeadpoolChatOpen(true)
+      }, 700)
     }
 
-    if (a === 'REFER_TO_DEADPOOL') {
-      setSpideyMessages(prev => [...prev, { sender: 'user', text: q }])
-      setIsSpideyTyping(true)
-      setTimeout(() => {
-        setIsSpideyTyping(false)
-        setSpideyMessages(prev => [
-          ...prev,
-          {
-            sender: 'spidey',
-            text: "Transferring you over to Wade on the left! Hold onto your web-shooters, fourth-wall chaos incoming... 🌮"
-          }
-        ])
-        setTimeout(() => {
-          setIsSpideyChatOpen(false)
-          setIsDeadpoolChatOpen(true)
-          setDeadpoolMessages(prev => [
-            ...prev,
-            {
-              sender: 'deadpool',
-              text: "🌮 MAXIMUM EFFORT! Did Parker get on his high moral horse again? You came to the right mercenary! What kind of mischief are we planning?"
-            }
-          ])
-        }, 600)
-      }, 400)
-      return
-    }
-
-    setSpideyMessages(prev => [...prev, { sender: 'user', text: q }])
-    setIsSpideyTyping(true)
-    setTimeout(() => {
-      setIsSpideyTyping(false)
-      setSpideyMessages(prev => [...prev, { sender: 'spidey', text: a }])
-    }, 400)
+    setSpideyExpandedIndex(idx)
   }
 
   // Custom Deadpool Input
@@ -712,32 +600,23 @@ export default function Home() {
     if (e && typeof e.preventDefault === 'function') e.preventDefault()
     if (!deadpoolInput.trim()) return
 
-    setShowDeadpoolPrompts(false)
     const userText = deadpoolInput.trim()
     const query = userText.toLowerCase()
     setDeadpoolInput('')
 
-    if (query.includes('troll') || query.includes('roast spidey') || query.includes('roast spider') || query.includes('attack spidey')) {
-      handleDeadpoolAsk(userText, "TROLL_SPIDEY_GAG")
-      return
-    }
-    if (query.includes('joke') || query.includes('laugh') || query.includes('funny') || query.includes('humor') || query.includes('hilarious') || query.includes('comedy') || query.includes('make me laugh')) {
-      handleDeadpoolAsk(userText, "TELL_DEADPOOL_JOKE")
-      return
-    }
-    if (query.includes('ask spidey') || query.includes('transfer to spidey') || query.includes('switch to spidey')) {
-      handleDeadpoolAsk(userText, "REFER_TO_SPIDEY")
-      return
+    let answer = getDeadpoolSmartResponse(query, userText)
+    if (query.includes('troll') || query.includes('roast spidey') || query.includes('attack spidey')) {
+      answer = DEADPOOL_SPIDEY_TROLLS[deadpoolTrollIdx % DEADPOOL_SPIDEY_TROLLS.length]
+      setDeadpoolTrollIdx(prev => prev + 1)
+    } else if (query.includes('joke') || query.includes('funny') || query.includes('laugh')) {
+      answer = DEADPOOL_JOKES_POOL[deadpoolJokeIdx % DEADPOOL_JOKES_POOL.length]
+      setDeadpoolJokeIdx(prev => prev + 1)
     }
 
-    const answer = getDeadpoolSmartResponse(query, userText)
-    setDeadpoolMessages(prev => [...prev, { sender: 'user', text: userText }])
-    setIsDeadpoolTyping(true)
-
-    setTimeout(() => {
-      setIsDeadpoolTyping(false)
-      setDeadpoolMessages(prev => [...prev, { sender: 'deadpool', text: answer }])
-    }, 450)
+    const newItem = { q: userText, a: answer, resolvedAnswer: answer }
+    setDeadpoolCustomList(prev => [newItem, ...prev])
+    setDeadpoolCategory('custom')
+    setDeadpoolExpandedIndex(0)
   }
 
   // Custom Spidey Input
@@ -745,32 +624,23 @@ export default function Home() {
     if (e && typeof e.preventDefault === 'function') e.preventDefault()
     if (!spideyInput.trim()) return
 
-    setShowSpideyPrompts(false)
     const userText = spideyInput.trim()
     const query = userText.toLowerCase()
     setSpideyInput('')
 
-    if (query.includes('roast') || query.includes('burn') || query.includes('troll wade') || query.includes('troll deadpool')) {
-      handleSpideyAsk(userText, "ROAST_DEADPOOL_GAG")
-      return
-    }
-    if (query.includes('joke') || query.includes('funny') || query.includes('laugh') || query.includes('humor') || query.includes('hilarious') || query.includes('comedy') || query.includes('make me laugh')) {
-      handleSpideyAsk(userText, "TELL_SPIDEY_JOKE")
-      return
-    }
-    if (query.includes('ask wade') || query.includes('ask deadpool') || query.includes('switch to deadpool')) {
-      handleSpideyAsk(userText, "REFER_TO_DEADPOOL")
-      return
+    let answer = getSpideySmartResponse(query, userText)
+    if (query.includes('roast') || query.includes('troll deadpool') || query.includes('troll wade')) {
+      answer = SPIDEY_DEADPOOL_TROLLS[spideyTrollIdx % SPIDEY_DEADPOOL_TROLLS.length]
+      setSpideyTrollIdx(prev => prev + 1)
+    } else if (query.includes('joke') || query.includes('funny') || query.includes('laugh')) {
+      answer = SPIDEY_JOKES_POOL[spideyJokeIdx % SPIDEY_JOKES_POOL.length]
+      setSpideyJokeIdx(prev => prev + 1)
     }
 
-    const answer = getSpideySmartResponse(query, userText)
-    setSpideyMessages(prev => [...prev, { sender: 'user', text: userText }])
-    setIsSpideyTyping(true)
-
-    setTimeout(() => {
-      setIsSpideyTyping(false)
-      setSpideyMessages(prev => [...prev, { sender: 'spidey', text: answer }])
-    }, 450)
+    const newItem = { q: userText, a: answer, resolvedAnswer: answer }
+    setSpideyCustomList(prev => [newItem, ...prev])
+    setSpideyCategory('custom')
+    setSpideyExpandedIndex(0)
   }
 
   return (
@@ -1943,112 +1813,99 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Chat Body */}
-            <div ref={deadpoolChatBodyRef} className="chat-window-body">
-              {deadpoolMessages.map((msg, idx) => (
-                <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-bot'}>
-                  <div style={{
-                    fontSize: '0.7rem',
-                    fontWeight: 'bold',
-                    marginBottom: '2px',
-                    color: msg.sender === 'user' ? '#FFF' : msg.sender === 'spidey' ? '#38BDF8' : '#FF4D4D'
-                  }}>
-                    {msg.sender === 'user' ? 'You' : msg.sender === 'spidey' ? 'Spider-Man' : 'Deadpool'}
-                  </div>
-                  <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
-                </div>
-              ))}
-              {isDeadpoolTyping && (
-                <div className="chat-bubble-bot" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ fontSize: '0.75rem', color: '#FF4D4D', fontWeight: 'bold' }}>Deadpool is crafting a roast</span>
-                  <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
-                </div>
-              )}
-
-              {/* Scroll Anchor right below messages so newly added answers are always in view */}
-              <div ref={deadpoolChatBottomRef} style={{ height: '2px' }} />
-
-              {/* Dynamic Interactive Suggestions & Prompts Hub */}
-              <div className="chat-suggestions-box" style={{ marginTop: '12px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                  <div style={{ fontSize: '0.68rem', color: '#F97316', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 800 }}>
-                    💡 Quick Intel Topics
-                  </div>
+            {/* Chat Body: Accordion Q&A List */}
+            <div ref={deadpoolChatBodyRef} className="chat-window-body" style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '12px 14px' }}>
+              {/* Category Filter Tabs */}
+              <div style={{ display: 'flex', gap: '6px', marginBottom: '4px', flexShrink: 0 }}>
+                <button
+                  type="button"
+                  className={`cat-tab-btn ${deadpoolCategory === 'technical' ? 'active deadpool' : ''}`}
+                  onClick={() => { setDeadpoolCategory('technical'); setDeadpoolExpandedIndex(0); }}
+                  style={{ flex: 1 }}
+                >
+                  🔬 Rules &amp; Math
+                </button>
+                <button
+                  type="button"
+                  className={`cat-tab-btn ${deadpoolCategory === 'non-technical' ? 'active deadpool' : ''}`}
+                  onClick={() => { setDeadpoolCategory('non-technical'); setDeadpoolExpandedIndex(0); }}
+                  style={{ flex: 1 }}
+                >
+                  🌮 Fun &amp; Trolls
+                </button>
+                {deadpoolCustomList.length > 0 && (
                   <button
                     type="button"
-                    onClick={() => setShowDeadpoolPrompts(prev => !prev)}
-                    style={{
-                      background: 'rgba(255,255,255,0.08)',
-                      border: '1px solid rgba(255,255,255,0.15)',
-                      color: '#FFF',
-                      fontSize: '0.66rem',
-                      padding: '2px 8px',
-                      borderRadius: '4px',
-                      cursor: 'pointer'
-                    }}
+                    className={`cat-tab-btn ${deadpoolCategory === 'custom' ? 'active deadpool' : ''}`}
+                    onClick={() => { setDeadpoolCategory('custom'); setDeadpoolExpandedIndex(0); }}
+                    style={{ flex: 1 }}
                   >
-                    {showDeadpoolPrompts ? '▲ Hide Topics' : '▼ Show Topics'}
+                    💬 Asked ({deadpoolCustomList.length})
                   </button>
-                </div>
-
-                {showDeadpoolPrompts && (
-                  <>
-                    {/* Category Filter Tabs */}
-                    <div style={{ display: 'flex', gap: '6px', margin: '2px 0' }}>
-                      <button
-                        type="button"
-                        className={`cat-tab-btn ${deadpoolCategory === 'technical' ? 'active deadpool' : ''}`}
-                        onClick={() => setDeadpoolCategory('technical')}
-                        style={{ flex: 1 }}
-                      >
-                        🔬 Technical Rules
-                      </button>
-                      <button
-                        type="button"
-                        className={`cat-tab-btn ${deadpoolCategory === 'non-technical' ? 'active deadpool' : ''}`}
-                        onClick={() => setDeadpoolCategory('non-technical')}
-                        style={{ flex: 1 }}
-                      >
-                        🌮 Fun &amp; Trolls
-                      </button>
-                    </div>
-
-                    {/* Highlighted Switch Pill */}
-                    <div
-                      className="popping-suggestion-pill"
-                      onClick={() => handleDeadpoolAsk("Ask Spidey-bug, he may know! 🕸️", "REFER_TO_SPIDEY")}
-                      style={{
-                        background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(226, 54, 54, 0.28) 100%)',
-                        border: '1.5px solid #F97316',
-                        borderRadius: '8px',
-                        padding: '6px 10px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        color: '#F97316',
-                        fontSize: '0.74rem',
-                        fontWeight: 'bold',
-                        cursor: 'pointer'
-                      }}
-                      title="Click to transfer to Spider-Man!"
-                    >
-                      <span>💥 'Ask Spidey-bug he may know!' 🕸️</span>
-                      <span style={{ background: '#F97316', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.66rem', fontWeight: 800 }}>SWITCH ➔</span>
-                    </div>
-
-                    {(deadpoolCategory === 'technical' ? DEADPOOL_TECH_FAQ : DEADPOOL_NON_TECH_FAQ).map((faq, idx) => (
-                      <div
-                        key={idx}
-                        className="chat-chip"
-                        onClick={() => handleDeadpoolAsk(faq.q, faq.a)}
-                      >
-                        <span>⚡</span>
-                        <span>{faq.q}</span>
-                      </div>
-                    ))}
-                  </>
                 )}
               </div>
+
+              {/* Accordion Questions List */}
+              {(deadpoolCategory === 'technical' ? DEADPOOL_TECH_FAQ : deadpoolCategory === 'non-technical' ? DEADPOOL_NON_TECH_FAQ : deadpoolCustomList).map((faq, idx) => {
+                const isExpanded = deadpoolExpandedIndex === idx;
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      background: isExpanded ? 'rgba(226, 54, 54, 0.16)' : 'rgba(255, 255, 255, 0.04)',
+                      border: isExpanded ? '1.5px solid #E23636' : '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                      transition: 'all 0.2s ease',
+                      boxShadow: isExpanded ? '0 4px 14px rgba(226, 54, 54, 0.25)' : 'none'
+                    }}
+                  >
+                    {/* Question Header Bar */}
+                    <div
+                      onClick={() => handleToggleDeadpoolItem(idx, faq)}
+                      style={{
+                        padding: '10px 12px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        fontSize: '0.84rem',
+                        color: isExpanded ? '#FFF' : 'rgba(255,255,255,0.9)',
+                        gap: '8px'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ color: '#E23636', fontSize: '0.85rem' }}>⚡</span>
+                        <span>{faq.q}</span>
+                      </div>
+                      <span style={{ fontSize: '0.72rem', color: isExpanded ? '#FF4D4D' : '#F97316', whiteSpace: 'nowrap', fontWeight: 800 }}>
+                        {isExpanded ? '▲ Hide' : '▼ Answer'}
+                      </span>
+                    </div>
+
+                    {/* Answer Presented Directly Inside Question Block */}
+                    {isExpanded && (
+                      <div
+                        style={{
+                          padding: '10px 12px 12px 12px',
+                          borderTop: '1px solid rgba(226, 54, 54, 0.3)',
+                          background: 'rgba(14, 5, 7, 0.85)',
+                          color: '#F1F5F9',
+                          fontSize: '0.82rem',
+                          lineHeight: 1.5,
+                          whiteSpace: 'pre-line'
+                        }}
+                      >
+                        <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#E23636', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>
+                          💬 Deadpool's Answer:
+                        </div>
+                        <div>{faq.resolvedAnswer || faq.a}</div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             {/* Custom Input */}
@@ -2146,112 +2003,99 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Chat Body */}
-            <div ref={spideyChatBodyRef} className="chat-window-body">
-              {spideyMessages.map((msg, idx) => (
-                <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-spidey'}>
-                  <div style={{
-                    fontSize: '0.7rem',
-                    fontWeight: 'bold',
-                    marginBottom: '2px',
-                    color: msg.sender === 'user' ? '#FFF' : msg.sender === 'deadpool' ? '#FF4D4D' : '#38BDF8'
-                  }}>
-                    {msg.sender === 'user' ? 'You' : msg.sender === 'deadpool' ? 'Deadpool' : 'Spider-Man'}
-                  </div>
-                  <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
-                </div>
-              ))}
-              {isSpideyTyping && (
-                <div className="chat-bubble-spidey" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ fontSize: '0.75rem', color: '#38BDF8', fontWeight: 'bold' }}>Spider-Man is calculating</span>
-                  <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
-                </div>
-              )}
-
-              {/* Scroll Anchor right below messages so newly added answers are always in view */}
-              <div ref={spideyChatBottomRef} style={{ height: '2px' }} />
-
-              {/* Dynamic Interactive Suggestions & Prompts Hub */}
-              <div className="chat-suggestions-box" style={{ marginTop: '12px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                  <div style={{ fontSize: '0.68rem', color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 800 }}>
-                    💡 Quick Forensic Topics
-                  </div>
+            {/* Chat Body: Accordion Q&A List */}
+            <div ref={spideyChatBodyRef} className="chat-window-body" style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '12px 14px' }}>
+              {/* Category Filter Tabs */}
+              <div style={{ display: 'flex', gap: '6px', marginBottom: '4px', flexShrink: 0 }}>
+                <button
+                  type="button"
+                  className={`cat-tab-btn ${spideyCategory === 'technical' ? 'active spidey' : ''}`}
+                  onClick={() => { setSpideyCategory('technical'); setSpideyExpandedIndex(0); }}
+                  style={{ flex: 1 }}
+                >
+                  🔬 Forensics &amp; Science
+                </button>
+                <button
+                  type="button"
+                  className={`cat-tab-btn ${spideyCategory === 'non-technical' ? 'active spidey' : ''}`}
+                  onClick={() => { setSpideyCategory('non-technical'); setSpideyExpandedIndex(0); }}
+                  style={{ flex: 1 }}
+                >
+                  🕷️ Spidey Quips
+                </button>
+                {spideyCustomList.length > 0 && (
                   <button
                     type="button"
-                    onClick={() => setShowSpideyPrompts(prev => !prev)}
-                    style={{
-                      background: 'rgba(255,255,255,0.08)',
-                      border: '1px solid rgba(255,255,255,0.15)',
-                      color: '#FFF',
-                      fontSize: '0.66rem',
-                      padding: '2px 8px',
-                      borderRadius: '4px',
-                      cursor: 'pointer'
-                    }}
+                    className={`cat-tab-btn ${spideyCategory === 'custom' ? 'active spidey' : ''}`}
+                    onClick={() => { setSpideyCategory('custom'); setSpideyExpandedIndex(0); }}
+                    style={{ flex: 1 }}
                   >
-                    {showSpideyPrompts ? '▲ Hide Topics' : '▼ Show Topics'}
+                    💬 Asked ({spideyCustomList.length})
                   </button>
-                </div>
-
-                {showSpideyPrompts && (
-                  <>
-                    {/* Category Filter Tabs */}
-                    <div style={{ display: 'flex', gap: '6px', margin: '2px 0' }}>
-                      <button
-                        type="button"
-                        className={`cat-tab-btn ${spideyCategory === 'technical' ? 'active spidey' : ''}`}
-                        onClick={() => setSpideyCategory('technical')}
-                        style={{ flex: 1 }}
-                      >
-                        🔬 Forensics &amp; Science
-                      </button>
-                      <button
-                        type="button"
-                        className={`cat-tab-btn ${spideyCategory === 'non-technical' ? 'active spidey' : ''}`}
-                        onClick={() => setSpideyCategory('non-technical')}
-                        style={{ flex: 1 }}
-                      >
-                        🕷️ Spidey Quips
-                      </button>
-                    </div>
-
-                    {/* Highlighted Switch Pill */}
-                    <div
-                      className="popping-suggestion-pill"
-                      onClick={() => handleSpideyAsk("Ask the guy in red spandex on the left! 🌮", "REFER_TO_DEADPOOL")}
-                      style={{
-                        background: 'linear-gradient(135deg, rgba(224, 27, 34, 0.2) 0%, rgba(133, 11, 18, 0.35) 100%)',
-                        border: '1.5px solid #E01B22',
-                        borderRadius: '8px',
-                        padding: '6px 10px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        color: '#FF8080',
-                        fontSize: '0.74rem',
-                        fontWeight: 'bold',
-                        cursor: 'pointer'
-                      }}
-                      title="Click to transfer to Deadpool!"
-                    >
-                      <span>🕷️ 'Ask the guy in red spandex on the left!' 🌮</span>
-                      <span style={{ background: '#E01B22', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.66rem', fontWeight: 800 }}>SWITCH ➔</span>
-                    </div>
-
-                    {(spideyCategory === 'technical' ? SPIDEY_TECH_FAQ : SPIDEY_NON_TECH_FAQ).map((faq, idx) => (
-                      <div
-                        key={idx}
-                        className="chat-chip-spidey"
-                        onClick={() => handleSpideyAsk(faq.q, faq.a)}
-                      >
-                        <span>🕸️</span>
-                        <span>{faq.q}</span>
-                      </div>
-                    ))}
-                  </>
                 )}
               </div>
+
+              {/* Accordion Questions List */}
+              {(spideyCategory === 'technical' ? SPIDEY_TECH_FAQ : spideyCategory === 'non-technical' ? SPIDEY_NON_TECH_FAQ : spideyCustomList).map((faq, idx) => {
+                const isExpanded = spideyExpandedIndex === idx;
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      background: isExpanded ? 'rgba(56, 189, 248, 0.16)' : 'rgba(255, 255, 255, 0.04)',
+                      border: isExpanded ? '1.5px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                      transition: 'all 0.2s ease',
+                      boxShadow: isExpanded ? '0 4px 14px rgba(56, 189, 248, 0.25)' : 'none'
+                    }}
+                  >
+                    {/* Question Header Bar */}
+                    <div
+                      onClick={() => handleToggleSpideyItem(idx, faq)}
+                      style={{
+                        padding: '10px 12px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        fontSize: '0.84rem',
+                        color: isExpanded ? '#FFF' : 'rgba(255,255,255,0.9)',
+                        gap: '8px'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ color: '#38BDF8', fontSize: '0.85rem' }}>🕸️</span>
+                        <span>{faq.q}</span>
+                      </div>
+                      <span style={{ fontSize: '0.72rem', color: isExpanded ? '#38BDF8' : '#7DD3FC', whiteSpace: 'nowrap', fontWeight: 800 }}>
+                        {isExpanded ? '▲ Hide' : '▼ Answer'}
+                      </span>
+                    </div>
+
+                    {/* Answer Presented Directly Inside Question Block */}
+                    {isExpanded && (
+                      <div
+                        style={{
+                          padding: '10px 12px 12px 12px',
+                          borderTop: '1px solid rgba(56, 189, 248, 0.3)',
+                          background: 'rgba(7, 12, 20, 0.85)',
+                          color: '#F1F5F9',
+                          fontSize: '0.82rem',
+                          lineHeight: 1.5,
+                          whiteSpace: 'pre-line'
+                        }}
+                      >
+                        <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#38BDF8', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>
+                          🕸️ Spider-Man's Answer:
+                        </div>
+                        <div>{faq.resolvedAnswer || faq.a}</div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             {/* Custom Input */}
