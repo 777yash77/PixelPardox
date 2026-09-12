@@ -438,18 +438,32 @@ export default function Home() {
     }
   }, [isDeadpoolChatOpen, isSpideyChatOpen])
 
-  // Smooth auto-scroll for chat body on new messages
+  // Smooth container-only auto-scroll for chat body on new messages
   useEffect(() => {
-    if (isDeadpoolChatOpen && deadpoolChatBottomRef.current) {
-      deadpoolChatBottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
+    if (isDeadpoolChatOpen && deadpoolChatBodyRef.current) {
+      setTimeout(() => {
+        if (deadpoolChatBodyRef.current) {
+          deadpoolChatBodyRef.current.scrollTo({
+            top: deadpoolChatBodyRef.current.scrollHeight,
+            behavior: 'smooth'
+          })
+        }
+      }, 50)
     }
-  }, [deadpoolMessages, isDeadpoolChatOpen, isDeadpoolTyping])
+  }, [deadpoolMessages, isDeadpoolChatOpen, isDeadpoolTyping, showDeadpoolPrompts])
 
   useEffect(() => {
-    if (isSpideyChatOpen && spideyChatBottomRef.current) {
-      spideyChatBottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
+    if (isSpideyChatOpen && spideyChatBodyRef.current) {
+      setTimeout(() => {
+        if (spideyChatBodyRef.current) {
+          spideyChatBodyRef.current.scrollTo({
+            top: spideyChatBodyRef.current.scrollHeight,
+            behavior: 'smooth'
+          })
+        }
+      }, 50)
     }
-  }, [spideyMessages, isSpideyChatOpen, isSpideyTyping])
+  }, [spideyMessages, isSpideyChatOpen, isSpideyTyping, showSpideyPrompts])
 
   // Periodic quote rotation
   useEffect(() => {
@@ -571,6 +585,7 @@ export default function Home() {
 
   // Deadpool Question Click Handler
   const handleDeadpoolAsk = (q, a) => {
+    setShowDeadpoolPrompts(false)
     if (a === 'TELL_DEADPOOL_JOKE') {
       const jokeText = DEADPOOL_JOKES_POOL[deadpoolJokeIdx % DEADPOOL_JOKES_POOL.length]
       setDeadpoolJokeIdx(prev => prev + 1)
@@ -632,6 +647,7 @@ export default function Home() {
 
   // Spidey Question Click Handler
   const handleSpideyAsk = (q, a) => {
+    setShowSpideyPrompts(false)
     if (a === 'TELL_SPIDEY_JOKE') {
       const jokeText = SPIDEY_JOKES_POOL[spideyJokeIdx % SPIDEY_JOKES_POOL.length]
       setSpideyJokeIdx(prev => prev + 1)
@@ -696,6 +712,7 @@ export default function Home() {
     if (e && typeof e.preventDefault === 'function') e.preventDefault()
     if (!deadpoolInput.trim()) return
 
+    setShowDeadpoolPrompts(false)
     const userText = deadpoolInput.trim()
     const query = userText.toLowerCase()
     setDeadpoolInput('')
@@ -728,6 +745,7 @@ export default function Home() {
     if (e && typeof e.preventDefault === 'function') e.preventDefault()
     if (!spideyInput.trim()) return
 
+    setShowSpideyPrompts(false)
     const userText = spideyInput.trim()
     const query = userText.toLowerCase()
     setSpideyInput('')
