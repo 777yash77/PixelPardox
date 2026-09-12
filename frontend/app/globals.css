@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
   /* Color Palette - Blue & Red Spider-Man x Deadpool Theme */
@@ -39,8 +39,8 @@
   --text-secondary: #94A3B8;
   --text-dim: #64748B;
 
-  --font-display: 'Space Grotesk', sans-serif;
-  --font-body: 'Outfit', sans-serif;
+  --font-display: 'Orbitron', 'Space Grotesk', sans-serif;
+  --font-body: 'Rajdhani', 'Outfit', sans-serif;
 }
 
 * {
