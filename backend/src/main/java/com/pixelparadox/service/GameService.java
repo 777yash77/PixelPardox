@@ -68,6 +68,18 @@ public class GameService {
         });
     }
 
+    public Optional<User> findTeamUser(String identifier) {
+        if (identifier == null || identifier.trim().isEmpty()) {
+            return Optional.empty();
+        }
+        String clean = identifier.trim();
+        Optional<User> byTeamId = userRepository.findByTeamId(clean);
+        if (byTeamId.isPresent()) {
+            return byTeamId;
+        }
+        return userRepository.findByTeamName(clean);
+    }
+
     @Transactional
     public GameState updateGameState(int round, Long questionId, int duration, int zoom) {
         GameState state = getOrCreateGameState();
@@ -114,7 +126,7 @@ public class GameService {
     @Transactional
     public Submission submitAnswer(String email, Long questionId, String chosenAnswer, String bonusAnswer,
             String textSubmission) {
-        User user = userRepository.findByTeamId(email)
+        User user = findTeamUser(email)
                 .orElseThrow(() -> new IllegalArgumentException("Team user not found"));
 
         if (user.isEliminated()) {
@@ -406,7 +418,7 @@ public class GameService {
     // PRELIMS LOGIC
 
     public Optional<QuizAttempt> getQuizAttempt(String email, String participantName) {
-        Optional<User> team = userRepository.findByTeamId(email);
+        Optional<User> team = findTeamUser(email);
         if (team.isEmpty())
             return Optional.empty();
         String pName = participantName != null ? participantName.trim() : "Member";
@@ -414,7 +426,7 @@ public class GameService {
     }
 
     public List<QuizAttempt> getTeamQuizAttempts(String teamId) {
-        Optional<User> team = userRepository.findByTeamId(teamId);
+        Optional<User> team = findTeamUser(teamId);
         if (team.isEmpty())
             return java.util.Collections.emptyList();
         return quizAttemptRepository.findByTeamId(team.get().getId());
@@ -436,7 +448,7 @@ public class GameService {
 
     @Transactional
     public QuizAttempt startQuizAttempt(String email, String participantName) {
-        User team = userRepository.findByTeamId(email)
+        User team = findTeamUser(email)
                 .orElseThrow(() -> new IllegalArgumentException("Team user not found"));
 
         if (team.isEliminated()) {
@@ -489,7 +501,7 @@ public class GameService {
 
     @Transactional
     public QuizAttempt submitQuizAttempt(String email, String participantName, Map<Long, String> answers) {
-        User team = userRepository.findByTeamId(email)
+        User team = findTeamUser(email)
                 .orElseThrow(() -> new IllegalArgumentException("Team user not found"));
 
         if (team.isEliminated()) {

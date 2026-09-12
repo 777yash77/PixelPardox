@@ -270,7 +270,7 @@ public class GameController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Authentication required"));
         }
         String teamId = auth.getName();
-        Optional<User> userOpt = userRepository.findByTeamId(teamId);
+        Optional<User> userOpt = gameService.findTeamUser(teamId);
         if (userOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
