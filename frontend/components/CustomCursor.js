@@ -58,11 +58,11 @@ export default function CustomCursor() {
 
     // Multiverse Chromatic Spectrum: Spidey Blue & Cyan, Dark Sapphire Blue, Deadpool Crimson, Scarlet Red, Fiery Orangish
     const colors = [
-      { r: 56,  g: 189, b: 248 }, // Neon Blue / Cyan
-      { r: 2,   g: 132, b: 199 }, // Spidey Electric Blue
-      { r: 224, g: 27,  b: 34  }, // Deadpool Crimson Red
-      { r: 239, g: 68,  b: 68  }, // Bright Scarlet Red
-      { r: 249, g: 115, b: 22  }, // Fiery Orangish Accent
+      { r: 56, g: 189, b: 248 }, // Neon Blue / Cyan
+      { r: 2, g: 132, b: 199 }, // Spidey Electric Blue
+      { r: 224, g: 27, b: 34 }, // Deadpool Crimson Red
+      { r: 239, g: 68, b: 68 }, // Bright Scarlet Red
+      { r: 249, g: 115, b: 22 }, // Fiery Orangish Accent
       { r: 255, g: 255, b: 255 }, // Pure White Starlight
     ]
 
@@ -111,26 +111,26 @@ export default function CustomCursor() {
       setIsClicking(true)
       // Triple multicolored smooth circular shockwaves
       shockwaves.push(
-        { x: e.clientX, y: e.clientY, radius: 5,  maxRadius: 56, alpha: 0.95, color: '#38BDF8', lineWidth: 2.5 },
-        { x: e.clientX, y: e.clientY, radius: 3,  maxRadius: 42, alpha: 0.85, color: '#EF4444', lineWidth: 2.0 },
-        { x: e.clientX, y: e.clientY, radius: 1,  maxRadius: 28, alpha: 0.75, color: '#F97316', lineWidth: 1.5 }
+        { x: e.clientX, y: e.clientY, radius: 5, maxRadius: 56, alpha: 0.95, color: '#38BDF8', lineWidth: 2.5 },
+        { x: e.clientX, y: e.clientY, radius: 3, maxRadius: 42, alpha: 0.85, color: '#EF4444', lineWidth: 2.0 },
+        { x: e.clientX, y: e.clientY, radius: 1, maxRadius: 28, alpha: 0.75, color: '#F97316', lineWidth: 1.5 }
       )
       addParticles(e.clientX, e.clientY, 22, 4.0)
     }
 
     const onMouseUp = () => setIsClicking(false)
     const onMouseLeave = () => {
-      if (cursorDotRef.current)  cursorDotRef.current.style.opacity  = '0'
+      if (cursorDotRef.current) cursorDotRef.current.style.opacity = '0'
       if (cursorRingRef.current) cursorRingRef.current.style.opacity = '0'
     }
     const onMouseEnter = () => {
-      if (cursorDotRef.current)  cursorDotRef.current.style.opacity  = '1'
+      if (cursorDotRef.current) cursorDotRef.current.style.opacity = '1'
       if (cursorRingRef.current) cursorRingRef.current.style.opacity = '1'
     }
 
-    window.addEventListener('mousemove',  onMouseMove,  { passive: true })
-    window.addEventListener('mousedown',  onMouseDown)
-    window.addEventListener('mouseup',    onMouseUp)
+    window.addEventListener('mousemove', onMouseMove, { passive: true })
+    window.addEventListener('mousedown', onMouseDown)
+    window.addEventListener('mouseup', onMouseUp)
     document.addEventListener('mouseleave', onMouseLeave)
     document.addEventListener('mouseenter', onMouseEnter)
 
@@ -146,10 +146,10 @@ export default function CustomCursor() {
 
       // Multiverse Dual Circular Spotlight (Spidey Cyan core + Deadpool Crimson halo)
       const spot = ctx.createRadialGradient(ringX, ringY, 0, ringX, ringY, 180)
-      spot.addColorStop(0,   'rgba(56, 189, 248, 0.09)')
+      spot.addColorStop(0, 'rgba(56, 189, 248, 0.09)')
       spot.addColorStop(0.4, 'rgba(2, 132, 199, 0.04)')
       spot.addColorStop(0.7, 'rgba(224, 27, 34, 0.035)')
-      spot.addColorStop(1,   'rgba(0, 0, 0, 0)')
+      spot.addColorStop(1, 'rgba(0, 0, 0, 0)')
       ctx.fillStyle = spot
       ctx.beginPath()
       ctx.arc(ringX, ringY, 180, 0, Math.PI * 2)
@@ -164,7 +164,7 @@ export default function CustomCursor() {
           ctx.beginPath()
           ctx.moveTo(p1.x, p1.y)
           ctx.lineTo(p2.x, p2.y)
-          
+
           if (i % 4 === 0) {
             ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`
           } else if (i % 4 === 1) {
@@ -193,11 +193,11 @@ export default function CustomCursor() {
         if (p.alpha <= 0) { particles.splice(i, 1); continue }
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-        ctx.fillStyle   = `rgba(${p.color.r},${p.color.g},${p.color.b},${p.alpha})`
+        ctx.fillStyle = `rgba(${p.color.r},${p.color.g},${p.color.b},${p.alpha})`
         ctx.shadowColor = `rgba(${p.color.r},${p.color.g},${p.color.b},0.85)`
-        ctx.shadowBlur  = 8
+        ctx.shadowBlur = 8
         ctx.fill()
-        ctx.shadowBlur  = 0
+        ctx.shadowBlur = 0
       }
 
       // Multicolored Expanding Circular Shockwaves
@@ -209,12 +209,12 @@ export default function CustomCursor() {
         ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2)
         ctx.strokeStyle = sw.color
         ctx.globalAlpha = sw.alpha
-        ctx.lineWidth   = sw.lineWidth || 2
+        ctx.lineWidth = sw.lineWidth || 2
         ctx.shadowColor = sw.color
-        ctx.shadowBlur  = 12
+        ctx.shadowBlur = 12
         ctx.stroke()
         ctx.globalAlpha = 1
-        ctx.shadowBlur  = 0
+        ctx.shadowBlur = 0
       }
 
       animationFrameId = requestAnimationFrame(render)
@@ -222,10 +222,10 @@ export default function CustomCursor() {
     render()
 
     return () => {
-      window.removeEventListener('resize',    handleResize)
+      window.removeEventListener('resize', handleResize)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('mousedown', onMouseDown)
-      window.removeEventListener('mouseup',   onMouseUp)
+      window.removeEventListener('mouseup', onMouseUp)
       document.removeEventListener('mouseleave', onMouseLeave)
       document.removeEventListener('mouseenter', onMouseEnter)
       cancelAnimationFrame(animationFrameId)

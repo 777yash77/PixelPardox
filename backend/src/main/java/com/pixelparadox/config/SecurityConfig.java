@@ -32,33 +32,33 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/uploads/**").permitAll()
-                .requestMatchers("/ws/**").permitAll()
-                // Let everyone view endpoints needed for registration status/leaderboard if needed, 
-                // but let's restrict game control and submissions
-                .requestMatchers("/api/game/state").permitAll()
-                .requestMatchers("/api/game/leaderboard").hasRole("ADMIN")
-                .requestMatchers("/api/game/my-team").hasAnyRole("ADMIN", "TEAM")
-                .requestMatchers("/api/game/upload").hasRole("ADMIN")
-                .requestMatchers("/api/game/images").hasAnyRole("ADMIN", "TEAM")
-                .requestMatchers("/api/game/images/**").hasRole("ADMIN")
-                .requestMatchers("/api/game/grade").hasRole("ADMIN")
-                .requestMatchers("/api/game/submissions").hasRole("ADMIN")
-                .requestMatchers("/api/game/advance-teams").hasRole("ADMIN")
-                .requestMatchers("/api/game/state/update").hasRole("ADMIN")
-                .requestMatchers("/api/game/state/timer").hasRole("ADMIN")
-                .requestMatchers("/api/game/reset").hasRole("ADMIN")
-                .requestMatchers("/api/game/submit").hasRole("TEAM")
-                .requestMatchers("/api/game/prelims/**").hasAnyRole("ADMIN", "TEAM")
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
+                        // Let everyone view endpoints needed for registration status/leaderboard if
+                        // needed,
+                        // but let's restrict game control and submissions
+                        .requestMatchers("/api/game/state").permitAll()
+                        .requestMatchers("/api/game/leaderboard").hasRole("ADMIN")
+                        .requestMatchers("/api/game/my-team").hasAnyRole("ADMIN", "TEAM")
+                        .requestMatchers("/api/game/upload").hasRole("ADMIN")
+                        .requestMatchers("/api/game/images").hasAnyRole("ADMIN", "TEAM")
+                        .requestMatchers("/api/game/images/**").hasRole("ADMIN")
+                        .requestMatchers("/api/game/grade").hasRole("ADMIN")
+                        .requestMatchers("/api/game/submissions").hasRole("ADMIN")
+                        .requestMatchers("/api/game/advance-teams").hasRole("ADMIN")
+                        .requestMatchers("/api/game/state/update").hasRole("ADMIN")
+                        .requestMatchers("/api/game/state/timer").hasRole("ADMIN")
+                        .requestMatchers("/api/game/reset").hasRole("ADMIN")
+                        .requestMatchers("/api/game/submit").hasRole("TEAM")
+                        .requestMatchers("/api/game/prelims/**").hasAnyRole("ADMIN", "TEAM")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -69,7 +69,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 

@@ -5,55 +5,6 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { API_BASE_URL, WS_BASE_URL } from '@/lib/api'
 
-const SPIDEY_GAME_QUOTES = [
-  "🕸️ 'Take a steady breath! Optical physics and photon diffraction are on your side.'",
-  "🕷️ 'Stage 0 is 30 questions in 30 minutes. Quality over reckless haste—protect your score from -5 penalties!'",
-  "⚡ 'In Round 1, inspect iris highlights. Diffusion models almost always mismatch ambient light reflections.'",
-  "🎯 'Need forensic analysis? Click [Ask Spidey for a Clue] anytime!'",
-  "🔬 'Check lens edge chromatic aberration. Real glass produces subtle color fringing; AI renders uniform blur.'",
-  "🛡️ 'Stay calm when the timer turns red. Great teams win by staying composed under pressure.'",
-  "☕ 'Ignore Wade over on the left trying to juggle weapons in the server room. Focus on the pixel boundaries.'",
-  "🕷️ 'Look closely at ear cartilage and hair roots. AI consistently fails anatomical transitions.'",
-  "🔬 'Subsurface Scattering Check: Translucent human earlobes glow pink against backlights; AI renders flat chalk.'",
-  "♟️ 'Transposed deconvolution leaves checkerboard grid frequencies in out-of-focus background bokeh.'",
-  "📊 'Remember the Cosine equation: CLIP measures semantic directional vectors. Quality tokens beat spamming!'"
-]
-
-const DEADPOOL_GAME_QUOTES = [
-  "🌮 'Maximum Effort! Show these neural networks what actual human intelligence looks like!'",
-  "⚔️ 'A wrong guess is minus five points. Click with your brain, not your panic, rookie!'",
-  "💥 'Stuck on a suspicious pixel? Click [Ask Deadpool for a Clue] before you guess blindly!'",
-  "🕶️ 'Trust your preparation! Just don't let your teammate start clicking random answers!'",
-  "🍕 'Focus up! A lead on the leaderboard is won on precision, not speed!'",
-  "🚨 'Stop sweating on the mouse! You are going to short-circuit the trackpad!'",
-  "🦄 'I put twenty bucks on your squad. Don't make me lose money to Peter Parker!'",
-  "🎬 'Relax your shoulders, take a breath, and lock in the answer before the red timer hits zero!'",
-  "🥞 'If the hands have seven knuckles and look like a bunch of melted sausages, smash the AI button!'",
-  "🧨 'Ask me for a joke in chat if you feel like having a nervous breakdown! Maximum Effort!'"
-]
-
-const ARENA_DEADPOOL_JOKES = [
-  "Why did the neural network get dumped? Every time it held hands, it sprouted seven fingers, two left thumbs, and an elbow growing out of its collarbone! 😂💀",
-  "A machine learning engineer, a cyber criminal, and me walk into a bar. The engineer orders a beer, the criminal steals the tap, and I shoot the jukebox because it was playing smooth jazz! Both unhandled null pointer and armed robbery! 💥🍸",
-  "What happens when you train a diffusion model in Wade Wilson's apartment? The GPU gets so hot I used the graphics card as a panini press for my chimichangas! Loss didn't converge, but the cheddar crust was phenomenal! 🔥🧀",
-  "What's faster than light? An engineering student slamming their laptop shut when their roommate walks into the proctored webcam frame wearing only a bath towel! 🏃💨",
-  "Git commit at 3:45 AM before launch: 'Fixed bug' ➔ 'Why is it doing this?' ➔ 'GOD HELP ME' ➔ 'Do not breathe on this branch'. Version-controlled trauma! 💀📉",
-  "Why do AI startups love Wade Wilson? Because I also have no ethical filters, consume ridiculous amounts of raw energy, and regenerate from complete catastrophic failure every sprint! ⚡🌮",
-  "What did the compiler say to the student trying to guess AI images randomly? 'I've seen segmentation faults with better decision-making capabilities than your click history!' 💥🖱️",
-  "Stack Overflow went down for 12 minutes in 2024. In that span, global software engineering output dropped to 1840s Victorian blacksmith levels! 📉🔨"
-]
-
-const ARENA_SPIDEY_JOKES = [
-  "Why are AI models terrified of quantum physics? The moment you observe them, their probability wave collapses into four extra fingers and a waxy forehead! ⚛️🔬",
-  "Wade asked why my code wasn't compiling. I said there was a bug on line 42. He drew dual katanas and sliced my monitor into three pieces shouting 'I neutralized the pest!' RIP Daily Bugle paycheck! 🕸️💸",
-  "Why did the machine learning model fail its road test? Overfitted on 10,000 cat pictures. It didn't stop at red lights, but screeched to a halt whenever it saw an empty cardboard box and tried to sit in it! 📦🚗",
-  "What is the hardest unsolved problem in computer science? P vs NP? The halting problem? Nope—vertically centering a div without breaking mobile Safari! 😭💻",
-  "Why are dentists terrified of generative AI? Every family portrait has 36 incisors, 3 rows of molars, and a canine growing out of the uvula! Like a Great White Shark having an existential crisis! 🦈🪥",
-  "Why did the optical physicist break up with the GAN generator? No matter how bright the sun was, the shadows fell in four contradictory directions! ☀️🧭",
-  "A student asked me: 'Peter, how do I know if an image is real?' I said: 'If the iris reflections match the ceiling lamps and their glasses don't morph into their earlobes, it might actually exist!' 👓🔍",
-  "Why don't deepfake creators play poker? Their facial landmark coordinates jitter every time they bluff! 🃏🎭"
-]
-
 export default function GameArena() {
   const router = useRouter()
   const [token, setToken] = useState('')
@@ -85,7 +36,7 @@ export default function GameArena() {
   const [textSubmission, setTextSubmission] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState('')
-  
+
   // Timer countdown
   const [timeLeft, setTimeLeft] = useState(0)
 
@@ -121,81 +72,6 @@ export default function GameArena() {
   // WebSocket Ref
   const wsRef = useRef(null)
 
-  // Superhero Clues & Arena Companion State (Default Hidden to keep questions clean)
-  const [activeClue, setActiveClue] = useState(null)
-  const [isDeadpoolChatOpen, setIsDeadpoolChatOpen] = useState(false)
-  const [isSpideyChatOpen, setIsSpideyChatOpen] = useState(false)
-  const [isDeadpoolCollapsed, setIsDeadpoolCollapsed] = useState(true)
-  const [isSpideyCollapsed, setIsSpideyCollapsed] = useState(true)
-  const [spideyQuoteIdx, setSpideyQuoteIdx] = useState(0)
-  const [deadpoolQuoteIdx, setDeadpoolQuoteIdx] = useState(0)
-  const [isDeadpoolTyping, setIsDeadpoolTyping] = useState(false)
-  const [isSpideyTyping, setIsSpideyTyping] = useState(false)
-  const [deadpoolInput, setDeadpoolInput] = useState('')
-  const [spideyInput, setSpideyInput] = useState('')
-  const deadpoolChatBottomRef = useRef(null)
-  const spideyChatBottomRef = useRef(null)
-  const deadpoolContainerRef = useRef(null)
-  const deadpoolChatBodyRef = useRef(null)
-  const spideyContainerRef = useRef(null)
-  const spideyChatBodyRef = useRef(null)
-
-  const [deadpoolMessages, setDeadpoolMessages] = useState([
-    {
-      sender: 'deadpool',
-      text: "Yo candidate! I'm in your game arena! Need a clue for the current round? Hit 'Ask Deadpool for a Clue' or click me! Maximum Effort!"
-    }
-  ])
-  const [spideyMessages, setSpideyMessages] = useState([
-    {
-      sender: 'spidey',
-      text: "Spider-Man checking in! I'm here to provide scientific forensic guidance and help your squad keep your cool. Click 'Ask Spidey for a Clue' anytime!"
-    }
-  ])
-
-  // Keyboard Escape listener & Click Outside listener for chatbot modals
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setIsDeadpoolChatOpen(false)
-        setIsSpideyChatOpen(false)
-      }
-    }
-    const handleClickOutside = (e) => {
-      if (isDeadpoolChatOpen && deadpoolContainerRef.current && !deadpoolContainerRef.current.contains(e.target)) {
-        setIsDeadpoolChatOpen(false)
-      }
-      if (isSpideyChatOpen && spideyContainerRef.current && !spideyContainerRef.current.contains(e.target)) {
-        setIsSpideyChatOpen(false)
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    document.addEventListener('pointerdown', handleClickOutside)
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-      document.removeEventListener('pointerdown', handleClickOutside)
-    }
-  }, [isDeadpoolChatOpen, isSpideyChatOpen])
-
-  // Internal smooth auto-scroll for chat body in game arena
-  useEffect(() => {
-    if (isDeadpoolChatOpen && deadpoolChatBodyRef.current) {
-      deadpoolChatBodyRef.current.scrollTo({
-        top: deadpoolChatBodyRef.current.scrollHeight,
-        behavior: 'smooth'
-      })
-    }
-  }, [deadpoolMessages, isDeadpoolChatOpen, isDeadpoolTyping])
-
-  useEffect(() => {
-    if (isSpideyChatOpen && spideyChatBodyRef.current) {
-      spideyChatBodyRef.current.scrollTo({
-        top: spideyChatBodyRef.current.scrollHeight,
-        behavior: 'smooth'
-      })
-    }
-  }, [spideyMessages, isSpideyChatOpen, isSpideyTyping])
-
   // MediaRecorder Ref for silent recording
   const mediaRecorderRef = useRef(null)
 
@@ -210,7 +86,7 @@ export default function GameArena() {
         } catch (e) {
           recorder = new MediaRecorder(stream);
         }
-        
+
         mediaRecorderRef.current = recorder;
         const chunks = [];
         recorder.ondataavailable = e => {
@@ -227,7 +103,7 @@ export default function GameArena() {
               headers: { 'Authorization': `Bearer ${token}` },
               body: formData
             });
-          } catch(err) {
+          } catch (err) {
             console.error("Failed to upload recording", err);
           }
         };
@@ -256,7 +132,7 @@ export default function GameArena() {
     setToken(storedToken)
     const storedParticipant = localStorage.getItem('participantName') || 'Unknown'
     setParticipantName(storedParticipant)
-    
+
     // Restore Prelims Quiz Progress if actively in progress
     const savedStartTime = localStorage.getItem('prelimStartTime_' + storedParticipant)
     if (savedStartTime) {
@@ -376,7 +252,7 @@ export default function GameArena() {
     if (gameState.timerRunning && localEndTime > 0) {
       interval = setInterval(() => {
         const remaining = Math.floor((localEndTime - Date.now()) / 1000)
-        
+
         if (remaining <= 0) {
           setTimeLeft(0)
           clearInterval(interval)
@@ -764,11 +640,6 @@ export default function GameArena() {
       } else if (e.key === 'f' || e.key === 'F') {
         e.preventDefault()
         if (currentQ) handleToggleFlag(currentQ.id)
-      } else if (e.key === '^' || (e.shiftKey && e.key === '6') || e.key === 'h' || e.key === 'H') {
-        e.preventDefault()
-        const shouldHide = !isDeadpoolCollapsed || !isSpideyCollapsed
-        setIsDeadpoolCollapsed(shouldHide)
-        setIsSpideyCollapsed(shouldHide)
       } else if (currentQ) {
         if (e.key === '1' || e.key === 'a' || e.key === 'A') {
           e.preventDefault()
@@ -788,7 +659,7 @@ export default function GameArena() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [gameState.activeRound, prelimStatus, prelimQuestions, currentPrelimIdx, showAcknowledgeModal, showConfirmSubmitModal, participantName, isDeadpoolCollapsed, isSpideyCollapsed])
+  }, [gameState.activeRound, prelimStatus, prelimQuestions, currentPrelimIdx, showAcknowledgeModal, showConfirmSubmitModal, participantName])
 
   const handlePrelimSubmit = async () => {
     setShowConfirmSubmitModal(false)
@@ -861,191 +732,6 @@ export default function GameArena() {
     return () => clearInterval(interval)
   }, [prelimStatus, token, participantName])
 
-  // Auto-scroll chat windows in Arena
-  useEffect(() => {
-    if (isDeadpoolChatOpen) {
-      deadpoolChatBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [deadpoolMessages, isDeadpoolChatOpen, isDeadpoolTyping])
-
-  useEffect(() => {
-    if (isSpideyChatOpen) {
-      spideyChatBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [spideyMessages, isSpideyChatOpen, isSpideyTyping])
-
-  // Periodic quote rotation
-  useEffect(() => {
-    const spideyTimer = setInterval(() => {
-      setSpideyQuoteIdx(prev => (prev + 1) % SPIDEY_GAME_QUOTES.length)
-    }, 6000)
-    const deadpoolTimer = setInterval(() => {
-      setDeadpoolQuoteIdx(prev => (prev + 1) % DEADPOOL_GAME_QUOTES.length)
-    }, 7000)
-    return () => {
-      clearInterval(spideyTimer)
-      clearInterval(deadpoolTimer)
-    }
-  }, [])
-
-  // Reveal In-Game Clue
-  const handleGetClue = (hero) => {
-    let title = ''
-    let text = ''
-
-    if (gameState.activeRound === 1) { // Stage 0 Quiz
-      if (hero === 'spidey') {
-        title = "Spider-Man's Scientific Quiz Intel (Stage 0)"
-        text = "🕸️ Peter Parker's Strategy:\n• Focus on AI fundamentals: Transformers use self-attention mechanisms; Diffusion models denoise step-by-step from Gaussian noise; GANs rely on an adversarial min-max objective.\n• Negative Marking Defense: Correct is +10, but Wrong is -5! Rule out two impossible answers first. If you still have no clue, leaving it blank (0 pts) protects your team score!"
-      } else {
-        title = "Deadpool's Chaos Clue (Stage 0 Quiz)"
-        text = "🌮 Wade's Survival Protocol:\n• Pro tip: If an option has super specific technical jargon and is longer than the others, that's usually the right one! Professors get lazy writing fake distractors!\n• Don't guess wildly! One wrong click deletes half a correct answer. Maximum Effort, trust your preparation!"
-      }
-    } else if (gameState.activeRound === 2) { // Stage 1 Pixel Detective
-      if (hero === 'spidey') {
-        title = "Spider-Man's Optical Forensics (Round 1)"
-        text = "🕸️ Peter Parker's Optical Breakdown (40s):\n• Lighting Coherence: Real camera flashes create sharp, unified specular dots in both pupils. AI frequently renders mismatched iris reflections.\n• Model Tells:\n  - Midjourney v6: High cinematic contrast, warm rim lighting, glossy skin.\n  - Flux: Hyper-detailed skin pores and fabric weaves, but background text is often slightly warped.\n  - DALL-E 3: Smooth, illustrative color blending.\n• Lock in the model for the full 10 points!"
-      } else {
-        title = "Deadpool's Visual Scan (Round 1)"
-        text = "🌮 Wade's Anomaly Test:\n• Zoom in on the ears, teeth, and jewelry! Does a necklace disappear behind an earlobe? Do the teeth look like a single white picket fence? If YES, hit AI and pick the generator before the 40s timer buzzes!\n• If it looks like a grainy candid phone picture with bad lighting, it's 100% REAL. Maximum Effort!"
-      }
-    } else if (gameState.activeRound === 3) { // Stage 2 The Glitch Hunt
-      if (hero === 'spidey') {
-        title = "Spider-Man's Forensic Glitch Scan (Round 2)"
-        text = "🕸️ Peter Parker's Glitch Analysis (45s):\n• Look for geometric violations: Sunglasses temples that don't rest on ears, clothing seams that change texture halfway, or contradictory shadow directions.\n• Writing Strategy: When typing your submission, be concise and specific (e.g., 'Unnatural hand geometry with inconsistent knuckle count' or 'Shadow angle directly opposes primary light source')."
-      } else {
-        title = "Deadpool's Glitch Hunter (Round 2)"
-        text = "🌮 Wade's Glitch Radar:\n• Scan the background! AI loves to hide weird glitches where it thinks nobody is looking—extra fingers, melted car wheels, or floating street lamps.\n• Type the glitch out clearly and submit before the 45 seconds run out!"
-      }
-    } else if (gameState.activeRound === 4) { // Stage 3 Prompt Wars
-      if (hero === 'spidey') {
-        title = "Spider-Man's Prompt Reconstruction (Round 3)"
-        text = "🕸️ Peter Parker's Reverse Prompting (75s):\n• Progressive Zoom deduction: Notice whether the texture is an Octane 3D render, photographic film (Kodak 35mm), or digital painting.\n• Essential Keywords: Include 'volumetric lighting', 'cinematic lighting', '8k photorealistic', 'octane render', 'macro photography', 'bokeh'!"
-      } else {
-        title = "Deadpool's Prompt Mastermind (Round 3)"
-        text = "🌮 Wade's Prompt Clue:\n• Think like a prompt artist trying to sound like a genius! Throw in terms like 'cyberpunk', 'hyper-detailed', 'neon', 'unreal engine 5', 'dramatic lighting'!\n• Submit early so your timestamp locks in first on the leaderboard!"
-      }
-    } else {
-      if (hero === 'spidey') {
-        title = "Spider-Man's Tactical Advice"
-        text = "🕸️ Stay focused, coordinate your team roles, and keep an eye on the cyber timer. Great teams succeed by staying calm under pressure!"
-      } else {
-        title = "Deadpool's Pre-Match Hype"
-        text = "🌮 Stretch those clicking fingers, take a sip of water, and prepare for Maximum Effort! You've got this!"
-      }
-    }
-
-    setActiveClue({ hero, title, text })
-
-    if (hero === 'spidey') {
-      setSpideyMessages(prev => [
-        ...prev,
-        { sender: 'spidey', text: `💡 [CLUE REVEALED]: ${text}` }
-      ])
-    } else {
-      setDeadpoolMessages(prev => [
-        ...prev,
-        { sender: 'deadpool', text: `💡 [CLUE REVEALED]: ${text}` }
-      ])
-    }
-  }
-
-  // Deadpool Arena Chat Input
-  const handleSendDeadpoolArena = (e, customText) => {
-    if (e && e.preventDefault) e.preventDefault()
-    const raw = (typeof customText === 'string' && customText) ? customText : deadpoolInput
-    if (!raw.trim()) return
-    const userText = raw.trim()
-    const query = userText.toLowerCase()
-    if (!customText) setDeadpoolInput('')
-
-    let reply = "Stay focused on the round, rookie! Click 'Ask Deadpool for a Clue' if you want tactical hints for this exact question!"
-    if (query.includes('clue') || query.includes('hint') || query.includes('help')) {
-      handleGetClue('deadpool')
-      return
-    } else if (query.includes('joke') || query.includes('funny') || query.includes('laugh') || query.includes('humor') || query.includes('roast') || query.includes('chimichanga')) {
-      reply = ARENA_DEADPOOL_JOKES[Math.floor(Math.random() * ARENA_DEADPOOL_JOKES.length)]
-    } else if (query.includes('fft') || query.includes('frequency') || query.includes('spectrum')) {
-      reply = "🔬 [DEADPOOL TECH INTEL]: Fast Fourier Transform converts the image into a 2D frequency spectrum! Generative deconvolution creates unnatural periodic peak spikes in the high-frequency quadrants. Real camera ISO grain is isotropic and randomly distributed!"
-    } else if (query.includes('clip') || query.includes('cosine') || query.includes('vector') || query.includes('embedding')) {
-      reply = "🧠 [DEADPOOL TECH INTEL]: CLIP maps textual tokens and visual patches into shared 512-D hyperspace! If a generator hallucinates, you will see strong semantic concepts glued together with zero regard for spatial physics (like a horse riding an astronaut)!"
-    } else if (query.includes('voice') || query.includes('audio') || query.includes('deepfake') || query.includes('clone') || query.includes('sound')) {
-      reply = "🎙️ [DEADPOOL TECH INTEL]: Audio deepfakes struggle with high-frequency harmonics (>16kHz) generated by neural vocoders (like HiFi-GAN), creating metallic phasing. Also check for phoneme-viseme desynchronization on bilabial plosives (P, B, M)!"
-    } else if (query.includes('gan') || query.includes('diffusion') || query.includes('noise')) {
-      reply = "🎨 [DEADPOOL TECH INTEL]: GANs are dual networks locked in adversarial deathmatch (sharp textures, warped anatomy). Diffusion runs 50-100 iterative reverse Markov denoising steps (gorgeous lighting, melted accessory details)!"
-    } else if (query.includes('inpaint') || query.includes('outpaint') || query.includes('splice')) {
-      reply = "🩹 [DEADPOOL TECH INTEL]: Inpainting masks out bounding boxes to re-synthesize. Look for boundary seam mismatch: differing sensor noise variance, inconsistent compression blocks, and abrupt shadows along the edge!"
-    } else if (query.includes('spidey') || query.includes('peter')) {
-      reply = "Spidey's over on the right giving nerdy lectures on physics. Click his widget if you want textbook formulas!"
-    } else if (query.includes('negative') || query.includes('-5') || query.includes('penalty')) {
-      reply = "Remember: One wrong guess in Stage 0 is -5 points! Leaving it blank is 0. Don't throw away your team's hard work!"
-    } else if (query.includes('time') || query.includes('clock')) {
-      reply = "Keep your eyes on the cyber countdown! When it hits zero, it auto-submits. Move fast and strike hard!"
-    } else if (query.includes('win') || query.includes('scared') || query.includes('nervous')) {
-      reply = "Nervous?! You have Deadpool in your corner! Take a breath, trust your eyes, and unleash MAXIMUM EFFORT!"
-    }
-
-    setDeadpoolMessages(prev => [
-      ...prev,
-      { sender: 'user', text: userText }
-    ])
-    setIsDeadpoolTyping(true)
-    setTimeout(() => {
-      setIsDeadpoolTyping(false)
-      setDeadpoolMessages(prev => [
-        ...prev,
-        { sender: 'deadpool', text: reply }
-      ])
-    }, 400)
-  }
-
-  // Spidey Arena Chat Input
-  const handleSendSpideyArena = (e, customText) => {
-    if (e && e.preventDefault) e.preventDefault()
-    const raw = (typeof customText === 'string' && customText) ? customText : spideyInput
-    if (!raw.trim()) return
-    const userText = raw.trim()
-    const query = userText.toLowerCase()
-    if (!customText) setSpideyInput('')
-
-    let reply = "I'm monitoring the competition feeds! Click 'Ask Spidey for a Clue' for optical and forensic hints on this question!"
-    if (query.includes('clue') || query.includes('hint') || query.includes('help')) {
-      handleGetClue('spidey')
-      return
-    } else if (query.includes('joke') || query.includes('funny') || query.includes('laugh') || query.includes('humor') || query.includes('roast')) {
-      reply = ARENA_SPIDEY_JOKES[Math.floor(Math.random() * ARENA_SPIDEY_JOKES.length)]
-    } else if (query.includes('sss') || query.includes('subsurface') || query.includes('skin') || query.includes('wax')) {
-      reply = "🔬 [SPIDEY FORENSIC INTEL]: Subsurface Scattering (SSS) models optical penetration into translucent skin layers and blood capillaries before exiting. AI often approximates this as simple Lambertian or Phong surface reflections, resulting in that waxy, plastic mannequin skin!"
-    } else if (query.includes('ela') || query.includes('error level') || query.includes('compression') || query.includes('jpeg')) {
-      reply = "📐 [SPIDEY FORENSIC INTEL]: Error Level Analysis (ELA) resaves the image at a known 95% JPEG quantization rate and evaluates the difference map. Authentic photos exhibit uniform error distribution across 8x8 DCT blocks; AI patches show abnormal high/low error variances!"
-    } else if (query.includes('checkerboard') || query.includes('deconv') || query.includes('stride') || query.includes('grid')) {
-      reply = "🕸️ [SPIDEY FORENSIC INTEL]: Transposed convolutions with kernel sizes not evenly divisible by their stride create uneven pixel overlap during upsampling. This imprints faint checkerboard artifacts visible in flat gradient zones!"
-    } else if (query.includes('flux') || query.includes('midjourney') || query.includes('sdxl') || query.includes('model') || query.includes('generator')) {
-      reply = "🤖 [SPIDEY FORENSIC INTEL]: Generator Signatures: Midjourney v5/v6 exhibits strong micro-contrast and hyper-curated cinematic rim lights. Flux.1 (rectified flow) excels in legible typography and complex hand geometry. SDXL shows vivid color grading and characteristic hair fiber clumping!"
-    } else if (query.includes('text') || query.includes('word') || query.includes('letter') || query.includes('spelling')) {
-      reply = "🔤 [SPIDEY FORENSIC INTEL]: Diffusion models process text through CLIP embeddings without explicit 2D spatial coordinate awareness, yielding gibberish or anagrams. Newer rectified flow models (Flux, Ideogram) render text accurately via character-level token encoders!"
-    } else if (query.includes('deadpool') || query.includes('wade')) {
-      reply = "Wade's just hyped on tacos over on the left! Focus on the details and you'll do great!"
-    } else if (query.includes('time') || query.includes('clock') || query.includes('timer')) {
-      reply = "Pacing is everything! 40s in R1, 45s in R2, 75s in R3, and 30m in the Quiz. Don't rush into reckless errors!"
-    } else if (query.includes('strategy') || query.includes('points') || query.includes('score')) {
-      reply = "In Round 1, spotting the generator model grabs you the full 10 points. In Stage 0, protect your team average from negative marks!"
-    }
-
-    setSpideyMessages(prev => [
-      ...prev,
-      { sender: 'user', text: userText }
-    ])
-    setIsSpideyTyping(true)
-    setTimeout(() => {
-      setIsSpideyTyping(false)
-      setSpideyMessages(prev => [
-        ...prev,
-        { sender: 'spidey', text: reply }
-      ])
-    }, 400)
-  }
-
   const handleLogout = () => {
     localStorage.clear()
     router.push('/')
@@ -1080,26 +766,7 @@ export default function GameArena() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          {/* Quick Clue Shortcut Buttons in Nav */}
           <div style={{ display: 'flex', gap: '8px' }}>
-            <button 
-              type="button" 
-              onClick={() => handleGetClue('spidey')}
-              className="clue-btn-spidey"
-              style={{ padding: '6px 12px', fontSize: '0.76rem' }}
-              title="Get Science & Optical Clue from Peter Parker"
-            >
-              🕸️ Spidey Intel
-            </button>
-            <button 
-              type="button" 
-              onClick={() => handleGetClue('deadpool')}
-              className="clue-btn-deadpool"
-              style={{ padding: '6px 12px', fontSize: '0.76rem' }}
-              title="Get Tactical Clue from Deadpool"
-            >
-              🌮 Wade Clue
-            </button>
             <button
               type="button"
               onClick={() => setShowAcknowledgeModal(true)}
@@ -1140,8 +807,8 @@ export default function GameArena() {
       </nav>
 
       {/* Main Container */}
-      <main className={`container ${gameState.activeRound === 1 ? 'quiz-container-wide' : ''}`} style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr', paddingBottom: '60px' }}>
-        
+      <main className={`container ${(gameState.activeRound >= 1 && gameState.activeRound <= 4) ? 'quiz-container-wide' : ''}`} style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr', paddingBottom: '60px' }}>
+
         {/* ELIMINATED VIEW */}
         {team.isEliminated ? (
           <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', margin: '40px auto', maxWidth: '600px', border: '1px solid var(--color-primary-blue)' }}>
@@ -1159,8 +826,8 @@ export default function GameArena() {
           </div>
         ) : (
           /* GAME STATE VIEWS */
-          <div style={{ maxWidth: gameState.activeRound === 1 ? '1560px' : '1100px', margin: '0 auto', width: '100%', transition: 'max-width 0.3s ease' }}>
-            
+          <div style={{ maxWidth: (gameState.activeRound >= 1 && gameState.activeRound <= 4) ? '1560px' : '1100px', margin: '0 auto', width: '100%', transition: 'max-width 0.3s ease' }}>
+
             {/* ROUND 0: WAITING IN LOBBY */}
             {gameState.activeRound === 0 && (
               <div className="glass-panel" style={{ padding: '44px 32px', textAlign: 'center', marginTop: '30px' }}>
@@ -1278,9 +945,9 @@ export default function GameArena() {
                         <p style={{ color: 'var(--text-secondary)', marginBottom: '24px', maxWidth: '520px', margin: '0 auto 24px' }}>
                           Ready your optical acuity and neural logic. Once initiated, your personal 30-minute timer begins.
                         </p>
-                        <button 
-                          className="btn-primary" 
-                          style={{ padding: '14px 32px', fontSize: '1.05rem', boxShadow: '0 0 20px rgba(224, 27, 34, 0.45)' }} 
+                        <button
+                          className="btn-primary"
+                          style={{ padding: '14px 32px', fontSize: '1.05rem', boxShadow: '0 0 20px rgba(224, 27, 34, 0.45)' }}
                           onClick={() => setShowAcknowledgeModal(true)}
                         >
                           ⚡ Acknowledge Protocols &amp; Start Quiz →
@@ -1336,103 +1003,6 @@ export default function GameArena() {
                         <div className="arena-progress-container" style={{ margin: 0 }}>
                           <div className="arena-progress-bar" style={{ width: `${(Object.keys(prelimAnswers).length / 30) * 100}%` }} />
                         </div>
-                      </div>
-
-                      {/* Top Superhero Clue Command Bar for Stage 0 Quiz */}
-                      <div style={{
-                        background: 'linear-gradient(135deg, rgba(14, 22, 38, 0.92) 0%, rgba(26, 12, 18, 0.92) 100%)',
-                        border: '1.5px solid rgba(56, 189, 248, 0.35)',
-                        borderRadius: '12px',
-                        padding: '14px 20px',
-                        marginBottom: '20px',
-                        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '12px'
-                      }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <span style={{ fontSize: '1.25rem' }}>🦸</span>
-                            <div>
-                              <span style={{ fontSize: '0.82rem', color: '#FFF', fontWeight: '800', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                                SUPERHERO INTEL STATION (TOP BAR)
-                              </span>
-                              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
-                                Clues pop cleanly at the top without hiding your question or options
-                              </div>
-                            </div>
-                          </div>
-                          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                            <button
-                              type="button"
-                              onClick={() => handleGetClue('spidey')}
-                              className="clue-btn-spidey"
-                              style={{ padding: '7px 16px', fontSize: '0.82rem' }}
-                            >
-                              🕸️ Ask Spidey for a Clue
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleGetClue('deadpool')}
-                              className="clue-btn-deadpool"
-                              style={{ padding: '7px 16px', fontSize: '0.82rem' }}
-                            >
-                              🌮 Ask Deadpool for a Clue
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Superhero Clue Pops Cleanly at the TOP above question */}
-                        {activeClue && (
-                          <div className={`active-clue-card ${activeClue.hero}`} style={{ margin: '4px 0 0 0', animationDuration: '0.2s' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                <span style={{ fontSize: '1.5rem' }}>{activeClue.hero === 'spidey' ? '🕷️' : '🌮'}</span>
-                                <div>
-                                  <strong style={{ color: activeClue.hero === 'spidey' ? '#38BDF8' : '#FF4D4D', fontSize: '0.98rem' }}>
-                                    {activeClue.title}
-                                  </strong>
-                                  <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
-                                    {activeClue.hero === 'spidey' ? 'Spider-Man Optical Analysis' : "Wade Wilson's Combat Heuristics"}
-                                  </div>
-                                </div>
-                              </div>
-                              <button 
-                                type="button"
-                                onClick={() => setActiveClue(null)}
-                                style={{
-                                  background: 'rgba(255, 255, 255, 0.1)',
-                                  border: '1px solid rgba(255, 255, 255, 0.25)',
-                                  color: '#FFF',
-                                  fontSize: '0.82rem',
-                                  cursor: 'pointer',
-                                  padding: '5px 12px',
-                                  borderRadius: '6px',
-                                  fontWeight: 'bold',
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '4px',
-                                  transition: 'all 0.2s ease'
-                                }}
-                                title="Dismiss Clue"
-                              >
-                                ✕ Hide Clue
-                              </button>
-                            </div>
-                            <div style={{
-                              color: '#F3F4F6',
-                              fontSize: '0.88rem',
-                              lineHeight: '1.65',
-                              whiteSpace: 'pre-line',
-                              borderLeft: `3px solid ${activeClue.hero === 'spidey' ? '#38BDF8' : '#E01B22'}`,
-                              padding: '10px 14px',
-                              background: 'rgba(0, 0, 0, 0.3)',
-                              borderRadius: '0 8px 8px 0'
-                            }}>
-                              {activeClue.text}
-                            </div>
-                          </div>
-                        )}
                       </div>
 
                       {/* Single-Question Navigator Layout */}
@@ -1492,30 +1062,6 @@ export default function GameArena() {
                                   </div>
 
                                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                                    {/* Quick Clue Shortcut Button */}
-                                    <button
-                                      type="button"
-                                      onClick={() => handleGetClue(activeClue?.hero === 'deadpool' ? 'spidey' : 'deadpool')}
-                                      style={{
-                                        background: 'rgba(56, 189, 248, 0.1)',
-                                        border: '1.5px solid #38BDF8',
-                                        color: '#38BDF8',
-                                        padding: '6px 14px',
-                                        borderRadius: '6px',
-                                        fontSize: '0.8rem',
-                                        fontWeight: 'bold',
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '6px',
-                                        transition: 'all 0.2s ease'
-                                      }}
-                                      title="Reveal top superhero clue"
-                                    >
-                                      <span>💡</span>
-                                      <span>{activeClue ? 'Switch Hero Clue' : 'Reveal Top Clue'}</span>
-                                    </button>
-
                                     {/* Flag / Unflag Button */}
                                     <button
                                       type="button"
@@ -1670,7 +1216,7 @@ export default function GameArena() {
 
                                 {/* Hotkey reminder */}
                                 <div style={{ fontSize: '0.74rem', color: 'var(--text-dim)', textAlign: 'center', marginTop: '16px', letterSpacing: '0.4px' }}>
-                                  💡 Hotkeys: <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>←</kbd> <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>→</kbd> to Navigate • <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>1-4</kbd> / <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>A-D</kbd> to Select • <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>F</kbd> to Flag • <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>^</kbd> or <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>H</kbd> to Toggle Bots
+                                  💡 Hotkeys: <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>←</kbd> <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>→</kbd> to Navigate • <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>1-4</kbd> / <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>A-D</kbd> to Select • <kbd style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>F</kbd> to Flag
                                 </div>
                               </div>
                             )
@@ -1761,6 +1307,7 @@ export default function GameArena() {
                                     type="button"
                                     onClick={() => handleSelectQuestion(idx)}
                                     style={{
+                                      position: 'relative',
                                       background: isCurrent ? 'rgba(224,27,34,0.3)' : bg,
                                       border,
                                       color,
@@ -1777,7 +1324,10 @@ export default function GameArena() {
                                     }}
                                     title={`Q${idx + 1}: ${isAnswered ? 'Answered' : isFlagged ? 'Flagged' : 'Unanswered'}`}
                                   >
-                                    {isFlagged ? '🚩' : idx + 1}
+                                    <span style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                                      {idx + 1}
+                                      {isFlagged && <span className="matrix-flag-indicator" />}
+                                    </span>
                                   </button>
                                 )
                               })}
@@ -1860,12 +1410,12 @@ export default function GameArena() {
 
                     return (
                       <div style={{ padding: '10px 0', width: '100%', maxWidth: '1400px', margin: '0 auto' }}>
-                        
+
                         {/* Top Mission Concluded Banner */}
-                        <div className="glass-panel" style={{ 
-                          padding: '24px 30px', 
-                          borderRadius: '16px', 
-                          border: '1.5px solid rgba(56, 189, 248, 0.4)', 
+                        <div className="glass-panel" style={{
+                          padding: '24px 30px',
+                          borderRadius: '16px',
+                          border: '1.5px solid rgba(56, 189, 248, 0.4)',
                           background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.12) 0%, rgba(224, 27, 34, 0.12) 50%, rgba(6, 8, 18, 0.95) 100%)',
                           boxShadow: '0 12px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(56, 189, 248, 0.2)',
                           marginBottom: '28px',
@@ -1896,13 +1446,13 @@ export default function GameArena() {
                                   setTimeout(() => setIsDebriefRefreshing(false), 600)
                                 }}
                                 className="btn-secondary"
-                                style={{ 
-                                  padding: '10px 18px', 
-                                  fontSize: '0.85rem', 
-                                  display: 'flex', 
-                                  alignItems: 'center', 
-                                  gap: '8px', 
-                                  borderColor: '#38BDF8', 
+                                style={{
+                                  padding: '10px 18px',
+                                  fontSize: '0.85rem',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '8px',
+                                  borderColor: '#38BDF8',
                                   color: '#38BDF8',
                                   cursor: 'pointer'
                                 }}
@@ -1921,10 +1471,10 @@ export default function GameArena() {
                         {/* 4 Metric Stats Cards Grid */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '18px', marginBottom: '28px' }}>
                           {/* Card 1: Member Personal Score */}
-                          <div className="comic-card card-hover-lift" style={{ 
-                            padding: '22px', 
-                            borderRadius: '12px', 
-                            borderTop: '4px solid #38BDF8', 
+                          <div className="comic-card card-hover-lift" style={{
+                            padding: '22px',
+                            borderRadius: '12px',
+                            borderTop: '4px solid #38BDF8',
                             background: 'rgba(56, 189, 248, 0.06)',
                             boxShadow: '0 8px 24px rgba(0,0,0,0.35)'
                           }}>
@@ -1943,10 +1493,10 @@ export default function GameArena() {
                           </div>
 
                           {/* Card 2: Squad Aggregate Score (Computed Sum) */}
-                          <div className="comic-card card-hover-lift" style={{ 
-                            padding: '22px', 
-                            borderRadius: '12px', 
-                            borderTop: '4px solid #F97316', 
+                          <div className="comic-card card-hover-lift" style={{
+                            padding: '22px',
+                            borderRadius: '12px',
+                            borderTop: '4px solid #F97316',
                             background: 'linear-gradient(145deg, rgba(249, 115, 22, 0.1) 0%, rgba(224, 27, 34, 0.1) 100%)',
                             boxShadow: '0 8px 24px rgba(249, 115, 22, 0.15)'
                           }}>
@@ -1965,10 +1515,10 @@ export default function GameArena() {
                           </div>
 
                           {/* Card 3: Tournament Standing */}
-                          <div className="comic-card card-hover-lift" style={{ 
-                            padding: '22px', 
-                            borderRadius: '12px', 
-                            borderTop: '4px solid #E01B22', 
+                          <div className="comic-card card-hover-lift" style={{
+                            padding: '22px',
+                            borderRadius: '12px',
+                            borderTop: '4px solid #E01B22',
                             background: 'rgba(224, 27, 34, 0.06)',
                             boxShadow: '0 8px 24px rgba(0,0,0,0.35)'
                           }}>
@@ -1987,10 +1537,10 @@ export default function GameArena() {
                           </div>
 
                           {/* Card 4: Squad Readiness */}
-                          <div className="comic-card card-hover-lift" style={{ 
-                            padding: '22px', 
-                            borderRadius: '12px', 
-                            borderTop: '4px solid #818CF8', 
+                          <div className="comic-card card-hover-lift" style={{
+                            padding: '22px',
+                            borderRadius: '12px',
+                            borderTop: '4px solid #818CF8',
                             background: 'rgba(129, 140, 248, 0.06)',
                             boxShadow: '0 8px 24px rgba(0,0,0,0.35)'
                           }}>
@@ -2026,11 +1576,11 @@ export default function GameArena() {
                           </div>
 
                           {/* Live Computation Formula Bar */}
-                          <div style={{ 
-                            background: 'rgba(0, 0, 0, 0.35)', 
-                            border: '1.5px dashed rgba(56, 189, 248, 0.35)', 
-                            borderRadius: '12px', 
-                            padding: '16px 20px', 
+                          <div style={{
+                            background: 'rgba(0, 0, 0, 0.35)',
+                            border: '1.5px dashed rgba(56, 189, 248, 0.35)',
+                            borderRadius: '12px',
+                            padding: '16px 20px',
                             marginBottom: '24px',
                             display: 'flex',
                             alignItems: 'center',
@@ -2044,13 +1594,13 @@ export default function GameArena() {
                             {teammateCards.map((member, idx) => (
                               <div key={member.name} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 {idx > 0 && <span style={{ color: '#F97316', fontWeight: 'bold', fontSize: '1.2rem' }}>+</span>}
-                                <div style={{ 
-                                  background: member.isMe ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.05)', 
+                                <div style={{
+                                  background: member.isMe ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.05)',
                                   border: `1px solid ${member.isMe ? '#38BDF8' : 'rgba(255,255,255,0.15)'}`,
-                                  padding: '6px 14px', 
-                                  borderRadius: '8px', 
-                                  display: 'flex', 
-                                  alignItems: 'center', 
+                                  padding: '6px 14px',
+                                  borderRadius: '8px',
+                                  display: 'flex',
+                                  alignItems: 'center',
                                   gap: '8px'
                                 }}>
                                   <span style={{ fontSize: '0.85rem', color: member.isMe ? '#38BDF8' : '#FFF', fontWeight: '600' }}>
@@ -2063,10 +1613,10 @@ export default function GameArena() {
                               </div>
                             ))}
                             <span style={{ color: '#38BDF8', fontWeight: 'bold', fontSize: '1.3rem' }}>=</span>
-                            <div style={{ 
-                              background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.25) 0%, rgba(224, 27, 34, 0.25) 100%)', 
-                              border: '1.5px solid #F97316', 
-                              padding: '6px 16px', 
+                            <div style={{
+                              background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.25) 0%, rgba(224, 27, 34, 0.25) 100%)',
+                              border: '1.5px solid #F97316',
+                              padding: '6px 16px',
                               borderRadius: '8px',
                               boxShadow: '0 0 12px rgba(249, 115, 22, 0.3)'
                             }}>
@@ -2078,11 +1628,11 @@ export default function GameArena() {
                           {/* Teammate Individual Dossier Cards */}
                           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
                             {teammateCards.map((member) => (
-                              <div 
-                                key={member.name} 
-                                className="comic-card" 
-                                style={{ 
-                                  padding: '18px 20px', 
+                              <div
+                                key={member.name}
+                                className="comic-card"
+                                style={{
+                                  padding: '18px 20px',
                                   borderRadius: '12px',
                                   border: member.isMe ? '1.5px solid #38BDF8' : '1px solid rgba(255,255,255,0.1)',
                                   background: member.isMe ? 'rgba(56, 189, 248, 0.05)' : 'rgba(255,255,255,0.02)',
@@ -2091,10 +1641,10 @@ export default function GameArena() {
                               >
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
                                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <div style={{ 
-                                      width: '40px', 
-                                      height: '40px', 
-                                      borderRadius: '50%', 
+                                    <div style={{
+                                      width: '40px',
+                                      height: '40px',
+                                      borderRadius: '50%',
                                       background: member.isMe ? 'rgba(56, 189, 248, 0.2)' : 'rgba(224, 27, 34, 0.15)',
                                       border: `2px solid ${member.isMe ? '#38BDF8' : '#E01B22'}`,
                                       display: 'flex',
@@ -2284,43 +1834,13 @@ export default function GameArena() {
                       </div>
                     </div>
 
-                    {/* Superhero Clue Station for Stages 1 to 4 */}
-                    <div className="superhero-clue-bar">
-                      <button type="button" onClick={() => handleGetClue('spidey')} className="clue-btn-spidey">
-                        🕸️ Ask Spidey for a Clue
-                      </button>
-                      <button type="button" onClick={() => handleGetClue('deadpool')} className="clue-btn-deadpool">
-                        🌮 Ask Deadpool for a Clue
-                      </button>
-                    </div>
-
-                    {activeClue && (
-                      <div className={`active-clue-card ${activeClue.hero}`}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={{ fontSize: '1.4rem' }}>{activeClue.hero === 'spidey' ? '🕷️' : '🌮'}</span>
-                            <strong style={{ color: activeClue.hero === 'spidey' ? '#38BDF8' : '#FF4D4D', fontSize: '0.95rem' }}>
-                              {activeClue.title}
-                            </strong>
-                          </div>
-                          <button 
-                            type="button"
-                            onClick={() => setActiveClue(null)}
-                            style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '1.2rem', cursor: 'pointer', padding: '2px 6px' }}
-                          >
-                            ✕
-                          </button>
-                        </div>
-                        <div style={{ color: '#F3F4F6', fontSize: '0.86rem', lineHeight: '1.55', whiteSpace: 'pre-line' }}>
-                          {activeClue.text}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Image Viewport with Cyber Forensics Frame */}
-                    {currentQuestion && (
-                      <div className="flex-center" style={{ marginBottom: '24px' }}>
-                        <div className="image-viewport-frame" style={{ width: '100%', maxWidth: '768px' }}>
+                    <div className="player-arena-layout">
+                      {/* Main Challenge Workspace */}
+                      <div className="player-main-workspace">
+                        {/* Image Viewport with Cyber Forensics Frame */}
+                        {currentQuestion && (
+                          <div className="flex-center" style={{ marginBottom: '24px' }}>
+                            <div className="image-viewport-frame" style={{ width: '100%', maxWidth: '100%' }}>
                           <div className="hud-corner-tl" />
                           <div className="hud-corner-tr" />
                           <div className="hud-corner-bl" />
@@ -2352,40 +1872,40 @@ export default function GameArena() {
                           {currentQuestion.imageUrl ? (
                             gameState.activeRound === 4 ? (
                               <div style={{ width: '100%', height: '432px', overflow: 'hidden', position: 'relative' }}>
-                                <img 
-                                  src={`${API_BASE_URL}${currentQuestion.imageUrl}`} 
-                                  alt="zoomed" 
-                                  style={{ 
-                                    width: '100%', 
-                                    height: '100%', 
-                                    objectFit: 'cover', 
+                                <img
+                                  src={`${API_BASE_URL}${currentQuestion.imageUrl}`}
+                                  alt="zoomed"
+                                  style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
                                     transform: `scale(${100 / (gameState.zoomLevel || 10)})`,
                                     transformOrigin: 'center',
                                     transition: 'transform 0.5s ease'
-                                  }} 
+                                  }}
                                 />
                               </div>
                             ) : (
                               <div style={{ width: '100%', background: '#070405', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '360px', overflow: 'hidden', position: 'relative' }}>
-                                <img 
-                                  src={`${API_BASE_URL}${currentQuestion.imageUrl}`} 
-                                  alt="quiz visual" 
-                                  style={{ 
-                                    width: '100%', 
-                                    height: 'auto', 
-                                    display: 'block', 
-                                    maxHeight: '504px', 
+                                <img
+                                  src={`${API_BASE_URL}${currentQuestion.imageUrl}`}
+                                  alt="quiz visual"
+                                  style={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    display: 'block',
+                                    maxHeight: '504px',
                                     objectFit: 'contain',
                                     transform: `scale(${forensicZoom})`,
                                     filter: forensicFilter === 'CONTRAST'
                                       ? 'contrast(1.6) saturate(1.3) brightness(1.05)'
                                       : forensicFilter === 'MONO'
-                                      ? 'grayscale(1) contrast(1.5)'
-                                      : forensicFilter === 'INVERT'
-                                      ? 'invert(1) hue-rotate(180deg) contrast(1.3)'
-                                      : 'none',
+                                        ? 'grayscale(1) contrast(1.5)'
+                                        : forensicFilter === 'INVERT'
+                                          ? 'invert(1) hue-rotate(180deg) contrast(1.3)'
+                                          : 'none',
                                     transition: 'transform 0.25s ease, filter 0.2s ease'
-                                  }} 
+                                  }}
                                 />
                               </div>
                             )
@@ -2515,7 +2035,7 @@ export default function GameArena() {
                               <h4 style={{ fontSize: '1.05rem', marginBottom: '18px', color: '#fff', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '1px' }}>
                                 Forensic Classification: Authentic or Synthetic AI?
                               </h4>
-                              
+
                               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
                                 <button
                                   type="button"
@@ -2691,9 +2211,9 @@ export default function GameArena() {
                             </div>
                           )}
 
-                          <button 
-                            type="submit" 
-                            className="btn-primary" 
+                          <button
+                            type="submit"
+                            className="btn-primary"
                             style={{ width: '100%', marginTop: '20px', padding: '14px', fontSize: '1.02rem' }}
                             disabled={gameState.activeRound === 2 && !round1Answer.chosen}
                           >
@@ -2703,6 +2223,126 @@ export default function GameArena() {
                       </div>
                     )}
                   </div>
+
+                  {/* Sticky Player Sidebar */}
+                  <aside className="player-stage-sidebar">
+                    {/* 1. Countdown Telemetry Panel */}
+                    <div className={`side-telemetry-panel ${timeLeft > 0 && timeLeft < 10 ? 'ring-pulse' : ''}`} style={{ borderColor: timeLeft < 10 && timeLeft > 0 ? '#E01B22' : 'rgba(56, 189, 248, 0.25)' }}>
+                      <div className="side-telemetry-header">
+                        <span className="side-telemetry-title">
+                          <span className="live-pulse-dot" style={{ background: timeLeft < 10 && timeLeft > 0 ? '#EF4444' : '#F97316' }} />
+                          Cyber Countdown
+                        </span>
+                        <span style={{ fontSize: '0.72rem', color: timeLeft < 10 && timeLeft > 0 ? '#EF4444' : '#F97316', fontWeight: 'bold' }}>
+                          {timeLeft < 10 && timeLeft > 0 ? 'CRITICAL' : 'IN PROGRESS'}
+                        </span>
+                      </div>
+                      <div style={{ textAlign: 'center', padding: '8px 0' }}>
+                        <div style={{
+                          fontSize: '2.4rem',
+                          fontWeight: '900',
+                          fontFamily: 'var(--font-display)',
+                          color: timeLeft < 10 && timeLeft > 0 ? '#EF4444' : '#FFF',
+                          textShadow: timeLeft < 10 && timeLeft > 0 ? '0 0 16px rgba(239,68,68,0.8)' : '0 0 10px rgba(56,189,248,0.4)',
+                          letterSpacing: '2px'
+                        }} className={timeLeft < 5 && timeLeft > 0 ? 'blink' : ''}>
+                          {timeLeft > 0 ? `${String(Math.floor(timeLeft / 60)).padStart(2, '0')}:${String(timeLeft % 60).padStart(2, '0')}` : '00:00'}
+                        </div>
+                        <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                          Auto-locks when timer expires
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* 2. Challenge Telemetry */}
+                    <div className="side-telemetry-panel">
+                      <div className="side-telemetry-header">
+                        <span className="side-telemetry-title">
+                          🎯 Stage Telemetry
+                        </span>
+                        <span style={{
+                          fontSize: '0.68rem',
+                          color: submitted ? '#34D399' : '#38BDF8',
+                          background: submitted ? 'rgba(52,211,153,0.1)' : 'rgba(56,189,248,0.1)',
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                          border: `1px solid ${submitted ? 'rgba(52,211,153,0.3)' : 'rgba(56,189,248,0.3)'}`
+                        }}>
+                          {submitted ? '✓ Submitted' : '○ Active Target'}
+                        </span>
+                      </div>
+                      <div className="side-telemetry-row">
+                        <span>Active Stage:</span>
+                        <strong style={{ color: '#FFF' }}>
+                          {gameState.activeRound === 2 && 'Stage 1: Pixel Detective'}
+                          {gameState.activeRound === 3 && 'Stage 2: The Glitch Hunt'}
+                          {gameState.activeRound === 4 && 'Stage 3: Prompt Wars'}
+                        </strong>
+                      </div>
+                      <div className="side-telemetry-row">
+                        <span>Target Number:</span>
+                        <strong style={{ color: '#F97316' }}>Question #{gameState.activeQuestionId}</strong>
+                      </div>
+                      <div className="side-telemetry-row">
+                        <span>Scoring Yield:</span>
+                        <strong style={{ color: '#38BDF8' }}>
+                          {gameState.activeRound === 2 && '10 PTS (+Model Bonus)'}
+                          {gameState.activeRound === 3 && 'Glitch Evaluation'}
+                          {gameState.activeRound === 4 && 'CLIP Cosine Match'}
+                        </strong>
+                      </div>
+                      <div className="side-telemetry-row">
+                        <span>Transmission:</span>
+                        <strong style={{ color: submitted ? '#34D399' : '#FBBF24' }}>
+                          {submitted ? 'Locked In' : 'Awaiting Input'}
+                        </strong>
+                      </div>
+                    </div>
+
+                    {/* 3. Squad Uplink */}
+                    <div className="side-telemetry-panel">
+                      <div className="side-telemetry-header">
+                        <span className="side-telemetry-title">
+                          ⚡ Squad Uplink
+                        </span>
+                        <span style={{ fontSize: '0.7rem', color: '#10B981', fontWeight: 'bold' }}>● ONLINE</span>
+                      </div>
+                      <div className="side-telemetry-row">
+                        <span>Squad Name:</span>
+                        <strong style={{ color: '#FFF' }}>{team.teamName || 'Your Squad'}</strong>
+                      </div>
+                      <div className="side-telemetry-row">
+                        <span>Team ID:</span>
+                        <strong style={{ color: '#A5B4FC' }}>{team.teamId || '-'}</strong>
+                      </div>
+                      {participantName && (
+                        <div className="side-telemetry-row">
+                          <span>Active Terminal:</span>
+                          <strong style={{ color: '#38BDF8' }}>{participantName}</strong>
+                        </div>
+                      )}
+                      <div className="side-telemetry-row">
+                        <span>Live Squad Score:</span>
+                        <strong style={{ color: '#FF4D4D', fontSize: '1.05rem' }}>{team.score} PTS</strong>
+                      </div>
+                    </div>
+
+                    {/* 4. Forensic Tips & Protocol */}
+                    <div className="side-telemetry-panel" style={{ borderLeft: '3px solid #F97316' }}>
+                      <div className="side-telemetry-header">
+                        <span className="side-telemetry-title" style={{ color: '#F97316' }}>
+                          💡 Forensic Protocol
+                        </span>
+                      </div>
+                      <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                        {gameState.activeRound === 2 && "Inspect iris glints, hair edge transitions, and ear cartilage. Real camera photos feature natural ISO grain; AI produces hyper-uniform blur."}
+                        {gameState.activeRound === 3 && "Document physical discrepancies: mismatched glasses frames, melted jewelry, contradictory shadow angles, or repeating background patterns."}
+                        {gameState.activeRound === 4 && "Construct concise prompt tokens specifying subject, artistic medium, lighting environment, and camera angle. Keywords align with CLIP vector embeddings."}
+                      </p>
+                    </div>
+                  </aside>
+                </div>
+              </div>
                 )}
               </div>
             )}
@@ -2714,7 +2354,7 @@ export default function GameArena() {
                 <p style={{ color: 'var(--text-secondary)', marginBottom: '32px' }}>
                   The Pixel Paradox: AI or Reality challenge has ended. Thank you for participating!
                 </p>
-                
+
                 <h3 style={{ fontSize: '1.25rem', marginBottom: '16px', textTransform: 'uppercase' }}>Squad Final Score</h3>
                 <div className="glass-panel" style={{ padding: '24px', maxWidth: '440px', margin: '0 auto', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
                   <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#FFF', marginBottom: '6px' }}>
@@ -2765,387 +2405,6 @@ export default function GameArena() {
         )}
       </main>
 
-      {/* ========================================================= */}
-      {/* SUPERHERO BOT COMPANIONS IN ARENA (SUPPRESSED DURING QUIZ) */}
-      {/* ========================================================= */}
-      {/* When in Stage 0 Quiz, bottom floating bots are suppressed so questions & options are 100% clean */}
-      {!(gameState.activeRound === 1 && prelimStatus === 'IN_PROGRESS') && (
-        <>
-          {/* DEADPOOL BOT DOCKED AT TOP */}
-          {isDeadpoolCollapsed ? (
-            <button
-              type="button"
-              className="bot-dock-tab deadpool-dock"
-              onClick={() => setIsDeadpoolCollapsed(false)}
-              title="Click to pop up Deadpool Coach"
-            >
-              <span className="dock-chevron">^</span>
-              <span>🌮 Deadpool Coach</span>
-            </button>
-          ) : (
-            <div className="sticky-deadpool-bar" ref={deadpoolContainerRef}>
-              {isDeadpoolChatOpen ? (
-                <div className="deadpool-chat-window">
-                  <div className="chat-window-header" style={{ background: 'linear-gradient(135deg, #E23636 0%, #850B12 100%)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#FFF', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <svg viewBox="0 0 64 64" style={{ width: '90%', height: '90%' }}>
-                          <circle cx="32" cy="32" r="28" fill="#C51B24" />
-                          <ellipse cx="20" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(8 20 32)" />
-                          <ellipse cx="44" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(-8 44 32)" />
-                          <path d="M15,31 Q20,29 25,32 Q20,35 15,31 Z" fill="#FFFFFF" />
-                          <path d="M49,31 Q44,29 39,32 Q44,35 49,31 Z" fill="#FFFFFF" />
-                        </svg>
-                      </div>
-                      <div>
-                        <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Deadpool's Arena Coach</div>
-                        <div style={{ fontSize: '0.7rem', color: '#F97316' }}>● Clue Provider &amp; Hype Man</div>
-                      </div>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <button
-                        type="button"
-                        onClick={() => setIsDeadpoolCollapsed(true)}
-                        className="bot-collapse-btn deadpool-btn"
-                        title="Hide Wade"
-                      >
-                        ^ Hide
-                      </button>
-                      <button 
-                        type="button"
-                        onClick={() => setIsDeadpoolChatOpen(false)}
-                        className="chat-close-btn"
-                        title="Close Chat (Esc)"
-                        aria-label="Close Chat"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
-
-                  <div ref={deadpoolChatBodyRef} className="chat-window-body">
-                    {deadpoolMessages.map((msg, idx) => (
-                      <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-bot'}>
-                        <div style={{ fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '2px', color: msg.sender === 'user' ? '#FFF' : '#FF4D4D' }}>
-                          {msg.sender === 'user' ? 'You' : 'Deadpool'}
-                        </div>
-                        <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
-                      </div>
-                    ))}
-                    {isDeadpoolTyping && (
-                      <div className="chat-bubble-bot" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ fontSize: '0.75rem', color: '#FF4D4D', fontWeight: 'bold' }}>Deadpool is crafting a clue</span>
-                        <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
-                      </div>
-                    )}
-                    {/* Tactical Clue Action & Prompts Hub */}
-                    <div style={{ marginTop: '8px', padding: '10px 12px', background: 'rgba(0,0,0,0.4)', borderRadius: '10px', border: '1px solid rgba(226, 54, 54, 0.25)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      <button 
-                        type="button"
-                        onClick={() => handleGetClue('deadpool')}
-                        className="clue-btn-deadpool"
-                        style={{ width: '100%', justifyContent: 'center', padding: '9px 12px', fontSize: '0.82rem', fontWeight: 800 }}
-                      >
-                        🌮 Reveal Active Clue for this Round!
-                      </button>
-                      <div style={{ fontSize: '0.66rem', color: '#FF8080', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: '2px' }}>
-                        ⚡ Quick Tactical Inquiries:
-                      </div>
-                      <div className="chat-chip" onClick={() => handleSendDeadpoolArena(null, "How does Fast Fourier Transform FFT frequency analysis help detect AI?")}>
-                        🔬 How does FFT frequency spectrum detect AI?
-                      </div>
-                      <div className="chat-chip" onClick={() => handleSendDeadpoolArena(null, "How do audio deepfakes and HiFi-GAN vocal clues work?")}>
-                        🎙️ Audio deepfake harmonics and phasing clues
-                      </div>
-                      <div className="chat-chip" onClick={() => handleSendDeadpoolArena(null, "Tell me a joke to calm my nerves!")}>
-                        🌮 Tell me a joke to calm my nerves!
-                      </div>
-                    </div>
-
-                    <div ref={deadpoolChatBottomRef} />
-                  </div>
-
-                  <form onSubmit={handleSendDeadpoolArena} className="chat-input-bar">
-                    <input 
-                      type="text"
-                      placeholder="Ask Wade anything..."
-                      value={deadpoolInput}
-                      onChange={(e) => setDeadpoolInput(e.target.value)}
-                      style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', borderRadius: '6px', padding: '8px 12px', fontSize: '0.82rem', outline: 'none' }}
-                    />
-                    <button 
-                      type="submit"
-                      style={{ background: '#E23636', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
-                    >
-                      Send
-                    </button>
-                  </form>
-                </div>
-              ) : (
-                <div 
-                  className="deadpool-speech card-hover-lift" 
-                  onClick={() => setIsDeadpoolChatOpen(true)}
-                  style={{ cursor: 'pointer' }}
-                  title="Click to talk to Deadpool!"
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                    <span style={{ fontSize: '0.68rem', color: '#FF4D4D', fontWeight: 'bold', letterSpacing: '0.5px' }}>🌮 DEADPOOL COACH</span>
-                    <button
-                      type="button"
-                      className="bot-collapse-btn deadpool-btn"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setIsDeadpoolCollapsed(true)
-                      }}
-                      title="Hide Wade"
-                    >
-                      ^ Hide
-                    </button>
-                  </div>
-                  {DEADPOOL_GAME_QUOTES[deadpoolQuoteIdx]}
-                  <div style={{ fontSize: '0.7rem', color: '#F97316', marginTop: '4px', textAlign: 'left' }}>
-                    [Click Deadpool for Coach Clues 💬]
-                  </div>
-                </div>
-              )}
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div 
-                  className="deadpool-floating"
-                  style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                  onClick={() => setIsDeadpoolChatOpen(prev => !prev)}
-                  title="Click to chat with Deadpool"
-                >
-                  <div style={{
-                    width: '44px',
-                    height: '44px',
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #7F1D1D 100%)',
-                    border: '2px solid #E23636',
-                    boxShadow: '0 4px 16px rgba(226, 54, 54, 0.7), 0 0 10px rgba(249, 115, 22, 0.3)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden'
-                  }}>
-                    <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
-                      <circle cx="32" cy="32" r="28" fill="#C51B24" />
-                      <ellipse cx="20" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(8 20 32)" />
-                      <ellipse cx="44" cy="32" rx="10" ry="16" fill="#140608" transform="rotate(-8 44 32)" />
-                      <path d="M15,31 Q20,29 25,32 Q20,35 15,31 Z" fill="#FFFFFF" />
-                      <path d="M49,31 Q44,29 39,32 Q44,35 49,31 Z" fill="#FFFFFF" />
-                    </svg>
-                  </div>
-                </div>
-                {!isDeadpoolChatOpen && (
-                  <button
-                    type="button"
-                    className="bot-collapse-btn deadpool-btn"
-                    onClick={() => setIsDeadpoolCollapsed(true)}
-                    title="Hide Wade"
-                    style={{ height: 'fit-content' }}
-                  >
-                    ^ Hide
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* SPIDER-MAN BOT DOCKED AT TOP */}
-          {isSpideyCollapsed ? (
-            <button
-              type="button"
-              className="bot-dock-tab spidey-dock"
-              onClick={() => setIsSpideyCollapsed(false)}
-              title="Click to pop up Spider-Man Intel"
-            >
-              <span className="dock-chevron">^</span>
-              <span>🕸️ Spidey Intel</span>
-            </button>
-          ) : (
-            <div className="spidey-floating-bot-container" ref={spideyContainerRef}>
-              {isSpideyChatOpen ? (
-                <div className="comic-card spidey-chat-window">
-                  <div className="chat-window-header" style={{ background: 'linear-gradient(135deg, #0284C7 0%, #034D75 100%)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#FFF', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <svg viewBox="0 0 64 64" style={{ width: '90%', height: '90%' }}>
-                          <circle cx="32" cy="32" r="30" fill="#D81E27" stroke="#180407" strokeWidth="2" />
-                          <path d="M32 2 L32 62 M2 32 L62 32 M10 10 L54 54 M10 54 L54 10" stroke="#850B12" strokeWidth="1.2" />
-                          <polygon points="14,30 29,36 28,24 16,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
-                          <polygon points="50,30 35,36 36,24 48,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
-                        </svg>
-                      </div>
-                      <div>
-                        <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#FFF' }}>Spider-Man's Intel</div>
-                        <div style={{ fontSize: '0.7rem', color: '#7DD3FC' }}>● Forensic Optical Science</div>
-                      </div>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <button
-                        type="button"
-                        onClick={() => setIsSpideyCollapsed(true)}
-                        className="bot-collapse-btn spidey-btn"
-                        title="Hide Spidey"
-                      >
-                        ^ Hide
-                      </button>
-                      <button 
-                        type="button"
-                        onClick={() => setIsSpideyChatOpen(false)}
-                        className="chat-close-btn"
-                        title="Close Chat (Esc)"
-                        aria-label="Close Chat"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
-
-                  <div ref={spideyChatBodyRef} className="chat-window-body">
-                    {spideyMessages.map((msg, idx) => (
-                      <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-spidey'}>
-                        <div style={{ fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '2px', color: msg.sender === 'user' ? '#FFF' : '#38BDF8' }}>
-                          {msg.sender === 'user' ? 'You' : 'Spider-Man'}
-                        </div>
-                        <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
-                      </div>
-                    ))}
-                    {isSpideyTyping && (
-                      <div className="chat-bubble-spidey" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ fontSize: '0.75rem', color: '#38BDF8', fontWeight: 'bold' }}>Peter is examining pixels</span>
-                        <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
-                      </div>
-                    )}
-                    {/* Optical Forensic Clue Action & Prompts Hub */}
-                    <div style={{ marginTop: '8px', padding: '10px 12px', background: 'rgba(0,0,0,0.4)', borderRadius: '10px', border: '1px solid rgba(56, 189, 248, 0.25)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      <button 
-                        type="button"
-                        onClick={() => handleGetClue('spidey')}
-                        className="clue-btn-spidey"
-                        style={{ width: '100%', justifyContent: 'center', padding: '9px 12px', fontSize: '0.82rem', fontWeight: 800 }}
-                      >
-                        🕸️ Reveal Optical Analysis Clue!
-                      </button>
-                      <div style={{ fontSize: '0.66rem', color: '#38BDF8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: '2px' }}>
-                        🔬 Forensic Science Prompts:
-                      </div>
-                      <div className="chat-chip-spidey" onClick={() => handleSendSpideyArena(null, "What optical lighting and cast shadow errors appear in diffusion models?")}>
-                        🕸️ Optical lighting &amp; cast shadow errors
-                      </div>
-                      <div className="chat-chip-spidey" onClick={() => handleSendSpideyArena(null, "How do I spot generative boundary seams in inpainting?")}>
-                        🔬 Boundary seams &amp; noise variance in inpainting
-                      </div>
-                      <div className="chat-chip-spidey" onClick={() => handleSendSpideyArena(null, "Any advice for the remaining tournament time?")}>
-                        ⏱️ Advice on managing timer &amp; negative marks
-                      </div>
-                    </div>
-
-                    <div ref={spideyChatBottomRef} />
-                  </div>
-
-                  <form onSubmit={handleSendSpideyArena} className="chat-input-bar">
-                    <input 
-                      type="text"
-                      placeholder="Ask Peter about forensic optics..."
-                      value={spideyInput}
-                      onChange={(e) => setSpideyInput(e.target.value)}
-                      style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', borderRadius: '6px', padding: '8px 12px', fontSize: '0.82rem', outline: 'none' }}
-                    />
-                    <button 
-                      type="submit"
-                      style={{ background: '#0284C7', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
-                    >
-                      Send
-                    </button>
-                  </form>
-                </div>
-              ) : (
-                <div 
-                  className="spidey-speech card-hover-lift" 
-                  onClick={() => setIsSpideyChatOpen(true)}
-                  style={{ cursor: 'pointer' }}
-                  title="Click to talk to Spider-Man!"
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                    <button
-                      type="button"
-                      className="bot-collapse-btn spidey-btn"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setIsSpideyCollapsed(true)
-                      }}
-                      title="Hide Spidey"
-                    >
-                      ^ Hide
-                    </button>
-                    <span style={{ fontSize: '0.68rem', color: '#38BDF8', fontWeight: 'bold', letterSpacing: '0.5px' }}>🕸️ SPIDEY INTEL</span>
-                  </div>
-                  {SPIDEY_GAME_QUOTES[spideyQuoteIdx]}
-                  <div style={{ fontSize: '0.7rem', color: '#F97316', marginTop: '4px', textAlign: 'right' }}>
-                    [Click Spidey for Science Clues 💬]
-                  </div>
-                </div>
-              )}
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {!isSpideyChatOpen && (
-                  <button
-                    type="button"
-                    className="bot-collapse-btn spidey-btn"
-                    onClick={() => setIsSpideyCollapsed(true)}
-                    title="Hide Spidey"
-                    style={{ height: 'fit-content' }}
-                  >
-                    ^ Hide
-                  </button>
-                )}
-                <div 
-                  style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                  onClick={() => setIsSpideyChatOpen(prev => !prev)}
-                  title="Click to chat with Spider-Man"
-                >
-                  <div className="spider-sense-active" style={{
-                    position: 'absolute',
-                    top: '-13px',
-                    width: '42px',
-                    height: '21px',
-                    pointerEvents: 'none'
-                  }}>
-                    <svg viewBox="0 0 60 30" fill="none">
-                      <path d="M12,25 Q30,2 48,25" stroke="#F97316" strokeWidth="3" strokeLinecap="round" />
-                      <path d="M5,20 Q30,-8 55,20" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 2" />
-                    </svg>
-                  </div>
-
-                  <div className="spidey-floating" style={{
-                    width: '44px',
-                    height: '44px',
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle at 35% 35%, #EF4444 0%, #7F1D1D 100%)',
-                    border: '2px solid #E01B22',
-                    boxShadow: '0 4px 16px rgba(224, 27, 34, 0.6), 0 0 10px rgba(249, 115, 22, 0.3)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden'
-                  }}>
-                    <svg viewBox="0 0 64 64" style={{ width: '85%', height: '85%' }}>
-                      <circle cx="32" cy="32" r="30" fill="#D81E27" stroke="#180407" strokeWidth="2" />
-                      <path d="M32 2 L32 62 M2 32 L62 32 M10 10 L54 54 M10 54 L54 10" stroke="#850B12" strokeWidth="1.2" />
-                      <polygon points="14,30 29,36 28,24 16,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
-                      <polygon points="50,30 35,36 36,24 48,18" fill="#FFFFFF" stroke="#0A0607" strokeWidth="2.5" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </>
-      )}
-
-      {/* ========================================================= */}
       {/* TOURNAMENT PROTOCOL ACKNOWLEDGEMENT POPUP MODAL          */}
       {/* ========================================================= */}
       {showAcknowledgeModal && (
@@ -3192,7 +2451,7 @@ export default function GameArena() {
 
             {/* Required Consent Checkbox with Active Pulse */}
             <label className={`acknowledge-consent-box ${hasAcknowledged ? 'consented' : 'unconsented'}`} style={{ marginBottom: '24px' }}>
-              <input 
+              <input
                 type="checkbox"
                 checked={hasAcknowledged}
                 onChange={(e) => setHasAcknowledged(e.target.checked)}

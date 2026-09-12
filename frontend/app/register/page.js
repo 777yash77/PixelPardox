@@ -128,7 +128,7 @@ export default function Register() {
         </div>
 
         <div className="auth-command-grid">
-          
+
           {/* LEFT COLUMN: SQUAD COMMISSIONING INTELLIGENCE (Spider-Man Blue Theme with Horizontal Dashboard Grid) */}
           <div className="auth-briefing-panel">
             <div>

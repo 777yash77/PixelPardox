@@ -39,10 +39,10 @@ public class GameController {
     private final SubmissionRepository submissionRepository;
 
     public GameController(GameService gameService,
-                          ImageQuestionRepository imageQuestionRepository,
-                          UserRepository userRepository,
-                          WebcamRecordingRepository webcamRecordingRepository,
-                          SubmissionRepository submissionRepository) {
+            ImageQuestionRepository imageQuestionRepository,
+            UserRepository userRepository,
+            WebcamRecordingRepository webcamRecordingRepository,
+            SubmissionRepository submissionRepository) {
         this.gameService = gameService;
         this.imageQuestionRepository = imageQuestionRepository;
         this.userRepository = userRepository;
@@ -51,14 +51,24 @@ public class GameController {
     }
 
     // Request Records
-    public record UpdateStateRequest(int round, Long questionId, int duration, int zoom) {}
-    public record SubmitRequest(Long questionId, String chosenAnswer, String bonusAnswer, String textSubmission) {}
-    public record GradeRequest(Long submissionId, int score) {}
-    public record AdvanceRequest(int limitValue, boolean isPercent) {}
-    
+    public record UpdateStateRequest(int round, Long questionId, int duration, int zoom) {
+    }
+
+    public record SubmitRequest(Long questionId, String chosenAnswer, String bonusAnswer, String textSubmission) {
+    }
+
+    public record GradeRequest(Long submissionId, int score) {
+    }
+
+    public record AdvanceRequest(int limitValue, boolean isPercent) {
+    }
+
     // Prelims records
-    public record StartQuizRequest(String participantName) {}
-    public record SubmitQuizRequest(String participantName, Map<Long, String> answers) {}
+    public record StartQuizRequest(String participantName) {
+    }
+
+    public record SubmitQuizRequest(String participantName, Map<Long, String> answers) {
+    }
 
     @GetMapping("/state")
     public ResponseEntity<GameState> getGameState() {
@@ -71,8 +81,7 @@ public class GameController {
                 request.round(),
                 request.questionId(),
                 request.duration(),
-                request.zoom()
-        );
+                request.zoom());
         return ResponseEntity.ok(updated);
     }
 
@@ -119,8 +128,7 @@ public class GameController {
                     bonusQuestion,
                     answerDetails,
                     glitchCoordinates,
-                    isLightning
-            );
+                    isLightning);
 
             ImageQuestion saved = imageQuestionRepository.save(question);
             return ResponseEntity.status(HttpStatus.CREATED).body(saved);
@@ -136,25 +144,24 @@ public class GameController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         boolean isTeam = auth != null && auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_TEAM"));
-        
+
         if (isTeam) {
             List<ImageQuestion> safeImages = images.stream().map(img -> {
                 ImageQuestion safe = new ImageQuestion(
-                    img.getImageUrl(),
-                    false, // isAi hidden
-                    "",    // modelUsed hidden
-                    img.getRoundNumber(),
-                    img.getBonusQuestion(), // Needs to see the bonus question text
-                    "",    // answerDetails hidden
-                    "",    // glitchCoordinates hidden
-                    img.isLightning()
-                );
+                        img.getImageUrl(),
+                        false, // isAi hidden
+                        "", // modelUsed hidden
+                        img.getRoundNumber(),
+                        img.getBonusQuestion(), // Needs to see the bonus question text
+                        "", // answerDetails hidden
+                        "", // glitchCoordinates hidden
+                        img.isLightning());
                 safe.setId(img.getId());
                 return safe;
             }).toList();
             return ResponseEntity.ok(safeImages);
         }
-        
+
         return ResponseEntity.ok(images);
     }
 
@@ -173,7 +180,8 @@ public class GameController {
     public ResponseEntity<?> deleteImage(@PathVariable Long id) {
         return imageQuestionRepository.findById(id)
                 .map(question -> {
-                    // Step 1: Cascade delete any submissions referencing this question and deduct user scores
+                    // Step 1: Cascade delete any submissions referencing this question and deduct
+                    // user scores
                     List<Submission> submissions = submissionRepository.findByImageQuestionId(id);
                     if (!submissions.isEmpty()) {
                         for (Submission s : submissions) {
@@ -195,8 +203,7 @@ public class GameController {
                                 currentState.getActiveRound(),
                                 null,
                                 currentState.getTimerDuration(),
-                                currentState.getZoomLevel()
-                        );
+                                currentState.getZoomLevel());
                     }
 
                     // Step 3: Try to delete physical file
@@ -228,20 +235,21 @@ public class GameController {
                     request.questionId(),
                     request.chosenAnswer(),
                     request.bonusAnswer(),
-                    request.textSubmission()
-            );
+                    request.textSubmission());
             return ResponseEntity.ok(submission);
         } catch (IllegalStateException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
             String msg = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Internal server error: " + msg));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Internal server error: " + msg));
         }
     }
 
     @GetMapping("/submissions")
-    public ResponseEntity<List<Submission>> getSubmissionsForGrading(@RequestParam(required = false, defaultValue = "0") int round) {
+    public ResponseEntity<List<Submission>> getSubmissionsForGrading(
+            @RequestParam(required = false, defaultValue = "0") int round) {
         return ResponseEntity.ok(gameService.getSubmissionsForGrading(round));
     }
 
@@ -349,7 +357,8 @@ public class GameController {
     public ResponseEntity<?> submitQuizAttempt(@RequestBody SubmitQuizRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
-            com.pixelparadox.model.QuizAttempt attempt = gameService.submitQuizAttempt(email, request.participantName(), request.answers());
+            com.pixelparadox.model.QuizAttempt attempt = gameService.submitQuizAttempt(email, request.participantName(),
+                    request.answers());
             return ResponseEntity.ok(attempt);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
@@ -375,7 +384,8 @@ public class GameController {
             }
 
             String cleanTeam = (teamId != null ? teamId : "team").replaceAll("[^a-zA-Z0-9_-]", "_");
-            String cleanMember = (participantName != null ? participantName : "member").replaceAll("[^a-zA-Z0-9_-]", "_");
+            String cleanMember = (participantName != null ? participantName : "member").replaceAll("[^a-zA-Z0-9_-]",
+                    "_");
             String fileName = System.currentTimeMillis() + "_" + cleanTeam + "_" + cleanMember + ".webm";
             Path path = Paths.get(uploadDir, fileName);
             Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);

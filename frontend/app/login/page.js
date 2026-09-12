@@ -147,7 +147,7 @@ export default function Login() {
         </div>
 
         <div className="auth-command-grid">
-          
+
           {/* LEFT COLUMN: MULTIVERSE BRIEFING & TELEMETRY (Spider-Man Blue Theme with Horizontal Dashboard Grid) */}
           <div className="auth-briefing-panel">
             <div>
@@ -364,10 +364,10 @@ export default function Login() {
                       </div>
                     </div>
 
-                    <button 
-                      type="submit" 
-                      className="btn-primary-red" 
-                      style={{ width: '100%', padding: '14px', fontSize: '0.98rem', fontWeight: '800', letterSpacing: '1.2px', borderRadius: '8px', marginTop: '10px' }} 
+                    <button
+                      type="submit"
+                      className="btn-primary-red"
+                      style={{ width: '100%', padding: '14px', fontSize: '0.98rem', fontWeight: '800', letterSpacing: '1.2px', borderRadius: '8px', marginTop: '10px' }}
                       disabled={loading}
                     >
                       {loading ? 'Authenticating Uplink...' : '⚡ LAUNCH INTO ARENA ➔'}
@@ -454,20 +454,20 @@ export default function Login() {
                       </div>
                     </div>
 
-                    <button 
-                      type="submit" 
-                      className="btn-primary-red" 
+                    <button
+                      type="submit"
+                      className="btn-primary-red"
                       style={{ width: '100%', padding: '14px', fontSize: '0.98rem', fontWeight: '800', letterSpacing: '1.2px', borderRadius: '8px' }}
                     >
                       ⚡ ENTER ARENA &amp; BEGIN ➔
                     </button>
                   </form>
 
-                  <button 
+                  <button
                     onClick={() => {
                       localStorage.clear()
                       setStep(1)
-                    }} 
+                    }}
                     style={{ marginTop: '20px', background: 'none', border: 'none', color: '#FF6B6B', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 'bold', letterSpacing: '0.5px' }}
                   >
                     ← Cancel &amp; Switch Team

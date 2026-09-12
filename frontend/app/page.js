@@ -376,13 +376,15 @@ export default function Home() {
   // Chat Category States
   const [deadpoolCategory, setDeadpoolCategory] = useState('technical')
   const [spideyCategory, setSpideyCategory] = useState('technical')
+  const [showDeadpoolPrompts, setShowDeadpoolPrompts] = useState(true)
+  const [showSpideyPrompts, setShowSpideyPrompts] = useState(true)
 
   // Deadpool Chatbot State
   const [isDeadpoolChatOpen, setIsDeadpoolChatOpen] = useState(false)
   const [deadpoolMessages, setDeadpoolMessages] = useState([
     {
       sender: 'deadpool',
-      text: "Yo! I'm Deadpool, your friendly neighborhood Merc-With-A-Chat. Pick a question below, or hit 'Ask Spidey-bug' if you want Peter's nerd science!"
+      text: "Yo! I'm Deadpool, your friendly neighborhood Merc-With-A-Chat! Ask me anything about tournament rules, Stage 0 negative marking traps, prompt scoring hacks, or hit 'Ask Spidey-bug' if you want Peter's nerd science!"
     }
   ])
   const [deadpoolInput, setDeadpoolInput] = useState('')
@@ -395,7 +397,7 @@ export default function Home() {
   const [spideyMessages, setSpideyMessages] = useState([
     {
       sender: 'spidey',
-      text: "Hey there! Spider-Man here! 🕸️ Need real tactical advice for Pixel Paradox? Ask me below, and don't let Wade convince you to guess blindly!"
+      text: "Hey there! Spider-Man here! 🕸️ Need real tactical advice for Pixel Paradox? Ask me below about AI generator fingerprints (Midjourney vs Flux vs DALL-E) or deepfake forensics, and don't let Wade convince you to guess blindly!"
     }
   ])
   const [spideyInput, setSpideyInput] = useState('')
@@ -412,6 +414,15 @@ export default function Home() {
       }
     }
     const handleClickOutside = (e) => {
+      // Don't close if clicking inside mascot perch rigs or sticky bars
+      if (e.target && e.target.closest && (
+        e.target.closest('.deadpool-perch-rig') ||
+        e.target.closest('.spidey-perch-rig') ||
+        e.target.closest('.sticky-deadpool-bar') ||
+        e.target.closest('.sticky-spidey-bar')
+      )) {
+        return
+      }
       if (isDeadpoolChatOpen && deadpoolContainerRef.current && !deadpoolContainerRef.current.contains(e.target)) {
         setIsDeadpoolChatOpen(false)
       }
@@ -427,36 +438,16 @@ export default function Home() {
     }
   }, [isDeadpoolChatOpen, isSpideyChatOpen])
 
-  // Internal smooth auto-scroll for chat body on new messages
+  // Smooth auto-scroll for chat body on new messages
   useEffect(() => {
-    if (isDeadpoolChatOpen && deadpoolChatBodyRef.current) {
-      if (deadpoolMessages.length > 1) {
-        deadpoolChatBodyRef.current.scrollTo({
-          top: deadpoolChatBodyRef.current.scrollHeight,
-          behavior: 'smooth'
-        })
-      } else {
-        deadpoolChatBodyRef.current.scrollTo({
-          top: 0,
-          behavior: 'auto'
-        })
-      }
+    if (isDeadpoolChatOpen && deadpoolChatBottomRef.current) {
+      deadpoolChatBottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
     }
   }, [deadpoolMessages, isDeadpoolChatOpen, isDeadpoolTyping])
 
   useEffect(() => {
-    if (isSpideyChatOpen && spideyChatBodyRef.current) {
-      if (spideyMessages.length > 1) {
-        spideyChatBodyRef.current.scrollTo({
-          top: spideyChatBodyRef.current.scrollHeight,
-          behavior: 'smooth'
-        })
-      } else {
-        spideyChatBodyRef.current.scrollTo({
-          top: 0,
-          behavior: 'auto'
-        })
-      }
+    if (isSpideyChatOpen && spideyChatBottomRef.current) {
+      spideyChatBottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
     }
   }, [spideyMessages, isSpideyChatOpen, isSpideyTyping])
 
@@ -476,307 +467,291 @@ export default function Home() {
     }
   }, [])
 
+  // =========================================================
+  // INTELLIGENT KNOWLEDGE & ANSWERING ENGINE (DEADPOOL)
+  // =========================================================
+  const getDeadpoolSmartResponse = (query, userText) => {
+    // Stage 0, Prelims, Negative Marking
+    if (query.includes('stage 0') || query.includes('prelim') || query.includes('negative') || query.includes('-5') || query.includes('penalty') || query.includes('guess') || query.includes('quiz') || query.includes('marking') || query.includes('mcq') || query.includes('skip')) {
+      return "Math time, rookie! In Stage 0, blind guessing is pure self-sabotage! With 4 options, a random guess has a 25% chance of +10 and a 75% chance of -5. Expected value = (0.25 × 10) - (0.75 × 5) = -1.25 points per guess! If you guess 20 questions blindly, you dump 25 points down the drain! If you don't know, skip it (0 pts)!"
+    }
+    // Stage 1, Pixel Detective, Generator Fingerprints
+    if (query.includes('stage 1') || query.includes('round 1') || query.includes('detective') || query.includes('pixel detective') || query.includes('midjourney') || query.includes('flux') || query.includes('dall-e') || query.includes('dalle') || query.includes('sdxl') || query.includes('camera') || query.includes('real') || query.includes('photo')) {
+      return "Round 1 gives you 40 seconds per challenge! Real camera photo = 10 pts. AI image + exact model (Midjourney v6, DALL-E 3, Flux) = 10 pts. AI correct but wrong model = 8 pts. Wrong = 0 pts. Pro tip: Midjourney loves glowing cinematic rim lighting; Flux has super sharp text on shirts; real photos have natural ISO sensor grain!"
+    }
+    // Stage 2, Deepfake Diagnostics, Glitch Hunt
+    if (query.includes('stage 2') || query.includes('round 2') || query.includes('glitch') || query.includes('deepfake') || query.includes('inpainting') || query.includes('outpainting') || query.includes('fft') || query.includes('fourier') || query.includes('ela') || query.includes('reflection') || query.includes('ear') || query.includes('iris') || query.includes('hand') || query.includes('finger')) {
+      return "Stage 2 is Glitch Hunt! 7 challenges, 45 seconds each. Inpainting is cosmetic surgery for pixels—look for boundary line lighting mismatches! Outpainting is expanding beyond the original border—look for roads with broken vanishing points! And check hands: if someone has 6 fingers and their ear is melting into their collar, hit AI! For deep optical physics, ask Spidey on the right!"
+    }
+    // Stage 3, Prompt Wars, Cosine Similarity, CLIP
+    if (query.includes('stage 3') || query.includes('round 3') || query.includes('prompt') || query.includes('cosine') || query.includes('similarity') || query.includes('clip') || query.includes('vector') || query.includes('embedding') || query.includes('reverse prompt')) {
+      return "Stage 3 is Prompt Wars Finale! 5 rounds, 75 seconds each. The server reveals the target image in progressive resolution steps! It converts your prompt words into mathematical vectors using CLIP neural networks and scores with Cosine Similarity = (A · B) / (||A|| ||B||). The closer your descriptive style, subject, and lighting are, the higher your score! Don't spam buzzwords—describe the actual composition!"
+    }
+    // Rules, Format, Scoring, Leaderboard, Tiebreaker
+    if (query.includes('rule') || query.includes('format') || query.includes('how to play') || query.includes('how many round') || query.includes('how many stage') || query.includes('score') || query.includes('point') || query.includes('leaderboard') || query.includes('rank') || query.includes('tie') || query.includes('winner') || query.includes('win')) {
+      return "Here are the battle rules for Pixel Paradox:\n• 4 Stages: Stage 0 (30 MCQs prelims), Stage 1 (Pixel Detective 40s), Stage 2 (Glitch Hunt 45s), Stage 3 (Prompt Wars 75s).\n• Scoring: Stage 0 has +10 / -5 negative marking. Stages 1-3 award up to 10 points per round.\n• Tiebreaker: Speed matters! Submissions are timestamped to the millisecond. Check the Live Leaderboard to track your squad's rank!"
+    }
+    // Teams, Registration & Login
+    if (query.includes('team') || query.includes('register') || query.includes('login') || query.includes('member') || query.includes('leader') || query.includes('code') || query.includes('account') || query.includes('password') || query.includes('sign up')) {
+      return "Teams consist of 2 to 4 members! Register your team on the Register page with your Team Name, College, and Team Leader credentials. The team leader logs in on the terminal to start the match. Once logged in, your squad is officially synced to the arena!"
+    }
+    // Cheating, Proctoring, Inspect Element
+    if (query.includes('cheat') || query.includes('proctor') || query.includes('inspect') || query.includes('f12') || query.includes('source') || query.includes('camera') || query.includes('webcam') || query.includes('phone') || query.includes('whatsapp') || query.includes('tab')) {
+      return "Oh, thinking of inspecting element with F12 or switching tabs? The proctoring system tracks window focus and webcam activity! Plus, all answers are verified on the Spring Boot backend server. The only thing you'll find in Chrome DevTools is your own reflection looking desperate! Keep it clean!"
+    }
+    // Organizers & Coordinators
+    if (query.includes('coordinator') || query.includes('organizer') || query.includes('author') || query.includes('creator') || query.includes('director') || query.includes('who built')) {
+      return "The tournament coordinators are the masterminds behind Pixel Paradox! They tuned the -5 negative marking penalty, created the visual challenges, and debugged the real-time leaderboard. Bow before the organizers!"
+    }
+    // Easter Eggs: Food, Suit, Weapons
+    if (query.includes('food') || query.includes('pizza') || query.includes('snack') || query.includes('bribe') || query.includes('coffee') || query.includes('chimichanga')) {
+      return DEADPOOL_NON_TECH_FAQ[3]?.a || "I'll accept all chimichangas and pepperoni pizzas, but the automated grading script deducts points without mercy! Eat your snacks and lock in!"
+    }
+    if (query.includes('pajama') || query.includes('onesie') || query.includes('suit') || query.includes('spandex')) {
+      return DEADPOOL_NON_TECH_FAQ[8]?.a || "Spidey's wearing a high-tech reinforced onesie with eye holes, and I wear red so bad guys can't see me bleed! Next question!"
+    }
+    if (query.includes('sword') || query.includes('katana') || query.includes('weapon') || query.includes('secret')) {
+      return "Katanas have a 99% success rate for hardware troubleshooting! But here, your secret weapon is not guessing blindly on Stage 0 and matching lighting tokens in Stage 3! Maximum Effort!"
+    }
+    // Greetings & Small Talk
+    if (query.includes('hi') || query.includes('hello') || query.includes('hey') || query.includes('sup') || query.includes('who are you') || query.includes('help') || query.includes('start')) {
+      return "Yo! Wade Wilson here, aka Deadpool, your 4th-wall-breaking tournament navigator! What's burning, rookie? I know every back-alley secret of Pixel Paradox: Stage 0 negative marking traps, prompt scoring hacks, or why Peter's camera forensics take too long. Click a question or fire away!"
+    }
+    // Contextual Fallback
+    return `Wade Wilson here! You asked: "${userText}". While I'm busy snacking on chimichangas, here is what you need to survive Pixel Paradox: watch out for the -5 penalty in Stage 0, look for waxy plastic skin in Stage 1, and use precise lighting tokens in Stage 3! Click any of the quick question chips below for instant intel!`
+  }
+
+  // =========================================================
+  // INTELLIGENT KNOWLEDGE & ANSWERING ENGINE (SPIDER-MAN)
+  // =========================================================
+  const getSpideySmartResponse = (query, userText) => {
+    // Stage 0, Prelims, Negative Marking
+    if (query.includes('stage 0') || query.includes('prelim') || query.includes('negative') || query.includes('-5') || query.includes('penalty') || query.includes('guess') || query.includes('quiz') || query.includes('marking') || query.includes('mcq') || query.includes('skip')) {
+      return "In Stage 0, you have 30 questions in strictly 30 minutes (60 seconds each). Correct answers give +10, but wrong answers penalize you -5! Unanswered questions receive 0 points. Strategy tip: Eliminate two impossible distractors first using AI fundamentals (Transformers self-attention, Diffusion denoising, GAN min-max). If you still have no clue, skipping protects your team score from negative points!"
+    }
+    // Stage 1, Pixel Detective, Generator Fingerprints
+    if (query.includes('stage 1') || query.includes('round 1') || query.includes('detective') || query.includes('model') || query.includes('flux') || query.includes('midjourney') || query.includes('dall-e') || query.includes('dalle') || query.includes('sdxl') || query.includes('camera') || query.includes('real') || query.includes('photo')) {
+      return "Here is Peter Parker's forensic breakdown for Stage 1 (40s per question):\n• Midjourney v6: Cinematic rim lighting, subtle waxy subsurface scattering on skin, painterly artistic flair.\n• Flux.1: Exceptional microtexture on fabric and skin pores, legible typography on signs, but occasional perspective flaws.\n• DALL-E 3: Saturated pastel colors, cartoonish smoothness, ultra-clean commercial look.\n• Real Photography: Natural ISO sensor grain, chromatic aberration at lens edges, and coherent specular pupil reflections!"
+    }
+    // Stage 2, Deepfake Diagnostics, Glitch Hunt
+    if (query.includes('stage 2') || query.includes('round 2') || query.includes('glitch') || query.includes('deepfake') || query.includes('inpainting') || query.includes('outpainting') || query.includes('fft') || query.includes('fourier') || query.includes('ela') || query.includes('reflection') || query.includes('ear') || query.includes('iris') || query.includes('hand') || query.includes('finger') || query.includes('eye')) {
+      return "Stage 2 Deepfake Diagnostics (45s per challenge). Execute Peter's 3-Point Scan:\n1) Iris Reflection: Check if both eyes reflect the identical ambient light source.\n2) Ear Cartilage: Biological earlobes show subsurface scattering (pink glow); synthetic ears often melt or lack symmetry.\n3) Compression & FFT: Fast Fourier Transform (FFT) reveals periodic grid spikes from transposed convolutions; Error Level Analysis (ELA) highlights inconsistent JPEG compression blocks where the deepfake was spliced!"
+    }
+    // Stage 3, Prompt Wars, Cosine Similarity, CLIP
+    if (query.includes('stage 3') || query.includes('round 3') || query.includes('prompt') || query.includes('cosine') || query.includes('similarity') || query.includes('clip') || query.includes('vector') || query.includes('embedding') || query.includes('reverse prompt') || query.includes('zoom')) {
+      return "Stage 3 (Prompt Duel Finale) gives you 75s with progressive resolution reveal. Early reveal tests macro-composition (art medium, style, artist, scene); late reveal lets you identify micro-tokens (lighting, textures, lens angle). The backend embeds your prompt using OpenAI CLIP vectors and computes Cosine Similarity = (A·B)/(||A|| ||B||). Focus on precise descriptive tokens: 'volumetric rim lighting', '35mm film grain', 'isometric', rather than spamming generic adjectives!"
+    }
+    // Rules, Format, Scoring, Leaderboard, Tiebreaker
+    if (query.includes('rule') || query.includes('format') || query.includes('how to play') || query.includes('how many round') || query.includes('how many stage') || query.includes('score') || query.includes('point') || query.includes('leaderboard') || query.includes('rank') || query.includes('tie') || query.includes('winner') || query.includes('win') || query.includes('time') || query.includes('timer')) {
+      return "Here is the competition breakdown:\n• Stage 0 (Prelims): 30 MCQs, 30 mins (+10 correct, -5 wrong).\n• Stage 1 (Pixel Detective): 10 questions, 40s each, Real vs AI generator identification.\n• Stage 2 (Deepfake Diagnostics): 7 challenges, 45s each, synthetic anomaly analysis.\n• Stage 3 (Prompt Duel Finale): 5 rounds, 75s each with progressive resolution reveal.\n• The live leaderboard updates automatically after each round. Submission speed serves as the tiebreaker!"
+    }
+    // Teams, Registration & Login
+    if (query.includes('team') || query.includes('register') || query.includes('login') || query.includes('member') || query.includes('leader') || query.includes('code') || query.includes('account') || query.includes('sign up')) {
+      return "Teams consist of 2–4 members. The team leader registers the squad on the Register page and logs in on the terminal. Ensure all team members have designated roles: one focusing on optical forensics, one on prompt engineering, and one on timer management!"
+    }
+    // Cheating, Proctoring, Inspect Element
+    if (query.includes('cheat') || query.includes('proctor') || query.includes('inspect') || query.includes('f12') || query.includes('source') || query.includes('camera') || query.includes('webcam') || query.includes('phone') || query.includes('tab') || query.includes('wifi') || query.includes('setup')) {
+      return "Academic honesty is strictly enforced! Automated proctoring monitors tab changes and window focus. Client-side inspection via Developer Tools won't reveal answers because validation takes place securely on the backend server. Trust your training and optical analysis skills!"
+    }
+    // Organizers & Coordinators
+    if (query.includes('coordinator') || query.includes('organizer') || query.includes('author') || query.includes('creator') || query.includes('director')) {
+      return "The tournament coordinators designed all 4 stages, curated the synthetic datasets, tuned the timers, and built the live leaderboard. Give it your 100%!"
+    }
+    // Easter Eggs: Wade, Pizza, Rent
+    if (query.includes('deadpool') || query.includes('wade') || query.includes('sword') || query.includes('katana') || query.includes('pizza') || query.includes('rent')) {
+      return SPIDEY_NON_TECH_FAQ[2]?.a || "Wade is over on the left trying to solve hardware issues with swords. Don't let his chaotic guessing strategy distract you from the actual forensics!"
+    }
+    // Greetings & Small Talk
+    if (query.includes('hi') || query.includes('hello') || query.includes('hey') || query.includes('who are you') || query.includes('help') || query.includes('start')) {
+      return "Hello there! Peter Parker here—tactical forensics and optical analysis partner! Welcome to Pixel Paradox. Ask me about identifying AI generators (Midjourney vs Flux vs DALL-E), deepfake artifacts (iris reflections, FFT spectrums), or competition rules. How can I help you?"
+    }
+    // Contextual Fallback
+    return `Peter Parker here! Regarding "${userText}": to succeed in Pixel Paradox, focus on the 4 core stages: 1) Avoid blind guessing in Stage 0 (-5 penalty!), 2) Look for specular pupil reflections in Stage 1, 3) Analyze ear cartilage & FFT checkerboard artifacts in Stage 2, and 4) Use concise lighting & style tokens for CLIP Cosine Similarity in Stage 3. Click any of the prompt chips below for a detailed guide!`
+  }
+
   // Deadpool Question Click Handler
   const handleDeadpoolAsk = (q, a) => {
     if (a === 'TELL_DEADPOOL_JOKE') {
-      setDeadpoolMessages(prev => [
-        ...prev,
-        { sender: 'user', text: q }
-      ])
-      setIsDeadpoolTyping(true)
-
       const jokeText = DEADPOOL_JOKES_POOL[deadpoolJokeIdx % DEADPOOL_JOKES_POOL.length]
       setDeadpoolJokeIdx(prev => prev + 1)
-
+      setDeadpoolMessages(prev => [...prev, { sender: 'user', text: q }])
+      setIsDeadpoolTyping(true)
       setTimeout(() => {
         setIsDeadpoolTyping(false)
-        setDeadpoolMessages(prev => [
-          ...prev,
-          { 
-            sender: 'deadpool', 
-            text: jokeText 
-          }
-        ])
-      }, 450)
+        setDeadpoolMessages(prev => [...prev, { sender: 'deadpool', text: jokeText }])
+      }, 400)
       return
     }
 
     if (a === 'TROLL_SPIDEY_GAG') {
-      setDeadpoolMessages(prev => [
-        ...prev,
-        { sender: 'user', text: q }
-      ])
-      setIsDeadpoolTyping(true)
-
       const trollText = DEADPOOL_SPIDEY_TROLLS[deadpoolTrollIdx % DEADPOOL_SPIDEY_TROLLS.length]
       setDeadpoolTrollIdx(prev => prev + 1)
-
+      setDeadpoolMessages(prev => [...prev, { sender: 'user', text: q }])
+      setIsDeadpoolTyping(true)
       setTimeout(() => {
         setIsDeadpoolTyping(false)
-        setDeadpoolMessages(prev => [
-          ...prev,
-          { 
-            sender: 'deadpool', 
-            text: trollText 
-          }
-        ])
-      }, 450)
+        setDeadpoolMessages(prev => [...prev, { sender: 'deadpool', text: trollText }])
+      }, 400)
       return
     }
 
     if (a === 'REFER_TO_SPIDEY') {
-      setDeadpoolMessages(prev => [
-        ...prev,
-        { sender: 'user', text: q }
-      ])
+      setDeadpoolMessages(prev => [...prev, { sender: 'user', text: q }])
       setIsDeadpoolTyping(true)
-
       setTimeout(() => {
         setIsDeadpoolTyping(false)
         setDeadpoolMessages(prev => [
           ...prev,
-          { 
-            sender: 'deadpool', 
-            text: "Whoa whoa! Do I look like a scientific calculator with swords?! I barely passed 8th grade! Ask Spidey-bug he may know! 🕸️ Sending you to web-head on the right right now..." 
+          {
+            sender: 'deadpool',
+            text: "Whoa whoa! Do I look like a scientific calculator with swords?! I barely passed 8th grade! Ask Spidey-bug he may know! 🕸️ Sending you to web-head on the right right now..."
           }
         ])
-
-        // Handoff to Spidey
         setTimeout(() => {
           setIsDeadpoolChatOpen(false)
           setIsSpideyChatOpen(true)
           setSpideyMessages(prev => [
             ...prev,
-            { 
-              sender: 'spidey', 
-              text: `🕸️ Spider-Man checking in! Wade just bailed on: "${q}"? Figures! Don't worry, Peter Parker has the actual scientific answer for you!` 
+            {
+              sender: 'spidey',
+              text: `🕸️ Spider-Man checking in! Wade just bailed on: "${q}"? Figures! Don't worry, Peter Parker has the actual scientific answer for you!`
             }
           ])
-        }, 800)
-      }, 500)
+        }, 600)
+      }, 400)
       return
     }
 
-    setDeadpoolMessages(prev => [
-      ...prev,
-      { sender: 'user', text: q }
-    ])
+    setDeadpoolMessages(prev => [...prev, { sender: 'user', text: q }])
     setIsDeadpoolTyping(true)
-
     setTimeout(() => {
       setIsDeadpoolTyping(false)
-      setDeadpoolMessages(prev => [
-        ...prev,
-        { sender: 'deadpool', text: a }
-      ])
-    }, 450)
+      setDeadpoolMessages(prev => [...prev, { sender: 'deadpool', text: a }])
+    }, 400)
   }
 
   // Spidey Question Click Handler
   const handleSpideyAsk = (q, a) => {
     if (a === 'TELL_SPIDEY_JOKE') {
-      setSpideyMessages(prev => [
-        ...prev,
-        { sender: 'user', text: q }
-      ])
-      setIsSpideyTyping(true)
-
       const jokeText = SPIDEY_JOKES_POOL[spideyJokeIdx % SPIDEY_JOKES_POOL.length]
       setSpideyJokeIdx(prev => prev + 1)
-
+      setSpideyMessages(prev => [...prev, { sender: 'user', text: q }])
+      setIsSpideyTyping(true)
       setTimeout(() => {
         setIsSpideyTyping(false)
-        setSpideyMessages(prev => [
-          ...prev,
-          { 
-            sender: 'spidey', 
-            text: jokeText 
-          }
-        ])
-      }, 450)
+        setSpideyMessages(prev => [...prev, { sender: 'spidey', text: jokeText }])
+      }, 400)
       return
     }
 
     if (a === 'ROAST_DEADPOOL_GAG') {
-      setSpideyMessages(prev => [
-        ...prev,
-        { sender: 'user', text: q }
-      ])
-      setIsSpideyTyping(true)
-
       const trollText = SPIDEY_DEADPOOL_TROLLS[spideyTrollIdx % SPIDEY_DEADPOOL_TROLLS.length]
       setSpideyTrollIdx(prev => prev + 1)
-
+      setSpideyMessages(prev => [...prev, { sender: 'user', text: q }])
+      setIsSpideyTyping(true)
       setTimeout(() => {
         setIsSpideyTyping(false)
-        setSpideyMessages(prev => [
-          ...prev,
-          { 
-            sender: 'spidey', 
-            text: trollText 
-          }
-        ])
-      }, 450)
+        setSpideyMessages(prev => [...prev, { sender: 'spidey', text: trollText }])
+      }, 400)
       return
     }
 
     if (a === 'REFER_TO_DEADPOOL') {
-      setSpideyMessages(prev => [
-        ...prev,
-        { sender: 'user', text: q }
-      ])
+      setSpideyMessages(prev => [...prev, { sender: 'user', text: q }])
       setIsSpideyTyping(true)
-
       setTimeout(() => {
         setIsSpideyTyping(false)
         setSpideyMessages(prev => [
           ...prev,
-          { 
-            sender: 'spidey', 
-            text: "Transferring you over to Wade on the left! Hold onto your web-shooters, fourth-wall chaos incoming... 🌮" 
+          {
+            sender: 'spidey',
+            text: "Transferring you over to Wade on the left! Hold onto your web-shooters, fourth-wall chaos incoming... 🌮"
           }
         ])
-
-        // Handoff to Deadpool
         setTimeout(() => {
           setIsSpideyChatOpen(false)
           setIsDeadpoolChatOpen(true)
           setDeadpoolMessages(prev => [
             ...prev,
-            { 
-              sender: 'deadpool', 
-              text: "🌮 MAXIMUM EFFORT! Did Parker get on his high moral horse again? You came to the right mercenary! What kind of mischief are we planning?" 
+            {
+              sender: 'deadpool',
+              text: "🌮 MAXIMUM EFFORT! Did Parker get on his high moral horse again? You came to the right mercenary! What kind of mischief are we planning?"
             }
           ])
-        }, 800)
-      }, 500)
+        }, 600)
+      }, 400)
       return
     }
 
-    setSpideyMessages(prev => [
-      ...prev,
-      { sender: 'user', text: q }
-    ])
+    setSpideyMessages(prev => [...prev, { sender: 'user', text: q }])
     setIsSpideyTyping(true)
-
     setTimeout(() => {
       setIsSpideyTyping(false)
-      setSpideyMessages(prev => [
-        ...prev,
-        { sender: 'spidey', text: a }
-      ])
-    }, 450)
+      setSpideyMessages(prev => [...prev, { sender: 'spidey', text: a }])
+    }, 400)
   }
 
   // Custom Deadpool Input
   const handleSendDeadpoolCustom = (e) => {
-    e.preventDefault()
+    if (e && typeof e.preventDefault === 'function') e.preventDefault()
     if (!deadpoolInput.trim()) return
 
-    const query = deadpoolInput.trim().toLowerCase()
     const userText = deadpoolInput.trim()
+    const query = userText.toLowerCase()
     setDeadpoolInput('')
 
-    let answer = "I am a mercenary with weapons, not ChatGPT. I don't give resume advice or write poems. Ask me about the tournament rules, tell me to roast Spidey, or click one of the quick questions below!"
-
-    if (query.includes('jarvis') || query.includes('ai bot') || query.includes('robot') || query.includes('chatgpt') || query.includes('assistant')) {
-      answer = "Do I look like a British AI assistant trapped in Tony Stark's thermostat? I am Wade Wilson. I get paid in cash to break things and mock bad life choices. If you want a robot to summarize a PDF, go ask Siri. If you want to survive this leaderboard, focus up!"
-    } else if (query.includes('troll') || query.includes('roast spidey') || query.includes('roast spider') || query.includes('attack spidey')) {
+    if (query.includes('troll') || query.includes('roast spidey') || query.includes('roast spider') || query.includes('attack spidey')) {
       handleDeadpoolAsk(userText, "TROLL_SPIDEY_GAG")
       return
-    } else if (query.includes('joke') || query.includes('laugh') || query.includes('funny') || query.includes('humor') || query.includes('hilarious') || query.includes('comedy') || query.includes('giggle') || query.includes('make me laugh')) {
+    }
+    if (query.includes('joke') || query.includes('laugh') || query.includes('funny') || query.includes('humor') || query.includes('hilarious') || query.includes('comedy') || query.includes('make me laugh')) {
       handleDeadpoolAsk(userText, "TELL_DEADPOOL_JOKE")
       return
-    } else if (query.includes('pajama') || query.includes('onesie') || query.includes('suit')) {
-      answer = DEADPOOL_NON_TECH_FAQ[8].a
-    } else if (query.includes('background') || query.includes('theme') || query.includes('design') || query.includes('look')) {
-      answer = DEADPOOL_NON_TECH_FAQ[4].a
-    } else if (query.includes('spidey') || query.includes('peter') || query.includes('spider') || query.includes('math') || query.includes('formula') || query.includes('science')) {
-      answer = "Peter? He's over on the right side having an existential crisis about responsibility. Click 'Ask Spidey-bug' below to bother him!"
-    } else if (query.includes('stage 0') || query.includes('prelim') || query.includes('quiz') || query.includes('negative') || query.includes('-5') || query.includes('guess')) {
-      answer = DEADPOOL_TECH_FAQ[0].a
-    } else if (query.includes('round 1') || query.includes('stage 1') || query.includes('detective') || query.includes('points') || query.includes('10 points')) {
-      answer = DEADPOOL_TECH_FAQ[1].a
-    } else if (query.includes('coordinator') || query.includes('organizer') || query.includes('author') || query.includes('creator') || query.includes('director')) {
-      answer = "The tournament coordinators are the architects behind this competition! They wrote the code, tuned the -5 penalty, and spent days debugging routes. Bow before the organizers!"
-    } else if (query.includes('cheat') || query.includes('camera') || query.includes('webcam') || query.includes('phone') || query.includes('whatsapp')) {
-      answer = DEADPOOL_NON_TECH_FAQ[7].a
-    } else if (query.includes('food') || query.includes('pizza') || query.includes('snack') || query.includes('bribe') || query.includes('coffee')) {
-      answer = DEADPOOL_NON_TECH_FAQ[3].a
-    } else if (query.includes('inspect') || query.includes('source') || query.includes('hack')) {
-      answer = DEADPOOL_NON_TECH_FAQ[5].a
-    } else if (query.includes('secret weapon') || query.includes('win') || query.includes('strategy')) {
-      answer = DEADPOOL_NON_TECH_FAQ[9].a
-    } else if (query.includes('finger') || query.includes('hand') || query.includes('midjourney')) {
-      answer = "Pro tip: If the character has 11 fingers and ears growing out of their neck, it's AI! For real optical science, click 'Ask Spidey-bug he may know! 🕸️'!"
+    }
+    if (query.includes('ask spidey') || query.includes('transfer to spidey') || query.includes('switch to spidey')) {
+      handleDeadpoolAsk(userText, "REFER_TO_SPIDEY")
+      return
     }
 
-    setDeadpoolMessages(prev => [
-      ...prev,
-      { sender: 'user', text: userText }
-    ])
+    const answer = getDeadpoolSmartResponse(query, userText)
+    setDeadpoolMessages(prev => [...prev, { sender: 'user', text: userText }])
     setIsDeadpoolTyping(true)
 
     setTimeout(() => {
       setIsDeadpoolTyping(false)
-      setDeadpoolMessages(prev => [
-        ...prev,
-        { sender: 'deadpool', text: answer }
-      ])
+      setDeadpoolMessages(prev => [...prev, { sender: 'deadpool', text: answer }])
     }, 450)
   }
 
   // Custom Spidey Input
   const handleSendSpideyCustom = (e) => {
-    e.preventDefault()
+    if (e && typeof e.preventDefault === 'function') e.preventDefault()
     if (!spideyInput.trim()) return
 
-    const query = spideyInput.trim().toLowerCase()
     const userText = spideyInput.trim()
+    const query = userText.toLowerCase()
     setSpideyInput('')
-
-    let answer = "My Spider-Sense didn't catch that clearly. Try asking about Stage 0 negative marking rules, Round 1 generator signatures (Midjourney vs Flux), or click one of the questions below!"
 
     if (query.includes('roast') || query.includes('burn') || query.includes('troll wade') || query.includes('troll deadpool')) {
       handleSpideyAsk(userText, "ROAST_DEADPOOL_GAG")
       return
-    } else if (query.includes('joke') || query.includes('funny') || query.includes('laugh') || query.includes('humor') || query.includes('hilarious') || query.includes('comedy') || query.includes('giggle') || query.includes('make me laugh')) {
+    }
+    if (query.includes('joke') || query.includes('funny') || query.includes('laugh') || query.includes('humor') || query.includes('hilarious') || query.includes('comedy') || query.includes('make me laugh')) {
       handleSpideyAsk(userText, "TELL_SPIDEY_JOKE")
       return
-    } else if (query.includes('sword') || query.includes('katana')) {
-      answer = SPIDEY_NON_TECH_FAQ[3].a
-    } else if (query.includes('deadpool') || query.includes('wade') || query.includes('pizza') || query.includes('snack') || query.includes('bribe')) {
-      answer = SPIDEY_NON_TECH_FAQ[2].a
-    } else if (query.includes('round 1') || query.includes('model') || query.includes('flux') || query.includes('midjourney') || query.includes('dall-e')) {
-      answer = SPIDEY_TECH_FAQ[0].a
-    } else if (query.includes('coordinator') || query.includes('organizer') || query.includes('director')) {
-      answer = "The tournament coordinators designed the 4 stages, set the timers, and built the live leaderboard. Give it your 100%!"
-    } else if (query.includes('stage 0') || query.includes('prelim') || query.includes('negative') || query.includes('-5') || query.includes('rule')) {
-      answer = SPIDEY_TECH_FAQ[3].a
-    } else if (query.includes('hand') || query.includes('finger') || query.includes('anatomy')) {
-      answer = SPIDEY_TECH_FAQ[1].a
-    } else if (query.includes('round 2') || query.includes('deepfake') || query.includes('eye') || query.includes('scan')) {
-      answer = SPIDEY_TECH_FAQ[2].a
-    } else if (query.includes('round 3') || query.includes('zoom') || query.includes('prompt')) {
-      answer = SPIDEY_TECH_FAQ[4].a
-    } else if (query.includes('wifi') || query.includes('setup') || query.includes('caught')) {
-      answer = SPIDEY_NON_TECH_FAQ[8].a
-    } else if (query.includes('hi') || query.includes('hello') || query.includes('hey')) {
-      answer = "Hello there! Peter Parker here. Ready to test your AI detection skills? Ask me anything about the four rounds, or ask about Wade on the left if you want a laugh!"
+    }
+    if (query.includes('ask wade') || query.includes('ask deadpool') || query.includes('switch to deadpool')) {
+      handleSpideyAsk(userText, "REFER_TO_DEADPOOL")
+      return
     }
 
-    setSpideyMessages(prev => [
-      ...prev,
-      { sender: 'user', text: userText }
-    ])
+    const answer = getSpideySmartResponse(query, userText)
+    setSpideyMessages(prev => [...prev, { sender: 'user', text: userText }])
     setIsSpideyTyping(true)
 
     setTimeout(() => {
       setIsSpideyTyping(false)
-      setSpideyMessages(prev => [
-        ...prev,
-        { sender: 'spidey', text: answer }
-      ])
+      setSpideyMessages(prev => [...prev, { sender: 'spidey', text: answer }])
     }, 450)
   }
 
@@ -803,116 +778,116 @@ export default function Home() {
 
       {/* TOP-RIGHT: REALISTIC SWINGING SPIDER-MAN FULL BODY MODEL WITH ELASTIC SILK */}
       {!hideSpideyMascot ? (
-      <div 
-        style={{
-          position: 'absolute',
-          top: 0,
-          right: 'clamp(8px, 1.6vw, 32px)',
-          zIndex: 90,
-          pointerEvents: 'auto'
-        }}
-      >
-        <div 
-          className="spidey-swinging-pro" 
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', cursor: 'pointer' }}
-          onClick={(e) => {
-            if (
-              e.target.closest('.mascot-hanging-container') || 
-              e.target.closest('.mascot-hanging-red-btn') || 
-              e.target.closest('.mascot-hanging-blue-btn')
-            ) return
-            setShowSpideyThwip(true)
-            setIsSpideyChatOpen(true)
-            setTimeout(() => setShowSpideyThwip(false), 1400)
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 'clamp(8px, 1.6vw, 32px)',
+            zIndex: 90,
+            pointerEvents: 'auto'
           }}
-          onMouseEnter={() => setShowSpideyThwip(true)}
-          onMouseLeave={() => setShowSpideyThwip(false)}
-          title="Click Spider-Man to Chat!"
         >
-          {/* Ceiling Web Anchor Splat */}
-          <div className="spidey-ceiling-anchor" />
+          <div
+            className="spidey-swinging-pro"
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', cursor: 'pointer' }}
+            onClick={(e) => {
+              if (
+                e.target.closest('.mascot-hanging-container') ||
+                e.target.closest('.mascot-hanging-red-btn') ||
+                e.target.closest('.mascot-hanging-blue-btn')
+              ) return
+              setShowSpideyThwip(true)
+              setIsSpideyChatOpen(true)
+              setTimeout(() => setShowSpideyThwip(false), 1400)
+            }}
+            onMouseEnter={() => setShowSpideyThwip(true)}
+            onMouseLeave={() => setShowSpideyThwip(false)}
+            title="Click Spider-Man to Chat!"
+          >
+            {/* Ceiling Web Anchor Splat */}
+            <div className="spidey-ceiling-anchor" />
 
-          {/* Elastic Silk Line */}
-          <div className="web-elastic-line" style={{
-            width: '2.5px',
-            background: 'linear-gradient(to bottom, #FFFFFF 0%, rgba(255,255,255,0.95) 45%, #38BDF8 75%, #0284C7 100%)',
-            boxShadow: '0 0 10px rgba(255,255,255,0.9), 0 0 20px rgba(56,189,248,0.7)'
-          }} />
+            {/* Elastic Silk Line */}
+            <div className="web-elastic-line" style={{
+              width: '2.5px',
+              background: 'linear-gradient(to bottom, #FFFFFF 0%, rgba(255,255,255,0.95) 45%, #38BDF8 75%, #0284C7 100%)',
+              boxShadow: '0 0 10px rgba(255,255,255,0.9), 0 0 20px rgba(56,189,248,0.7)'
+            }} />
 
-          {/* Atmospheric Cyan Multiverse Aura */}
-          <div className="spidey-multiverse-aura" />
+            {/* Atmospheric Cyan Multiverse Aura */}
+            <div className="spidey-multiverse-aura" />
 
-          {/* Full Model Spider-Man Container */}
-          <div className="mascot-image-wrapper" style={{
-            filter: 'drop-shadow(0 14px 28px rgba(2,132,199,0.75))'
-          }}>
-            {/* THWIP Action Pop */}
-            {showSpideyThwip && (
-              <div className="comic-badge-thwip">THWIP!</div>
-            )}
-
-            {/* Spider-Sense Radiating Crown (Around Head) */}
-            <div className="spider-sense-intense" style={{
-              position: 'absolute',
-              bottom: '-8px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '44px',
-              height: '22px',
-              pointerEvents: 'none'
+            {/* Full Model Spider-Man Container */}
+            <div className="mascot-image-wrapper" style={{
+              filter: 'drop-shadow(0 14px 28px rgba(2,132,199,0.75))'
             }}>
-              <svg viewBox="0 0 56 28" fill="none">
-                <path d="M10,24 Q28,-2 46,24" stroke="#38BDF8" strokeWidth="3" strokeLinecap="round" />
-                <path d="M4,18 Q28,-10 52,18" stroke="#0088FF" strokeWidth="2.4" strokeLinecap="round" strokeDasharray="4 2" />
-                <path d="M18,25 Q28,8 38,25" stroke="#F97316" strokeWidth="2" strokeLinecap="round" />
-              </svg>
+              {/* THWIP Action Pop */}
+              {showSpideyThwip && (
+                <div className="comic-badge-thwip">THWIP!</div>
+              )}
+
+              {/* Spider-Sense Radiating Crown (Around Head) */}
+              <div className="spider-sense-intense" style={{
+                position: 'absolute',
+                bottom: '-8px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '44px',
+                height: '22px',
+                pointerEvents: 'none'
+              }}>
+                <svg viewBox="0 0 56 28" fill="none">
+                  <path d="M10,24 Q28,-2 46,24" stroke="#38BDF8" strokeWidth="3" strokeLinecap="round" />
+                  <path d="M4,18 Q28,-10 52,18" stroke="#0088FF" strokeWidth="2.4" strokeLinecap="round" strokeDasharray="4 2" />
+                  <path d="M18,25 Q28,8 38,25" stroke="#F97316" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </div>
+
+              {/* Authentic Cinematic Transparent Spider-Man Model */}
+              <img
+                src="/spiderman_model.png"
+                alt="Spider-Man"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  userSelect: 'none',
+                  pointerEvents: 'none'
+                }}
+              />
             </div>
 
-            {/* Authentic Cinematic Transparent Spider-Man Model */}
-            <img 
-              src="/spiderman_model.png" 
-              alt="Spider-Man" 
-              style={{ 
-                width: '100%', 
-                height: '100%', 
-                objectFit: 'contain', 
-                userSelect: 'none',
-                pointerEvents: 'none'
-              }} 
-            />
-          </div>
+            {/* Spider-Man Callout Tag */}
+            <div className="mascot-tag-pill spidey-tag">
+              <span>🕷️ SPIDER-MAN • MENTOR</span>
+              <span className="mascot-tag-sub">Click to Chat</span>
+            </div>
 
-          {/* Spider-Man Callout Tag */}
-          <div className="mascot-tag-pill spidey-tag">
-            <span>🕷️ SPIDER-MAN • MENTOR</span>
-            <span className="mascot-tag-sub">Click to Chat</span>
-          </div>
-
-          {/* Small Red Hanging Hide Button — Swings along with Spider-Man! */}
-          <div 
-            className="mascot-hanging-container"
-            onClick={handleSpideyHideClick}
-            onPointerDown={handleSpideyHideClick}
-            onMouseDown={handleSpideyHideClick}
-            onTouchStart={handleSpideyHideClick}
-            style={{ cursor: 'pointer' }}
-          >
-            <div className="mascot-hanging-wire red" />
-            <button
-              type="button"
-              className="mascot-hanging-red-btn"
+            {/* Small Red Hanging Hide Button — Swings along with Spider-Man! */}
+            <div
+              className="mascot-hanging-container"
               onClick={handleSpideyHideClick}
               onPointerDown={handleSpideyHideClick}
               onMouseDown={handleSpideyHideClick}
               onTouchStart={handleSpideyHideClick}
-              title="Hide Spider-Man"
-              aria-label="Hide Spider-Man"
+              style={{ cursor: 'pointer' }}
             >
-              ✕
-            </button>
+              <div className="mascot-hanging-wire red" />
+              <button
+                type="button"
+                className="mascot-hanging-red-btn"
+                onClick={handleSpideyHideClick}
+                onPointerDown={handleSpideyHideClick}
+                onMouseDown={handleSpideyHideClick}
+                onTouchStart={handleSpideyHideClick}
+                title="Hide Spider-Man"
+                aria-label="Hide Spider-Man"
+              >
+                ✕
+              </button>
+            </div>
           </div>
         </div>
-      </div>
       ) : (
         /* Hanging restore tab docked to top edge */
         <button
@@ -928,105 +903,105 @@ export default function Home() {
 
       {/* TOP-LEFT: TACTICAL PERCH DEADPOOL FULL BODY MODEL ON CYBER PLATFORM */}
       {!hideDeadpoolMascot ? (
-      <div 
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 'clamp(8px, 1.6vw, 32px)',
-          zIndex: 90,
-          pointerEvents: 'auto'
-        }}
-      >
-        <div 
-          className="deadpool-perch-rig"
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', cursor: 'pointer' }}
-          onClick={(e) => {
-            if (
-              e.target.closest('.mascot-hanging-container') || 
-              e.target.closest('.mascot-hanging-blue-btn') ||
-              e.target.closest('.mascot-hanging-red-btn')
-            ) return
-            setShowDeadpoolPop(true)
-            setIsDeadpoolChatOpen(true)
-            setTimeout(() => setShowDeadpoolPop(false), 1400)
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 'clamp(8px, 1.6vw, 32px)',
+            zIndex: 90,
+            pointerEvents: 'auto'
           }}
-          onMouseEnter={() => setShowDeadpoolPop(true)}
-          onMouseLeave={() => setShowDeadpoolPop(false)}
-          title="Click Deadpool to Chat!"
         >
-          {/* Dual Tactical Suspension Cables anchoring platform */}
-          <div className="deadpool-cables-container">
-            <div className="cable-ceiling-clamp-left" />
-            <div className="cable-ceiling-clamp-right" />
-            <div className="deadpool-cable-left" />
-            <div className="deadpool-cable-right" />
-          </div>
-
-          {/* Atmospheric Red Multiverse Aura */}
-          <div className="deadpool-multiverse-aura" />
-
-          {/* Full Model Deadpool Container */}
-          <div className="mascot-image-wrapper" style={{
-            filter: 'drop-shadow(0 14px 28px rgba(224,27,34,0.75))'
-          }}>
-            {/* MAXIMUM EFFORT Action Pop */}
-            {showDeadpoolPop && (
-              <div className="comic-badge-maximum">MAXIMUM EFFORT!</div>
-            )}
-
-            {/* Authentic Cinematic Transparent Deadpool Model */}
-            <img 
-              src="/deadpool_model.png" 
-              alt="Deadpool" 
-              style={{ 
-                width: '100%', 
-                height: '100%', 
-                objectFit: 'contain', 
-                userSelect: 'none',
-                pointerEvents: 'none'
-              }} 
-            />
-          </div>
-
-          {/* High-Tech Tactical Combat Platform directly under boots */}
-          <div className="deadpool-combat-platform">
-            <div className="platform-thruster-left" />
-            <div className="platform-thruster-right" />
-            <span style={{ fontSize: '0.48rem', color: '#EF4444', fontFamily: 'monospace', fontWeight: 900, letterSpacing: '0.5px' }}>⚡ PERCH</span>
-            <span style={{ fontSize: '0.48rem', color: '#F97316', fontFamily: 'monospace', fontWeight: 900 }}>READY</span>
-          </div>
-
-          {/* Deadpool Callout Tag */}
-          <div className="mascot-tag-pill deadpool-tag">
-            <span>⚔️ DEADPOOL • MERC-BOT</span>
-            <span className="mascot-tag-sub">Click to Chat</span>
-          </div>
-
-          {/* Small Blue Hanging Hide Button — Floats along with Deadpool! */}
-          <div 
-            className="mascot-hanging-container"
-            onClick={handleDeadpoolHideClick}
-            onPointerDown={handleDeadpoolHideClick}
-            onMouseDown={handleDeadpoolHideClick}
-            onTouchStart={handleDeadpoolHideClick}
-            style={{ cursor: 'pointer' }}
+          <div
+            className="deadpool-perch-rig"
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', cursor: 'pointer' }}
+            onClick={(e) => {
+              if (
+                e.target.closest('.mascot-hanging-container') ||
+                e.target.closest('.mascot-hanging-blue-btn') ||
+                e.target.closest('.mascot-hanging-red-btn')
+              ) return
+              setShowDeadpoolPop(true)
+              setIsDeadpoolChatOpen(true)
+              setTimeout(() => setShowDeadpoolPop(false), 1400)
+            }}
+            onMouseEnter={() => setShowDeadpoolPop(true)}
+            onMouseLeave={() => setShowDeadpoolPop(false)}
+            title="Click Deadpool to Chat!"
           >
-            <div className="mascot-hanging-wire" />
-            <button
-              type="button"
-              className="mascot-hanging-blue-btn"
+            {/* Dual Tactical Suspension Cables anchoring platform */}
+            <div className="deadpool-cables-container">
+              <div className="cable-ceiling-clamp-left" />
+              <div className="cable-ceiling-clamp-right" />
+              <div className="deadpool-cable-left" />
+              <div className="deadpool-cable-right" />
+            </div>
+
+            {/* Atmospheric Red Multiverse Aura */}
+            <div className="deadpool-multiverse-aura" />
+
+            {/* Full Model Deadpool Container */}
+            <div className="mascot-image-wrapper" style={{
+              filter: 'drop-shadow(0 14px 28px rgba(224,27,34,0.75))'
+            }}>
+              {/* MAXIMUM EFFORT Action Pop */}
+              {showDeadpoolPop && (
+                <div className="comic-badge-maximum">MAXIMUM EFFORT!</div>
+              )}
+
+              {/* Authentic Cinematic Transparent Deadpool Model */}
+              <img
+                src="/deadpool_model.png"
+                alt="Deadpool"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  userSelect: 'none',
+                  pointerEvents: 'none'
+                }}
+              />
+            </div>
+
+            {/* High-Tech Tactical Combat Platform directly under boots */}
+            <div className="deadpool-combat-platform">
+              <div className="platform-thruster-left" />
+              <div className="platform-thruster-right" />
+              <span style={{ fontSize: '0.48rem', color: '#EF4444', fontFamily: 'monospace', fontWeight: 900, letterSpacing: '0.5px' }}>⚡ PERCH</span>
+              <span style={{ fontSize: '0.48rem', color: '#F97316', fontFamily: 'monospace', fontWeight: 900 }}>READY</span>
+            </div>
+
+            {/* Deadpool Callout Tag */}
+            <div className="mascot-tag-pill deadpool-tag">
+              <span>⚔️ DEADPOOL • MERC-BOT</span>
+              <span className="mascot-tag-sub">Click to Chat</span>
+            </div>
+
+            {/* Small Blue Hanging Hide Button — Floats along with Deadpool! */}
+            <div
+              className="mascot-hanging-container"
               onClick={handleDeadpoolHideClick}
               onPointerDown={handleDeadpoolHideClick}
               onMouseDown={handleDeadpoolHideClick}
               onTouchStart={handleDeadpoolHideClick}
-              title="Hide Deadpool"
-              aria-label="Hide Deadpool"
+              style={{ cursor: 'pointer' }}
             >
-              ✕
-            </button>
+              <div className="mascot-hanging-wire" />
+              <button
+                type="button"
+                className="mascot-hanging-blue-btn"
+                onClick={handleDeadpoolHideClick}
+                onPointerDown={handleDeadpoolHideClick}
+                onMouseDown={handleDeadpoolHideClick}
+                onTouchStart={handleDeadpoolHideClick}
+                title="Hide Deadpool"
+                aria-label="Hide Deadpool"
+              >
+                ✕
+              </button>
+            </div>
           </div>
         </div>
-      </div>
       ) : (
         /* Hanging restore tab docked to top edge */
         <button
@@ -1042,9 +1017,9 @@ export default function Home() {
 
       {/* Main Content Container — Expansive Width, Clean Stacked Spacing */}
       <div className="container page-transition" style={{ maxWidth: 'min(1560px, 94vw)', margin: '0 auto', padding: 'clamp(20px, 3vw, 36px) clamp(16px, 3.5vw, 48px) 60px', position: 'relative', zIndex: 40 }}>
-        
+
         {/* Multiverse Header Banner — Perfectly Centered, Balanced Gaps & Clean Cinematic Alignment */}
-        <header style={{ 
+        <header style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -1056,8 +1031,8 @@ export default function Home() {
           paddingTop: 'clamp(20px, 3.2vw, 40px)',
           paddingLeft: '16px',
           paddingRight: '16px',
-          position: 'relative', 
-          zIndex: 40 
+          position: 'relative',
+          zIndex: 40
         }}>
           {/* Live Multiverse Status Telemetry Banner (Blue & Red Duality) */}
           <div style={{
@@ -1082,22 +1057,22 @@ export default function Home() {
           </div>
 
           {/* Protocol & Department Badges */}
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            gap: '12px', 
-            margin: '0 auto 24px auto', 
-            flexWrap: 'wrap', 
-            position: 'relative', 
-            zIndex: 40 
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '12px',
+            margin: '0 auto 24px auto',
+            flexWrap: 'wrap',
+            position: 'relative',
+            zIndex: 40
           }}>
-            <span className="shimmer-badge" style={{ 
-              border: '1px solid #38BDF8', 
-              color: '#38BDF8', 
-              padding: '6px 18px', 
-              borderRadius: '6px', 
-              fontSize: '0.82rem', 
+            <span className="shimmer-badge" style={{
+              border: '1px solid #38BDF8',
+              color: '#38BDF8',
+              padding: '6px 18px',
+              borderRadius: '6px',
+              fontSize: '0.82rem',
               fontWeight: '800',
               letterSpacing: '1.4px',
               boxShadow: '0 0 14px rgba(56, 189, 248, 0.35)',
@@ -1107,13 +1082,13 @@ export default function Home() {
             }}>
               LOGIN 2026 • MULTIVERSE PROTOCOL
             </span>
-            <span style={{ 
-              background: 'rgba(224, 27, 34, 0.14)', 
-              border: '1px solid rgba(224, 27, 34, 0.5)', 
-              color: '#FF7B7B', 
-              padding: '6px 18px', 
-              borderRadius: '6px', 
-              fontSize: '0.82rem', 
+            <span style={{
+              background: 'rgba(224, 27, 34, 0.14)',
+              border: '1px solid rgba(224, 27, 34, 0.5)',
+              color: '#FF7B7B',
+              padding: '6px 18px',
+              borderRadius: '6px',
+              fontSize: '0.82rem',
               fontWeight: '700',
               letterSpacing: '1px',
               display: 'inline-flex',
@@ -1125,8 +1100,8 @@ export default function Home() {
           </div>
 
           {/* Main Title Heading — Centered Horizontally & Vertically Balanced */}
-          <h1 className="hero-title-cinematic" style={{ 
-            fontSize: 'clamp(2.8rem, 6.8vw, 5.2rem)', 
+          <h1 className="hero-title-cinematic" style={{
+            fontSize: 'clamp(2.8rem, 6.8vw, 5.2rem)',
             margin: '0 auto 24px auto',
             position: 'relative',
             zIndex: 40,
@@ -1137,14 +1112,14 @@ export default function Home() {
           </h1>
 
           {/* Subtitle Heading Tagline — Centered with Balanced Gap */}
-          <div style={{ 
+          <div style={{
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: '10px',
-            fontSize: 'clamp(0.92rem, 1.8vw, 1.22rem)', 
-            fontWeight: '800', 
-            color: '#7DD3FC', 
+            fontSize: 'clamp(0.92rem, 1.8vw, 1.22rem)',
+            fontWeight: '800',
+            color: '#7DD3FC',
             letterSpacing: '2.5px',
             textTransform: 'uppercase',
             background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.22) 0%, rgba(224, 27, 34, 0.22) 100%)',
@@ -1164,13 +1139,13 @@ export default function Home() {
           </div>
 
           {/* Cinematic Lead Description — Centered with Comfortable Reading Width */}
-          <p style={{ 
-            maxWidth: '820px', 
-            margin: '0 auto', 
-            color: 'var(--text-secondary)', 
-            fontSize: '1.08rem', 
-            lineHeight: '1.75', 
-            position: 'relative', 
+          <p style={{
+            maxWidth: '820px',
+            margin: '0 auto',
+            color: 'var(--text-secondary)',
+            fontSize: '1.08rem',
+            lineHeight: '1.75',
+            position: 'relative',
             zIndex: 40,
             textAlign: 'center'
           }}>
@@ -1179,20 +1154,20 @@ export default function Home() {
         </header>
 
         {/* Quick Action Station Cards (Balanced 2-Column Multiverse Duel Layout) */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', 
-          gap: '32px', 
-          marginBottom: '80px' 
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+          gap: '32px',
+          marginBottom: '80px'
         }}>
           {/* CARD 01: ONBOARDING (Spider-Man Electric Blue Theme) */}
           <Link href="/register" style={{ textDecoration: 'none' }}>
-            <div className="comic-card card-hover-lift cyber-card-blue" style={{ 
-              padding: '24px 22px', 
-              height: '100%', 
-              display: 'flex', 
-              flexDirection: 'column', 
-              justifyContent: 'space-between', 
+            <div className="comic-card card-hover-lift cyber-card-blue" style={{
+              padding: '24px 22px',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
               boxShadow: '0 8px 32px rgba(0,0,0,0.65)',
               position: 'relative',
               overflow: 'hidden'
@@ -1220,12 +1195,12 @@ export default function Home() {
 
           {/* CARD 02: BATTLEGROUND (Deadpool Crimson Red Theme) */}
           <Link href="/login" style={{ textDecoration: 'none' }}>
-            <div className="comic-card card-hover-lift cyber-card-red" style={{ 
-              padding: '24px 22px', 
-              height: '100%', 
-              display: 'flex', 
-              flexDirection: 'column', 
-              justifyContent: 'space-between', 
+            <div className="comic-card card-hover-lift cyber-card-red" style={{
+              padding: '24px 22px',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
               boxShadow: '0 8px 32px rgba(0,0,0,0.65)',
               position: 'relative',
               overflow: 'hidden'
@@ -1939,7 +1914,7 @@ export default function Home() {
                   <div style={{ fontSize: '0.7rem', color: '#F97316' }}>● Fourth Wall Breaker • Online</div>
                 </div>
               </div>
-              <button 
+              <button
                 type="button"
                 onClick={() => setIsDeadpoolChatOpen(false)}
                 className="chat-close-btn"
@@ -1954,11 +1929,11 @@ export default function Home() {
             <div ref={deadpoolChatBodyRef} className="chat-window-body">
               {deadpoolMessages.map((msg, idx) => (
                 <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-bot'}>
-                  <div style={{ 
-                    fontSize: '0.7rem', 
-                    fontWeight: 'bold', 
-                    marginBottom: '2px', 
-                    color: msg.sender === 'user' ? '#FFF' : msg.sender === 'spidey' ? '#38BDF8' : '#FF4D4D' 
+                  <div style={{
+                    fontSize: '0.7rem',
+                    fontWeight: 'bold',
+                    marginBottom: '2px',
+                    color: msg.sender === 'user' ? '#FFF' : msg.sender === 'spidey' ? '#38BDF8' : '#FF4D4D'
                   }}>
                     {msg.sender === 'user' ? 'You' : msg.sender === 'spidey' ? 'Spider-Man' : 'Deadpool'}
                   </div>
@@ -1972,89 +1947,102 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Dynamic Interactive Suggestions & Prompts Hub — Seamlessly integrated inside Chat Body */}
-              <div className="chat-suggestions-box">
-                {/* Category Filter Tabs */}
-                <div style={{ display: 'flex', gap: '6px', margin: '2px 0' }}>
-                  <button
-                    type="button"
-                    className={`cat-tab-btn ${deadpoolCategory === 'technical' ? 'active deadpool' : ''}`}
-                    onClick={() => setDeadpoolCategory('technical')}
-                    style={{ flex: 1 }}
-                  >
-                    🔬 Technical Rules
-                  </button>
-                  <button
-                    type="button"
-                    className={`cat-tab-btn ${deadpoolCategory === 'non-technical' ? 'active deadpool' : ''}`}
-                    onClick={() => setDeadpoolCategory('non-technical')}
-                    style={{ flex: 1 }}
-                  >
-                    🌮 Fun & Trolls
-                  </button>
-                </div>
+              {/* Scroll Anchor right below messages so newly added answers are always in view */}
+              <div ref={deadpoolChatBottomRef} style={{ height: '2px' }} />
 
-                {/* Highlighted Popping Suggestion Pill */}
-                <div 
-                  className="popping-suggestion-pill"
-                  onClick={() => handleDeadpoolAsk("Ask Spidey-bug, he may know! 🕸️", "REFER_TO_SPIDEY")}
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(226, 54, 54, 0.28) 100%)',
-                    border: '1.5px solid #F97316',
-                    borderRadius: '8px',
-                    padding: '8px 12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    color: '#F97316',
-                    fontSize: '0.78rem',
-                    fontWeight: 'bold',
-                    cursor: 'pointer'
-                  }}
-                  title="Click to transfer to Spider-Man!"
-                >
-                  <span>💥 'Ask Spidey-bug he may know!' 🕸️</span>
-                  <span style={{ background: '#F97316', color: '#FFF', padding: '3px 9px', borderRadius: '4px', fontSize: '0.68rem', fontWeight: 800 }}>SWITCH ➔</span>
-                </div>
-
-                <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '4px', fontWeight: 800 }}>
-                  {deadpoolCategory === 'technical' ? 'Tournament Rules & AI Hints:' : 'Fourth-Wall Banter, Jokes & Trolls:'}
-                </div>
-                {(deadpoolCategory === 'technical' ? DEADPOOL_TECH_FAQ : DEADPOOL_NON_TECH_FAQ).map((faq, idx) => (
-                  <div 
-                    key={idx} 
-                    className="chat-chip"
-                    onClick={() => handleDeadpoolAsk(faq.q, faq.a)}
-                  >
-                    <span>⚡</span>
-                    <span>{faq.q}</span>
+              {/* Dynamic Interactive Suggestions & Prompts Hub */}
+              <div className="chat-suggestions-box" style={{ marginTop: '12px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                  <div style={{ fontSize: '0.68rem', color: '#F97316', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 800 }}>
+                    💡 Quick Intel Topics
                   </div>
-                ))}
-
-                {/* Quick Cross-Handoff Button */}
-                <div 
-                  className="cross-char-pill-spidey"
-                  onClick={() => handleDeadpoolAsk("Ask Spidey-bug, he may know! 🕸️", "REFER_TO_SPIDEY")}
-                  style={{ marginTop: '4px' }}
-                >
-                  <span>🕸️ Need scientific optical physics?</span>
-                  <span>Ask Spidey ➔</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowDeadpoolPrompts(prev => !prev)}
+                    style={{
+                      background: 'rgba(255,255,255,0.08)',
+                      border: '1px solid rgba(255,255,255,0.15)',
+                      color: '#FFF',
+                      fontSize: '0.66rem',
+                      padding: '2px 8px',
+                      borderRadius: '4px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {showDeadpoolPrompts ? '▲ Hide Topics' : '▼ Show Topics'}
+                  </button>
                 </div>
-              </div>
 
-              <div ref={deadpoolChatBottomRef} />
+                {showDeadpoolPrompts && (
+                  <>
+                    {/* Category Filter Tabs */}
+                    <div style={{ display: 'flex', gap: '6px', margin: '2px 0' }}>
+                      <button
+                        type="button"
+                        className={`cat-tab-btn ${deadpoolCategory === 'technical' ? 'active deadpool' : ''}`}
+                        onClick={() => setDeadpoolCategory('technical')}
+                        style={{ flex: 1 }}
+                      >
+                        🔬 Technical Rules
+                      </button>
+                      <button
+                        type="button"
+                        className={`cat-tab-btn ${deadpoolCategory === 'non-technical' ? 'active deadpool' : ''}`}
+                        onClick={() => setDeadpoolCategory('non-technical')}
+                        style={{ flex: 1 }}
+                      >
+                        🌮 Fun &amp; Trolls
+                      </button>
+                    </div>
+
+                    {/* Highlighted Switch Pill */}
+                    <div
+                      className="popping-suggestion-pill"
+                      onClick={() => handleDeadpoolAsk("Ask Spidey-bug, he may know! 🕸️", "REFER_TO_SPIDEY")}
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(226, 54, 54, 0.28) 100%)',
+                        border: '1.5px solid #F97316',
+                        borderRadius: '8px',
+                        padding: '6px 10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        color: '#F97316',
+                        fontSize: '0.74rem',
+                        fontWeight: 'bold',
+                        cursor: 'pointer'
+                      }}
+                      title="Click to transfer to Spider-Man!"
+                    >
+                      <span>💥 'Ask Spidey-bug he may know!' 🕸️</span>
+                      <span style={{ background: '#F97316', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.66rem', fontWeight: 800 }}>SWITCH ➔</span>
+                    </div>
+
+                    {(deadpoolCategory === 'technical' ? DEADPOOL_TECH_FAQ : DEADPOOL_NON_TECH_FAQ).map((faq, idx) => (
+                      <div
+                        key={idx}
+                        className="chat-chip"
+                        onClick={() => handleDeadpoolAsk(faq.q, faq.a)}
+                      >
+                        <span>⚡</span>
+                        <span>{faq.q}</span>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
             </div>
 
             {/* Custom Input */}
             <form onSubmit={handleSendDeadpoolCustom} className="chat-input-bar">
-              <input 
+              <input
                 type="text"
                 placeholder="Ask Deadpool anything..."
                 value={deadpoolInput}
                 onChange={(e) => setDeadpoolInput(e.target.value)}
                 style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', borderRadius: '6px', padding: '8px 12px', fontSize: '0.82rem', outline: 'none' }}
               />
-              <button 
+              <button
                 type="submit"
                 style={{ background: '#E23636', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
               >
@@ -2064,8 +2052,8 @@ export default function Home() {
           </div>
         ) : (
           /* Speech Bubble when Closed */
-          <div 
-            className="deadpool-speech card-hover-lift" 
+          <div
+            className="deadpool-speech card-hover-lift"
             onClick={() => setIsDeadpoolChatOpen(true)}
             style={{ cursor: 'pointer' }}
             title="Click to open Deadpool's Chatbot!"
@@ -2078,7 +2066,7 @@ export default function Home() {
         )}
 
         {/* Floating Deadpool Mask Action Icon */}
-        <div 
+        <div
           className="deadpool-floating"
           style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           onClick={() => setIsDeadpoolChatOpen(prev => !prev)}
@@ -2129,7 +2117,7 @@ export default function Home() {
                   <div style={{ fontSize: '0.7rem', color: '#38BDF8' }}>● Peter Parker • Tactical Assistant</div>
                 </div>
               </div>
-              <button 
+              <button
                 type="button"
                 onClick={() => setIsSpideyChatOpen(false)}
                 className="chat-close-btn"
@@ -2144,11 +2132,11 @@ export default function Home() {
             <div ref={spideyChatBodyRef} className="chat-window-body">
               {spideyMessages.map((msg, idx) => (
                 <div key={idx} className={msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-spidey'}>
-                  <div style={{ 
-                    fontSize: '0.7rem', 
-                    fontWeight: 'bold', 
-                    marginBottom: '2px', 
-                    color: msg.sender === 'user' ? '#FFF' : msg.sender === 'deadpool' ? '#FF4D4D' : '#38BDF8' 
+                  <div style={{
+                    fontSize: '0.7rem',
+                    fontWeight: 'bold',
+                    marginBottom: '2px',
+                    color: msg.sender === 'user' ? '#FFF' : msg.sender === 'deadpool' ? '#FF4D4D' : '#38BDF8'
                   }}>
                     {msg.sender === 'user' ? 'You' : msg.sender === 'deadpool' ? 'Deadpool' : 'Spider-Man'}
                   </div>
@@ -2162,89 +2150,102 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Dynamic Interactive Suggestions & Prompts Hub — Seamlessly integrated inside Chat Body */}
-              <div className="chat-suggestions-box">
-                {/* Category Filter Tabs */}
-                <div style={{ display: 'flex', gap: '6px', margin: '2px 0' }}>
-                  <button
-                    type="button"
-                    className={`cat-tab-btn ${spideyCategory === 'technical' ? 'active spidey' : ''}`}
-                    onClick={() => setSpideyCategory('technical')}
-                    style={{ flex: 1 }}
-                  >
-                    🔬 Forensics &amp; Science
-                  </button>
-                  <button
-                    type="button"
-                    className={`cat-tab-btn ${spideyCategory === 'non-technical' ? 'active spidey' : ''}`}
-                    onClick={() => setSpideyCategory('non-technical')}
-                    style={{ flex: 1 }}
-                  >
-                    🕷️ Spidey Quips
-                  </button>
-                </div>
+              {/* Scroll Anchor right below messages so newly added answers are always in view */}
+              <div ref={spideyChatBottomRef} style={{ height: '2px' }} />
 
-                {/* Highlighted Popping Suggestion Pill */}
-                <div 
-                  className="popping-suggestion-pill"
-                  onClick={() => handleSpideyAsk("Ask the guy in red spandex on the left! 🌮", "REFER_TO_DEADPOOL")}
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(224, 27, 34, 0.2) 0%, rgba(133, 11, 18, 0.35) 100%)',
-                    border: '1.5px solid #E01B22',
-                    borderRadius: '8px',
-                    padding: '8px 12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    color: '#FF8080',
-                    fontSize: '0.78rem',
-                    fontWeight: 'bold',
-                    cursor: 'pointer'
-                  }}
-                  title="Click to transfer to Deadpool!"
-                >
-                  <span>🕷️ 'Ask the guy in red spandex on the left!' 🌮</span>
-                  <span style={{ background: '#E01B22', color: '#FFF', padding: '3px 9px', borderRadius: '4px', fontSize: '0.68rem', fontWeight: 800 }}>SWITCH ➔</span>
-                </div>
-
-                <div style={{ fontSize: '0.68rem', color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '4px', fontWeight: 800 }}>
-                  {spideyCategory === 'technical' ? 'Forensic Science & Strategies:' : 'Spidey Banter, Jokes & Advice:'}
-                </div>
-                {(spideyCategory === 'technical' ? SPIDEY_TECH_FAQ : SPIDEY_NON_TECH_FAQ).map((faq, idx) => (
-                  <div 
-                    key={idx} 
-                    className="chat-chip-spidey"
-                    onClick={() => handleSpideyAsk(faq.q, faq.a)}
-                  >
-                    <span>🕸️</span>
-                    <span>{faq.q}</span>
+              {/* Dynamic Interactive Suggestions & Prompts Hub */}
+              <div className="chat-suggestions-box" style={{ marginTop: '12px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                  <div style={{ fontSize: '0.68rem', color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 800 }}>
+                    💡 Quick Forensic Topics
                   </div>
-                ))}
-
-                {/* Quick Cross-Handoff Button */}
-                <div 
-                  className="cross-char-pill-deadpool"
-                  onClick={() => handleSpideyAsk("Ask the guy in red spandex on the left! 🌮", "REFER_TO_DEADPOOL")}
-                  style={{ marginTop: '4px' }}
-                >
-                  <span>🌮 Need chaotic chimichangas &amp; roasts?</span>
-                  <span>Ask Wade ➔</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowSpideyPrompts(prev => !prev)}
+                    style={{
+                      background: 'rgba(255,255,255,0.08)',
+                      border: '1px solid rgba(255,255,255,0.15)',
+                      color: '#FFF',
+                      fontSize: '0.66rem',
+                      padding: '2px 8px',
+                      borderRadius: '4px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {showSpideyPrompts ? '▲ Hide Topics' : '▼ Show Topics'}
+                  </button>
                 </div>
-              </div>
 
-              <div ref={spideyChatBottomRef} />
+                {showSpideyPrompts && (
+                  <>
+                    {/* Category Filter Tabs */}
+                    <div style={{ display: 'flex', gap: '6px', margin: '2px 0' }}>
+                      <button
+                        type="button"
+                        className={`cat-tab-btn ${spideyCategory === 'technical' ? 'active spidey' : ''}`}
+                        onClick={() => setSpideyCategory('technical')}
+                        style={{ flex: 1 }}
+                      >
+                        🔬 Forensics &amp; Science
+                      </button>
+                      <button
+                        type="button"
+                        className={`cat-tab-btn ${spideyCategory === 'non-technical' ? 'active spidey' : ''}`}
+                        onClick={() => setSpideyCategory('non-technical')}
+                        style={{ flex: 1 }}
+                      >
+                        🕷️ Spidey Quips
+                      </button>
+                    </div>
+
+                    {/* Highlighted Switch Pill */}
+                    <div
+                      className="popping-suggestion-pill"
+                      onClick={() => handleSpideyAsk("Ask the guy in red spandex on the left! 🌮", "REFER_TO_DEADPOOL")}
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(224, 27, 34, 0.2) 0%, rgba(133, 11, 18, 0.35) 100%)',
+                        border: '1.5px solid #E01B22',
+                        borderRadius: '8px',
+                        padding: '6px 10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        color: '#FF8080',
+                        fontSize: '0.74rem',
+                        fontWeight: 'bold',
+                        cursor: 'pointer'
+                      }}
+                      title="Click to transfer to Deadpool!"
+                    >
+                      <span>🕷️ 'Ask the guy in red spandex on the left!' 🌮</span>
+                      <span style={{ background: '#E01B22', color: '#FFF', padding: '2px 8px', borderRadius: '4px', fontSize: '0.66rem', fontWeight: 800 }}>SWITCH ➔</span>
+                    </div>
+
+                    {(spideyCategory === 'technical' ? SPIDEY_TECH_FAQ : SPIDEY_NON_TECH_FAQ).map((faq, idx) => (
+                      <div
+                        key={idx}
+                        className="chat-chip-spidey"
+                        onClick={() => handleSpideyAsk(faq.q, faq.a)}
+                      >
+                        <span>🕸️</span>
+                        <span>{faq.q}</span>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
             </div>
 
             {/* Custom Input */}
             <form onSubmit={handleSendSpideyCustom} className="chat-input-bar">
-              <input 
+              <input
                 type="text"
                 placeholder="Ask Spider-Man anything..."
                 value={spideyInput}
                 onChange={(e) => setSpideyInput(e.target.value)}
                 style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(224,27,34,0.3)', color: '#FFF', borderRadius: '6px', padding: '8px 12px', fontSize: '0.82rem', outline: 'none' }}
               />
-              <button 
+              <button
                 type="submit"
                 style={{ background: '#E01B22', color: '#FFF', border: 'none', borderRadius: '6px', padding: '8px 14px', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}
               >
@@ -2254,8 +2255,8 @@ export default function Home() {
           </div>
         ) : (
           /* Speech Bubble when Closed */
-          <div 
-            className="spidey-speech card-hover-lift" 
+          <div
+            className="spidey-speech card-hover-lift"
             onClick={() => setIsSpideyChatOpen(true)}
             style={{ cursor: 'pointer' }}
             title="Click to open Spider-Man's Chatbot!"
@@ -2268,7 +2269,7 @@ export default function Home() {
         )}
 
         {/* Floating Spidey Action Icon with Spider-Sense */}
-        <div 
+        <div
           style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           onClick={() => setIsSpideyChatOpen(prev => !prev)}
         >
