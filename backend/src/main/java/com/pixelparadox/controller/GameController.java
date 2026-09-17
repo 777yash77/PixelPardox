@@ -80,6 +80,11 @@ public class GameController {
     public record SubmitQuizRequest(String participantName, Map<Long, String> answers) {
     }
 
+    @GetMapping("/time")
+    public ResponseEntity<Long> getServerTime() {
+        return ResponseEntity.ok(System.currentTimeMillis());
+    }
+
     @GetMapping("/state")
     public ResponseEntity<GameState> getGameState() {
         return ResponseEntity.ok(gameService.getOrCreateGameState());

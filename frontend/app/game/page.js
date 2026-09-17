@@ -521,16 +521,30 @@ export default function GameArena() {
 
   // 3. Countdown timer logic (Clock Skew Resilient & Zero Stale Closures)
   useEffect(() => {
-    if (gameState.timerRunning && gameState.timerDuration > 0 && gameState.activeQuestionId) {
-      if (gameState.questionStartTime && gameState.questionStartTime > 0) {
-        const expectedEndTime = gameState.questionStartTime + (gameState.timerDuration * 1000)
-        if (Math.abs(Date.now() - gameState.questionStartTime) < 3600000) {
-          setLocalEndTime(expectedEndTime)
-          return
+    const syncTimeAndSetTimer = async () => {
+      if (gameState.timerRunning && gameState.timerDuration > 0 && gameState.activeQuestionId) {
+        if (gameState.questionStartTime && gameState.questionStartTime > 0) {
+          try {
+            const res = await fetch(`${API_BASE_URL}/api/game/time`)
+            if (res.ok) {
+              const serverTime = await res.json()
+              const elapsed = Math.floor((serverTime - gameState.questionStartTime) / 1000)
+              const remaining = gameState.timerDuration - elapsed
+              if (remaining > 0) {
+                setLocalEndTime(Date.now() + (remaining * 1000))
+              } else {
+                setLocalEndTime(0)
+              }
+              return
+            }
+          } catch (e) {
+            console.error('Failed to sync clock', e)
+          }
         }
+        setLocalEndTime(Date.now() + (gameState.timerDuration * 1000))
       }
-      setLocalEndTime(Date.now() + (gameState.timerDuration * 1000))
     }
+    syncTimeAndSetTimer()
   }, [gameState.timerRunning, gameState.timerDuration, gameState.questionStartTime, gameState.activeQuestionId])
 
   useEffect(() => {

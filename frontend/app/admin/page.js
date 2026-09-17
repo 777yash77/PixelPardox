@@ -119,8 +119,14 @@ export default function AdminDashboard() {
   useEffect(() => {
     let interval
     if (gameState.timerRunning && gameState.questionStartTime > 0 && gameState.timerDuration > 0) {
+      let serverTimeOffset = 0
+      fetch(`${API_BASE_URL}/api/game/time`).then(res => res.json()).then(t => {
+        serverTimeOffset = Date.now() - t
+      }).catch(e => {})
+
       interval = setInterval(() => {
-        const elapsed = Math.floor((Date.now() - gameState.questionStartTime) / 1000)
+        const syncedNow = Date.now() - serverTimeOffset
+        const elapsed = Math.floor((syncedNow - gameState.questionStartTime) / 1000)
         const remaining = gameState.timerDuration - elapsed
         if (remaining <= 0) {
           setTimerText('TIME UP')
