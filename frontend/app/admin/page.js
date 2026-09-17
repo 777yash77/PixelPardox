@@ -1067,7 +1067,7 @@ export default function AdminDashboard() {
                                   onClick={() => handleUpdateGameState(
                                     gameState.activeRound, 
                                     img.id, 
-                                    gameState.activeRound === 2 ? 40 : (gameState.activeRound === 3 ? 45 : (gameState.activeRound === 4 ? 75 : 60)),
+                                    gameState.activeRound === 2 ? 48 : (gameState.activeRound === 3 ? 60 : (gameState.activeRound === 4 ? 78 : 60)),
                                     100
                                   )} 
                                   className="btn-primary" 
