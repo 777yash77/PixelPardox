@@ -5137,10 +5137,10 @@ tbody tr:hover {
   position: fixed;
   top: 0;
   left: 0;
-  width: 16px;
-  height: 16px;
-  margin-top: -8px;
-  margin-left: -8px;
+  width: 22px;
+  height: 22px;
+  margin-top: -11px;
+  margin-left: -11px;
   border-radius: 50%;
   pointer-events: none;
   z-index: 999999;
@@ -5169,15 +5169,15 @@ tbody tr:hover {
   position: fixed;
   top: 0;
   left: 0;
-  width: 4px;
-  height: 4px;
-  margin-top: -2px;
-  margin-left: -2px;
+  width: 5px;
+  height: 5px;
+  margin-top: -2.5px;
+  margin-left: -2.5px;
   background-color: #38BDF8;
   border-radius: 50%;
   pointer-events: none;
   z-index: 999999;
-  box-shadow: 0 0 4px #38BDF8;
+  box-shadow: 0 0 5px #38BDF8;
   transition: transform 0.05s linear;
   will-change: transform;
 }
