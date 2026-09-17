@@ -1111,19 +1111,19 @@ export default function GameArena() {
 
                   <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(56,189,248,0.3)', borderRadius: '8px', padding: '12px 14px' }}>
                     <div style={{ fontSize: '0.7rem', color: '#38BDF8', fontWeight: 'bold' }}>STAGE 1: DETECTIVE</div>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>10 Pixels / 40s</div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>10 Pixels / 48s</div>
                     <div style={{ fontSize: '0.72rem', color: '#7DD3FC' }}>Authenticity &amp; Model ID</div>
                   </div>
 
                   <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(56,189,248,0.25)', borderRadius: '8px', padding: '12px 14px' }}>
                     <div style={{ fontSize: '0.7rem', color: '#38BDF8', fontWeight: 'bold' }}>STAGE 2: INPAINTING</div>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>7 Challenges / 45s</div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>6 Challenges / 60s</div>
                     <div style={{ fontSize: '0.72rem', color: '#BAE6FD' }}>Glitch Artifact Scan</div>
                   </div>
 
                   <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(249,115,22,0.35)', borderRadius: '8px', padding: '12px 14px' }}>
                     <div style={{ fontSize: '0.7rem', color: '#F97316', fontWeight: 'bold' }}>STAGE 3: PROMPT DUEL</div>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>5 Prompts / 75s</div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#FFF' }}>5 Prompts / 78s</div>
                     <div style={{ fontSize: '0.72rem', color: '#FB923C' }}>Semantic Prompt Match</div>
                   </div>
                 </div>
