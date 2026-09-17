@@ -920,9 +920,9 @@ export default function AdminDashboard() {
                 >
                   <option value={0}>Stage 0 - Registration / Lobby</option>
                   <option value={1}>Stage 0 - Prelims (MCQ Quiz - 30 Qs, strictly 30 mins)</option>
-                  <option value={2}>Stage 1 - Pixel Detective (Real vs AI - 10 Qs, 40s each)</option>
-                  <option value={3}>Stage 2 - The Glitch Hunt (Spot Inconsistencies - 7 Qs, 45s each)</option>
-                  <option value={4}>Stage 3 - Prompt Wars (Prompt Engineering - 5 Qs, 75s each)</option>
+                  <option value={2}>Stage 1 - Pixel Detective (Real vs AI - 10 Qs, 48s each)</option>
+                  <option value={3}>Stage 2 - The Glitch Hunt (Spot Inconsistencies - 6 Qs, 60s each)</option>
+                  <option value={4}>Stage 3 - Prompt Wars (Prompt Engineering - 5 Qs, 78s each)</option>
                   <option value={5}>Stage 5 - Completed / Winner Podium</option>
                 </select>
               </div>
@@ -1065,9 +1065,9 @@ export default function AdminDashboard() {
                               ) : (
                                 <button 
                                   onClick={() => handleUpdateGameState(
-                                    gameState.activeRound, 
+                                    img.roundNumber, 
                                     img.id, 
-                                    gameState.activeRound === 2 ? 48 : (gameState.activeRound === 3 ? 60 : (gameState.activeRound === 4 ? 78 : 60)),
+                                    img.roundNumber === 2 ? 48 : (img.roundNumber === 3 ? 60 : (img.roundNumber === 4 ? 78 : 60)),
                                     100
                                   )} 
                                   className="btn-primary" 
@@ -1390,8 +1390,8 @@ export default function AdminDashboard() {
                 <div className="form-group">
                   <label className="form-label">Target Competition Stage</label>
                   <select name="roundNumber" className="form-input" value={uploadData.roundNumber} onChange={handleUploadChange}>
-                    <option value={2}>Stage 1 - Pixel Detective (Real vs AI — 10 Questions, 40s each)</option>
-                    <option value={3}>Stage 2 - The Glitch Hunt (Artifacts / Flaws — 7 Questions, 45s each)</option>
+                    <option value={2}>Stage 1 - Pixel Detective (Real vs AI - 10 Questions, 48s each)</option>
+                    <option value={3}>Stage 2 - The Glitch Hunt (Artifacts / Flaws - 6 Questions, 60s each)</option>
                     <option value={4}>Stage 3 - Prompt Wars (Prompt Engineering — 5 Questions, 75s each)</option>
                   </select>
                 </div>
@@ -1537,8 +1537,8 @@ export default function AdminDashboard() {
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxHeight: '600px', overflowY: 'auto', paddingRight: '4px' }}>
                 {[
-                  { round: 2, label: 'Stage 1 - Pixel Detective (Target: 10 Qs, 40s per pixel)' },
-                  { round: 3, label: 'Stage 2 - The Glitch Hunt (Target: 7 Qs, 45s per pixel)' },
+                  { round: 2, label: 'Stage 1 - Pixel Detective (Target: 10 Qs, 48s per pixel)' },
+                  { round: 3, label: 'Stage 2 - The Glitch Hunt (Target: 6 Qs, 60s per pixel)' },
                   { round: 4, label: 'Stage 3 - Prompt Wars (Target: 5 Qs, 75s per pixel)' }
                 ].map(({ round, label }) => {
                   const roundImgs = images.filter(img => img.roundNumber === round)
