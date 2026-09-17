@@ -48,7 +48,7 @@ public class DataInitializer implements ApplicationRunner {
             Optional<User> adminOpt = userRepository.findByTeamId(email);
             if (adminOpt.isEmpty()) {
                 User admin = new User();
-                admin.setTeamName("Admin Organizer");
+                admin.setTeamName("Admin Organizer - " + email);
                 admin.setTeamId(email);
                 admin.setPassword(passwordEncoder.encode("mcappt"));
                 admin.setRole("ROLE_ADMIN");
