@@ -22,20 +22,16 @@ export default function CustomCursor() {
     document.head.appendChild(styleTag)
     setIsVisible(true)
 
-    let mouseX = -100
-    let mouseY = -100
-    let ringX = -100
-    let ringY = -100
-    let isMoving = false
-    let rafId = null
-
     const onMouseMove = (e) => {
-      mouseX = e.clientX
-      mouseY = e.clientY
+      const mouseX = e.clientX
+      const mouseY = e.clientY
 
-      // Hardware-accelerated 0ms direct transform on center precision dot
+      // Hardware-accelerated direct transforms (CSS handles the smoothing for the ring)
       if (cursorDotRef.current) {
         cursorDotRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`
+      }
+      if (cursorRingRef.current) {
+        cursorRingRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`
       }
 
       // Fast check for interactive elements without traversing entire DOM tree
@@ -52,34 +48,6 @@ export default function CustomCursor() {
           (target.closest && target.closest('button, a, input, [role="button"], .round-tab-btn, .card-hover-lift'))
         setIsHovered(!!isInteractive)
       }
-
-      if (!isMoving) {
-        isMoving = true
-        startLerpLoop()
-      }
-    }
-
-    const startLerpLoop = () => {
-      if (rafId) return
-      const updateRing = () => {
-        const dx = mouseX - ringX
-        const dy = mouseY - ringY
-        ringX += dx * 0.28
-        ringY += dy * 0.28
-
-        if (cursorRingRef.current) {
-          cursorRingRef.current.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`
-        }
-
-        // Only keep RAF going if the ring has distance left to travel (stops when mouse is still!)
-        if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
-          rafId = requestAnimationFrame(updateRing)
-        } else {
-          rafId = null
-          isMoving = false
-        }
-      }
-      rafId = requestAnimationFrame(updateRing)
     }
 
     const onMouseDown = () => setIsClicking(true)
@@ -100,7 +68,6 @@ export default function CustomCursor() {
     document.addEventListener('mouseenter', onMouseEnter)
 
     return () => {
-      if (rafId) cancelAnimationFrame(rafId)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('mousedown', onMouseDown)
       window.removeEventListener('mouseup', onMouseUp)
